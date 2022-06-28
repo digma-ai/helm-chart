@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ tpl .Values.postgres.host . }}
+spec:
+  ports:
+  - port: {{ .Values.postgres.port }}
+    protocol: TCP
+  selector:
+    app/postgres: ""
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ tpl .Values.redis.host . }}
+spec:
+  ports:
+  - port: 6379
+    protocol: TCP
+  selector:
+    app/redis: ""
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ tpl .Values.rabbit.host . }}
+spec:
+  ports:
+  - port: 5672
+    protocol: TCP
+  selector:
+    app/rabbitmq: ""
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ tpl .Values.influx.host . }}
+spec:
+  ports:
+  - port: 8086
+    protocol: TCP
+  selector:
+    app/influxdb: ""
+    
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ tpl .Values.digmaAnalytics.host . }}
+spec:
+  ports:
+  - port: 5052
+    protocol: TCP
+  selector:
+    app/digma-analytics: ""

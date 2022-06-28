@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ .Release.Name }}-services
+  labels:
+    app/digma-collector-api: ""
+    app/digma-plugin-api: ""
+    app/digma-analytics: ""
+spec:
+  containers:
+
+  - name: digma-collector-api
+    image: digmatic/digma-collector
+    ports:
+    - containerPort: 5049
+    - containerPort: 5050
+    env:
+    {{- include "env.redis" . | nindent  4 }}
+    {{- include "env.influx" . | nindent  4 }}
+    {{- include "env.postgres" . | nindent  4 }}
+    {{- include "env.rabbit" . | nindent  4 }}
+
+  - name: digma-plugin-api
+    image: digmatic/digma-plugin-api
+    ports:
+    - containerPort: 5051
+    env:
+    {{- include "env.redis" . | nindent  4 }}
+    {{- include "env.influx" . | nindent  4 }}
+    - name: AnalyticsUrl
+      value: {{ printf " http://%s:5052" (tpl .Values.digmaAnalytics.host .)}}
+  
+  - name: digma-analytics
+    image: digmatic/digma-analytics
+    env:
+    {{- include "env.redis" . | nindent  4 }}
+    {{- include "env.influx" . | nindent  4 }}
+    {{- include "env.postgres" . | nindent  4 }}
+    {{- include "env.rabbit" . | nindent  4 }}
+
