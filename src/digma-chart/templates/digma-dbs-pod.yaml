@@ -3,6 +3,7 @@ kind: Pod
 metadata:
   name: {{ .Release.Name }}-dbs
   labels:
+    app/all-dbs: ""
     app/redis: ""
     app/rabbitmq: ""
     app/postgres: ""

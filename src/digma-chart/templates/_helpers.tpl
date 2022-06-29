@@ -26,3 +26,7 @@
 {{- end -}}
 
 
+{{- define "env.otlpExporter" -}}
+- name: OtlpExporterUrl
+  value: {{ printf " http://%s:8200" (tpl .Values.elasticApmServer.host .)}}
+{{- end -}}

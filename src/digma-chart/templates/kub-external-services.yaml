@@ -1,29 +1,65 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: {{ .Release.Name }}-collector-lb
+  name: {{ .Release.Name }}-service-lb
 spec:
   type: LoadBalancer
   selector:
-     app/digma-collector-api: ""
+     app/all-services: ""
   ports:
-    - name: http
+
+    - name: plugin
       protocol: TCP
-      port: 5049
-    - name: grpc
+      port: 5051
+
+    - name: collector-grpc
       protocol: TCP
       port: 5050
 
----
+    - name: collector-http
+      protocol: TCP
+      port: 5049
 
+
+{{ if .Values.debug }}
+---
 kind: Service
 apiVersion: v1
 metadata:
-  name: {{ .Release.Name }}-plugin-lb
+  name: {{ .Release.Name }}-debug-lb
 spec:
   type: LoadBalancer
   selector:
-     app/digma-plugin-api: ""
+     app/all-debug: ""
   ports:
-    - protocol: TCP
-      port: 5051
+
+    - name: kibana
+      protocol: TCP
+      port: 81
+      targetPort: 5601
+
+    - name: redis-commander
+      protocol: TCP
+      port: 82
+      targetPort: 8081
+
+    - name: pgadmin
+      protocol: TCP
+      port: 83
+      port: 8080
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Release.Name }}-db-lb
+spec:
+  type: LoadBalancer
+  selector:
+     app/all-dbs: ""
+  ports:
+    - name: influx
+      protocol: TCP
+      port: 81
+      targetPort: 8086
+
+{{ end }}

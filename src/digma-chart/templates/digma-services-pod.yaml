@@ -3,6 +3,7 @@ kind: Pod
 metadata:
   name: {{ .Release.Name }}-services
   labels:
+    app/all-services: ""
     app/digma-collector-api: ""
     app/digma-plugin-api: ""
     app/digma-analytics: ""
@@ -19,6 +20,7 @@ spec:
     {{- include "env.influx" . | nindent  4 }}
     {{- include "env.postgres" . | nindent  4 }}
     {{- include "env.rabbit" . | nindent  4 }}
+    {{- include "env.otlpExporter" . | nindent  4 }}
 
   - name: digma-plugin-api
     image: digmatic/digma-plugin-api
@@ -27,8 +29,9 @@ spec:
     env:
     {{- include "env.redis" . | nindent  4 }}
     {{- include "env.influx" . | nindent  4 }}
+    {{- include "env.otlpExporter" . | nindent  4 }}
     - name: AnalyticsUrl
-      value: {{ printf " http://%s:5052" (tpl .Values.digmaAnalytics.host .)}}
+      value: http://localhost:5052
   
   - name: digma-analytics
     image: digmatic/digma-analytics
@@ -37,4 +40,5 @@ spec:
     {{- include "env.influx" . | nindent  4 }}
     {{- include "env.postgres" . | nindent  4 }}
     {{- include "env.rabbit" . | nindent  4 }}
+    {{- include "env.otlpExporter" . | nindent  4 }}
 
