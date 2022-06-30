@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-configmap
+  namespace: {{ .Release.Namespace }}
+data:
+  go_mod: {{ tpl (.Files.Get "files/go.mod") . | quote }}
+  go_sum: {{ tpl (.Files.Get "files/go.sum") . | quote }}
+  main_go: {{ .Files.Get "files/main.go" | quote }}

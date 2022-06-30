@@ -1,7 +1,15 @@
 # helm-chart
 This repo is going to function as a standard helm chart repository
 
-
+### How To Run
+digma:
+```bash
+helm install digma digma-chart -n digma-ns
+```
+sample app:
+```bash
+ helm install go sample-app-go --set otlpExporter.host=digma-collector-api.digma-ns -n staging-ns
+```
 ### `helm` Cheat sheet
 
 Install:

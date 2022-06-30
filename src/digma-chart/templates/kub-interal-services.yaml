@@ -91,4 +91,32 @@ spec:
   ports:
   - port: 4317
     protocol: TCP
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Release.Name }}-debug-clients
+spec:
+  selector:
+     app/all-debug: ""
+  ports:
+
+    - name: kibana
+      protocol: TCP
+      port: 81
+      targetPort: 5601
+
+    - name: redis-commander
+      protocol: TCP
+      port: 82
+      targetPort: 8081
+
+    - name: pgadmin
+      protocol: TCP
+      port: 83
+      targetPort: 8080
+
+
 {{ end }}

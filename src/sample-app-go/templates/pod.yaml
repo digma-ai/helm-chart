@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ .Release.Name }}-pod
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: sample-app-go
+spec:
+  containers:
+    - name: sample-app-go
+      image: golang:1.17
+      volumeMounts:
+      - name: {{ $.Release.Name }}-configmap-volume
+        mountPath: /app
+      command: ["/bin/sh"]
+      args: ["-c", "cd /app; go run ./"]
+      env:
+      - name: OTEL_EXPORTER_OTLP_ENDPOINT
+        value: {{ .Values.otlpExporter.host }}:5050
+  
+  volumes:
+  - name: {{ $.Release.Name }}-configmap-volume
+    configMap:
+      name: {{ .Release.Name }}-configmap
+      items:
+        - key: go_mod
+          path: go.mod
+        - key: go_sum
+          path: go.sum
+        - key: main_go
+          path: main.go

@@ -1,3 +1,5 @@
+{{ if .Values.exposeAll }}
+
 kind: Service
 apiVersion: v1
 metadata:
@@ -20,13 +22,28 @@ spec:
       protocol: TCP
       port: 5049
 
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Release.Name }}-db-lb
+spec:
+  type: LoadBalancer
+  selector:
+     app/all-dbs: ""
+  ports:
+    - name: influx
+      protocol: TCP
+      port: 81
+      targetPort: 8086
 
 {{ if .Values.debug }}
 ---
 kind: Service
 apiVersion: v1
 metadata:
-  name: {{ .Release.Name }}-debug-lb
+  name: {{ .Release.Name }}-debug-clients-lb
 spec:
   type: LoadBalancer
   selector:
@@ -46,20 +63,8 @@ spec:
     - name: pgadmin
       protocol: TCP
       port: 83
-      port: 8080
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: {{ .Release.Name }}-db-lb
-spec:
-  type: LoadBalancer
-  selector:
-     app/all-dbs: ""
-  ports:
-    - name: influx
-      protocol: TCP
-      port: 81
-      targetPort: 8086
+      targetPort: 8080
 
+
+{{ end }}
 {{ end }}
