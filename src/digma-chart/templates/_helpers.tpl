@@ -30,3 +30,10 @@
 - name: OtlpExporterUrl
   value: {{ printf " http://%s:8200" (tpl .Values.elasticApmServer.host .)}}
 {{- end -}}
+
+
+{{- define "env.elasticsearch" -}}
+- name: ElasticSearch
+  value: {{ printf " http://%s:9200" (tpl .Values.elasticsearch.host .)}}
+{{- end -}}
+
