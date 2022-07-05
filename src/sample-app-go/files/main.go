@@ -37,7 +37,7 @@ func main() {
 	r := echo.New()
 	r.Use(otelecho.Middleware(appName))
 	r.Use(digmaecho.Middleware())
-	r.GET("/", index)
+	r.GET("/go", index)
 
 	fmt.Println("listening on :" + port)
 	handleErr(r.Start(":"+port), "failed to listen & serve")
