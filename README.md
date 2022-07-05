@@ -2,12 +2,11 @@
 This repo is going to function as a standard helm chart repository
 
 ## How To Run
-#### Standard
+### Standard
 Create namespaces:
 ```
 kubectl create digma-ns
 kubectl create staging-ns
-kubectl create traefik-ns
 ```
 
 Install digma:
@@ -19,11 +18,12 @@ Install the sample app:
 ```
 helm install go sample-app-go --set otlpExporter.host=digma-collector-api.digma-ns -n staging-ns
 ```
-#### Using [traefik](https://github.com/traefik/traefik)
+### Using [traefik](https://github.com/traefik/traefik)
 Create namespaces:
 ```
 kubectl create digma-ns
 kubectl create staging-ns
+kubectl create traefik-ns
 ```
 
 Install digma:
@@ -40,7 +40,7 @@ Install traefik:
 ```
 helm repo add traefik https://helm.traefik.io/traefik
 helm repo update
-helm install traefik traefik/traefik --set providers.kubernetesCRD.namespaces={staging-ns} -n traefik-ns
+helm install traefik traefik/traefik --set providers.kubernetesCRD.namespaces={staging-ns\,digma-ns} -n traefik-ns
 ```
 
 ## `helm` Cheat sheet
