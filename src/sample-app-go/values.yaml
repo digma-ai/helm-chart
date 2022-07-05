@@ -1,2 +1,4 @@
 otlpExporter:
-  host: ""
+  host: "localhost"
+
+traefik: false
