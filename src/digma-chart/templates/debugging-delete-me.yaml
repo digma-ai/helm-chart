@@ -1,0 +1,16 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Release.Name }}-digma-collector-api-service-lb
+spec:
+  type: LoadBalancer
+  selector:
+     app: digma-collector-api
+  ports:
+    - name: collector-grpc
+      protocol: TCP
+      port: 5050
+
+    - name: collector-http
+      protocol: TCP
+      port: 5049

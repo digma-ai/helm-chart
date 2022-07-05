@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-influxdb-deployment
+  labels:
+    app: influxdb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: influxdb
+  template:
+    metadata:
+      labels:
+        app: influxdb
+    spec:
+      containers:
+      - name: influxdb
+        image: influxdb:latest
+        env:
+        - name: DOCKER_INFLUXDB_INIT_MODE
+          value: "setup"
+        - name: DOCKER_INFLUXDB_INIT_USERNAME
+          value: "admin"
+        - name: DOCKER_INFLUXDB_INIT_PASSWORD
+          value: "12345678"
+        - name: DOCKER_INFLUXDB_INIT_ORG
+          value: "digma"
+        - name: DOCKER_INFLUXDB_INIT_BUCKET
+          value: "errors"
+        - name: DOCKER_INFLUXDB_INIT_RETENTION
+          value: "24w"
+        - name: DOCKER_INFLUXDB_INIT_ADMIN_TOKEN
+          value: "dc61908e-05bc-411a-9fe2-e3356b8dc7c0"
+        volumeMounts:
+        - name: influxdb-data
+          mountPath: /var/lib/influxdb2
+        - name: influxdb-config
+          mountPath: /etc/influxdb2
+        ports:
+        - containerPort: 8086 
+      volumes:
+      - name: influxdb-data
+        emptyDir: {}
+      - name: influxdb-config
+        emptyDir: {}
+
+
+     
+     
