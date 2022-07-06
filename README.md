@@ -9,7 +9,7 @@ kubectl create staging-ns
 ```
 #### 2. Install digma:
 ```
-helm install digma digma-chart -n digma-ns
+helm install digma digma -n digma-ns
 ```
 #### 3. Install the sample app:
 ```
@@ -26,7 +26,7 @@ kubectl create traefik-ns
 
 #### 2. Install digma:
 ```
-helm install digma digma-chart --set digmaCollectorApi.expose=false,digmaPluginApi.expose=false -n digma-ns
+helm install digma digma --set digmaCollectorApi.expose=false,digmaPluginApi.expose=false -n digma-ns
 ```
 - `digmaCollectorApi.expose=false` - Do not to expose digma's otlp collector via public ip.
 - `digmaPluginApi.expose=false` - Do not to expose digma's plugin api via public ip.
@@ -99,15 +99,15 @@ kubectl apply -f traefic/sample-ingress-route.yaml -n staging-ns
 
 Install:
 ```
-helm install digma-chart --generate-name
+helm install digma --generate-name
 ```
 
 Uinstall:
 ```
-helm uninstall digma-chart-xxxxx
+helm uninstall digma-xxxxx
 ```
 
 Test (dry run):
 ```
-helm install digma-test digma-chart --debug --dry-run 
+helm install digma-test digma --debug --dry-run 
 ```
