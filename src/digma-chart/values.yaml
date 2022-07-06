@@ -27,7 +27,7 @@ kibana:
   host: "{{ .Release.Name }}-kibana"
 
 redisCommander:
-  host: "{{ .Release.Name }}-redisCommander"
+  host: "{{ .Release.Name }}-redis-commander"
 
 elasticApmServer:
   host: "{{ .Release.Name }}-apm"

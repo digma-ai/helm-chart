@@ -5,11 +5,6 @@ metadata:
   name: {{ .Release.Name }}-debug-deployment
   labels:
     app: digma-debug-services
-    app/elasticApmServer: ""
-    app/elasticsearch: ""
-    app/kibana: ""
-    app/pgadmin: ""
-    app/redisCommander: ""
 spec:
   replicas: 1
   selector:
@@ -27,6 +22,8 @@ spec:
         - name: pgadmin-data
           mountPath: /var/lib/pgadmin
         env:
+        - name: PGADMIN_LISTEN_PORT
+          value: 8080
         - name: PGADMIN_DEFAULT_EMAIL
           value: {{ .Values.pgadmin.email }}
         - name: PGADMIN_DEFAULT_PASSWORD

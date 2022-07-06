@@ -91,8 +91,8 @@ spec:
 
 Apply them in namespaces beside the referenced service:
 ```
-kubectl apply -f traefic\digma-ingress-route.yaml -n digma-ns
-kubectl apply -f traefic\sample-ingress-route.yaml -n staging-ns
+kubectl apply -f traefic/digma-ingress-route.yaml -n digma-ns
+kubectl apply -f traefic/sample-ingress-route.yaml -n staging-ns
 ```
 
 ## `helm` Cheat sheet

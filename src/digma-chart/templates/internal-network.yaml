@@ -109,7 +109,7 @@ metadata:
   name: {{ tpl .Values.elasticApmServer.host . }}
 spec:
   selector:
-    app/elasticApmServer: ""
+    app: "digma-debug-services"
   ports:
   - port: 8200
     protocol: TCP
@@ -122,7 +122,7 @@ metadata:
   name: {{ tpl .Values.elasticsearch.host . }}
 spec:
   selector:
-    app/elasticsearch: ""
+    app: "digma-debug-services"
   ports:
   - port: 9200
     protocol: TCP
@@ -135,7 +135,7 @@ metadata:
   name: {{ tpl .Values.kibana.host . }}
 spec:
   selector:
-    app/kibana: ""
+    app: "digma-debug-services"
   ports:
   - port: 5601
     protocol: TCP
@@ -148,9 +148,9 @@ metadata:
   name: {{ tpl .Values.pgadmin.host . }}
 spec:
   selector:
-    app/pgadmin: ""
+    app: "digma-debug-services"
   ports:
-  - port: 5432
+  - port: 8080
     protocol: TCP
 
 ---
@@ -161,7 +161,7 @@ metadata:
   name: {{ tpl .Values.redisCommander.host . }}
 spec:
   selector:
-    app/redisCommander: ""
+    app: "digma-debug-services"
   ports:
   - port: 8081
     protocol: TCP
