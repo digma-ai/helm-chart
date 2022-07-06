@@ -5,6 +5,11 @@ metadata:
   name: {{ .Release.Name }}-debug-deployment
   labels:
     app: digma-debug-services
+    app/elasticApmServer: ""
+    app/elasticsearch: ""
+    app/kibana: ""
+    app/pgadmin: ""
+    app/redisCommander: ""
 spec:
   replicas: 1
   selector:

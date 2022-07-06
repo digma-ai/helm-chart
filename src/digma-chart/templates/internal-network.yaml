@@ -100,54 +100,70 @@ spec:
 
 
 {{ if .Values.debug }}
+
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
   name: {{ tpl .Values.elasticApmServer.host . }}
 spec:
   selector:
-    app: "digma-debug-services"
+    app/elasticApmServer: ""
   ports:
   - port: 8200
     protocol: TCP
 
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
   name: {{ tpl .Values.elasticsearch.host . }}
 spec:
   selector:
-    app: "digma-debug-services"
+    app/elasticsearch: ""
   ports:
   - port: 9200
     protocol: TCP
 
 ---
 
-kind: Service
 apiVersion: v1
+kind: Service
 metadata:
-  name: {{ .Release.Name }}-debug-clients
+  name: {{ tpl .Values.kibana.host . }}
 spec:
   selector:
-    app: "digma-debug-services"
+    app/kibana: ""
   ports:
+  - port: 5601
+    protocol: TCP
 
-    - name: kibana
-      protocol: TCP
-      port: 81
-      targetPort: 5601
+---
 
-    - name: redis-commander
-      protocol: TCP
-      port: 82
-      targetPort: 8081
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ tpl .Values.pgadmin.host . }}
+spec:
+  selector:
+    app/pgadmin: ""
+  ports:
+  - port: 5432
+    protocol: TCP
 
-    - name: pgadmin
-      protocol: TCP
-      port: 83
-      targetPort: 8080
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ tpl .Values.redisCommander.host . }}
+spec:
+  selector:
+    app/redisCommander: ""
+  ports:
+  - port: 8081
+    protocol: TCP
 
 {{ end }}

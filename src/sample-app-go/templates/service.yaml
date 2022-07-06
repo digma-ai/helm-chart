@@ -1,4 +1,4 @@
-{{- if not .Values.traefik }}
+{{- if not .Values.expose }}
 
 kind: Service
 apiVersion: v1
@@ -24,23 +24,5 @@ spec:
   ports:
   - protocol: TCP
     port: 8011
-
---- 
-
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRoute
-metadata:
-  name: {{ .Release.Name }}-traefik-route
-spec:
-  entryPoints:
-  - web
-  routes:
-  - kind: Rule
-    match: Path(`/go`) 
-    services:
-    - kind: Service
-      name: {{ .Release.Name }}-service-cip
-      port: 8011
-      # scheme: https
 
 {{- end -}}

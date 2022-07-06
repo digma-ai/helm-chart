@@ -19,8 +19,15 @@ rabbit:
   password: admin
 
 pgadmin:
+  host: "{{ .Release.Name }}-pgadmin"
   email: admin@admin.com
   password: admin
+
+kibana:
+  host: "{{ .Release.Name }}-kibana"
+
+redisCommander:
+  host: "{{ .Release.Name }}-redisCommander"
 
 elasticApmServer:
   host: "{{ .Release.Name }}-apm"
