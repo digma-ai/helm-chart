@@ -1,4 +1,4 @@
 otlpExporter:
   host: "localhost"
 
-traefik: false
+expose: true

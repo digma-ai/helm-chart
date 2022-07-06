@@ -100,7 +100,9 @@ spec:
 
 
 {{ if .Values.debug }}
+
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -113,6 +115,7 @@ spec:
     protocol: TCP
 
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -126,28 +129,41 @@ spec:
 
 ---
 
-kind: Service
 apiVersion: v1
+kind: Service
 metadata:
-  name: {{ .Release.Name }}-debug-clients
+  name: {{ tpl .Values.kibana.host . }}
 spec:
   selector:
     app: "digma-debug-services"
   ports:
+  - port: 5601
+    protocol: TCP
 
-    - name: kibana
-      protocol: TCP
-      port: 81
-      targetPort: 5601
+---
 
-    - name: redis-commander
-      protocol: TCP
-      port: 82
-      targetPort: 8081
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ tpl .Values.pgadmin.host . }}
+spec:
+  selector:
+    app: "digma-debug-services"
+  ports:
+  - port: 8080
+    protocol: TCP
 
-    - name: pgadmin
-      protocol: TCP
-      port: 83
-      targetPort: 8080
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ tpl .Values.redisCommander.host . }}
+spec:
+  selector:
+    app: "digma-debug-services"
+  ports:
+  - port: 8081
+    protocol: TCP
 
 {{ end }}

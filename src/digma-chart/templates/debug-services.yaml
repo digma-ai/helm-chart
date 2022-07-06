@@ -22,6 +22,8 @@ spec:
         - name: pgadmin-data
           mountPath: /var/lib/pgadmin
         env:
+        - name: PGADMIN_LISTEN_PORT
+          value: 8080
         - name: PGADMIN_DEFAULT_EMAIL
           value: {{ .Values.pgadmin.email }}
         - name: PGADMIN_DEFAULT_PASSWORD

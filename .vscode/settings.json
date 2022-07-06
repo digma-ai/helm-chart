@@ -1,4 +1,4 @@
 {
     "editor.tabSize": 2,
-    "digma.url": "http://35.240.85.136:5051"
+    "digma.environment": "HELM-TEST",
 }

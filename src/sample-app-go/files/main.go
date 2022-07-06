@@ -73,7 +73,7 @@ func InitTracer(serviceName string, moduleImportPath string, modulePath string, 
 		*/
 		resource.WithDetectors(
 			&detector.DigmaDetector{
-				DeploymentEnvironment:  os.Getenv("DEPLOYMENT_ENV"),
+				DeploymentEnvironment:  "HELM-TEST",
 				CommitId:               "",
 				ModuleImportPath:       moduleImportPath,
 				ModulePath:             modulePath,
