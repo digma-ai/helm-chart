@@ -1,7 +1,37 @@
-# helm-chart
-This repo is going to function as a standard helm chart repository
+# Digma's Helm-Charts
+This repository functions both as the source control and the chart repository for digma helm-charts, and consists of:
+- Digmas services
+  - Collector
+  - PluginApi
+  - Analytics
+- Databases/Queues
+  - Redis
+  - Postgres
+  - InfluxDB
+  - RabbitMq
+- Services for debugging *(can be disabled by setting `debug=false`)*
+  - ELK+APM
+  - PgAdmin
+  - Redis Commander
 
-## How To Run (Standard)
+## Installing
+
+Add Digma's chart repository to Helm:
+```bash
+helm repo add digma https://digma-ai.github.io/helm-chart/
+```
+
+Update the chart repository:
+```bash
+helm repo update
+```
+
+Deploy digma:
+```bash
+helm install digma digma/digma
+```
+
+## Install Digma + Sample app (Standard)
 #### 1. Create namespaces:
 ```
 kubectl create digma-ns
@@ -9,14 +39,14 @@ kubectl create staging-ns
 ```
 #### 2. Install digma:
 ```
-helm install digma digma -n digma-ns
+helm install digma digma/digma -n digma-ns
 ```
 #### 3. Install the sample app:
 ```
-helm install go sample-app-go --set otlpExporter.host=digma-collector-api.digma-ns -n staging-ns
+helm install go digma/sample-app-go --set otlpExporter.host=digma-collector-api.digma-ns -n staging-ns
 ```
 
-## How To Run (Using [traefik](https://github.com/traefik/traefik))
+## Install Digma + Sample app (Using [traefik](https://github.com/traefik/traefik))
 #### 1. Create namespaces:
 ```
 kubectl create digma-ns
@@ -26,7 +56,7 @@ kubectl create traefik-ns
 
 #### 2. Install digma:
 ```
-helm install digma digma --set digmaCollectorApi.expose=false,digmaPluginApi.expose=false -n digma-ns
+helm install digma digma/digma --set digmaCollectorApi.expose=false,digmaPluginApi.expose=false -n digma-ns
 ```
 - `digmaCollectorApi.expose=false` - Do not to expose digma's otlp collector via public ip.
 - `digmaPluginApi.expose=false` - Do not to expose digma's plugin api via public ip.
@@ -34,7 +64,7 @@ helm install digma digma --set digmaCollectorApi.expose=false,digmaPluginApi.exp
 
 #### 3. Install the sample app:
 ```
-helm install go sample-app-go --set otlpExporter.host=digma-collector-api.digma-ns,expose=false -n staging-ns
+helm install go digma/sample-app-go --set otlpExporter.host=digma-collector-api.digma-ns,expose=false -n staging-ns
 ```
 
 #### 4. Install traefik:
