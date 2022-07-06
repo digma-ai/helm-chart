@@ -1,0 +1,14 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: digma-plugin-api-traefik-route
+spec:
+  entryPoints:
+  - digma # [1] A new entrypoint that needs to be configured in the traefik
+  routes:
+  - kind: Rule
+    match: Path(`/`) 
+    services:
+    - kind: Service
+      name: digma-plugin-api # [2] The digma's plugin api service name
+      port: 5051

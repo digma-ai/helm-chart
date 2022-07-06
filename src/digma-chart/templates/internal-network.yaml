@@ -57,6 +57,20 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  name: {{ tpl .Values.digmaPluginApi.host . }}
+spec:
+  type: ClusterIP
+  selector:
+    app: digma-plugin-api  
+  ports:
+  - port: 5051
+    protocol: TCP 
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
   name: {{ tpl .Values.digmaAnalytics.host . }}
 spec:
   type: ClusterIP
