@@ -1,18 +1,11 @@
 # Digma's Helm-Charts
-This repository functions both as the source control and the chart repository for digma helm-charts, and consists of:
-- Digmas services
-  - Collector
-  - PluginApi
-  - Analytics
-- Databases/Queues
-  - Redis
-  - Postgres
-  - InfluxDB
-  - RabbitMq
-- Services for debugging *(can be disabled by setting `debug=false`)*
-  - ELK+APM
-  - PgAdmin
-  - Redis Commander
+This repository functions both as the source control and the chart repository for digma helm-charts, and consists of the following components:
+| Digmas services | Databases/Queues | Services for debugging <br>*(can be disabled by setting `debug=false`)*
+| :-------------- | :--------------- | :--------------------
+| - Collector       | Redis            | ELK+APM
+| - PluginApi       | Postgres         | PgAdmin
+| - Analytics       | InfluxDB         | Redis Commander
+|                 | RabbitMq         | 
 
 ## Installing
 
