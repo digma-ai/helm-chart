@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: digma-plugin-api
-        image: digmatic/digma-plugin-api:0.1.8-pre1
+        image: digmatic/digma-plugin-api:0.1.9
         ports:
         - containerPort: 5051
         env:
