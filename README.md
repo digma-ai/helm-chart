@@ -5,7 +5,9 @@
     <img width="410" height="200" src=".github/images/digma-helm-light.png" alt="digma+helm logos">
   </picture>
   <br/>
-  This branch (<code>gh-pages</code>) contains the published charts for digma
+  This branch (<code>gh-pages</code>) contains the <b>published</b> charts for digma
+  <br/>
+  (see <a href="https://github.com/digma-ai/helm-chart/tree/main">main</a> branch)
 </p>
 
 ## Installation
