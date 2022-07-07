@@ -1,5 +1,0 @@
-Next steps:
-
-1. Copy the public ip generated for service "{{ .Release.Name }}-services-lb", and set it as the url in the Digma's IDE plugin (vscode/rider) settings.
-
-2. Add Digma's collector endpoint "http://{{ tpl .Values.digmaCollectorApi.host . }}.{{.Release.Namespace}}:5050" in your app or OTLP collector config file.
