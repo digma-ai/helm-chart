@@ -37,8 +37,8 @@ Clone this repository and follow the steps to deploy digma and a sample app.
 ### Basic
 #### 1. Create namespaces:
 ```
-kubectl create digma-ns
-kubectl create staging-ns
+kubectl create namespace digma-ns
+kubectl create namespace staging-ns
 ```
 #### 2. Install digma:
 ```
@@ -52,9 +52,9 @@ helm install go src/sample-app-go --set otlpExporter.host=digma-collector-api.di
 ### Using [traefik](https://github.com/traefik/traefik)
 #### 1. Create namespaces:
 ```
-kubectl create digma-ns
-kubectl create staging-ns
-kubectl create traefik-ns
+kubectl create namespace digma-ns
+kubectl create namespace staging-ns
+kubectl create namespace traefik-ns
 ```
 
 #### 2. Install digma:
