@@ -12,7 +12,7 @@
 
 Add Digma's chart repository to Helm:
 ```bash
-helm repo add digma https://digma-ai.github.io/helm-chart/
+helm repo add digma-ai https://digma-ai.github.io/helm-chart/
 ```
 
 Update the chart repository:
@@ -22,7 +22,7 @@ helm repo update
 
 Deploy digma:
 ```bash
-helm install digma digma/digma
+helm install digma digma-ai/digma
 ```
 
 Usage:
