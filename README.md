@@ -5,7 +5,7 @@
     <img width="410" height="200" src=".github/images/digma-helm-light.png" alt="digma+helm logos">
   </picture>
   <br/>
-  This repository functions <b>both</b> as the source control<br><b>and</b> the chart repository for digma helm-charts
+  This branch (<code>gh-pages</code>) contains the published charts for digma
 </p>
 
 ## Installation
