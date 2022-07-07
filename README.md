@@ -1,8 +1,8 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset=".github/images/digma-helm-dark.png">
-    <source media="(prefers-color-scheme: light)" srcset=".github/images/digma-helm-light.png">
-    <img width="410" height="200" src=".github/images/digma-helm-light.png" alt="digma+helm logos">
+    <source media="(prefers-color-scheme: dark)" srcset="/assets/digma-helm-dark.png">
+    <source media="(prefers-color-scheme: light)" srcset="/assets/digma-helm-light.png">
+    <img width="410" height="200" src="/assets/digma-helm-light.png" alt="digma+helm logos">
   </picture>
   <br/>
   This branch (<code>gh-pages</code>) contains the <b>published</b> charts for digma
