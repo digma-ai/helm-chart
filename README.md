@@ -1,13 +1,10 @@
-# Digma's Helm-Charts
-This repository functions both as the source control and the chart repository for digma helm-charts, and consists of the following components:
-| Digmas services | Databases/Queues | Services for debugging <br>*(can be disabled by setting `debug=false`)*
-| :-------------- | :--------------- | :--------------------
-| - Collector       | Redis            | ELK+APM
-| - PluginApi       | Postgres         | PgAdmin
-| - Analytics       | InfluxDB         | Redis Commander
-|                 | RabbitMq         | 
+<p align="center">
+  <img width="410" height="200" src=".github/images/digma+helm.png" alt="digma+helm logos">
+  <br/>
+  This repository functions <b>both</b> as the source control<br><b>and</b> the chart repository for digma helm-charts
+</p>
 
-## Installing
+## Installation
 
 Add Digma's chart repository to Helm:
 ```bash
@@ -24,7 +21,20 @@ Deploy digma:
 helm install digma digma/digma
 ```
 
-## Install Digma + Sample app (Standard)
+Usage:
+- View the `digma-plugin-api-service-lb` service (via kubectl/dashboard/..), copy the its **public ip**, and set it to the **digma url** in the digma's ide plugin settings.
+- View the `digma-collector-api-service-lb` service (via kubectl/dashboard/..), copy the its **public ip**, and set it as otlp collector in your code (port **5049** for **http**, and **5050** for **gRpc**).
+## Configuration
+| Value | Description |
+| -- | --- |
+| `debug` *(boolean)* |  When **true**, one more pod is deployed, containing <br/><ul><li>ELK+APM</li><li>PgAdmin</li><li>Redis Commander</li></ul>Default **False**.
+| `<service>.host` *(string)* | Defines the application's service name (internal dns), **as template** (e.g. `"{{.Release.Name}}-elasticsearch"`)
+| `digmaCollectorApi.expose` *(boolean)* | When **true**, digma's otlp collector is exposed to the internet via public ip.<br/>Default **true**.
+| `digmaPluginApi.expose` *(boolean)* | When **true**, digma's plugin api is exposed to the internet via public ip.<br/>Default **true**.
+
+## Examples
+Clone this repository and follow the steps to deploy digma and a sample app.
+### Basic
 #### 1. Create namespaces:
 ```
 kubectl create digma-ns
@@ -32,14 +42,14 @@ kubectl create staging-ns
 ```
 #### 2. Install digma:
 ```
-helm install digma digma/digma -n digma-ns
+helm install digma src/digma -n digma-ns
 ```
 #### 3. Install the sample app:
 ```
-helm install go digma/sample-app-go --set otlpExporter.host=digma-collector-api.digma-ns -n staging-ns
+helm install go src/sample-app-go --set otlpExporter.host=digma-collector-api.digma-ns -n staging-ns
 ```
 
-## Install Digma + Sample app (Using [traefik](https://github.com/traefik/traefik))
+### Using [traefik](https://github.com/traefik/traefik)
 #### 1. Create namespaces:
 ```
 kubectl create digma-ns
@@ -49,15 +59,12 @@ kubectl create traefik-ns
 
 #### 2. Install digma:
 ```
-helm install digma digma/digma --set digmaCollectorApi.expose=false,digmaPluginApi.expose=false -n digma-ns
+helm install digma src/digma --set digmaCollectorApi.expose=false,digmaPluginApi.expose=false -n digma-ns
 ```
-- `digmaCollectorApi.expose=false` - Do not to expose digma's otlp collector via public ip.
-- `digmaPluginApi.expose=false` - Do not to expose digma's plugin api via public ip.
-
 
 #### 3. Install the sample app:
 ```
-helm install go digma/sample-app-go --set otlpExporter.host=digma-collector-api.digma-ns,expose=false -n staging-ns
+helm install go src/sample-app-go --set otlpExporter.host=digma-collector-api.digma-ns,expose=false -n staging-ns
 ```
 
 #### 4. Install traefik:
@@ -114,11 +121,12 @@ spec:
 
 Apply them in namespaces beside the referenced service:
 ```
-kubectl apply -f traefic/digma-ingress-route.yaml -n digma-ns
-kubectl apply -f traefic/sample-ingress-route.yaml -n staging-ns
+kubectl apply -f src/traefic/digma-ingress-route.yaml -n digma-ns
+kubectl apply -f src/traefic/sample-ingress-route.yaml -n staging-ns
 ```
+<hr/>
 
-## `helm` Cheat sheet
+### `helm` Cheat sheet
 
 Install:
 ```
