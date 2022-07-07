@@ -1,8 +1,8 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="/assets/digma-helm-dark.png">
-    <source media="(prefers-color-scheme: light)" srcset="/assets/digma-helm-light.png">
-    <img width="410" height="200" src="/assets/digma-helm-light.png" alt="digma+helm logos">
+    <source media="(prefers-color-scheme: dark)" srcset="assets/digma-helm-dark.png">
+    <source media="(prefers-color-scheme: light)" srcset="assets/digma-helm-light.png">
+    <img width="410" height="200" src="assets/digma-helm-light.png" alt="digma+helm logos">
   </picture>
   <br/>
   This branch (<code>gh-pages</code>) contains the <b>published</b> charts for digma
@@ -130,21 +130,4 @@ Apply them in namespaces beside the referenced service:
 kubectl apply -f src/traefic/digma-ingress-route.yaml -n digma-ns
 kubectl apply -f src/traefic/sample-ingress-route.yaml -n staging-ns
 ```
-<hr/>
 
-### `helm` Cheat sheet
-
-Install:
-```
-helm install digma --generate-name
-```
-
-Uinstall:
-```
-helm uninstall digma-xxxxx
-```
-
-Test (dry run):
-```
-helm install digma-test digma --debug --dry-run 
-```
