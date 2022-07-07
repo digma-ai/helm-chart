@@ -3,5 +3,5 @@ name: digma
 description: A Helm chart containing Digma's services and dbs
 home: https://github.com/digma-ai/digma
 type: application
-version: 1.0.1
+version: 0.1.9-pre1
 appVersion: "0.1.9"
