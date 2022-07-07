@@ -23,5 +23,6 @@ spec:
         ports:
         - containerPort: 6379 
       volumes:
-      - name: redis-data
-        emptyDir: {}
+        - name: redis-data
+          persistentVolumeClaim:
+            claimName: redis-pvc
