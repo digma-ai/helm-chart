@@ -35,16 +35,14 @@ spec:
         volumeMounts:
         - name: influxdb-data
           mountPath: /var/lib/influxdb2
-        - name: influxdb-config
+        - name: influxdb-data
           mountPath: /etc/influxdb2
         ports:
         - containerPort: 8086 
       volumes:
-      - name: influxdb-data
-        emptyDir: {}
-      - name: influxdb-config
-        emptyDir: {}
-
+        - name: influxdb-data
+          persistentVolumeClaim:
+            claimName: influxdb-pvc
 
      
      

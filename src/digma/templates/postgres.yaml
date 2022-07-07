@@ -27,11 +27,13 @@ spec:
         volumeMounts:
         - name: postgres-data
           mountPath: /var/lib/postgresql/data
+          subPath: postgres
         ports:
         - containerPort: 5432 
       volumes:
-      - name: postgres-data
-        emptyDir: {}
+        - name: postgres-data
+          persistentVolumeClaim:
+            claimName: postgres-pvc
 
 
 
