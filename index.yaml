@@ -1,0 +1,26 @@
+apiVersion: v1
+entries:
+  digma:
+  - apiVersion: v2
+    appVersion: 0.1.9
+    created: "2022-07-07T11:08:41.529572673Z"
+    description: A Helm chart containing Digma's services and dbs
+    digest: 943f0a4e2db459276527447ec57884ca4f05086facc78a00cde8e34386c9bb18
+    home: https://github.com/digma-ai/digma
+    name: digma
+    type: application
+    urls:
+    - https://github.com/digma-ai/helm-chart/releases/download/digma-0.1.9/digma-0.1.9.tgz
+    version: 0.1.9
+  sample-app-go:
+  - apiVersion: v2
+    appVersion: 1.1.0
+    created: "2022-07-07T11:08:41.684581828Z"
+    description: A Helm chart for Kubernetes
+    digest: 50095de8b5ae6a06040557455d88fefd37a8c4547ffefebef2a4bc2d9fba28f5
+    name: sample-app-go
+    type: application
+    urls:
+    - https://github.com/digma-ai/helm-chart/releases/download/sample-app-go-1.1.0/sample-app-go-1.1.0.tgz
+    version: 1.1.0
+generated: "2022-07-07T11:08:41.269346191Z"
