@@ -1,5 +1,9 @@
 <p align="center">
-  <img width="410" height="200" src=".github/images/digma+helm.png" alt="digma+helm logos">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset=".github/images/digma-helm-dark.png">
+    <source media="(prefers-color-scheme: light)" srcset=".github/images/digma-helm-light.png">
+    <img width="410" height="200" src=".github/images/digma-helm-light.png" alt="digma+helm logos">
+  </picture>
   <br/>
   This repository functions <b>both</b> as the source control<br><b>and</b> the chart repository for digma helm-charts
 </p>
