@@ -52,7 +52,7 @@ helm install digma src/digma -n digma-ns
 ```
 #### 3. Install the sample app:
 ```
-helm install go src/sample-app-go --set otlpExporter.host=digma-collector-api.digma-ns -n staging-ns
+helm install go digma/sample-app-go --set otlpExporter.host=digma-collector-api.digma-ns -n staging-ns
 ```
 
 ### Using [traefik](https://github.com/traefik/traefik)
@@ -65,7 +65,7 @@ kubectl create namespace traefik-ns
 
 #### 2. Install digma:
 ```
-helm install digma src/digma --set digmaCollectorApi.expose=false,digmaPluginApi.expose=false -n digma-ns
+helm install digma digma/digma --set digmaCollectorApi.expose=false,digmaPluginApi.expose=false -n digma-ns
 ```
 
 #### 3. Install the sample app:
