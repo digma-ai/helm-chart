@@ -59,6 +59,10 @@ Usage:
           <td><code>digmaPluginApi.accesstoken</code> <i>(string)</i></td>
             <td>Access token for plugin authentication. Set any string you want here, and set the same one in the IDE plugin settings.</td>
         </tr>
+        <tr>
+          <td><code>digmaPluginApi.secured</code> <i>(boolean)</i></td>
+          <td>When <b>true</b> digma's plugin api use <b>HTTPS</b>, else <b>HTTP</b>.<br/>Default <b>true</b></td>
+        </tr>
     </tbody>
 </table>
 
@@ -114,19 +118,19 @@ Download the following yaml files:
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: digma-plugin-api-traefik-route
-  namespace: digma-ns
+  name: digma-plugin-api-ingress-route
 spec:
   entryPoints:
   - web
   - websecure
   routes:
   - kind: Rule
-    match: Path(`/`) 
+    match: Host(`digma`)
     services:
     - kind: Service
       name: digma-plugin-api # [2] The digma's plugin api service name
       port: 5051
+      scheme: http
 ```
 [sample-ingress-route.yaml](https://github.com/digma-ai/helm-chart/blob/main/src/traefik/sample-ingress-route.yaml)
 ```yaml
