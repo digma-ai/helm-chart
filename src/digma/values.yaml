@@ -41,6 +41,7 @@ digmaCollectorApi:
 digmaPluginApi:
   host: "{{ .Release.Name }}-plugin-api"
   expose: true
+  secured: true
   accesstoken: "796f3ca7-31e6-4810-af53-d70cba1ff0c7"
 
 digmaAnalytics:
