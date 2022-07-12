@@ -31,12 +31,36 @@ Usage:
 - View the `digma-plugin-api-service-lb` service (via kubectl/dashboard/..), copy the its **public ip**, and set it to the **digma url** in the digma's ide plugin settings.
 - View the `digma-collector-api-service-lb` service (via kubectl/dashboard/..), copy the its **public ip**, and set it as otlp collector in your code (port **5049** for **http**, and **5050** for **gRpc**).
 ## Configuration
-| Value | Description |
-| -- | --- |
-| `debug` *(boolean)* |  When **true**, one more pod is deployed, containing <br/><ul><li>ELK+APM</li><li>PgAdmin</li><li>Redis Commander</li></ul>Default **False**.
-| `<service>.host` *(string)* | Defines the application's service name (internal dns), **as template** (e.g. `"{{.Release.Name}}-elasticsearch"`)
-| `digmaCollectorApi.expose` *(boolean)* | When **true**, digma's otlp collector is exposed to the internet via public ip.<br/>Default **true**.
-| `digmaPluginApi.expose` *(boolean)* | When **true**, digma's plugin api is exposed to the internet via public ip.<br/>Default **true**.
+<table>
+    <thead>
+        <tr>
+            <th align="left">Value</th>
+            <th align="left">Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>debug</code><i>(boolean)</i></td>
+              <td>When <b>true</b>, one more pod is deployed, containing <br/><ul><li>ELK+APM</li><li>PgAdmin</li><li>Redis Commander</li></ul>Default <b>False</b>.</td>
+            </tr>
+        <tr>
+          <td><code>&lt;service&gt;.host</code> <i>(string)</i></td>
+              <td>Defines the application's service name (internal dns), <b>as template</b> (e.g. <code>"{{.Release.Name}}-elasticsearch"</code>)</td>
+            </tr>
+        <tr>
+          <td><code>digmaCollectorApi.expose</code><i>(boolean)</i></td>
+            <td>When <b>true</b> digma's otlp collector is exposed to the internet via public ip.<br/>Default <b>true</b>.</td>
+          </tr>
+        <tr>
+          <td><code>digmaPluginApi.expose</code> <i>(boolean)</i></td>
+            <td>When <b>true</b> digma's plugin api is exposed to the internet via public ip.<br/>Default <b>true</b>.</td>
+          </tr>
+        <tr>
+          <td><code>digmaPluginApi.accesstoken</code> <i>(string)</i></td>
+            <td>Access token for plugin authentication. Set any string you want here, and set the same one in the IDE plugin settings.</td>
+        </tr>
+    </tbody>
+</table>
 
 ## Examples
 Clone this repository and follow the steps to deploy digma and a sample app.
