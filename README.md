@@ -89,7 +89,7 @@ kubectl create namespace traefik-ns
 
 #### 2. Install digma:
 ```
-helm install digma digma/digma --set digmaCollectorApi.expose=false,digmaPluginApi.expose=false -n digma-ns
+helm install digma digma/digma --set digmaCollectorApi.expose=false,digmaPluginApi.expose=false,digmaPluginApi.secured=false -n digma-ns
 ```
 
 #### 3. Install the sample app:
@@ -101,13 +101,11 @@ helm install go src/sample-app-go --set otlpExporter.host=digma-collector-api.di
 ```
 helm repo add traefik https://helm.traefik.io/traefik
 helm repo update
-helm install traefik traefik/traefik --set providers.kubernetesCRD.namespaces={staging-ns\,digma-ns},ports.digma.port=5051,ports.digma.expose=true,ports.digma.exposedPort=5051,ports.digma.protocol=TCP,logs.access.enabled=true,additionalArguments={--serversTransport.insecureSkipVerify=true} -n traefik-ns
+helm install traefik traefik/traefik --set providers.kubernetesCRD.namespaces={staging-ns\,digma-ns},logs.access.enabled=true -n traefik-ns
 ```
 - `providers.kubernetesCRD.namespaces={staging-ns\,digma-ns}` - Listen for routes modifications on the `staging-ns` and `digma-ns` namespaces as well.
-- `ports.digma.port=5051, ... ,ports.digma.protocol=TCP` - Expose a new entrypoint called `digma`, that listens to port 5051 for digma's plugin api.
 - `logs.access.enabled=true` - Log every access attempt to for debugging purpose.
-- `additionalArguments={--serversTransport.insecureSkipVerify=true}` - Disable SSL certificate verification for backends.
-
+```
 #### 5. Add traefik IngressRoutes:
 Download the following yaml files:
 [digma-ingress-route.yaml](https://github.com/digma-ai/helm-chart/blob/main/src/traefik/digma-ingress-route.yaml)
@@ -120,7 +118,8 @@ metadata:
   namespace: digma-ns
 spec:
   entryPoints:
-  - digma # [1] A new entrypoint that needs to be configured in the traefik
+  - web
+  - websecure
   routes:
   - kind: Rule
     match: Path(`/`) 
