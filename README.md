@@ -59,6 +59,10 @@ Usage:
           <td><code>digmaPluginApi.accesstoken</code> <i>(string)</i></td>
             <td>Access token for plugin authentication. Set any string you want here, and set the same one in the IDE plugin settings.</td>
         </tr>
+        <tr>
+          <td><code>digmaPluginApi.secured</code> <i>(boolean)</i></td>
+          <td>When <b>true</b> digma's plugin api use <b>HTTPS</b>, else <b>HTTP</b>.<br/>Default <b>true</b></td>
+        </tr>
     </tbody>
 </table>
 
@@ -89,7 +93,7 @@ kubectl create namespace traefik-ns
 
 #### 2. Install digma:
 ```
-helm install digma digma/digma --set digmaCollectorApi.expose=false,digmaPluginApi.expose=false -n digma-ns
+helm install digma digma/digma --set digmaCollectorApi.expose=false,digmaPluginApi.expose=false,digmaPluginApi.secured=false -n digma-ns
 ```
 
 #### 3. Install the sample app:
@@ -101,12 +105,10 @@ helm install go src/sample-app-go --set otlpExporter.host=digma-collector-api.di
 ```
 helm repo add traefik https://helm.traefik.io/traefik
 helm repo update
-helm install traefik traefik/traefik --set providers.kubernetesCRD.namespaces={staging-ns\,digma-ns},ports.digma.port=5051,ports.digma.expose=true,ports.digma.exposedPort=5051,ports.digma.protocol=TCP,logs.access.enabled=true,additionalArguments={--serversTransport.insecureSkipVerify=true} -n traefik-ns
+helm install traefik traefik/traefik --set providers.kubernetesCRD.namespaces={staging-ns\,digma-ns},logs.access.enabled=true -n traefik-ns
 ```
 - `providers.kubernetesCRD.namespaces={staging-ns\,digma-ns}` - Listen for routes modifications on the `staging-ns` and `digma-ns` namespaces as well.
-- `ports.digma.port=5051, ... ,ports.digma.protocol=TCP` - Expose a new entrypoint called `digma`, that listens to port 5051 for digma's plugin api.
 - `logs.access.enabled=true` - Log every access attempt to for debugging purpose.
-- `additionalArguments={--serversTransport.insecureSkipVerify=true}` - Disable SSL certificate verification for backends.
 
 #### 5. Add traefik IngressRoutes:
 Download the following yaml files:
@@ -116,18 +118,19 @@ Download the following yaml files:
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: digma-plugin-api-traefik-route
-  namespace: digma-ns
+  name: digma-plugin-api-ingress-route
 spec:
   entryPoints:
-  - digma # [1] A new entrypoint that needs to be configured in the traefik
+  - web
+  - websecure
   routes:
   - kind: Rule
-    match: Path(`/`) 
+    match: Host(`digma`)
     services:
     - kind: Service
       name: digma-plugin-api # [2] The digma's plugin api service name
       port: 5051
+      scheme: http
 ```
 [sample-ingress-route.yaml](https://github.com/digma-ai/helm-chart/blob/main/src/traefik/sample-ingress-route.yaml)
 ```yaml
