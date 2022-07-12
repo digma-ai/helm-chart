@@ -105,7 +105,7 @@ helm install traefik traefik/traefik --set providers.kubernetesCRD.namespaces={s
 ```
 - `providers.kubernetesCRD.namespaces={staging-ns\,digma-ns}` - Listen for routes modifications on the `staging-ns` and `digma-ns` namespaces as well.
 - `logs.access.enabled=true` - Log every access attempt to for debugging purpose.
-```
+
 #### 5. Add traefik IngressRoutes:
 Download the following yaml files:
 [digma-ingress-route.yaml](https://github.com/digma-ai/helm-chart/blob/main/src/traefik/digma-ingress-route.yaml)
