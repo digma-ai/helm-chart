@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: digma-analytics
-        image: digmatic/digma-analytics:0.1.13
+        image: digmatic/digma-analytics:0.1.14
         ports:
         - containerPort: 5052
         env:
