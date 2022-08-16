@@ -1,0 +1,48 @@
+debug: true
+
+redis:
+  host: "{{ .Release.Name }}-redis"
+
+influx:
+  host: "{{ .Release.Name }}-influxdb"
+
+postgres:
+  host: "{{ .Release.Name }}-postgres"
+  port: 5432
+  username: postgres
+  password: postgres
+
+rabbit:
+  host: "{{ .Release.Name }}-rabbitmq"
+  username: admin
+  password: admin
+
+pgadmin:
+  host: "{{ .Release.Name }}-pgadmin"
+  email: admin@admin.com
+  password: admin
+
+kibana:
+  host: "{{ .Release.Name }}-kibana"
+
+redisCommander:
+  host: "{{ .Release.Name }}-redis-commander"
+
+elasticApmServer:
+  host: "{{ .Release.Name }}-apm"
+
+elasticsearch:
+  host: "{{ .Release.Name }}-elasticsearch"
+
+digmaCollectorApi:
+  host: "{{ .Release.Name }}-collector-api"
+  expose: true
+
+digmaPluginApi:
+  host: "{{ .Release.Name }}-plugin-api"
+  expose: true
+  secured: true
+  accesstoken: "796f3ca7-31e6-4810-af53-d70cba1ff0c7"
+
+digmaAnalytics:
+  host: "{{ .Release.Name }}-analytics"
