@@ -1,0 +1,88 @@
+https://docs.aws.amazon.com/eks/latest/userguide/efs-csi.html
+
+vpc_id=$(aws eks describe-cluster \
+    --name cluster \
+    --query "cluster.resourcesVpcConfig.vpcId" \
+    --output text)
+
+  vpc-0cd7e1953e007f119
+
+
+cidr_range=$(aws ec2 describe-vpcs \
+    --vpc-ids $vpc_id \
+    --query "Vpcs[].CidrBlock" \
+    --output text)
+
+  192.168.0.0/16
+
+
+security_group_id=$(aws ec2 create-security-group \
+    --group-name MyEfsSecurityGroup \
+    --description "My EFS security group" \
+    --vpc-id $vpc_id \
+    --output text)
+
+  sg-051ab8d4908119941
+
+
+aws ec2 authorize-security-group-ingress \
+    --group-id $security_group_id \
+    --protocol tcp \
+    --port 2049 \
+    --cidr $cidr_range
+
+{
+    "Return": true,
+    "SecurityGroupRules": [
+        {
+            "SecurityGroupRuleId": "sgr-01a58972928ab7878",
+            "GroupId": "sg-051ab8d4908119941",
+            "GroupOwnerId": "585085114703",
+            "IsEgress": false,
+            "IpProtocol": "tcp",
+            "FromPort": 2049,
+            "ToPort": 2049,
+            "CidrIpv4": "192.168.0.0/16"
+        }
+    ]
+}
+
+file_system_id=$(aws efs create-file-system \
+    --region eu-west-1 \
+    --performance-mode generalPurpose \
+    --query 'FileSystemId' \
+    --output text)
+
+  fs-015bfc7899f2e1ac7
+
+aws ec2 describe-subnets \
+    --filters "Name=vpc-id,Values=$vpc_id" \
+    --query 'Subnets[*].{SubnetId: SubnetId,AvailabilityZone: AvailabilityZone,CidrBlock: CidrBlock}' \
+    --output table
+
+----------------------------------------------------------------------
+|                           DescribeSubnets                          |
++------------------+--------------------+----------------------------+
+| AvailabilityZone |     CidrBlock      |         SubnetId           |
++------------------+--------------------+----------------------------+
+|  ←[1m←[34meu-west-1a←[0m      |  ←[1m←[34m192.168.128.0/19←[0m  |  ←[1m←[34msubnet-00ef3eb3587d0f66b←[0m  |
+|  ←[1m←[34meu-west-1b←[0m      |  ←[1m←[34m192.168.160.0/19←[0m  |  ←[1m←[34msubnet-01367f7b76943bab4←[0m  |
+|  ←[1m←[34meu-west-1b←[0m      |  ←[1m←[34m192.168.64.0/19←[0m   |  ←[1m←[34msubnet-00d274ce04b434999←[0m  |
+|  ←[1m←[34meu-west-1c←[0m      |  ←[1m←[34m192.168.0.0/19←[0m    |  ←[1m←[34msubnet-031aa92c9e71a633f←[0m  |
+|  ←[1m←[34meu-west-1c←[0m      |  ←[1m←[34m192.168.96.0/19←[0m   |  ←[1m←[34msubnet-0026d112e6d1a438e←[0m  |
+|  ←[1m←[34meu-west-1a←[0m      |  ←[1m←[34m192.168.32.0/19←[0m   |  ←[1m←[34msubnet-00c6680fb6f4ce09e←[0m  |
++------------------+--------------------+----------------------------+
+
+### for each subnet:
+aws efs create-mount-target \
+    --file-system-id $file_system_id \
+    --subnet-id subnet-EXAMPLEe2ba886490 \
+    --security-groups $security_group_id
+
+aws efs create-mount-target --file-system-id fs-015bfc7899f2e1ac7 --security-groups sg-051ab8d4908119941 --subnet-id subnet-00ef3eb3587d0f66b
+aws efs create-mount-target --file-system-id fs-015bfc7899f2e1ac7 --security-groups sg-051ab8d4908119941 --subnet-id subnet-01367f7b76943bab4
+aws efs create-mount-target --file-system-id fs-015bfc7899f2e1ac7 --security-groups sg-051ab8d4908119941 --subnet-id subnet-00d274ce04b434999
+aws efs create-mount-target --file-system-id fs-015bfc7899f2e1ac7 --security-groups sg-051ab8d4908119941 --subnet-id subnet-031aa92c9e71a633f
+aws efs create-mount-target --file-system-id fs-015bfc7899f2e1ac7 --security-groups sg-051ab8d4908119941 --subnet-id subnet-0026d112e6d1a438e
+aws efs create-mount-target --file-system-id fs-015bfc7899f2e1ac7 --security-groups sg-051ab8d4908119941 --subnet-id subnet-00c6680fb6f4ce09e
+
