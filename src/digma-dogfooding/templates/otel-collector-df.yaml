@@ -17,17 +17,21 @@ data:
     exporters:
       logging:
 
+      logzio:
+        account_token: BIFvpvjcLuXhcAgbosgiVwjgCZXSutZt
+        region: us
+
       otlp/digma-df:
         endpoint: {{ printf " http://%s:5060" (tpl .Values.digmaCollectorApi.host .)}}
         tls:
-          insecure: true    
+          insecure: true
 
     service:
       pipelines:
         traces:
           receivers: [otlp]
           processors: []
-          exporters: [logging,otlp/digma-df]
+          exporters: [logging,logzio,otlp/digma-df]
 
 ---
 
@@ -49,7 +53,7 @@ spec:
     spec:
       containers:
         - name: otel-collector-df
-          image: otel/opentelemetry-collector:{{ .Values.otelCollectorDf.imageTag }}
+          image: otel/opentelemetry-collector-contrib:{{ .Values.otelCollectorDf.imageTag }}
           ports:
             - containerPort: 4317
           args:
