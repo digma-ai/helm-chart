@@ -5,6 +5,7 @@ redis:
 
 influx:
   host: "{{ .Release.Name }}-influxdb"
+  version: 2.3.0
 
 postgres:
   host: "{{ .Release.Name }}-postgres"

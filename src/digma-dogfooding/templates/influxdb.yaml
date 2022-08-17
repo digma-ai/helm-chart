@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: influxdb
-        image: influxdb:latest
+        image: influxdb:{{ .Values.influx.version }}
         env:
         - name: DOCKER_INFLUXDB_INIT_MODE
           value: "setup"
