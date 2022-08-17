@@ -22,7 +22,7 @@ data:
         region: us
 
       otlp/digma-df:
-        endpoint: {{ printf " http://%s:5060" (tpl .Values.digmaCollectorApi.host .)}}
+        endpoint: {{ printf "http://%s:5060" (tpl .Values.digmaCollectorApi.host .)}}
         tls:
           insecure: true
 

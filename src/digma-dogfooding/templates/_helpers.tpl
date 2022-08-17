@@ -12,7 +12,7 @@
 
 {{- define "env.influx" -}}
 - name: influx2__Url
-  value: {{ printf " http://%s:8086" (tpl .Values.influx.host .)}}
+  value: {{ printf "http://%s:8086" (tpl .Values.influx.host .)}}
 {{- end -}}
 
 
@@ -28,12 +28,12 @@
 
 {{- define "env.otlpExporter" -}}
 - name: OtlpExporterUrl
-  value: {{ printf " http://%s:8200" (tpl .Values.elasticApmServer.host .)}}
+  value: {{ printf "http://%s:8200" (tpl .Values.elasticApmServer.host .)}}
 {{- end -}}
 
 
 {{- define "env.elasticsearch" -}}
 - name: ElasticSearch
-  value: {{ printf " http://%s:9200" (tpl .Values.elasticsearch.host .)}}
+  value: {{ printf "http://%s:9200" (tpl .Values.elasticsearch.host .)}}
 {{- end -}}
 
