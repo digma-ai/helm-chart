@@ -94,6 +94,9 @@ spec:
     - name: http
       protocol: TCP
       port: 5049
-    - name: grpc
+    - name: otlp-grpc
       protocol: TCP
       port: 5050
+    - name: otlp-grpc-df
+      protocol: TCP
+      port: 5060
