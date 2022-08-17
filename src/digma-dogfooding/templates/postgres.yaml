@@ -16,14 +16,14 @@ spec:
     spec:
       containers:
       - name: postgres
-        image: postgres
+        image: postgres:{{ .Values.postgres.version }}
         env:
         - name: POSTGRES_NAME
           value: postgres
         - name: POSTGRES_USER
-          value: {{ .Values.postgres.username}}
+          value: {{ .Values.postgres.username }}
         - name: POSTGRES_PASSWORD
-          value: {{ .Values.postgres.password}}
+          value: {{ .Values.postgres.password }}
         volumeMounts:
         - name: postgres-data
           mountPath: /var/lib/postgresql/data
@@ -34,8 +34,3 @@ spec:
         - name: postgres-data
           persistentVolumeClaim:
             claimName: postgres-pvc
-
-
-
-     
-     
