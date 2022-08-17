@@ -1,4 +1,4 @@
-debug: true
+adminTools: true
 
 redis:
   host: "{{ .Release.Name }}-redis"
@@ -8,6 +8,7 @@ influx:
 
 postgres:
   host: "{{ .Release.Name }}-postgres"
+  version: 14.5
   port: 5432
   username: postgres
   password: postgres

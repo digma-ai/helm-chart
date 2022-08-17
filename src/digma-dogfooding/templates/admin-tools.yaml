@@ -1,19 +1,19 @@
-{{ if .Values.debug }}
+{{ if .Values.adminTools }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-debug-deployment
+  name: {{ .Release.Name }}-admin-tools-deployment
   labels:
-    app: digma-debug-services
+    app: digma-admin-tools
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: "digma-debug-services"
+      app: "digma-admin-tools"
   template:
     metadata:
       labels:
-        app: "digma-debug-services"
+        app: "digma-admin-tools"
     spec:
       containers:
       - name: pgadmin
@@ -84,4 +84,70 @@ spec:
         emptyDir: {}
       - name: elasticsearch-data
         emptyDir: {}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ tpl .Values.elasticApmServer.host . }}
+spec:
+  selector:
+    app: "digma-admin-tools"
+  ports:
+  - port: 8200
+    protocol: TCP
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ tpl .Values.elasticsearch.host . }}
+spec:
+  selector:
+    app: "digma-admin-tools"
+  ports:
+  - port: 9200
+    protocol: TCP
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ tpl .Values.kibana.host . }}
+spec:
+  selector:
+    app: "digma-admin-tools"
+  ports:
+  - port: 5601
+    protocol: TCP
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ tpl .Values.pgadmin.host . }}
+spec:
+  selector:
+    app: "digma-admin-tools"
+  ports:
+  - port: 8080
+    protocol: TCP
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ tpl .Values.redisCommander.host . }}
+spec:
+  selector:
+    app: "digma-admin-tools"
+  ports:
+  - port: 8081
+    protocol: TCP
+
 {{ end }}
