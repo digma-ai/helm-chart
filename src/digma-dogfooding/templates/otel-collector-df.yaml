@@ -12,16 +12,22 @@ data:
           grpc:
     
     processors:
+      batch:
     
     exporters:
       logging:
-    
+
+      otlp/digma-df:
+        endpoint: {{ printf " http://%s:5060" (tpl .Values.digmaCollectorApi.host .)}}
+        tls:
+          insecure: true    
+
     service:
       pipelines:
         traces:
           receivers: [otlp]
           processors: []
-          exporters: [logging]
+          exporters: [logging,otlp/digma-df]
 
 ---
 
