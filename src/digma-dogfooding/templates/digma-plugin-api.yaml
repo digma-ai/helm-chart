@@ -25,8 +25,8 @@ spec:
         {{- include "env.otlpExporter" . | nindent  8 }}
         {{- include "env.elasticsearch" . | nindent  8 }}
         - name: AnalyticsUrl
-          value: {{ printf " http://%s:5052" (tpl .Values.digmaAnalytics.host .)}}
+          value: {{ printf "http://%s:5052" (tpl .Values.digmaAnalytics.host .) }}
         - name: AccessToken
-          value: {{ .Values.digmaPluginApi.accesstoken}}
+          value: {{ .Values.digmaPluginApi.accesstoken }}
         - name: Secured
           value: {{ .Values.digmaPluginApi.secured | quote }}
