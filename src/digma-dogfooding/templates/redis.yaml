@@ -15,13 +15,13 @@ spec:
         app: redis
     spec:
       containers:
-      - name: redis
-        image: redis:alpine
-        volumeMounts:
-        - name: redis-data
-          mountPath: /data
-        ports:
-        - containerPort: 6379 
+        - name: redis
+          image: redis:{{ .Values.redis.image-tag }}
+          volumeMounts:
+            - name: redis-data
+              mountPath: /data
+          ports:
+            - containerPort: 6379
       volumes:
         - name: redis-data
           persistentVolumeClaim:

@@ -2,6 +2,7 @@ adminTools: true
 
 redis:
   host: "{{ .Release.Name }}-redis"
+  image-tag: 7.0.4-alpine
 
 influx:
   host: "{{ .Release.Name }}-influxdb"
