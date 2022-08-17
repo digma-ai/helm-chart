@@ -21,7 +21,7 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: {{ .Release.Name }}-plugin-api-service-lb
+  name: {{ .Release.Name }}-digma-plugin-api-service
 spec:
   type: LoadBalancer
   selector:
