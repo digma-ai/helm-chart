@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: digma-collector-api
-        image: digmatic/digma-collector:0.1.14
+        image: digmatic/digma-collector:{{ .Values.digmaVersion }}
         ports:
         - containerPort: 5049
         - containerPort: 5050

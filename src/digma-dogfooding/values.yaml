@@ -1,4 +1,18 @@
 adminTools: true
+# digmaVersion affects the image tags
+digmaVersion: 0.1.14
+
+digmaCollectorApi:
+  host: "{{ .Release.Name }}-digma-collector-api"
+
+digmaPluginApi:
+  host: "{{ .Release.Name }}-digma-plugin-api"
+  expose: true
+  secured: true
+  accesstoken: "796f3ca7-31e6-4810-af53-d70cba1ff0c7"
+
+digmaAnalytics:
+  host: "{{ .Release.Name }}-digma-analytics"
 
 redis:
   host: "{{ .Release.Name }}-redis"
@@ -42,14 +56,3 @@ elasticApmServer:
 elasticsearch:
   host: "{{ .Release.Name }}-elasticsearch"
 
-digmaCollectorApi:
-  host: "{{ .Release.Name }}-digma-collector-api"
-
-digmaPluginApi:
-  host: "{{ .Release.Name }}-digma-plugin-api"
-  expose: true
-  secured: true
-  accesstoken: "796f3ca7-31e6-4810-af53-d70cba1ff0c7"
-
-digmaAnalytics:
-  host: "{{ .Release.Name }}-digma-analytics"
