@@ -17,6 +17,7 @@ postgres:
 
 rabbit:
   host: "{{ .Release.Name }}-rabbitmq"
+  image-tag: 3.10.7-management-alpine
   username: admin
   password: admin
 

@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: rabbitmq
-        image: rabbitmq:3-management-alpine
+        image: rabbitmq:{{ .Values.rabbit.image-tag }}
         env:
         - name: RABBITMQ_DEFAULT_USER
           value: {{ .Values.rabbit.username}}
