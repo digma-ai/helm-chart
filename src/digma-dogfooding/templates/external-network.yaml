@@ -1,5 +1,23 @@
+#
+# exposing otel-collector-df
+#
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-otel-collector-df-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: "otel-collector-df"
+  ports:
+    - name: collector-otlp
+      protocol: TCP
+      port: 4317
+      targetPort: 4317
+
 {{ if .Values.digmaPluginApi.expose }}
 
+---
 kind: Service
 apiVersion: v1
 metadata:
@@ -16,6 +34,7 @@ spec:
 {{ end }}
 
 {{ if .Values.digmaCollectorApi.expose }}
+
 ---
 kind: Service
 apiVersion: v1
