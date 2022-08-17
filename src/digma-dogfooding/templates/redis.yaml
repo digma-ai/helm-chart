@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: redis
-          image: redis:{{ .Values.redis.image-tag }}
+          image: redis:{{ .Values.redis.imageTag }}
           volumeMounts:
             - name: redis-data
               mountPath: /data

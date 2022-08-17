@@ -2,7 +2,7 @@ adminTools: true
 
 redis:
   host: "{{ .Release.Name }}-redis"
-  image-tag: 7.0.4-alpine
+  imageTag: 7.0.4-alpine
 
 influx:
   host: "{{ .Release.Name }}-influxdb"
@@ -17,7 +17,7 @@ postgres:
 
 rabbit:
   host: "{{ .Release.Name }}-rabbitmq"
-  image-tag: 3.10.7-management-alpine
+  imageTag: 3.10.7-management-alpine
   username: admin
   password: admin
 

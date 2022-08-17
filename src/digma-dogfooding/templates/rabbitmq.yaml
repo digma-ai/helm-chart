@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: rabbitmq
-        image: rabbitmq:{{ .Values.rabbit.image-tag }}
+        image: rabbitmq:{{ .Values.rabbit.imageTag }}
         env:
         - name: RABBITMQ_DEFAULT_USER
           value: {{ .Values.rabbit.username}}
