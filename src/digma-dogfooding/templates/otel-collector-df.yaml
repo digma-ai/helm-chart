@@ -1,0 +1,61 @@
+# OpenTelemetry Collector - for Digma dog-fooding (df)
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-otel-collector-config
+data:
+  key-collector-yaml: |
+    receivers:
+      otlp:
+        protocols: 
+          grpc:
+    
+    processors:
+    
+    exporters:
+      logging:
+    
+    service:
+      pipelines:
+        traces:
+          receivers: [otlp]
+          processors: []
+          exporters: [logging]
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-otel-collector-df-deployment
+  labels:
+    app: otel-collector-df
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: otel-collector-df
+  template:
+    metadata:
+      labels:
+        app: otel-collector-df
+    spec:
+      containers:
+        - name: otel-collector-df
+          image: otel/opentelemetry-collector:{{ .Values.otelCollectorDf.imageTag }}
+          ports:
+            - containerPort: 4317
+          args:
+            - --config=/conf/collector.yaml
+          volumeMounts:
+            - name: vn-config
+              mountPath: /conf
+              readOnly: true
+      volumes:
+        - name: vn-config # volume name
+          configMap:
+            name: cm-otel-collector-config # configMap name
+            items:
+              - key: "key-collector-yaml"
+                path: "collector.yaml"

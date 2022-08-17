@@ -21,6 +21,10 @@ rabbit:
   username: admin
   password: admin
 
+otelCollectorDf:
+  host: "{{ .Release.Name }}-otel-collector-df"
+  imageTag: 0.57.2
+
 pgadmin:
   host: "{{ .Release.Name }}-pgadmin"
   email: admin@admin.com
