@@ -46,3 +46,7 @@ digmaPluginApi:
 
 digmaAnalytics:
   host: "{{ .Release.Name }}-analytics"
+
+digmaSelfDiagnosis:
+  otlpExporterEndpoint: http://a8cf1b1ec8c8845049a642a09cfeb01e-1048314442.eu-west-1.elb.amazonaws.com:4317/
+

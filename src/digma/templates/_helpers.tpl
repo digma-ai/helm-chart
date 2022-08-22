@@ -26,9 +26,16 @@
 {{- end -}}
 
 
+# Digma to meloona
 {{- define "env.otlpExporter" -}}
 - name: OtlpExporterUrl
-  value: {{ printf " http://%s:8200" (tpl .Values.elasticApmServer.host .)}}
+  value: {{ .Values.digmaSelfDiagnosis.otlpExporterEndpoint }}
+{{- end -}}
+
+
+{{- define "env.otlpExporter2ElasticApm" -}}
+- name: OtlpExporterUrl
+  value: {{ printf "http://%s:8200" (tpl .Values.elasticApmServer.host .)}}
 {{- end -}}
 
 
