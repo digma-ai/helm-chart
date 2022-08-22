@@ -20,6 +20,7 @@ spec:
         ports:
         - containerPort: 5052
         env:
+        {{- include "env.digmaEnv" . | nindent  8 }}
         {{- include "env.digmaSite" . | nindent  8 }}
         {{- include "env.redis" . | nindent  8 }}
         {{- include "env.influx" . | nindent  8 }}

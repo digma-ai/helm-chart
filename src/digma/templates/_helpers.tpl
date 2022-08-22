@@ -1,3 +1,9 @@
+{{- define "env.digmaEnv" -}}
+- name: DEPLOYMENT_ENV
+  value: {{ .Values.digma.environmentName }}
+{{- end -}}
+
+
 {{- define "env.digmaSite" -}}
 - name: Site
   value: {{ .Values.digma.siteName }}
