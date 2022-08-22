@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: digma-plugin-api
-        image: digmatic/digma-plugin-api:{{ .Values.digmaVersion }}
+        image: digmatic/digma-plugin-api:{{ .Chart.AppVersion }}
         ports:
         - containerPort: 5051
         env:
