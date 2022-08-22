@@ -1,3 +1,9 @@
+{{- define "env.digmaSite" -}}
+- name: Site
+  value: {{ .Values.digma.siteName }}
+{{- end -}}
+
+
 {{- define "env.postgres" -}}
 - name: ConnectionStrings__Postgres
   value:  {{ printf "Server=%s;Port=%v;Database=digma_analytics;User Id=%s;Password=%s;" ( tpl .Values.postgres.host . ) .Values.postgres.port .Values.postgres.username .Values.postgres.password}}
