@@ -48,7 +48,7 @@ digmaAnalytics:
   host: "{{ .Release.Name }}-analytics"
 
 digmaSelfDiagnosis:
-  otlpExporterEndpoint: http://a8cf1b1ec8c8845049a642a09cfeb01e-1048314442.eu-west-1.elb.amazonaws.com:4317/
+  otlpExporterEndpoint: http://a085b75f98a7b4320b79aa5794a61df8-1654452201.eu-west-1.elb.amazonaws.com:4317/
 
 digma:
   environmentName: undefined
