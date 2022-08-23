@@ -1,6 +1,4 @@
 debug: true
-# digmaVersion affects the image tags
-digmaVersion: 0.1.14
 
 redis:
   host: "{{ .Release.Name }}-redis"
@@ -48,3 +46,10 @@ digmaPluginApi:
 
 digmaAnalytics:
   host: "{{ .Release.Name }}-analytics"
+
+digmaSelfDiagnosis:
+  otlpExporterEndpoint: http://a085b75f98a7b4320b79aa5794a61df8-1654452201.eu-west-1.elb.amazonaws.com:4317/
+
+digma:
+  environmentName: undefined
+  siteName: undefined
