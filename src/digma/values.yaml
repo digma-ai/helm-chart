@@ -1,4 +1,4 @@
-debug: true
+debug: false
 
 redis:
   host: "{{ .Release.Name }}-redis"
