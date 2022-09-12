@@ -31,6 +31,6 @@ spec:
         - name: AnalyticsUrl
           value: {{ printf " http://%s:5052" (tpl .Values.digmaAnalytics.host .)}}
         - name: AccessToken
-          value: {{ .Values.digmaPluginApi.accesstoken}}
+          value: {{ required "A valid .Values.digmaPluginApi.accesstoken entry is required." .Values.digmaPluginApi.accesstoken }}
         - name: Secured
           value: {{ .Values.digmaPluginApi.secured | quote }}
