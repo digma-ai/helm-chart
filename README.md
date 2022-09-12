@@ -24,7 +24,7 @@ helm repo update
 
 Deploy digma:
 ```bash
-helm install digma digma/digma
+helm install digma digma/digma --set digmaPluginApi.accesstoken=[SOME_TOKEN_VALUE]
 ```
 
 Usage:
