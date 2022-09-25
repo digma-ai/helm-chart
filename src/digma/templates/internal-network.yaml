@@ -29,7 +29,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ tpl .Values.rabbit.host . }}
+  name: {{ tpl .Values.rabbitMq.host . }}
 spec:
   type: ClusterIP
   selector:

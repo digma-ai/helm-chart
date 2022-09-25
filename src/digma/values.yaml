@@ -2,17 +2,23 @@ debug: false
 
 redis:
   host: "{{ .Release.Name }}-redis"
+  imageTag: 7.0.4-alpine
 
 influx:
   host: "{{ .Release.Name }}-influxdb"
+  imageTag: 2.3.0
 
 postgres:
   host: "{{ .Release.Name }}-postgres"
+  imageTag: 14.5
   port: 5432
   username: postgres
   password: postgres
+  maxConnections: 315 # setting to 315, since 15 are saved for internal use. 200 are for Analytics, 50 are for digma, and 50 for plugin backend
+  maxMemory: 2048MB # mapped to shared_buffers
 
-rabbit:
+rabbitMq:
+  imageTag: 3.10.7-management-alpine
   host: "{{ .Release.Name }}-rabbitmq"
   username: admin
   password: admin

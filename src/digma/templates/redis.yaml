@@ -1,7 +1,7 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: {{ .Release.Name }}-redis-deployment
+  name: {{ .Release.Name }}-redis-stateful-set
   labels:
     app: redis
 spec:
@@ -9,20 +9,33 @@ spec:
   selector:
     matchLabels:
       app: redis
+  serviceName: {{ tpl .Values.redis.host . }}
+  {{ if .Release.IsInstall }}
+  minReadySeconds: 5
+  {{ end }}
   template:
     metadata:
       labels:
         app: redis
     spec:
+      terminationGracePeriodSeconds: 5
       containers:
-      - name: redis
-        image: redis:alpine
-        volumeMounts:
-        - name: redis-data
-          mountPath: /data
-        ports:
-        - containerPort: 6379 
-      volumes:
-        - name: redis-data
-          persistentVolumeClaim:
-            claimName: redis-pvc
+        - name: redis
+          image: redis:{{ .Values.redis.imageTag }}
+          ports:
+            - containerPort: 6379
+          volumeMounts:
+            - name: redis-data
+              mountPath: /data
+  volumeClaimTemplates:
+    - metadata:
+        name: redis-data
+      spec:
+        storageClassName: gp2
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 10Gi
+  # persistentVolumeClaimRetentionPolicy:
+  #   whenDeleted: Retain
