@@ -1,7 +1,7 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: {{ .Release.Name }}-postgres-deployment
+  name: {{ .Release.Name }}-postgres-stateful-set
   labels:
     app: postgres
 spec:
@@ -9,33 +9,42 @@ spec:
   selector:
     matchLabels:
       app: postgres
+  serviceName: {{ tpl .Values.postgres.host . }}
+  {{ if .Release.IsInstall }}
+  minReadySeconds: 5
+  {{ end }}
   template:
     metadata:
       labels:
         app: postgres
     spec:
+      terminationGracePeriodSeconds: 5
       containers:
       - name: postgres
-        image: postgres
+        image: postgres:{{ .Values.postgres.imageTag }}
+        ports:
+          - containerPort: 5432
+        args: ["-c" ,"max_connections={{ .Values.postgres.maxConnections }}", "-c", "shared_buffers={{ .Values.postgres.maxMemory }}"]
         env:
         - name: POSTGRES_NAME
           value: postgres
         - name: POSTGRES_USER
-          value: {{ .Values.postgres.username}}
+          value: {{ .Values.postgres.username }}
         - name: POSTGRES_PASSWORD
-          value: {{ .Values.postgres.password}}
+          value: {{ .Values.postgres.password }}
         volumeMounts:
         - name: postgres-data
           mountPath: /var/lib/postgresql/data
           subPath: postgres
-        ports:
-        - containerPort: 5432 
-      volumes:
-        - name: postgres-data
-          persistentVolumeClaim:
-            claimName: postgres-pvc
-
-
-
-     
-     
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-data
+      spec:
+        storageClassName: gp2
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 20Gi
+  # persistentVolumeClaimRetentionPolicy:
+  #   whenDeleted: Retain

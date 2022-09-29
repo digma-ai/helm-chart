@@ -1,7 +1,7 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: {{ .Release.Name }}-influxdb-deployment
+  name: {{ .Release.Name }}-influxdb-stateful-set
   labels:
     app: influxdb
 spec:
@@ -9,14 +9,21 @@ spec:
   selector:
     matchLabels:
       app: influxdb
+  serviceName: {{ tpl .Values.influx.host . }}
+  {{ if .Release.IsInstall }}
+  minReadySeconds: 5
+  {{ end }}
   template:
     metadata:
       labels:
         app: influxdb
     spec:
+      terminationGracePeriodSeconds: 5
       containers:
       - name: influxdb
-        image: influxdb:latest
+        image: influxdb:{{ .Values.influx.imageTag }}
+        ports:
+          - containerPort: 8086
         env:
         - name: DOCKER_INFLUXDB_INIT_MODE
           value: "setup"
@@ -37,12 +44,15 @@ spec:
           mountPath: /var/lib/influxdb2
         - name: influxdb-data
           mountPath: /etc/influxdb2
-        ports:
-        - containerPort: 8086 
-      volumes:
-        - name: influxdb-data
-          persistentVolumeClaim:
-            claimName: influxdb-pvc
-
-     
-     
+  volumeClaimTemplates:
+    - metadata:
+        name: influxdb-data
+      spec:
+        storageClassName: gp2
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 80Gi
+  # persistentVolumeClaimRetentionPolicy:
+  #   whenDeleted: Retain

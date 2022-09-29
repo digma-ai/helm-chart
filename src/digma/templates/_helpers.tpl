@@ -30,11 +30,11 @@
 
 {{- define "env.rabbit" -}}
 - name: RabbitMq__Host
-  value: {{ tpl .Values.rabbit.host . }}
+  value: {{ tpl .Values.rabbitMq.host . }}
 - name: RabbitMq__Username
-  value: {{ .Values.rabbit.username}}
+  value: {{ .Values.rabbitMq.username}}
 - name: RabbitMq_Password
-  value: {{ .Values.rabbit.password}}
+  value: {{ .Values.rabbitMq.password}}
 {{- end -}}
 
 
