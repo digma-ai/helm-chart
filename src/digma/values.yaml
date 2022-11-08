@@ -2,11 +2,11 @@ debug: false
 
 redis:
   host: "{{ .Release.Name }}-redis"
-  imageTag: 7.0.4-alpine
+  imageTag: 7.0.5-alpine
 
 influx:
   host: "{{ .Release.Name }}-influxdb"
-  imageTag: 2.3.0
+  imageTag: 2.5.0
 
 postgres:
   host: "{{ .Release.Name }}-postgres"
@@ -18,7 +18,7 @@ postgres:
   maxMemory: 2048MB # mapped to shared_buffers
 
 rabbitMq:
-  imageTag: 3.10.7-management-alpine
+  imageTag: 3.11.2-management-alpine
   host: "{{ .Release.Name }}-rabbitmq"
   username: admin
   password: admin
@@ -54,6 +54,7 @@ digmaAnalytics:
   host: "{{ .Release.Name }}-analytics"
 
 digmaSelfDiagnosis:
+  # directing to Meloona (Dogfooding center)
   otlpExporterEndpoint: http://a60eb4cf716984651bfad6299c01b07d-861352271.eu-west-1.elb.amazonaws.com:4317/
 
 digma:
