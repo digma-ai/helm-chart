@@ -55,7 +55,8 @@ digmaAnalytics:
 
 digmaSelfDiagnosis:
   # directing to Meloona (Dogfooding center)
-  otlpExporterEndpoint: http://a60eb4cf716984651bfad6299c01b07d-861352271.eu-west-1.elb.amazonaws.com:4317/
+  otlpExporterEndpoint: "http://a60eb4cf716984651bfad6299c01b07d-861352271.eu-west-1.elb.amazonaws.com:4317/"
+  otlpSamplerProbability: "0.3"
 
 digma:
   environmentName: undefined

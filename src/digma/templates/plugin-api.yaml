@@ -34,3 +34,5 @@ spec:
           value: {{ required "A valid .Values.digmaPluginApi.accesstoken entry is required." .Values.digmaPluginApi.accesstoken }}
         - name: Secured
           value: {{ .Values.digmaPluginApi.secured | quote }}
+        - name: OtlpSamplerProbability
+          value: {{ .Values.digmaSelfDiagnosis.otlpSamplerProbability| quote}}
