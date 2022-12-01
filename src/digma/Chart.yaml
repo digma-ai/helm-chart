@@ -1,6 +1,6 @@
 apiVersion: v2
 # version: this Chart version
-version: 1.0.22
+version: 1.0.24
 name: digma
 description: A Helm chart containing Digma's services and dbs
 home: https://github.com/digma-ai/digma

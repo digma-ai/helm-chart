@@ -10,9 +10,6 @@ spec:
     matchLabels:
       app: rabbitmq
   serviceName: {{ tpl .Values.rabbitMq.host . }}
-  {{ if .Release.IsInstall }}
-  minReadySeconds: 5
-  {{ end }}
   template:
     metadata:
       labels:

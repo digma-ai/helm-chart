@@ -10,9 +10,6 @@ spec:
     matchLabels:
       app: postgres
   serviceName: {{ tpl .Values.postgres.host . }}
-  {{ if .Release.IsInstall }}
-  minReadySeconds: 5
-  {{ end }}
   template:
     metadata:
       labels:
