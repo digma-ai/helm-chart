@@ -10,9 +10,6 @@ spec:
     matchLabels:
       app: influxdb
   serviceName: {{ tpl .Values.influx.host . }}
-  {{ if .Release.IsInstall }}
-  minReadySeconds: 5
-  {{ end }}
   template:
     metadata:
       labels:

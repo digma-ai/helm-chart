@@ -10,9 +10,6 @@ spec:
     matchLabels:
       app: redis
   serviceName: {{ tpl .Values.redis.host . }}
-  {{ if .Release.IsInstall }}
-  minReadySeconds: 5
-  {{ end }}
   template:
     metadata:
       labels:
