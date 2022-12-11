@@ -21,6 +21,11 @@ spec:
         - containerPort: 5049
         - containerPort: 5050
         - containerPort: 5060
+        resources:
+          requests:
+            cpu: 10m
+          limits:
+            cpu: {{ .Values.digmaCollectorApi.cpuLimit }}
         env:
         {{- include "env.digmaEnv" . | nindent  8 }}
         {{- include "env.digmaSite" . | nindent  8 }}
