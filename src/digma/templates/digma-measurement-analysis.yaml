@@ -17,6 +17,11 @@ spec:
       containers:
       - name: digma-measurement-analysis
         image: digmatic/digma-measurement-analysis:{{ .Chart.AppVersion }}
+        resources:
+          requests:
+            cpu: 10m
+          limits:
+            cpu: {{ .Values.digmaMeasurementAnalysis.cpuLimit }}
         env:
         {{- include "env.digmaEnv" . | nindent  8 }}
         {{- include "env.digmaSite" . | nindent  8 }}
