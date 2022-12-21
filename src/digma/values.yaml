@@ -2,15 +2,15 @@ debug: false
 
 redis:
   host: "{{ .Release.Name }}-redis"
-  imageTag: 7.0.5-alpine
+  imageTag: 7.0.6-alpine
 
 influx:
   host: "{{ .Release.Name }}-influxdb"
-  imageTag: 2.5.0
+  imageTag: 2.5.1
 
 postgres:
   host: "{{ .Release.Name }}-postgres"
-  imageTag: 14.5
+  imageTag: 14.6
   port: 5432
   username: postgres
   password: postgres
@@ -18,7 +18,7 @@ postgres:
   maxMemory: 2048MB # mapped to shared_buffers
 
 rabbitMq:
-  imageTag: 3.11.2-management-alpine
+  imageTag: 3.11.4-management-alpine
   host: "{{ .Release.Name }}-rabbitmq"
   username: admin
   password: admin
