@@ -4,9 +4,10 @@ redis:
   host: "{{ .Release.Name }}-redis"
   imageTag: 7.0.6-alpine
 
+# https://hub.docker.com/_/influxdb/tags
 influx:
   host: "{{ .Release.Name }}-influxdb"
-  imageTag: 2.5.1
+  imageTag: 2.5.0
 
 postgres:
   host: "{{ .Release.Name }}-postgres"
