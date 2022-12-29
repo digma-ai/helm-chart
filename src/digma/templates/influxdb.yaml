@@ -45,7 +45,6 @@ spec:
     - metadata:
         name: influxdb-data
       spec:
-        storageClassName: gp2
         accessModes:
           - ReadWriteOnce
         resources:

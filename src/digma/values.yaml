@@ -10,7 +10,7 @@ influx:
 
 postgres:
   host: "{{ .Release.Name }}-postgres"
-  imageTag: 14.5
+  imageTag: 15.1
   port: 5432
   username: postgres
   password: postgres
@@ -64,9 +64,8 @@ digmaMeasurementAnalysis:
 
 digmaSelfDiagnosis:
   # directing to Meloona (Dogfooding center)
-  otlpExporterEndpoint: "http://a60eb4cf716984651bfad6299c01b07d-861352271.eu-west-1.elb.amazonaws.com:4317/"
+  otlpExporterEndpoint: "http://a5c491ca899484231ac1e238dffc6b59-1941698795.eu-west-1.elb.amazonaws.com:4317/"
   otlpSamplerProbability: "0.3"
-
 digma:
-  environmentName: undefined
+  environmentName: 
   siteName: undefined

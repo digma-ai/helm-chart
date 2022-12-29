@@ -37,7 +37,6 @@ spec:
     - metadata:
         name: postgres-data
       spec:
-        storageClassName: gp2
         accessModes:
           - ReadWriteOnce
         resources:

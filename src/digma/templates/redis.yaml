@@ -28,7 +28,6 @@ spec:
     - metadata:
         name: redis-data
       spec:
-        storageClassName: gp2
         accessModes:
           - ReadWriteOnce
         resources:
