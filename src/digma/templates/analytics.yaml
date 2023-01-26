@@ -19,7 +19,7 @@ spec:
         image: digmatic/digma-analytics:{{ .Chart.AppVersion }}
         resources:
           requests:
-            cpu: 10m
+            cpu: 400m
           limits:
             cpu: {{ .Values.digmaAnalytics.cpuLimit }}
         ports:

@@ -43,18 +43,18 @@ elasticsearch:
 digmaCollectorApi:
   host: "{{ .Release.Name }}-collector-api"
   expose: false
-  cpuLimit: 200m
+  cpuLimit: 400m
 
 digmaPluginApi:
   host: "{{ .Release.Name }}-plugin-api"
   expose: true
   secured: true
   accesstoken: 
-  cpuLimit: 200m
+  cpuLimit: 400m
 
 digmaAnalytics:
   host: "{{ .Release.Name }}-analytics"
-  cpuLimit: 200m
+  cpuLimit: 700m
 
 digmaInsightAnalysis:
   cpuLimit: 200m
@@ -65,7 +65,7 @@ digmaMeasurementAnalysis:
 digmaSelfDiagnosis:
   # directing to Meloona (Dogfooding center)
   otlpExporterEndpoint: "http://a5c491ca899484231ac1e238dffc6b59-1941698795.eu-west-1.elb.amazonaws.com:4317/"
-  otlpSamplerProbability: "0.3"
+  otlpSamplerProbability: ""
 digma:
   environmentName: 
   siteName: undefined

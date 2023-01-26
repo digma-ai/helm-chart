@@ -17,13 +17,13 @@ spec:
       containers:
       - name: digma-plugin-api
         image: digmatic/digma-plugin-api:{{ .Chart.AppVersion }}
-        ports:
-        - containerPort: 5051
         resources:
           requests:
-            cpu: 10m
+            cpu: 200m
           limits:
             cpu: {{ .Values.digmaPluginApi.cpuLimit }}
+        ports:
+        - containerPort: 5051
         env:
         {{- include "env.digmaEnv" . | nindent  8 }}
         {{- include "env.digmaSite" . | nindent  8 }}
