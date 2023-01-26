@@ -19,7 +19,7 @@ spec:
         image: digmatic/digma-insight-analysis:{{ .Chart.AppVersion }}
         resources:
           requests:
-            cpu: 10m
+            cpu: 100m
           limits:
             cpu: {{ .Values.digmaInsightAnalysis.cpuLimit }}
         env:
