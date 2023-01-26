@@ -19,6 +19,9 @@ spec:
       containers:
       - name: influxdb
         image: influxdb:{{ .Values.influx.imageTag }}
+        resources:
+          requests:
+            cpu: 500m
         ports:
           - containerPort: 8086
         env:
