@@ -50,7 +50,7 @@ digmaPluginApi:
   expose: true
   secured: true
   accesstoken: 
-  cpuLimit: 400m
+  cpuLimit: 500m
 
 digmaAnalytics:
   host: "{{ .Release.Name }}-analytics"
