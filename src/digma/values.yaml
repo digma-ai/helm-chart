@@ -54,6 +54,10 @@ digmaPluginApi:
 
 digmaAnalytics:
   host: "{{ .Release.Name }}-analytics"
+  cpuLimit: 500m
+
+digmaScheduler:
+  host: "{{ .Release.Name }}-scheduler"
   cpuLimit: 700m
 
 digmaInsightAnalysis:

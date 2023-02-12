@@ -1,35 +1,36 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-analytics-deployment
+  name: {{ .Release.Name }}-digma-scheduler-deployment
   labels:
-    app: digma-analytics
+    app: digma-scheduler
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      app: digma-analytics
+      app: digma-scheduler
   template:
     metadata:
       labels:
-        app: digma-analytics
+        app: digma-scheduler
     spec:
       containers:
-      - name: digma-analytics
-        image: digmatic/digma-analytics:{{ .Chart.AppVersion }}
+      - name: digma-scheduler
+        image: digmatic/digma-scheduler:{{ .Chart.AppVersion }}
         resources:
           requests:
-            cpu: 200m
+            cpu: 400m
           limits:
-            cpu: {{ .Values.digmaAnalytics.cpuLimit }}
+            cpu: {{ .Values.digmaScheduler.cpuLimit }}
         ports:
-        - containerPort: 5052
+        - containerPort: 5053
         env:
         {{- include "env.digmaEnv" . | nindent  8 }}
         {{- include "env.digmaSite" . | nindent  8 }}
         {{- include "env.redis" . | nindent  8 }}
         {{- include "env.influx" . | nindent  8 }}
         {{- include "env.postgres" . | nindent  8 }}
+        {{- include "env.rabbit" . | nindent  8 }}
         {{- include "env.otlpExporter" . | nindent  8 }}
 {{ if .Values.debug }}
         {{- include "env.elasticsearch" . | nindent  8 }}

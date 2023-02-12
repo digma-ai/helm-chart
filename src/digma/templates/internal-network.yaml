@@ -85,6 +85,20 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  name: {{ tpl .Values.digmaScheduler.host . }}
+spec:
+  type: ClusterIP
+  selector:
+    app: "digma-scheduler"   
+  ports:
+  - port: 5053
+    protocol: TCP 
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
   name: {{ tpl .Values.digmaCollectorApi.host . }}
 spec:
   type: ClusterIP
