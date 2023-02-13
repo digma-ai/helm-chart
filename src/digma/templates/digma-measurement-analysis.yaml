@@ -19,9 +19,11 @@ spec:
         image: digmatic/digma-measurement-analysis:{{ .Chart.AppVersion }}
         resources:
           requests:
-            cpu: 100m
+            memory: {{ .Values.digmaMeasurementAnalysis.resources.requests.memory }}
+            cpu: {{ .Values.digmaMeasurementAnalysis.resources.requests.cpu }}
           limits:
-            cpu: {{ .Values.digmaMeasurementAnalysis.cpuLimit }}
+            memory: {{ .Values.digmaMeasurementAnalysis.resources.limits.memory }}
+            cpu: {{ .Values.digmaMeasurementAnalysis.resources.limits.cpu }}
         env:
         {{- include "env.digmaEnv" . | nindent  8 }}
         {{- include "env.digmaSite" . | nindent  8 }}

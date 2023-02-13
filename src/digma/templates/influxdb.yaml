@@ -21,7 +21,11 @@ spec:
         image: influxdb:{{ .Values.influx.imageTag }}
         resources:
           requests:
-            cpu: 500m
+            memory: {{ .Values.influx.resources.requests.memory }}
+            cpu: {{ .Values.influx.resources.requests.cpu }}
+          limits:
+            memory: {{ .Values.influx.resources.limits.memory }}
+            cpu: {{ .Values.influx.resources.limits.cpu }}
         ports:
           - containerPort: 8086
         env:

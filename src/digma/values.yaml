@@ -3,10 +3,30 @@ debug: false
 redis:
   host: "{{ .Release.Name }}-redis"
   imageTag: 7.0.5-alpine
+  resources: {
+    requests: {
+      memory: 100Mi,
+      cpu: 200m
+    },
+    limits: {
+      memory: 200Mi,
+      cpu: 500m
+    }
+  }
 
 influx:
   host: "{{ .Release.Name }}-influxdb"
   imageTag: 2.5.0
+  resources: {
+    requests: {
+      memory: 500Mi,
+      cpu: 500m
+    },
+    limits: {
+      memory: 2Gi,
+      cpu: 1500m
+    }
+  }
 
 postgres:
   host: "{{ .Release.Name }}-postgres"
@@ -16,12 +36,32 @@ postgres:
   password: postgres
   maxConnections: 315 # setting to 315, since 15 are saved for internal use. 200 are for Analytics, 50 are for digma, and 50 for plugin backend
   maxMemory: 2048MB # mapped to shared_buffers
+  resources: {
+    requests: {
+      memory: 300Mi,
+      cpu: 200m
+    },
+    limits: {
+      memory: 500Mi,
+      cpu: 500m
+    }
+  }
 
 rabbitMq:
   imageTag: 3.11.2-management-alpine
   host: "{{ .Release.Name }}-rabbitmq"
   username: admin
   password: admin
+  resources: {
+    requests: {
+      memory: 300Mi,
+      cpu: 200m
+    },
+    limits: {
+      memory: 500Mi,
+      cpu: 500m
+    }
+  }
 
 pgadmin:
   host: "{{ .Release.Name }}-pgadmin"
@@ -43,28 +83,82 @@ elasticsearch:
 digmaCollectorApi:
   host: "{{ .Release.Name }}-collector-api"
   expose: false
-  cpuLimit: 400m
+  resources: {
+    requests: {
+      memory: 300Mi,
+      cpu: 200m
+    },
+    limits: {
+      memory: 500Mi,
+      cpu: 400m
+    }
+  }
 
 digmaPluginApi:
   host: "{{ .Release.Name }}-plugin-api"
   expose: true
   secured: true
-  accesstoken: 
-  cpuLimit: 500m
+  accesstoken:
+  resources: {
+    requests: {
+      memory: 300Mi,
+      cpu: 200m
+    },
+    limits: {
+      memory: 500Mi,
+      cpu: 500m
+    }
+  }
 
 digmaAnalytics:
   host: "{{ .Release.Name }}-analytics"
-  cpuLimit: 500m
+  resources: {
+    requests: {
+      memory: 300Mi,
+      cpu: 200m
+    },
+    limits: {
+      memory: 500Mi,
+      cpu: 500m
+    }
+  }
 
 digmaScheduler:
   host: "{{ .Release.Name }}-scheduler"
-  cpuLimit: 700m
+  resources: {
+    requests: {
+      memory: 300Mi,
+      cpu: 200m
+    },
+    limits: {
+      memory: 800Mi,
+      cpu: 700m
+    }
+  }
 
 digmaInsightAnalysis:
-  cpuLimit: 200m
+  resources: {
+    requests: {
+      memory: 200Mi,
+      cpu: 200m
+    },
+    limits: {
+      memory: 300Mi,
+      cpu: 300m
+    }
+  }
 
 digmaMeasurementAnalysis:
-  cpuLimit: 200m
+  resources: {
+    requests: {
+      memory: 200Mi,
+      cpu: 200m
+    },
+    limits: {
+      memory: 300Mi,
+      cpu: 300m
+    }
+  }
 
 digmaSelfDiagnosis:
   # directing to Meloona (Dogfooding center)

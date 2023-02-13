@@ -19,9 +19,11 @@ spec:
         image: digmatic/digma-analytics:{{ .Chart.AppVersion }}
         resources:
           requests:
-            cpu: 200m
+            memory: {{ .Values.digmaAnalytics.resources.requests.memory }}
+            cpu: {{ .Values.digmaAnalytics.resources.requests.cpu }}
           limits:
-            cpu: {{ .Values.digmaAnalytics.cpuLimit }}
+            memory: {{ .Values.digmaAnalytics.resources.limits.memory }}
+            cpu: {{ .Values.digmaAnalytics.resources.limits.cpu }}
         ports:
         - containerPort: 5052
         env:

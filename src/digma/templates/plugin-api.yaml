@@ -19,9 +19,11 @@ spec:
         image: digmatic/digma-plugin-api:{{ .Chart.AppVersion }}
         resources:
           requests:
-            cpu: 200m
+            memory: {{ .Values.digmaPluginApi.resources.requests.memory }}
+            cpu: {{ .Values.digmaPluginApi.resources.requests.cpu }}
           limits:
-            cpu: {{ .Values.digmaPluginApi.cpuLimit }}
+            memory: {{ .Values.digmaPluginApi.resources.limits.memory }}
+            cpu: {{ .Values.digmaPluginApi.resources.limits.cpu }}
         ports:
         - containerPort: 5051
         env:

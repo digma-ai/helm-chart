@@ -17,15 +17,17 @@ spec:
       containers:
       - name: digma-collector-api
         image: digmatic/digma-collector:{{ .Chart.AppVersion }}
+        resources:
+          requests:
+            memory: {{ .Values.digmaCollectorApi.resources.requests.memory }}
+            cpu: {{ .Values.digmaCollectorApi.resources.requests.cpu }}
+          limits:
+            memory: {{ .Values.digmaCollectorApi.resources.limits.memory }}
+            cpu: {{ .Values.digmaCollectorApi.resources.limits.cpu }}
         ports:
         - containerPort: 5049
         - containerPort: 5050
         - containerPort: 5060
-        resources:
-          requests:
-            cpu: 200m
-          limits:
-            cpu: {{ .Values.digmaCollectorApi.cpuLimit }}
         env:
         {{- include "env.digmaEnv" . | nindent  8 }}
         {{- include "env.digmaSite" . | nindent  8 }}

@@ -19,9 +19,11 @@ spec:
         image: digmatic/digma-scheduler:{{ .Chart.AppVersion }}
         resources:
           requests:
-            cpu: 400m
+            memory: {{ .Values.digmaScheduler.resources.requests.memory }}
+            cpu: {{ .Values.digmaScheduler.resources.requests.cpu }}
           limits:
-            cpu: {{ .Values.digmaScheduler.cpuLimit }}
+            memory: {{ .Values.digmaScheduler.resources.limits.memory }}
+            cpu: {{ .Values.digmaScheduler.resources.limits.cpu }}
         ports:
         - containerPort: 5053
         env:
