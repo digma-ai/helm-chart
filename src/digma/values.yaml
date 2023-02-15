@@ -42,7 +42,7 @@ postgres:
       cpu: 200m
     },
     limits: {
-      memory: 500Mi,
+      memory: 1Gi,
       cpu: 500m
     }
   }
