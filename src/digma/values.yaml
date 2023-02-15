@@ -35,7 +35,7 @@ postgres:
   username: postgres
   password: postgres
   maxConnections: 315 # setting to 315, since 15 are saved for internal use. 200 are for Analytics, 50 are for digma, and 50 for plugin backend
-  maxMemory: 2048MB # mapped to shared_buffers
+  maxMemory: 1000MB # mapped to shared_buffers
   resources: {
     requests: {
       memory: 300Mi,
