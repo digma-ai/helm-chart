@@ -19,12 +19,12 @@ influx:
   imageTag: 2.5.0
   resources: {
     requests: {
-      memory: 500Mi,
+      memory: 2Gi,
       cpu: 500m
     },
     limits: {
-      memory: 2Gi,
-      cpu: 1500m
+      memory: 4Gi,
+      cpu: 2000m
     }
   }
 
