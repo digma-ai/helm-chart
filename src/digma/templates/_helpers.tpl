@@ -44,6 +44,23 @@
   value: {{ .Values.digmaSelfDiagnosis.otlpExporterEndpoint }}
 {{- end -}}
 
+{{- define "env.otlpExportTraces" -}}
+- name: OtlpExportTraces
+  value: {{ .Values.digmaSelfDiagnosis.otlpExportTraces }}
+{{- end -}}
+
+
+{{- define "env.otlpExportMetrics" -}}
+- name: OtlpExportMetrics
+  value: {{ .Values.digmaSelfDiagnosis.otlpExportMetrics }}
+{{- end -}}
+
+
+{{- define "env.otlpExportLogs" -}}
+- name: OtlpExportLogs
+  value: {{ .Values.digmaSelfDiagnosis.otlpExportLogs }}
+{{- end -}}
+
 
 {{- define "env.otlpExporter2ElasticApm" -}}
 - name: OtlpExporterUrl

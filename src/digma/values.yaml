@@ -162,6 +162,9 @@ digmaMeasurementAnalysis:
 
 digmaSelfDiagnosis:
   # directing to Meloona (Dogfooding center)
+  otlpExportTraces: true
+  otlpExportMetrics: false
+  otlpExportLogs: true
   otlpExporterEndpoint: "http://a5c491ca899484231ac1e238dffc6b59-1941698795.eu-west-1.elb.amazonaws.com:4317/"
   otlpSamplerProbability: ""
 digma:

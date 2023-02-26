@@ -36,6 +36,9 @@ spec:
         {{- include "env.postgres" . | nindent  8 }}
         {{- include "env.rabbit" . | nindent  8 }}
         {{- include "env.otlpExporter" . | nindent  8 }}
+        {{- include "env.otlpExportLogs" . | nindent  8 }}
+        {{- include "env.otlpExportMetrics" . | nindent  8 }}
+        {{- include "env.otlpExportTraces" . | nindent  8 }}
 {{ if .Values.debug }}
         {{- include "env.elasticsearch" . | nindent  8 }}
 {{ end }}
