@@ -46,19 +46,19 @@
 
 {{- define "env.otlpExportTraces" -}}
 - name: OtlpExportTraces
-  value: {{ .Values.digmaSelfDiagnosis.otlpExportTraces }}
+  value: {{ quote .Values.digmaSelfDiagnosis.otlpExportTraces }}
 {{- end -}}
 
 
 {{- define "env.otlpExportMetrics" -}}
 - name: OtlpExportMetrics
-  value: {{ .Values.digmaSelfDiagnosis.otlpExportMetrics }}
+  value: {{ quote .Values.digmaSelfDiagnosis.otlpExportMetrics }}
 {{- end -}}
 
 
 {{- define "env.otlpExportLogs" -}}
 - name: OtlpExportLogs
-  value: {{ .Values.digmaSelfDiagnosis.otlpExportLogs }}
+  value: {{ quote .Values.digmaSelfDiagnosis.otlpExportLogs }}
 {{- end -}}
 
 
