@@ -27,6 +27,10 @@ influx:
       cpu: 2000m
     }
   }
+  config: 
+    queryConcurrency: 15
+    queryQueueSize: 50
+    
 
 postgres:
   host: "{{ .Release.Name }}-postgres"
