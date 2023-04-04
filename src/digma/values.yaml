@@ -29,7 +29,7 @@ influx:
   }
   config: 
     queryConcurrency: 15
-    queryQueueSize: 50
+    queryQueueSize: 200
     
 
 postgres:
