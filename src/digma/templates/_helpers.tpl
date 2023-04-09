@@ -73,3 +73,11 @@
   value: {{ printf " http://%s:9200" (tpl .Values.elasticsearch.host .)}}
 {{- end -}}
 
+
+{{- define "env.versions" -}}
+- name: ApplicationVersion
+  value: {{.Chart.AppVersion}}
+- name: ChartVersion
+  value: {{.Chart.Version}}
+{{- end -}}
+
