@@ -38,5 +38,3 @@ spec:
         {{- include "env.versions" . | nindent  8 }}
         - name: OtlpSamplerProbability
           value: {{ .Values.digmaSelfDiagnosis.otlpSamplerProbability| quote}}
-        - name: OTEL_RESOURCE_ATTRIBUTES
-          value: ApplicationVersion={{.Chart.AppVersion}},ChartVersion={{.Chart.Version}}
