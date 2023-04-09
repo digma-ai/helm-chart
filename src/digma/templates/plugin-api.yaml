@@ -47,5 +47,3 @@ spec:
           value: {{ .Values.digmaPluginApi.secured | quote }}
         - name: OtlpSamplerProbability
           value: {{ .Values.digmaSelfDiagnosis.otlpSamplerProbability| quote}}
-        - name: OTEL_RESOURCE_ATTRIBUTES
-          value: ApplicationVersion={{.Chart.AppVersion}},ChartVersion={{.Chart.Version}}
