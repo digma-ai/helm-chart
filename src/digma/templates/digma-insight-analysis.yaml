@@ -35,6 +35,7 @@ spec:
         {{- include "env.otlpExportLogs" . | nindent  8 }}
         {{- include "env.otlpExportMetrics" . | nindent  8 }}
         {{- include "env.otlpExportTraces" . | nindent  8 }}
+        {{- include "env.versions" . | nindent  8 }}
         - name: OtlpSamplerProbability
           value: {{ .Values.digmaSelfDiagnosis.otlpSamplerProbability| quote}}
         - name: OTEL_RESOURCE_ATTRIBUTES
