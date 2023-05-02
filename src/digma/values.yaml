@@ -102,6 +102,7 @@ digmaPluginApi:
   host: "{{ .Release.Name }}-plugin-api"
   expose: true
   secured: true
+  deploymentType: Helm
   accesstoken:
   resources: {
     requests: {
