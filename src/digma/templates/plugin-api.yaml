@@ -46,4 +46,6 @@ spec:
         - name: Secured
           value: {{ .Values.digmaPluginApi.secured | quote }}
         - name: OtlpSamplerProbability
-          value: {{ .Values.digmaSelfDiagnosis.otlpSamplerProbability| quote}}
+          value: {{ .Values.digmaSelfDiagnosis.otlpSamplerProbability | quote}}
+        - name: BACKEND_DEPLOYMENT_TYPE
+          value: {{ .Values.digmaPluginApi.deploymentType | quote}}
