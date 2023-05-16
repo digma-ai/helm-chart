@@ -34,3 +34,22 @@ spec:
       port: 5050
 
 {{ end }}
+
+{{ if .Values.embeddedJaeger.enabled }}
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-embedded-jaeger-lb
+spec:
+  type: LoadBalancer
+  selector:
+     app: "embedded-jaeger"
+  ports:
+  - name: api
+    port: 17686
+    protocol: TCP
+    targetPort: 16686
+
+{{ end }}
