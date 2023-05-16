@@ -1,0 +1,39 @@
+{{ if .Values.embeddedJaeger.enabled }}
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-embedded-jaeger-stateful-set
+  labels:
+    app: embedded-jaeger
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: embedded-jaeger
+  serviceName: {{ tpl .Values.embeddedJaeger.host . }}
+  template:
+    metadata:
+      labels:
+        app: embedded-jaeger
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+      - name: embedded-jaeger
+        image: jaegertracing/all-in-one:{{ .Values.embeddedJaeger.imageTag }}
+        args: ["--query.additional-headers", "Access-Control-Allow-Origin: *"]
+        env:
+        - name: SPAN_STORAGE_TYPE
+          value: badger
+        - name: COLLECTOR_OTLP_ENABLED
+          value: "true" # enable OTEL receiver
+        - name: BADGER_EPHEMERAL
+          value: "false"
+        - name: BADGER_DIRECTORY_VALUE
+          value: "/badger/data"
+        - name: BADGER_DIRECTORY_KEY
+          value: "/badger/key"
+        - name: BADGER_SPAN_STORE_TTL
+          value: "336h0m0s" # BADGER store ttl default is 72h
+
+{{ end }}

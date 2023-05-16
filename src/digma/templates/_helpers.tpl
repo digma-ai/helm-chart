@@ -27,6 +27,13 @@
   value: {{ printf " http://%s:8086" (tpl .Values.influx.host .)}}
 {{- end -}}
 
+{{- define "env.embeddedJaeger" -}}
+{{- if .Values.embeddedJaeger.enabled -}}
+- name: Jaeger__OtlpUrl
+  value: {{ printf " http://%s:4317" (tpl .Values.embeddedJaeger.host .)}}
+{{- end -}}
+{{- end -}}
+
 
 {{- define "env.rabbit" -}}
 - name: RabbitMq__Host

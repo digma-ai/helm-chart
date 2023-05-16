@@ -113,6 +113,25 @@ spec:
       port: 5050
 
 
+{{ if .Values.embeddedJaeger.enabled }}
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ tpl .Values.embeddedJaeger.host . }}
+spec:
+  type: ClusterIP
+  selector:
+     app: "embedded-jaeger"
+  ports:
+  - name: grpc
+    port: 4317
+    protocol: TCP
+
+{{ end }}
+
+
 {{ if .Values.debug }}
 
 ---

@@ -72,6 +72,11 @@ pgadmin:
   email: admin@admin.com
   password: admin
 
+embeddedJaeger:
+  host: "{{ .Release.Name }}-embedded-jaeger"
+  imageTag: "1.44.0"
+  enabled: false
+
 kibana:
   host: "{{ .Release.Name }}-kibana"
 
