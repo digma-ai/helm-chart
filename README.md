@@ -49,7 +49,7 @@ Usage:
             </tr>
         <tr>
           <td><code>digmaCollectorApi.expose</code><i>(boolean)</i></td>
-            <td>When <b>true</b> digma's otlp collector is exposed to the internet via public ip.<br/>Default <b>true</b>.</td>
+            <td>When <b>true</b> digma's otlp collector is exposed to the internet via public ip.<br/>Default <b>false</b>.</td>
           </tr>
         <tr>
           <td><code>digmaPluginApi.expose</code> <i>(boolean)</i></td>
@@ -62,6 +62,10 @@ Usage:
         <tr>
           <td><code>digmaPluginApi.secured</code> <i>(boolean)</i></td>
           <td>When <b>true</b> digma's plugin api use <b>HTTPS</b>, else <b>HTTP</b>.<br/>Default <b>true</b></td>
+        </tr>
+        <tr>
+          <td><code>embeddedJaeger.enabled</code> <i>(boolean)</i></td>
+          <td>When <b>true</b> embedded jaeger is deployed and being used.<br/>Default <b>False</b></td>
         </tr>
     </tbody>
 </table>
