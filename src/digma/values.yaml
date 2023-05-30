@@ -103,6 +103,19 @@ digmaCollectorApi:
     }
   }
 
+digmaCollectorWorker:
+  host: "{{ .Release.Name }}-collector-worker"
+  resources: {
+    requests: {
+      memory: 300Mi,
+      cpu: 200m
+    },
+    limits: {
+      memory: 800Mi,
+      cpu: 700m
+    }
+  }
+
 digmaPluginApi:
   host: "{{ .Release.Name }}-plugin-api"
   expose: true

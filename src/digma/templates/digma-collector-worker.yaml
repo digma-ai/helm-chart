@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-digma-collector-worker-deployment
+  labels:
+    app: digma-collector-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: digma-collector-worker
+  template:
+    metadata:
+      labels:
+        app: digma-collector-worker
+    spec:
+      containers:
+      - name: digma-collector-worker
+        image: digmatic/digma-collector-worker:{{ .Chart.AppVersion }}
+        resources:
+          requests:
+            memory: {{ .Values.digmaCollectorWorker.resources.requests.memory }}
+            cpu: {{ .Values.digmaCollectorWorker.resources.requests.cpu }}
+          limits:
+            memory: {{ .Values.digmaCollectorWorker.resources.limits.memory }}
+            cpu: {{ .Values.digmaCollectorWorker.resources.limits.cpu }}
+        env:
+        {{- include "env.digmaSite" . | nindent  8 }}
+        {{- include "env.otlpExporter" . | nindent  8 }}
+        {{- include "env.otlpExportLogs" . | nindent  8 }}
+        {{- include "env.otlpExportMetrics" . | nindent  8 }}
+        {{- include "env.otlpExportTraces" . | nindent  8 }}
+        {{- include "env.redis" . | nindent  8 }}
+        {{- include "env.influx" . | nindent  8 }}
+        {{- include "env.postgres" . | nindent  8 }}
+        {{- include "env.rabbit" . | nindent  8 }}
+        {{- include "env.versions" . | nindent  8 }}
