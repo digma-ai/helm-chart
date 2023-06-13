@@ -42,3 +42,5 @@ spec:
 {{ end }}
         - name: OtlpSamplerProbability
           value: {{ .Values.digmaSelfDiagnosis.otlpSamplerProbability| quote}}
+        - name: BACKEND_DEPLOYMENT_TYPE
+          value: {{ .Values.deploymentType | quote}}

@@ -1,4 +1,7 @@
 {
-    "editor.tabSize": 2,
-    "digma.environment": "HELM-TEST",
+  "editor.tabSize": 2,
+  "digma.environment": "HELM-TEST",
+  "gopls": {
+    "ui.semanticTokens": true
+  }
 }
