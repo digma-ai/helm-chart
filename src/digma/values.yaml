@@ -18,7 +18,7 @@ redis:
 
 influx:
   host: "{{ .Release.Name }}-influxdb"
-  imageTag: 2.5.0
+  imageTag: 2.7.1
   resources: {
     requests: {
       memory: 2Gi,
