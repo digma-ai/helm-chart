@@ -40,7 +40,7 @@ spec:
         - name: DOCKER_INFLUXDB_INIT_BUCKET
           value: "errors"
         - name: DOCKER_INFLUXDB_INIT_RETENTION
-          value: "24w"
+          value: "4w"
         - name: DOCKER_INFLUXDB_INIT_ADMIN_TOKEN
           value: "dc61908e-05bc-411a-9fe2-e3356b8dc7c0"
         - name: INFLUXD_QUERY_CONCURRENCY
