@@ -1,6 +1,7 @@
 debug: false
 
 deploymentType: Helm
+exposeInternalErrorDetails: true
 
 redis:
   host: "{{ .Release.Name }}-redis"
