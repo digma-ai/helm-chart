@@ -51,3 +51,5 @@ spec:
           value: {{ .Values.deploymentType | quote }}
         - name: GlobalExceptionSettings__ExposeInternalDetails
           value: {{ .Values.exposeInternalErrorDetails | quote }}
+        - name: CollectorUrl
+          value: {{ printf " http://%s:5049" (tpl .Values.digmaCollectorApi.host .)}}
