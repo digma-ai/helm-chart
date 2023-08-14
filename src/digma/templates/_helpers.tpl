@@ -16,6 +16,12 @@
 {{- end -}}
 
 
+{{- define "env.kafka" -}}
+- name: Kafka__Urls__0
+  value: {{ tpl .Values.kafka.host . }}:9092
+{{- end -}}
+
+
 {{- define "env.redis" -}}
 - name: CacheSettings__RedisConnection
   value: {{ tpl .Values.redis.host . }}
