@@ -21,7 +21,7 @@ spec:
         image: provectuslabs/kafka-ui:v0.7.1
         env:
         - name: KAFKA_CLUSTERS_0_NAME
-          value: NTNlOGNmNjlkZjY4NDkxOT
+          value: lOMvcthTTKWvHgYh-pRqtQ
         - name: KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS
           value: {{ tpl .Values.kafka.host . }}:9092
 
