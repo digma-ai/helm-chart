@@ -6,7 +6,17 @@ exposeInternalErrorDetails: false
 kafka:
   host: "{{ .Release.Name }}-kafka"
   imageTag: 3.5.1
-
+  resources: {
+    requests: {
+      memory: 300Mi,
+      cpu: 200m
+    },
+    limits: {
+      memory: 500Mi,
+      cpu: 500m
+    }
+  }
+  
 redis:
   host: "{{ .Release.Name }}-redis"
   imageTag: 7.0.5-alpine

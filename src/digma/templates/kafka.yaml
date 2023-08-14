@@ -19,6 +19,13 @@ spec:
       containers:
       - name: kafka
         image: bitnami/kafka:{{ .Values.kafka.imageTag }}
+        resources:
+          requests:
+            memory: {{ .Values.kafka.resources.requests.memory }}
+            cpu: {{ .Values.kafka.resources.requests.cpu }}
+          limits:
+            memory: {{ .Values.kafka.resources.limits.memory }}
+            cpu: {{ .Values.kafka.resources.limits.cpu }}
         ports:
         - containerPort: 9092
         volumeMounts:
@@ -59,6 +66,6 @@ spec:
         - ReadWriteOnce
       resources:
         requests:
-          storage: 5Gi
+          storage: 10Gi
 
 
