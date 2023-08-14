@@ -3,6 +3,10 @@ debug: false
 deploymentType: Helm
 exposeInternalErrorDetails: false
 
+kafka:
+  host: "{{ .Release.Name }}-kafka"
+  imageTag: 3.5.1
+
 redis:
   host: "{{ .Release.Name }}-redis"
   imageTag: 7.0.5-alpine
