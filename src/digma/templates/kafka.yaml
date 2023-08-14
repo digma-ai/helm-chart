@@ -37,7 +37,7 @@ spec:
         - name: KAFKA_LOG_RETENTION_HOURS
           value: "1"
         - name: KAFKA_KRAFT_CLUSTER_ID
-          value: lOMvcthTTKWvHgYh-pRqtQ
+          value: h4U35I9QRnGhbgsEQAlXAw
         # Start Kraft Setup (Kafka as Controller - no Zookeeper)
         - name: KAFKA_CFG_NODE_ID
           value: "1"
