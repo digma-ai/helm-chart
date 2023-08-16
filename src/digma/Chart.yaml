@@ -7,3 +7,4 @@ home: https://github.com/digma-ai/digma
 type: application
 # appVersion: digma version (affects image tag)
 appVersion: 0.2.134
+
