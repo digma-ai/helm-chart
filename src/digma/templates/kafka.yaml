@@ -16,6 +16,8 @@ spec:
         app: kafka
     spec:
       terminationGracePeriodSeconds: 5
+      securityContext:
+        fsGroup: 1001
       containers:
       - name: kafka
         image: bitnami/kafka:{{ .Values.kafka.imageTag }}
@@ -30,11 +32,11 @@ spec:
         - containerPort: 9092
         volumeMounts:
         - name: kafka-data
-          mountPath: /var/lib/kafka/data
+          mountPath: /bitnami/kafka
         env:
         - name: ALLOW_PLAINTEXT_LISTENER
           value: "yes"
-        - name: KAFKA_LOG_RETENTION_HOURS
+        - name: KAFKA_CFG_LOG_RETENTION_HOURS
           value: "1"
         - name: KAFKA_KRAFT_CLUSTER_ID
           value: h4U35I9QRnGhbgsEQAlXAw
@@ -49,8 +51,6 @@ spec:
           value: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,INTERNAL:PLAINTEXT
         - name: KAFKA_CFG_CONTROLLER_LISTENER_NAMES
           value: CONTROLLER
-        - name: KAFKA_CFG_LOG_DIRS
-          value: tmp/logs
         - name: KAFKA_CFG_PROCESS_ROLES
           value: broker,controller
         - name: KAFKA_CFG_LISTENERS
