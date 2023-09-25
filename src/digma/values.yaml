@@ -3,6 +3,12 @@ debug: false
 deploymentType: Helm
 exposeInternalErrorDetails: false
 
+traceCollectorThresholds:
+  recentActivityUpdateThresholdSeconds: 5
+  upsertEndpointThresholdSeconds: 5
+  upsertSpansThresholdSeconds: 5
+  upsertSpanFlowMetadataThresholdSeconds: 5
+
 kafka:
   host: "{{ .Release.Name }}-kafka"
   imageTag: 3.5.1
@@ -63,7 +69,7 @@ postgres:
       cpu: 400m
     },
     limits: {
-      memory: 1.3Gi,
+      memory: 1300Mi,
       cpu: 800m
     }
   }
