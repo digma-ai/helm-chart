@@ -1,9 +1,9 @@
 Next steps:
 
-1.1 To get PluginAPI external endpoint address please run command:
-  run command: "kubectl get service {{.Release.Namespace}}-plugin-api-service-lb -n {{.Release.Namespace}} -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'"
+1.1 To get DIGMA API external endpoint address please run command:
+  run command: "kubectl get service {{.Release.Namespace}}-analytics-service-lb -n {{.Release.Namespace}} -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'"
 
-1.2 Copy the PluginAPI endpoint "https://<PluginAPI-external-endpoint>:5051" and set it as the url in the Digma's IDE plugin (IntelliJ) settings.
+1.2 Copy the DIGMA API endpoint "https://<DIGMA_API-external-endpoint>:5051" and set it as the url in the Digma's IDE api (IntelliJ) settings.
 {{ if .Values.digmaCollectorApi.expose }}
 2.1 You configured Digma OTEL Collector with external DNS. To get Collector OTEL external endpoint address please run command:
   run command: "kubectl get service {{ .Release.Name }}-collector-api-service-lb -n {{.Release.Namespace}} -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'"
