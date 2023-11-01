@@ -139,24 +139,11 @@ digmaCollectorWorker:
     }
   }
 
-digmaPluginApi:
-  host: "{{ .Release.Name }}-plugin-api"
+digmaAnalytics:
+  host: "{{ .Release.Name }}-analytics"
   expose: true
   secured: true
   accesstoken:
-  resources: {
-    requests: {
-      memory: 300Mi,
-      cpu: 200m
-    },
-    limits: {
-      memory: 800Mi,
-      cpu: 800m
-    }
-  }
-
-digmaAnalytics:
-  host: "{{ .Release.Name }}-analytics"
   resources: {
     requests: {
       memory: 300Mi,

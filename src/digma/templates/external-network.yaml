@@ -1,15 +1,15 @@
-{{ if .Values.digmaPluginApi.expose }}
+{{ if .Values.digmaAnalytics.expose }}
 
 kind: Service
 apiVersion: v1
 metadata:
-  name: {{ .Release.Name }}-plugin-api-service-lb
+  name: {{ .Release.Name }}-analytics-service-lb
 spec:
   type: LoadBalancer
   selector:
-     app: "digma-plugin-api"
+     app: "digma-analytics"
   ports:
-    - name: plugin-api
+    - name: analytics
       protocol: TCP
       port: 5051
 
