@@ -71,6 +71,21 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  name: {{ tpl .Values.digmaDs.host . }}
+spec:
+  type: ClusterIP
+  selector:
+     app: "digma-ds"
+  ports:
+    - name: http
+      protocol: TCP
+      port: 5054
+      
+---
+
+apiVersion: v1
+kind: Service
+metadata:
   name: {{ tpl .Values.digmaAnalytics.host . }}
 spec:
   type: ClusterIP
