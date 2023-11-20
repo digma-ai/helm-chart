@@ -3,6 +3,17 @@ entries:
   digma:
   - apiVersion: v2
     appVersion: 0.2.171
+    created: "2023-11-20T10:14:41.852869496Z"
+    description: A Helm chart containing Digma's services and dbs
+    digest: 95f44e40dd074532fa69ae88a50356ca11c99b296e9d518b13b856efca2e4837
+    home: https://github.com/digma-ai/digma
+    name: digma
+    type: application
+    urls:
+    - https://github.com/digma-ai/helm-chart/releases/download/digma-1.0.109/digma-1.0.109.tgz
+    version: 1.0.109
+  - apiVersion: v2
+    appVersion: 0.2.171
     created: "2023-11-19T12:09:06.181081567Z"
     description: A Helm chart containing Digma's services and dbs
     digest: b3ce9ceed55b2f65a3341672c681f3592aff44074c73c93f104808cfa25c9578
