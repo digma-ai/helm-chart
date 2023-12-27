@@ -5,7 +5,7 @@ metadata:
   labels:
     app: digma-measurement-analysis
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: digma-measurement-analysis

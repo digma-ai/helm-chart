@@ -182,15 +182,15 @@ digmaScheduler:
     }
   }
 
-digmaInsightAnalysis:
+digmaPipelineWorker:
   resources: {
     requests: {
       memory: 200Mi,
       cpu: 200m
     },
     limits: {
-      memory: 300Mi,
-      cpu: 300m
+      memory: 500Mi,
+      cpu: 500m
     }
   }
 
