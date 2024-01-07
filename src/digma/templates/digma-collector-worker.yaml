@@ -34,7 +34,6 @@ spec:
         {{- include "env.redis" . | nindent  8 }}
         {{- include "env.influx" . | nindent  8 }}
         {{- include "env.postgres" . | nindent  8 }}
-        {{- include "env.rabbit" . | nindent  8 }}
         {{- include "env.kafka" . | nindent  8 }}
         {{- include "env.versions" . | nindent  8 }}
         {{- include "env.embeddedJaeger" . | nindent  8 }}
