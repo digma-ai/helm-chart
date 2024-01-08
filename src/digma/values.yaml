@@ -74,22 +74,6 @@ postgres:
     }
   }
 
-rabbitMq:
-  imageTag: 3.11.2-management-alpine
-  host: "{{ .Release.Name }}-rabbitmq"
-  username: admin
-  password: admin
-  resources: {
-    requests: {
-      memory: 300Mi,
-      cpu: 200m
-    },
-    limits: {
-      memory: 500Mi,
-      cpu: 500m
-    }
-  }
-
 pgadmin:
   host: "{{ .Release.Name }}-pgadmin"
   email: admin@admin.com

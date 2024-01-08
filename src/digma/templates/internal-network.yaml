@@ -43,20 +43,6 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ tpl .Values.rabbitMq.host . }}
-spec:
-  type: ClusterIP
-  selector:
-    app: "rabbitmq"
-  ports:
-  - port: 5672
-    protocol: TCP
-
----
-
-apiVersion: v1
-kind: Service
-metadata:
   name: {{ tpl .Values.influx.host . }}
 spec:
   type: ClusterIP

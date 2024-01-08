@@ -40,17 +40,6 @@
 {{- end -}}
 {{- end -}}
 
-
-{{- define "env.rabbit" -}}
-- name: RabbitMq__Host
-  value: {{ tpl .Values.rabbitMq.host . }}
-- name: RabbitMq__Username
-  value: {{ .Values.rabbitMq.username}}
-- name: RabbitMq_Password
-  value: {{ .Values.rabbitMq.password}}
-{{- end -}}
-
-
 # Digma to meloona
 {{- define "env.otlpExporter" -}}
 - name: OtlpExporterUrl

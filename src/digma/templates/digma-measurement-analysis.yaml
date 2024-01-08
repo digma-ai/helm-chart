@@ -29,7 +29,6 @@ spec:
         {{- include "env.digmaSite" . | nindent  8 }}
         {{- include "env.redis" . | nindent  8 }}
         {{- include "env.influx" . | nindent  8 }}
-        {{- include "env.rabbit" . | nindent  8 }}
         {{- include "env.postgres" . | nindent  8 }}
         {{- include "env.kafka" . | nindent  8 }}
         {{- include "env.otlpExporter" . | nindent  8 }}
