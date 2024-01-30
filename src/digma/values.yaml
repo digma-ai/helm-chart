@@ -98,7 +98,7 @@ elasticsearch:
 
 digmaDs:
   host: "{{ .Release.Name }}-ds"
-  imageTag: 0.0.19-alpha.3
+  imageTag: 0.0.21
   resources: {
     requests: {
       memory: 100Mi,
