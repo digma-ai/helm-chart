@@ -35,7 +35,7 @@ spec:
 
 {{ end }}
 
-{{ if .Values.embeddedJaeger.enabled }}
+{{ if and (eq .Values.embeddedJaeger.enabled true) (eq .Values.embeddedJaeger.expose true) }}
 ---
 
 apiVersion: v1

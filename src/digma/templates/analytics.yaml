@@ -48,7 +48,7 @@ spec:
           value: {{ .Values.exposeInternalErrorDetails | quote }}
         - name: AccessToken
           value: {{ required "A valid .Values.digmaAnalytics.accesstoken entry is required." .Values.digmaAnalytics.accesstoken }}
-        - name: Secured
+        - name: Analytics.Endpoints__Default__Secured
           value: {{ .Values.digmaAnalytics.secured | quote }}
         - name: CollectorUrl
           value: {{ printf " http://%s:5049" (tpl .Values.digmaCollectorApi.host .)}}
