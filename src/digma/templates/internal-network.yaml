@@ -129,6 +129,9 @@ spec:
   - name: grpc
     port: 4317
     protocol: TCP
+  - name: api
+    port: 16686
+    protocol: TCP
 
 {{ end }}
 
