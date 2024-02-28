@@ -57,12 +57,12 @@ spec:
         - name: KAFKA_CFG_INTER_BROKER_LISTENER_NAME
           value: PLAINTEXT
         # Retention
-        - name: KAFKA_CFG_LOG_RETENTION_HOURS
-          value: "1"
+        - name: KAFKA_CFG_LOG_RETENTION_MINUTES
+          value: "30"
         - name: KAFKA_CFG_LOG_RETENTION_CHECK_INTERVAL_MS
-          value: "300000"
-        - name: KAFKA_CFG_LOG_ROLL_HOURS
-          value: "1"
+          value: "300000" # 5 min
+        - name: KAFKA_CFG_LOG_ROLL_MS
+          value: "600000" # 10 min
   volumeClaimTemplates:
   - metadata:
       name: kafka-data

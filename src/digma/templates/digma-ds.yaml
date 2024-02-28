@@ -5,7 +5,7 @@ metadata:
   labels:
     app: digma-ds
 spec:
-  replicas: 1
+  replicas: {{ .Values.digmaDs.replicas }}
   selector:
     matchLabels:
       app: digma-ds
@@ -27,11 +27,11 @@ spec:
             cpu: {{ .Values.digmaDs.resources.limits.cpu }}
         ports:
         - containerPort: 5054
-        env:
-        - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-          value: {{ .Values.digmaSelfDiagnosis.otlpExporterEndpoint }}
-        - name: OTEL_RESOURCE_ATTRIBUTES
-          value: {{ printf "digma.environment=%s" .Values.digma.environmentName }}
+        # env:
+        # - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
+        #   value: {{ .Values.digmaSelfDiagnosis.otlpExporterEndpoint }}
+        # - name: OTEL_RESOURCE_ATTRIBUTES
+        #   value: {{ printf "digma.environment=%s" .Values.digma.environmentName }}
         # - name: OTEL_TRACES_SAMPLER
         #   value: traceidratio
         # - name: OTEL_TRACES_SAMPLER_ARG
