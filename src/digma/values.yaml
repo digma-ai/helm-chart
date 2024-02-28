@@ -61,7 +61,7 @@ postgres:
   port: 5432
   username: postgres
   password: postgres
-  maxConnections: 315 # setting to 315, since 15 are saved for internal use. 200 are for Analytics, 50 are for digma, and 50 for plugin backend
+  maxConnections: 400
   maxMemory: 800MB # mapped to shared_buffers
   resources: {
     requests: {
@@ -70,7 +70,7 @@ postgres:
     },
     limits: {
       memory: 2000Mi,
-      cpu: 800m
+      cpu: 2000m
     }
   }
 
@@ -128,7 +128,7 @@ digmaCollectorApi:
 
 digmaCollectorWorker:
   host: "{{ .Release.Name }}-collector-worker"
-  replicas: 1
+  replicas: 4
   resources: {
     requests: {
       memory: 300Mi,
@@ -184,14 +184,14 @@ digmaPipelineWorker:
   }
 
 digmaMeasurementAnalysis:
-  replicas: 3
+  replicas: 4
   resources: {
     requests: {
       memory: 200Mi,
       cpu: 200m
     },
     limits: {
-      memory: 300Mi,
+      memory: 900Mi,
       cpu: 900m
     }
   }
