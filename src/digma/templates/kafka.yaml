@@ -23,9 +23,10 @@ spec:
         image: bitnami/kafka:{{ .Values.kafka.imageTag }}
         resources:
           requests:
-            memory: {{ printf "%sM" .Values.kafka.resources.requests.memoryInMb }}
+            memory: {{ .Values.kafka.resources.requests.memory }}
             cpu: {{ .Values.kafka.resources.requests.cpu }}
           limits:
+            memory: {{ .Values.kafka.resources.limits.memory }}
             cpu: {{ .Values.kafka.resources.limits.cpu }}
         ports:
         - containerPort: 9092
@@ -33,9 +34,6 @@ spec:
         - name: kafka-data
           mountPath: /bitnami/kafka
         env:
-        # Java settings
-        - name: KAFKA_HEAP_OPTS
-          value: {{ printf "-Xmx%sm " .Values.kafka.resources.limits.memoryInMb }}  
         # KRaft settings
         - name: KAFKA_KRAFT_CLUSTER_ID
           value: h4U35I9QRnGhbgsEQAlXAw
