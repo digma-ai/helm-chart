@@ -18,8 +18,8 @@ kafka:
       cpu: 200m
     },
     limits: {
-      memory: 1Gi,
-      cpu: 500m
+      memory: 3Gi,
+      cpu: 600m
     }
   }
   
@@ -29,11 +29,11 @@ redis:
   resources: {
     requests: {
       memory: 100Mi,
-      cpu: 200m
+      cpu: 50m
     },
     limits: {
-      memory: 800Mi,
-      cpu: 500m
+      memory: 600Mi,
+      cpu: 300m
     }
   }
 
@@ -42,11 +42,11 @@ influx:
   imageTag: 2.7.1
   resources: {
     requests: {
-      memory: 2Gi,
+      memory: 500Mi,
       cpu: 500m
     },
     limits: {
-      memory: 4Gi,
+      memory: 2Gi,
       cpu: 2000m
     }
   }
@@ -65,12 +65,12 @@ postgres:
   maxMemory: 800MB # mapped to shared_buffers
   resources: {
     requests: {
-      memory: 600Mi,
-      cpu: 400m
+      memory: 1Gi,
+      cpu: 500m
     },
     limits: {
-      memory: 2000Mi,
-      cpu: 2000m
+      memory: 2Gi,
+      cpu: 2500m
     }
   }
 
@@ -103,12 +103,12 @@ digmaDs:
   replicas: 1
   resources: {
     requests: {
-      memory: 100Mi,
+      memory: 300Mi,
       cpu: 100m
     },
     limits: {
       memory: 500Mi,
-      cpu: 1000m
+      cpu: 700m
     }
   }
 
@@ -117,12 +117,12 @@ digmaCollectorApi:
   expose: false
   resources: {
     requests: {
-      memory: 300Mi,
-      cpu: 200m
+      memory: 100Mi,
+      cpu: 50m
     },
     limits: {
-      memory: 500Mi,
-      cpu: 400m
+      memory: 300Mi,
+      cpu: 100m
     }
   }
 
@@ -131,12 +131,12 @@ digmaCollectorWorker:
   replicas: 4
   resources: {
     requests: {
-      memory: 300Mi,
+      memory: 200Mi,
       cpu: 200m
     },
     limits: {
-      memory: 800Mi,
-      cpu: 700m
+      memory: 400Mi,
+      cpu: 400m
     }
   }
 
@@ -148,7 +148,7 @@ digmaAnalytics:
   resources: {
     requests: {
       memory: 300Mi,
-      cpu: 200m
+      cpu: 100m
     },
     limits: {
       memory: 800Mi,
@@ -160,12 +160,12 @@ digmaScheduler:
   host: "{{ .Release.Name }}-scheduler"
   resources: {
     requests: {
-      memory: 300Mi,
-      cpu: 200m
+      memory: 100Mi,
+      cpu: 50m
     },
     limits: {
-      memory: 1000Mi,
-      cpu: 800m
+      memory: 300Mi,
+      cpu: 200m
     }
   }
 
@@ -173,11 +173,11 @@ digmaPipelineWorker:
   replicas: 4
   resources: {
     requests: {
-      memory: 200Mi,
-      cpu: 200m
+      memory: 100Mi,
+      cpu: 50m
     },
     limits: {
-      memory: 500Mi,
+      memory: 300Mi,
       cpu: 500m
     }
   }
@@ -186,12 +186,12 @@ digmaMeasurementAnalysis:
   replicas: 4
   resources: {
     requests: {
-      memory: 200Mi,
+      memory: 100Mi,
       cpu: 200m
     },
     limits: {
-      memory: 900Mi,
-      cpu: 900m
+      memory: 300Mi,
+      cpu: 800m
     }
   }
 
