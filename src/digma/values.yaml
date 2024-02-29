@@ -51,7 +51,7 @@ influx:
     }
   }
   config: 
-    queryConcurrency: 15
+    queryConcurrency: 30
     queryQueueSize: 200
     
 
@@ -171,7 +171,7 @@ digmaScheduler:
   }
 
 digmaPipelineWorker:
-  replicas: 1
+  replicas: 4
   resources: {
     requests: {
       memory: 200Mi,
