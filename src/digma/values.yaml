@@ -199,7 +199,7 @@ digmaSelfDiagnosis:
   otlpExportTraces: false
   otlpExportMetrics: false
   otlpExportLogs: false
-  otlpExporterEndpoint: http://digma-otel-collector-df:4317/  
+  otlpExporterEndpoint:
   otlpSamplerProbability: "0.3"
 
 digma:
