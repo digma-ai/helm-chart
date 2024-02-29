@@ -82,7 +82,7 @@ pgadmin:
 embeddedJaeger:
   host: "{{ .Release.Name }}-embedded-jaeger"
   imageTag: "1.44.0"
-  enabled: true
+  enabled: false
   exposed: true
 
 kibana:
@@ -143,8 +143,8 @@ digmaCollectorWorker:
 digmaAnalytics:
   host: "{{ .Release.Name }}-analytics"
   replicas: 1
-  expose: false
-  secured: false
+  expose: true
+  secured: true
   accesstoken: pcr5UDZqdvzky1cgj
   resources: {
     requests: {
@@ -198,10 +198,10 @@ digmaMeasurementAnalysis:
 
 digmaSelfDiagnosis:
   otlpExportTraces: false
-  otlpExportMetrics: true
+  otlpExportMetrics: false
   otlpExportLogs: false
   otlpExporterEndpoint: http://digma-otel-collector-df:4317/
 
 digma:
-  environmentName: stag01
-  siteName: stag01
+  environmentName:
+  siteName: undefined
