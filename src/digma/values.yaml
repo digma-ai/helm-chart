@@ -145,7 +145,6 @@ digmaAnalytics:
   replicas: 1
   expose: true
   secured: true
-  accesstoken: pcr5UDZqdvzky1cgj
   resources: {
     requests: {
       memory: 300Mi,
