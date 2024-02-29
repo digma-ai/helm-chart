@@ -1,6 +1,6 @@
 {{- define "env.digmaEnv" -}}
 - name: DEPLOYMENT_ENV
-  value: {{ required "A valid .Values.digma.environmentName entry is required." .Values.digma.environmentName }}
+  value: {{ .Values.digma.environmentName }}
 {{- end -}}
 
       

@@ -14,11 +14,11 @@ kafka:
   imageTag: 3.5.1
   resources: {
     requests: {
-      memoryInMb: "100",
+      memory: 400Mi,
       cpu: 200m
     },
     limits: {
-      memoryInMb: "500",
+      memory: 1Gi,
       cpu: 500m
     }
   }
