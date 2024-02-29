@@ -5,7 +5,7 @@ metadata:
   labels:
     app: digma-ds
 spec:
-  replicas: 1
+  replicas: {{ .Values.digmaDs.replicas }}
   selector:
     matchLabels:
       app: digma-ds

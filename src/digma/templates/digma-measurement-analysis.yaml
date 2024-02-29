@@ -5,7 +5,7 @@ metadata:
   labels:
     app: digma-measurement-analysis
 spec:
-  replicas: 1
+  replicas: {{ .Values.digmaMeasurementAnalysis.replicas }}
   selector:
     matchLabels:
       app: digma-measurement-analysis
@@ -41,3 +41,11 @@ spec:
           value: {{ .Values.digmaSelfDiagnosis.otlpSamplerProbability| quote}}
         - name: BACKEND_DEPLOYMENT_TYPE
           value: {{ .Values.deploymentType | quote}}
+        - name: Kafka__SpanDurationSummaryCG__WorkerBatchSize
+          value: '2'
+        - name: Kafka__SpanDurationTotalCG__WorkerBatchSize
+          value: '2'
+        - name: Kafka__SpanUsageStatsCG__WorkerBatchSize
+          value: '2'
+        - name: Kafka__BottleneckCG__WorkerBatchSize
+          value: '2'

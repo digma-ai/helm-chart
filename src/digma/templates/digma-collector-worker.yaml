@@ -5,7 +5,7 @@ metadata:
   labels:
     app: digma-collector-worker
 spec:
-  replicas: 3
+  replicas: {{ .Values.digmaCollectorWorker.replicas }}
   selector:
     matchLabels:
       app: digma-collector-worker
