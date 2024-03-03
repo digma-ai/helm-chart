@@ -41,11 +41,19 @@ spec:
           value: {{ .Values.digmaSelfDiagnosis.otlpSamplerProbability| quote}}
         - name: BACKEND_DEPLOYMENT_TYPE
           value: {{ .Values.deploymentType | quote}}
+        - name: Kafka__SpanDurationSummaryCG__Workers
+          value: '2'
+        - name: Kafka__SpanDurationTotalCG__Workers
+          value: '2'
+        - name: Kafka__SpanUsageStatsCG__Workers
+          value: '2'
+        - name: Kafka__BottleneckCG__Workers
+          value: '2'
         - name: Kafka__SpanDurationSummaryCG__WorkerBatchSize
-          value: '2'
+          value: '1000'
         - name: Kafka__SpanDurationTotalCG__WorkerBatchSize
-          value: '2'
+          value: '1000'
         - name: Kafka__SpanUsageStatsCG__WorkerBatchSize
-          value: '2'
+          value: '1000'
         - name: Kafka__BottleneckCG__WorkerBatchSize
-          value: '2'
+          value: '1000'
