@@ -19,7 +19,7 @@ kafka:
     },
     limits: {
       memory: 3Gi,
-      cpu: 600m
+      cpu: 1000m
     }
   }
   
@@ -32,8 +32,8 @@ redis:
       cpu: 50m
     },
     limits: {
-      memory: 600Mi,
-      cpu: 300m
+      memory: 2Gi,
+      cpu: 400m
     }
   }
 
@@ -66,11 +66,11 @@ postgres:
   resources: {
     requests: {
       memory: 1Gi,
-      cpu: 500m
+      cpu: 200m
     },
     limits: {
       memory: 2Gi,
-      cpu: 2500m
+      cpu: 1000m
     }
   }
 
@@ -122,7 +122,7 @@ digmaCollectorApi:
     },
     limits: {
       memory: 300Mi,
-      cpu: 100m
+      cpu: 200m
     }
   }
 
@@ -132,11 +132,11 @@ digmaCollectorWorker:
   resources: {
     requests: {
       memory: 200Mi,
-      cpu: 200m
+      cpu: 100m
     },
     limits: {
       memory: 400Mi,
-      cpu: 400m
+      cpu: 600m
     }
   }
 
@@ -165,7 +165,7 @@ digmaScheduler:
     },
     limits: {
       memory: 300Mi,
-      cpu: 200m
+      cpu: 300m
     }
   }
 
@@ -190,7 +190,7 @@ digmaMeasurementAnalysis:
       cpu: 200m
     },
     limits: {
-      memory: 300Mi,
+      memory: 500Mi,
       cpu: 800m
     }
   }
