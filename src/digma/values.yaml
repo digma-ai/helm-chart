@@ -32,7 +32,7 @@ redis:
       cpu: 200m
     },
     limits: {
-      memory: 800Mi,
+      memory: 2Gi,
       cpu: 500m
     }
   }
