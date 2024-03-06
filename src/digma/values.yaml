@@ -1,5 +1,29 @@
 debug: false
 
+size: small # small | medium | large
+presets:
+  small:
+    digmaCollectorWorker:
+      replicas: 1
+    digmaMeasurementAnalysis: 
+      replicas: 1
+    digmaPipelineWorker: 
+      replicas: 1
+  medium:
+    digmaCollectorWorker:
+      replicas: 4
+    digmaMeasurementAnalysis: 
+      replicas: 4
+    digmaPipelineWorker: 
+      replicas: 1
+  large:
+    digmaCollectorWorker:
+      replicas: 6
+    digmaMeasurementAnalysis: 
+      replicas: 4
+    digmaPipelineWorker: 
+      replicas: 4
+
 deploymentType: Helm
 exposeInternalErrorDetails: false
 
@@ -54,7 +78,6 @@ influx:
     queryConcurrency: 30
     queryQueueSize: 200
     
-
 postgres:
   host: "{{ .Release.Name }}-postgres"
   imageTag: 15.1
@@ -128,7 +151,7 @@ digmaCollectorApi:
 
 digmaCollectorWorker:
   host: "{{ .Release.Name }}-collector-worker"
-  replicas: 4
+  replicas: "{{ index .Values.presets .Values.size \"digmaCollectorWorker\" \"replicas\" }}"
   resources: {
     requests: {
       memory: 200Mi,
@@ -145,6 +168,7 @@ digmaAnalytics:
   replicas: 1
   expose: true
   secured: true
+  defaultAccessToken: default uuidv4
   resources: {
     requests: {
       memory: 300Mi,
@@ -170,7 +194,7 @@ digmaScheduler:
   }
 
 digmaPipelineWorker:
-  replicas: 4
+  replicas: "{{ index .Values.presets .Values.size \"digmaPipelineWorker\" \"replicas\" }}"
   resources: {
     requests: {
       memory: 100Mi,
@@ -183,7 +207,7 @@ digmaPipelineWorker:
   }
 
 digmaMeasurementAnalysis:
-  replicas: 4
+  replicas: "{{ index .Values.presets .Values.size \"digmaMeasurementAnalysis\" \"replicas\" }}"
   resources: {
     requests: {
       memory: 100Mi,

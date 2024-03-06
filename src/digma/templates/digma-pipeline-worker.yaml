@@ -5,7 +5,7 @@ metadata:
   labels:
     app: digma-pipeline-worker
 spec:
-  replicas: {{ .Values.digmaPipelineWorker.replicas }}
+  replicas: {{ tpl .Values.digmaPipelineWorker.replicas . }}
   selector:
     matchLabels:
       app: digma-pipeline-worker
