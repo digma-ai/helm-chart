@@ -128,7 +128,7 @@ digmaCollectorApi:
 
 digmaCollectorWorker:
   host: "{{ .Release.Name }}-collector-worker"
-  replicas: 4
+  replicas: 6
   resources: {
     requests: {
       memory: 300Mi,
