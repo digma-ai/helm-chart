@@ -168,7 +168,6 @@ digmaAnalytics:
   replicas: 1
   expose: true
   secured: true
-  defaultAccessToken: default uuidv4
   resources: {
     requests: {
       memory: 300Mi,
