@@ -2,7 +2,7 @@
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset=".github/images/digma-helm-dark.png">
     <source media="(prefers-color-scheme: light)" srcset=".github/images/digma-helm-light.png">
-    <img width="410" height="200" src=".github/images/digma-helm-light.png" alt="digma+helm logos">
+    <img width="446" height="200" src=".github/images/digma-helm-light.png" alt="digma+helm logos">
   </picture>
    <br/>
   This branch (<code>main</code>) contains the <b>source code</b> for the charts
