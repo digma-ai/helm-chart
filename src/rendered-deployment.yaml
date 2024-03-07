@@ -225,7 +225,7 @@ spec:
         - name: ApplicationVersion
           value: 0.2.236
         - name: ChartVersion
-          value: 1.0.131
+          value: 1.0.132
 
         - name: OtlpSamplerProbability
           value: "0.3"
@@ -292,7 +292,7 @@ spec:
         - name: ApplicationVersion
           value: 0.2.236
         - name: ChartVersion
-          value: 1.0.131
+          value: 1.0.132
         - name: Jaeger__OtlpUrl
           value:  http://digma-embedded-jaeger:4317
 
@@ -352,7 +352,7 @@ spec:
         - name: ApplicationVersion
           value: 0.2.236
         - name: ChartVersion
-          value: 1.0.131
+          value: 1.0.132
         - name: Jaeger__OtlpUrl
           value:  http://digma-embedded-jaeger:4317
         - name: OtlpSamplerProbability
@@ -459,7 +459,7 @@ spec:
         - name: ApplicationVersion
           value: 0.2.236
         - name: ChartVersion
-          value: 1.0.131
+          value: 1.0.132
         - name: Jaeger__OtlpUrl
           value:  http://digma-embedded-jaeger:4317
         - name: OtlpSamplerProbability
@@ -493,7 +493,7 @@ metadata:
   labels:
     app: digma-pipeline-worker
 spec:
-  replicas: 4
+  replicas: 1
   selector:
     matchLabels:
       app: digma-pipeline-worker
@@ -536,7 +536,7 @@ spec:
         - name: ApplicationVersion
           value: 0.2.236
         - name: ChartVersion
-          value: 1.0.131
+          value: 1.0.132
         - name: Jaeger__OtlpUrl
           value:  http://digma-embedded-jaeger:4317
         - name: OtlpSamplerProbability
@@ -599,7 +599,7 @@ spec:
         - name: ApplicationVersion
           value: 0.2.236
         - name: ChartVersion
-          value: 1.0.131
+          value: 1.0.132
 
         - name: OtlpSamplerProbability
           value: "0.3"
@@ -769,11 +769,11 @@ spec:
           value: PLAINTEXT
         # Retention
         - name: KAFKA_CFG_LOG_RETENTION_MINUTES
-          value: "30"
+          value: "20"
         - name: KAFKA_CFG_LOG_RETENTION_CHECK_INTERVAL_MS
-          value: "300000" # 5 min
+          value: "100000" # 1 min
         - name: KAFKA_CFG_LOG_ROLL_MS
-          value: "600000" # 10 min
+          value: "500000" # 5 min
   volumeClaimTemplates:
   - metadata:
       name: kafka-data
@@ -782,7 +782,7 @@ spec:
         - ReadWriteOnce
       resources:
         requests:
-          storage: 10Gi
+          storage: 15Gi
 ---
 # Source: digma/templates/postgres.yaml
 apiVersion: apps/v1
