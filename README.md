@@ -2,7 +2,7 @@
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="assets/digma-helm-dark.png">
     <source media="(prefers-color-scheme: light)" srcset="assets/digma-helm-light.png">
-    <img width="410" height="200" src="assets/digma-helm-light.png" alt="digma+helm logos">
+    <img width="446" height="200" src="assets/digma-helm-light.png" alt="digma+helm logos">
   </picture>
   <br/>
   This branch (<code>gh-pages</code>) contains the <b>published</b> charts for digma
