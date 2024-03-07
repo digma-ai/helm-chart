@@ -234,9 +234,9 @@ spec:
         - name: GlobalExceptionSettings__ExposeInternalDetails
           value: "false"
         - name: AccessToken
-          value: ${ACCESS_TOKEN}
+          value: "${ACCESS_TOKEN}"
         - name: Analytics.Endpoints__Default__Secured
-          value: ${ANALYTICS_API_SECURED}"
+          value: "${ANALYTICS_API_SECURED}"
         - name: CollectorUrl
           value:  http://digma-collector-api:5049
 ---
