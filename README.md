@@ -40,8 +40,15 @@ Usage:
     </thead>
     <tbody>
         <tr>
+          <td><code>size</code><i>(string)</i></td>
+          <td>Adjusts the deployment to efficiently handle different scales of workload, and can be either <b>small</b>, <b>medium</b>, or <b>large</b>.<br/>
+            Default <b>small</b>.
+          </ls>
+          </td>
+        </tr>
+        <tr>
           <td><code>debug</code><i>(boolean)</i></td>
-              <td>When <b>true</b>, one more pod is deployed, containing <br/><ul><li>ELK+APM</li><li>PgAdmin</li><li>Redis Commander</li></ul>Default <b>False</b>.</td>
+              <td>When <b>true</b>, one more pod is deployed, containing <br/><ul><li>ELK+APM</li><li>PgAdmin</li><li>Redis Commander</li></ul>Default <b>false</b>.</td>
             </tr>
         <tr>
           <td><code>&lt;service&gt;.host</code> <i>(string)</i></td>
