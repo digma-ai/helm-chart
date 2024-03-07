@@ -56,11 +56,11 @@ spec:
           value: PLAINTEXT
         # Retention
         - name: KAFKA_CFG_LOG_RETENTION_MINUTES
-          value: "30"
+          value: "20"
         - name: KAFKA_CFG_LOG_RETENTION_CHECK_INTERVAL_MS
-          value: "300000" # 5 min
+          value: "100000" # 1 min
         - name: KAFKA_CFG_LOG_ROLL_MS
-          value: "600000" # 10 min
+          value: "500000" # 5 min
   volumeClaimTemplates:
   - metadata:
       name: kafka-data
@@ -69,6 +69,6 @@ spec:
         - ReadWriteOnce
       resources:
         requests:
-          storage: 10Gi
+          storage: 15Gi
 
 

@@ -5,7 +5,7 @@ metadata:
   labels:
     app: digma-measurement-analysis
 spec:
-  replicas: {{ .Values.digmaMeasurementAnalysis.replicas }}
+  replicas: {{ tpl .Values.digmaMeasurementAnalysis.replicas . }}
   selector:
     matchLabels:
       app: digma-measurement-analysis
