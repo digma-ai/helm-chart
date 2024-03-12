@@ -25,6 +25,8 @@ spec:
             memory: {{ .Values.digmaMeasurementAnalysis.resources.limits.memory }}
             cpu: {{ .Values.digmaMeasurementAnalysis.resources.limits.cpu }}
         env:
+        - name: IsCentralize
+          value: {{ .Values.digma.isCentralize }}
         {{- include "env.digmaEnv" . | nindent  8 }}
         {{- include "env.digmaSite" . | nindent  8 }}
         {{- include "env.redis" . | nindent  8 }}

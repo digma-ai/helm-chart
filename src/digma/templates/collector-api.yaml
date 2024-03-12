@@ -28,6 +28,8 @@ spec:
         - containerPort: 5049
         - containerPort: 5050
         env:
+        - name: IsCentralize
+          value: {{ .Values.digma.isCentralize }}
         {{- include "env.digmaEnv" . | nindent  8 }}
         {{- include "env.digmaSite" . | nindent  8 }}
         {{- include "env.postgres" . | nindent  8 }}
