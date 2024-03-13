@@ -25,7 +25,6 @@ presets:
       replicas: 4
 
 deploymentType: Helm
-licenseKey:
 exposeInternalErrorDetails: false
 
 traceCollectorThresholds:
@@ -230,3 +229,4 @@ digma:
   environmentName:
   siteName: undefined
   isCentralize: true
+  licenseKey:

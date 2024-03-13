@@ -93,6 +93,6 @@
 
 {{- define "env.licenseKey" -}}
 - name: DIGMA_LICENSE_KEY
-  value: {{.Values.licenseKey}}
+  value: {{.Values.digma.licenseKey}}
 {{- end -}}
 
