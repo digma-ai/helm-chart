@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-digma-measurement-analysis-deployment
+  name: {{ .Release.Name }}-measurement-analysis-deployment
   labels:
     app: digma-measurement-analysis
 spec:
@@ -25,8 +25,8 @@ spec:
             memory: {{ .Values.digmaMeasurementAnalysis.resources.limits.memory }}
             cpu: {{ .Values.digmaMeasurementAnalysis.resources.limits.cpu }}
         env:
-        - name: IsCentralize
-          value: {{ .Values.digma.isCentralize| quote }}
+        {{- include "env.isCentralize" . | nindent  8 }}
+        {{- include "env.licenseKey" . | nindent  8 }}
         {{- include "env.digmaEnv" . | nindent  8 }}
         {{- include "env.digmaSite" . | nindent  8 }}
         {{- include "env.redis" . | nindent  8 }}

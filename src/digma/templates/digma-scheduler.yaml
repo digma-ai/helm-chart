@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-digma-scheduler-deployment
+  name: {{ .Release.Name }}-scheduler-deployment
   labels:
     app: digma-scheduler
 spec:
@@ -27,8 +27,8 @@ spec:
         ports:
         - containerPort: 5053
         env:
-        - name: IsCentralize
-          value: {{ .Values.digma.isCentralize| quote }}
+        {{- include "env.isCentralize" . | nindent  8 }}
+        {{- include "env.licenseKey" . | nindent  8 }}
         {{- include "env.digmaEnv" . | nindent  8 }}
         {{- include "env.digmaSite" . | nindent  8 }}
         {{- include "env.redis" . | nindent  8 }}
