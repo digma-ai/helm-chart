@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-digma-measurement-analysis-deployment
+  name: {{ .Release.Name }}-measurement-analysis-deployment
   labels:
     app: digma-measurement-analysis
 spec:

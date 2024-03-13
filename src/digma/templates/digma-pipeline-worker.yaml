@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-digma-pipeline-worker-deployment
+  name: {{ .Release.Name }}-pipeline-worker-deployment
   labels:
     app: digma-pipeline-worker
 spec:

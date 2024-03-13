@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-digma-scheduler-deployment
+  name: {{ .Release.Name }}-scheduler-deployment
   labels:
     app: digma-scheduler
 spec:

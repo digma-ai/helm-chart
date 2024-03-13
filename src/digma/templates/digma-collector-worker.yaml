@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-digma-collector-worker-deployment
+  name: {{ .Release.Name }}-collector-worker-deployment
   labels:
     app: digma-collector-worker
 spec:
