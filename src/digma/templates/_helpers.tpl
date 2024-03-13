@@ -85,6 +85,12 @@
 
 
 
+{{- define "env.isCentralize" -}}
+- name: IsCentralize
+  value: {{.Values.digma.isCentralize | quote}}
+{{- end -}}
+
+
 {{- define "env.licenseKey" -}}
 - name: DIGMA_LICENSE_KEY
   value: {{.Values.licenseKey}}

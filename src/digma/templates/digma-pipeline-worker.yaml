@@ -25,6 +25,7 @@ spec:
             memory: {{ .Values.digmaPipelineWorker.resources.limits.memory }}
             cpu: {{ .Values.digmaPipelineWorker.resources.limits.cpu }}
         env:
+        {{- include "env.isCentralize" . | nindent  8 }}
         {{- include "env.licenseKey" . | nindent  8 }}
         {{- include "env.digmaEnv" . | nindent  8 }}
         {{- include "env.digmaSite" . | nindent  8 }}

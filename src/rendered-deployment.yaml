@@ -193,7 +193,7 @@ spec:
     spec:
       containers:
         - name: digma-analytics
-          image: digmatic/digma-analytics:0.2.241
+          image: digmatic/digma-analytics:0.2.242
           resources:
             requests:
               memory: 300Mi
@@ -206,6 +206,8 @@ spec:
           env:
             - name: DEPLOYMENT_ENV
               value:
+            - name: IsCentralize
+              value: "true"
             - name: Site
               value: undefined
             - name: CacheSettings__RedisConnection
@@ -223,7 +225,7 @@ spec:
             - name: OtlpExportTraces
               value: "false"
             - name: ApplicationVersion
-              value: 0.2.241
+              value: 0.2.242
             - name: ChartVersion
               value: 1.0.132
 
@@ -259,7 +261,7 @@ spec:
     spec:
       containers:
         - name: digma-collector-api
-          image: digmatic/digma-collector:0.2.241
+          image: digmatic/digma-collector:0.2.242
           resources:
             requests:
               memory: 100Mi
@@ -273,6 +275,8 @@ spec:
           env:
             - name: DEPLOYMENT_ENV
               value:
+            - name: IsCentralize
+              value: "true"
             - name: Site
               value: undefined
             - name: ConnectionStrings__Postgres
@@ -290,7 +294,7 @@ spec:
             - name: OtlpExportTraces
               value: "false"
             - name: ApplicationVersion
-              value: 0.2.241
+              value: 0.2.242
             - name: ChartVersion
               value: 1.0.132
             - name: Jaeger__OtlpUrl
@@ -320,7 +324,7 @@ spec:
     spec:
       containers:
         - name: digma-collector-worker
-          image: digmatic/digma-collector-worker:0.2.241
+          image: digmatic/digma-collector-worker:0.2.242
           resources:
             requests:
               memory: 200Mi
@@ -331,6 +335,8 @@ spec:
           env:
             - name: DEPLOYMENT_ENV
               value:
+            - name: IsCentralize
+              value: "true"
             - name: Site
               value: undefined
             - name: OtlpExporterUrl
@@ -350,7 +356,7 @@ spec:
             - name: Kafka__Urls__0
               value: digma-kafka:9092
             - name: ApplicationVersion
-              value: 0.2.241
+              value: 0.2.242
             - name: ChartVersion
               value: 1.0.132
             - name: Jaeger__OtlpUrl
@@ -434,7 +440,7 @@ spec:
     spec:
       containers:
         - name: digma-measurement-analysis
-          image: digmatic/digma-measurement-analysis:0.2.241
+          image: digmatic/digma-measurement-analysis:0.2.242
           resources:
             requests:
               memory: 100Mi
@@ -445,6 +451,8 @@ spec:
           env:
             - name: DEPLOYMENT_ENV
               value:
+            - name: IsCentralize
+              value: "true"
             - name: Site
               value: undefined
             - name: CacheSettings__RedisConnection
@@ -464,7 +472,7 @@ spec:
             - name: OtlpExportTraces
               value: "false"
             - name: ApplicationVersion
-              value: 0.2.241
+              value: 0.2.242
             - name: ChartVersion
               value: 1.0.132
             - name: Jaeger__OtlpUrl
@@ -511,7 +519,7 @@ spec:
     spec:
       containers:
         - name: digma-pipeline-worker
-          image: digmatic/digma-pipeline-worker:0.2.241
+          image: digmatic/digma-pipeline-worker:0.2.242
           resources:
             requests:
               memory: 100Mi
@@ -522,6 +530,8 @@ spec:
           env:
             - name: DEPLOYMENT_ENV
               value:
+            - name: IsCentralize
+              value: "true"
             - name: Site
               value: undefined
             - name: OtlpExporterUrl
@@ -541,7 +551,7 @@ spec:
             - name: Kafka__Urls__0
               value: digma-kafka:9092
             - name: ApplicationVersion
-              value: 0.2.241
+              value: 0.2.242
             - name: ChartVersion
               value: 1.0.132
             - name: Jaeger__OtlpUrl
@@ -572,7 +582,7 @@ spec:
     spec:
       containers:
         - name: digma-scheduler
-          image: digmatic/digma-scheduler:0.2.241
+          image: digmatic/digma-scheduler:0.2.242
           resources:
             requests:
               memory: 100Mi
@@ -585,6 +595,8 @@ spec:
           env:
             - name: DEPLOYMENT_ENV
               value:
+            - name: IsCentralize
+              value: "true"
             - name: Site
               value: undefined
             - name: CacheSettings__RedisConnection
@@ -604,7 +616,7 @@ spec:
             - name: OtlpExportTraces
               value: "false"
             - name: ApplicationVersion
-              value: 0.2.241
+              value: 0.2.242
             - name: ChartVersion
               value: 1.0.132
 

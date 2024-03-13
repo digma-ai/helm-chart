@@ -229,3 +229,4 @@ digmaSelfDiagnosis:
 digma:
   environmentName:
   siteName: undefined
+  isCentralize: true
