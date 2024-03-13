@@ -83,3 +83,10 @@
   value: {{.Chart.Version}}
 {{- end -}}
 
+
+
+{{- define "env.licenseKey" -}}
+- name: DIGMA_LICENSE_KEY
+  value: {{.Values.licenseKey}}
+{{- end -}}
+

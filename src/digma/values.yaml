@@ -25,6 +25,7 @@ presets:
       replicas: 4
 
 deploymentType: Helm
+licenseKey:
 exposeInternalErrorDetails: false
 
 traceCollectorThresholds:
