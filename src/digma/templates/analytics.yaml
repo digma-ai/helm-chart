@@ -27,6 +27,8 @@ spec:
         ports:
         - containerPort: 5051
         env:
+        - name: IsCentralize
+          value: {{ .Values.digma.isCentralize| quote }}
         {{- include "env.digmaEnv" . | nindent  8 }}
         {{- include "env.digmaSite" . | nindent  8 }}
         {{- include "env.redis" . | nindent  8 }}

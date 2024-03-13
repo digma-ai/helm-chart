@@ -25,6 +25,8 @@ spec:
             memory: {{ .Values.digmaPipelineWorker.resources.limits.memory }}
             cpu: {{ .Values.digmaPipelineWorker.resources.limits.cpu }}
         env:
+        - name: IsCentralize
+          value: {{ .Values.digma.isCentralize| quote }}
         {{- include "env.digmaEnv" . | nindent  8 }}
         {{- include "env.digmaSite" . | nindent  8 }}
         {{- include "env.otlpExporter" . | nindent  8 }}
