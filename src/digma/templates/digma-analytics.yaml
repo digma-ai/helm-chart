@@ -50,7 +50,7 @@ spec:
         - name: GlobalExceptionSettings__ExposeInternalDetails
           value: {{ .Values.exposeInternalErrorDetails | quote }}
         - name: AccessToken
-          value: {{ required "A valid .Values.digmaAnalytics.accesstoken entry is required." .Values.digmaAnalytics.accesstoken }}
+          value: {{ .Values.digmaAnalytics.accesstoken | quote }}
         - name: Analytics.Endpoints__Default__Secured
           value: {{ .Values.digmaAnalytics.secured | quote }}
         - name: CollectorUrl
