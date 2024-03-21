@@ -4,6 +4,12 @@ kind: Service
 apiVersion: v1
 metadata:
   name: {{ .Release.Name }}-analytics-service-lb
+  {{- if .Values.digmaAnalytics.service.annotations }}
+  annotations:
+    {{- if .Values.digmaAnalytics.service.annotations }}
+      {{ toYaml .Values.digmaAnalytics.service.annotations | indent 4 }}
+    {{- end }}
+  {{- end }}
 spec:
   type: LoadBalancer
   selector:
@@ -21,6 +27,12 @@ kind: Service
 apiVersion: v1
 metadata:
   name: {{ .Release.Name }}-collector-api-service-lb
+  {{- if .Values.digmaCollectorApi.service.annotations }}
+  annotations:
+    {{- if .Values.digmaCollectorApi.service.annotations }}
+      {{ toYaml .Values.digmaCollectorApi.service.annotations | indent 4 }}
+    {{- end }}
+  {{- end }}
 spec:
   type: LoadBalancer
   selector:
@@ -42,6 +54,12 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ .Release.Name }}-embedded-jaeger-lb
+  {{- if .Values.embeddedJaeger.service.annotations }}
+  annotations:
+    {{- if .Values.embeddedJaeger.service.annotations }}
+      {{ toYaml .Values.embeddedJaeger.service.annotations | indent 4 }}
+    {{- end }}
+  {{- end }}
 spec:
   type: LoadBalancer
   selector:
