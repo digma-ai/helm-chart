@@ -4,8 +4,6 @@ digmaAnalytics:
       service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
 
 embeddedJaeger:
-  enabled: true
-  expose: true
   service:
     annotations:
       service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing

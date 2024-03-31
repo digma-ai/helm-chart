@@ -1,0 +1,14 @@
+digmaAnalytics:
+  service:
+    annotations:
+      networking.gke.io/load-balancer-type: "Internal"
+
+embeddedJaeger:
+  service:
+    annotations:
+      networking.gke.io/load-balancer-type: "Internal"
+
+digmaCollectorApi:
+  service:
+    annotations:
+      networking.gke.io/load-balancer-type: "Internal"

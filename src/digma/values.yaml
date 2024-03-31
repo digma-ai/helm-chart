@@ -106,7 +106,6 @@ embeddedJaeger:
   host: "{{ .Release.Name }}-embedded-jaeger"
   imageTag: "1.44.0"
   enabled: true
-  exposed: true
 
 kibana:
   host: "{{ .Release.Name }}-kibana"
@@ -137,7 +136,6 @@ digmaDs:
 
 digmaCollectorApi:
   host: "{{ .Release.Name }}-collector-api"
-  expose: false
   resources: {
     requests: {
       memory: 100Mi,
@@ -166,7 +164,6 @@ digmaCollectorWorker:
 digmaAnalytics:
   host: "{{ .Release.Name }}-analytics"
   replicas: 1
-  expose: true
   secured: true
   resources: {
     requests: {

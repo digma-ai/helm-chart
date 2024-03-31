@@ -1,0 +1,14 @@
+digmaAnalytics:
+  service:
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-scheme: internal
+
+embeddedJaeger:
+  service:
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-scheme: internal
+
+digmaCollectorApi:
+  service:
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-scheme: internal
