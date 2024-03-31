@@ -93,6 +93,6 @@
 
 {{- define "env.licenseKey" -}}
 - name: DIGMA_LICENSE_KEY
-  value: {{.Values.digma.licenseKey}}
+  value: {{ required "A valid .Values.digma.licenseKey entry is required. If you've signed up for a free Digma account you should have received a Digma license to use. check https://docs.digma.ai/digma-developer-guide/installation/central-on-prem-install" .Values.digma.licenseKey }}
 {{- end -}}
 

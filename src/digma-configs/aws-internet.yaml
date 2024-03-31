@@ -2,13 +2,16 @@ digmaAnalytics:
   service:
     annotations:
       service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
-
-embeddedJaeger:
-  service:
-    annotations:
-      service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+      # any other annotation can be declared here.
 
 digmaCollectorApi:
   service:
     annotations:
       service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+      # any other annotation can be declared here.
+
+embeddedJaeger:
+  service:
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+      # any other annotation can be declared here.

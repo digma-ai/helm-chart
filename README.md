@@ -16,19 +16,38 @@ Switch to the `gh-pages` branch to see the [full user guide](https://github.com/
 ## Publish 
 To publish a new verion for the chart, just update the charts version, the push to main.
 
-## Cheat sheet
+## Installation
 
-Install:
-```
-helm install dig src/digma
-```
-
-Uinstall:
-```
-helm uninstall dig
+Add Digma's chart repository to Helm:
+```bash
+helm repo add digma https://digma-ai.github.io/helm-chart/
 ```
 
-Test:
+Update the chart repository:
+```bash
+helm repo update
 ```
-helm install dig src/digma --debug --dry-run 
+
+## Set up Digma on AWS
+
+### Internal passthrough
+```
+helm install digma digma/digma --values https://raw.githubusercontent.com/digma-ai/helm-chart/main/src/digma-configs/aws-internal.yaml --set digma.licenseKey=[DIGMA_LICENSE] --namespace digma --create-namespace
+```
+
+### External passthrough
+```
+helm install digma digma/digma --values https://raw.githubusercontent.com/digma-ai/helm-chart/main/src/digma-configs/aws-internet.yaml --set digma.licenseKey=[DIGMA_LICENSE] --namespace digma --create-namespace
+```
+
+## Set up Digma on GKE
+
+### Internal passthrough
+```
+helm install digma digma/digma --values https://raw.githubusercontent.com/digma-ai/helm-chart/main/src/digma-configs/gcp-internal.yaml --set digma.licenseKey=[DIGMA_LICENSE] --namespace digma --create-namespace
+```
+
+### External passthrough
+```
+helm install digma digma/digma --values https://raw.githubusercontent.com/digma-ai/helm-chart/main/src/digma-configs/gcp-internet.yaml --set digma.licenseKey=[DIGMA_LICENSE] --namespace digma --create-namespace
 ```
