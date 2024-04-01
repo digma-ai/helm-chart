@@ -1,0 +1,17 @@
+digmaAnalytics:
+  service:
+    annotations:
+      networking.gke.io/load-balancer-type: "External"
+      # any other annotation can be declared here.
+
+digmaCollectorApi:
+  service:
+    annotations:
+      networking.gke.io/load-balancer-type: "External"
+      # any other annotation can be declared here.
+
+embeddedJaeger:
+  service:
+    annotations:
+      networking.gke.io/load-balancer-type: "External"
+      # any other annotation can be declared here.
