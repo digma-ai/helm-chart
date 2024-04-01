@@ -10,44 +10,9 @@
   (see <a href="https://github.com/digma-ai/helm-chart/tree/gh-pages">gh-pages</a> branch for the published ones)
 </p>
 
+# Central (on-prem) Install
+### [In this simple guide](https://docs.digma.ai/digma-developer-guide/installation/central-on-prem-install), we’ll go over the basic steps required to move beyond local deployment and get Digma up and running in a Kubernetes cluster that multiple people can connect to.
+
+
 ## User Guide
 Switch to the `gh-pages` branch to see the [full user guide](https://github.com/digma-ai/helm-chart/tree/gh-pages).
-
-## Publish 
-To publish a new verion for the chart, just update the charts version, the push to main.
-
-## Installation
-
-Add Digma's chart repository to Helm:
-```bash
-helm repo add digma https://digma-ai.github.io/helm-chart/
-```
-
-Update the chart repository:
-```bash
-helm repo update
-```
-
-## Set up Digma on AWS
-
-### Internal passthrough
-```
-helm install digma digma/digma --values https://raw.githubusercontent.com/digma-ai/helm-chart/main/src/digma-configs/aws-internal.yaml --set digma.licenseKey=[DIGMA_LICENSE] --namespace digma --create-namespace
-```
-
-### External passthrough
-```
-helm install digma digma/digma --values https://raw.githubusercontent.com/digma-ai/helm-chart/main/src/digma-configs/aws-internet.yaml --set digma.licenseKey=[DIGMA_LICENSE] --namespace digma --create-namespace
-```
-
-## Set up Digma on GKE
-
-### Internal passthrough
-```
-helm install digma digma/digma --values https://raw.githubusercontent.com/digma-ai/helm-chart/main/src/digma-configs/gcp-internal.yaml --set digma.licenseKey=[DIGMA_LICENSE] --namespace digma --create-namespace
-```
-
-### External passthrough
-```
-helm install digma digma/digma --values https://raw.githubusercontent.com/digma-ai/helm-chart/main/src/digma-configs/gcp-internet.yaml --set digma.licenseKey=[DIGMA_LICENSE] --namespace digma --create-namespace
-```
