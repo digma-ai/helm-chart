@@ -193,7 +193,7 @@ spec:
     spec:
       containers:
         - name: digma-analytics
-          image: digmatic/digma-analytics:0.2.267
+          image: digmatic/digma-analytics:0.2.268
           resources:
             requests:
               memory: 300Mi
@@ -261,7 +261,7 @@ spec:
     spec:
       containers:
         - name: digma-collector-api
-          image: digmatic/digma-collector:0.2.267
+          image: digmatic/digma-collector:0.2.268
           resources:
             requests:
               memory: 100Mi
@@ -324,7 +324,7 @@ spec:
     spec:
       containers:
         - name: digma-collector-worker
-          image: digmatic/digma-collector-worker:0.2.267
+          image: digmatic/digma-collector-worker:0.2.268
           resources:
             requests:
               memory: 200Mi
@@ -440,7 +440,7 @@ spec:
     spec:
       containers:
         - name: digma-measurement-analysis
-          image: digmatic/digma-measurement-analysis:0.2.267
+          image: digmatic/digma-measurement-analysis:0.2.268
           resources:
             requests:
               memory: 100Mi
@@ -519,7 +519,7 @@ spec:
     spec:
       containers:
         - name: digma-pipeline-worker
-          image: digmatic/digma-pipeline-worker:0.2.267
+          image: digmatic/digma-pipeline-worker:0.2.268
           resources:
             requests:
               memory: 100Mi
@@ -582,7 +582,7 @@ spec:
     spec:
       containers:
         - name: digma-scheduler
-          image: digmatic/digma-scheduler:0.2.267
+          image: digmatic/digma-scheduler:0.2.268
           resources:
             requests:
               memory: 100Mi
