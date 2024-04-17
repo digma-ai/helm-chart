@@ -55,3 +55,19 @@ spec:
           value: {{ .Values.digmaAnalytics.secured | quote }}
         - name: CollectorUrl
           value: {{ printf " http://%s:5049" (tpl .Values.digmaCollectorApi.host .)}}
+        - name: DigmaIdentityConfig__Secret
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-auto-secret
+              key: secret-key
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Release.Name }}-auto-secret
+  annotations:
+    "helm.sh/hook": "pre-install"
+    "helm.sh/hook-delete-policy": "before-hook-creation"
+data:
+  secret-key: {{ randAlphaNum 32 | b64enc | quote }}
