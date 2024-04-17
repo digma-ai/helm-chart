@@ -212,6 +212,8 @@ spec:
           ports:
             - containerPort: 5051
           env:
+            - name: DIGMA_LICENSE_KEY
+              value: "${LICENSE_KEY}"
             - name: DEPLOYMENT_ENV
               value:
             - name: IsCentralize
@@ -286,6 +288,8 @@ spec:
             - containerPort: 5049
             - containerPort: 5050
           env:
+            - name: DIGMA_LICENSE_KEY
+              value: "${LICENSE_KEY}"
             - name: DEPLOYMENT_ENV
               value:
             - name: IsCentralize
@@ -346,6 +350,8 @@ spec:
               memory: 400Mi
               cpu: 600m
           env:
+            - name: DIGMA_LICENSE_KEY
+              value: "${LICENSE_KEY}"
             - name: DEPLOYMENT_ENV
               value:
             - name: IsCentralize
@@ -462,6 +468,8 @@ spec:
               memory: 500Mi
               cpu: 800m
           env:
+            - name: DIGMA_LICENSE_KEY
+              value: "${LICENSE_KEY}"
             - name: DEPLOYMENT_ENV
               value:
             - name: IsCentralize
@@ -541,6 +549,8 @@ spec:
               memory: 300Mi
               cpu: 500m
           env:
+            - name: DIGMA_LICENSE_KEY
+              value: "${LICENSE_KEY}"
             - name: DEPLOYMENT_ENV
               value:
             - name: IsCentralize
@@ -606,6 +616,8 @@ spec:
           ports:
             - containerPort: 5053
           env:
+            - name: DIGMA_LICENSE_KEY
+              value: "${LICENSE_KEY}"
             - name: DEPLOYMENT_ENV
               value:
             - name: IsCentralize
