@@ -55,3 +55,23 @@ spec:
           value: {{ .Values.digmaAnalytics.secured | quote }}
         - name: CollectorUrl
           value: {{ printf " http://%s:5049" (tpl .Values.digmaCollectorApi.host .)}}
+        - name: DigmaIdentityConfig__Secret
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-auto-secret
+              key: secretKey
+
+---
+{{- $secretName := printf "%s-auto-secret" .Release.Name  }}
+{{- $previousSecret := lookup "v1" "Secret" .Release.Namespace $secretName }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ $secretName }}
+data:
+  {{- if $previousSecret }}
+  secretKey: {{ $previousSecret.data.secretKey }}
+  {{- else }}
+  secretKey: {{ randAlphaNum 32 | b64enc | quote }}
+  {{- end }}
+

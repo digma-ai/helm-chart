@@ -1,4 +1,12 @@
 ---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: digma-auto-secret
+data:
+  secretKey: "${RANDOM_SECRET}"
+
+---
 # Source: digma/templates/external-network.yaml
 # Comment the following section to only expose plugin api internally
 kind: Service
@@ -204,6 +212,8 @@ spec:
           ports:
             - containerPort: 5051
           env:
+            - name: DIGMA_LICENSE_KEY
+              value: "${LICENSE_KEY}"
             - name: DEPLOYMENT_ENV
               value:
             - name: IsCentralize
@@ -241,6 +251,11 @@ spec:
               value: "${ANALYTICS_API_SECURED}"
             - name: CollectorUrl
               value: http://digma-collector-api:5049
+            - name: DigmaIdentityConfig__Secret
+              valueFrom:
+                secretKeyRef:
+                  name: digma-auto-secret
+                  key: secretKey
 ---
 # Source: digma/templates/collector-api.yaml
 apiVersion: apps/v1
@@ -273,6 +288,8 @@ spec:
             - containerPort: 5049
             - containerPort: 5050
           env:
+            - name: DIGMA_LICENSE_KEY
+              value: "${LICENSE_KEY}"
             - name: DEPLOYMENT_ENV
               value:
             - name: IsCentralize
@@ -333,6 +350,8 @@ spec:
               memory: 400Mi
               cpu: 600m
           env:
+            - name: DIGMA_LICENSE_KEY
+              value: "${LICENSE_KEY}"
             - name: DEPLOYMENT_ENV
               value:
             - name: IsCentralize
@@ -449,6 +468,8 @@ spec:
               memory: 500Mi
               cpu: 800m
           env:
+            - name: DIGMA_LICENSE_KEY
+              value: "${LICENSE_KEY}"
             - name: DEPLOYMENT_ENV
               value:
             - name: IsCentralize
@@ -528,6 +549,8 @@ spec:
               memory: 300Mi
               cpu: 500m
           env:
+            - name: DIGMA_LICENSE_KEY
+              value: "${LICENSE_KEY}"
             - name: DEPLOYMENT_ENV
               value:
             - name: IsCentralize
@@ -593,6 +616,8 @@ spec:
           ports:
             - containerPort: 5053
           env:
+            - name: DIGMA_LICENSE_KEY
+              value: "${LICENSE_KEY}"
             - name: DEPLOYMENT_ENV
               value:
             - name: IsCentralize
