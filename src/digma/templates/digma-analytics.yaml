@@ -59,15 +59,19 @@ spec:
           valueFrom:
             secretKeyRef:
               name: {{ .Release.Name }}-auto-secret
-              key: secret-key
+              key: secretKey
 
 ---
+{{- $secretName := printf "%s-auto-secret" .Release.Name  }}
+{{- $previousSecret := lookup "v1" "Secret" .Release.Namespace $secretName }}
 apiVersion: v1
 kind: Secret
 metadata:
-  name: {{ .Release.Name }}-auto-secret
-  annotations:
-    "helm.sh/hook": "pre-install"
-    "helm.sh/hook-delete-policy": "before-hook-creation"
+  name: {{ $secretName }}
 data:
-  secret-key: {{ randAlphaNum 32 | b64enc | quote }}
+  {{- if $previousSecret }}
+  secretKey: {{ $previousSecret.data.secretKey }}
+  {{- else }}
+  secretKey: {{ randAlphaNum 32 | b64enc | quote }}
+  {{- end }}
+
