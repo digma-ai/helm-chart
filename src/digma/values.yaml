@@ -58,9 +58,6 @@ redis:
     limits: {
       memory: 2Gi,
       cpu: 500m
-=======
-      cpu: 400m
->>>>>>> main
     }
   }
 
@@ -111,6 +108,8 @@ embeddedJaeger:
   imageTag: "1.44.0"
   enabled: true
   exposed: true
+  service:
+    annotations: []
 
 kibana:
   host: "{{ .Release.Name }}-kibana"
@@ -152,6 +151,8 @@ digmaCollectorApi:
       cpu: 400m
     }
   }
+  service:
+    annotations: []
 
 digmaCollectorWorker:
   host: "{{ .Release.Name }}-collector-worker"
@@ -183,6 +184,8 @@ digmaAnalytics:
       cpu: 800m
     }
   }
+  service:
+    annotations: []
 
 digmaScheduler:
   host: "{{ .Release.Name }}-scheduler"
