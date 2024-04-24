@@ -17,6 +17,7 @@ spec:
       containers:
       - name: digma-analytics
         image: digmatic/digma-analytics:{{ .Chart.AppVersion }}
+        
         resources:
           requests:
             memory: {{ .Values.digmaAnalytics.resources.requests.memory }}
@@ -27,6 +28,8 @@ spec:
         ports:
         - containerPort: 5051
         env:
+        {{- include "env.isCentralize" . | nindent  8 }}
+        {{- include "env.licenseKey" . | nindent  8 }}
         {{- include "env.digmaEnv" . | nindent  8 }}
         {{- include "env.digmaSite" . | nindent  8 }}
         {{- include "env.redis" . | nindent  8 }}
@@ -47,8 +50,28 @@ spec:
         - name: GlobalExceptionSettings__ExposeInternalDetails
           value: {{ .Values.exposeInternalErrorDetails | quote }}
         - name: AccessToken
-          value: {{ required "A valid .Values.digmaAnalytics.accesstoken entry is required." .Values.digmaAnalytics.accesstoken }}
+          value: {{ .Values.digmaAnalytics.accesstoken | quote }}
         - name: Analytics.Endpoints__Default__Secured
           value: {{ .Values.digmaAnalytics.secured | quote }}
         - name: CollectorUrl
           value: {{ printf " http://%s:5049" (tpl .Values.digmaCollectorApi.host .)}}
+        - name: DigmaIdentityConfig__Secret
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-auto-secret
+              key: secretKey
+
+---
+{{- $secretName := printf "%s-auto-secret" .Release.Name  }}
+{{- $previousSecret := lookup "v1" "Secret" .Release.Namespace $secretName }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ $secretName }}
+data:
+  {{- if $previousSecret }}
+  secretKey: {{ $previousSecret.data.secretKey }}
+  {{- else }}
+  secretKey: {{ randAlphaNum 32 | b64enc | quote }}
+  {{- end }}
+

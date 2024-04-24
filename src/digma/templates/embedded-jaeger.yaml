@@ -35,5 +35,7 @@ spec:
           value: "/badger/key"
         - name: BADGER_SPAN_STORE_TTL
           value: "336h0m0s" # BADGER store ttl default is 72h
+        - name: COLLECTOR_OTLP_GRPC_MAX_MESSAGE_SIZE
+          value: "41943040"
 
 {{ end }}

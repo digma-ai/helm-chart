@@ -28,6 +28,8 @@ spec:
         - containerPort: 5049
         - containerPort: 5050
         env:
+        {{- include "env.isCentralize" . | nindent  8 }}
+        {{- include "env.licenseKey" . | nindent  8 }}
         {{- include "env.digmaEnv" . | nindent  8 }}
         {{- include "env.digmaSite" . | nindent  8 }}
         {{- include "env.postgres" . | nindent  8 }}

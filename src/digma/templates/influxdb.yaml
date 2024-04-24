@@ -60,6 +60,6 @@ spec:
           - ReadWriteOnce
         resources:
           requests:
-            storage: 80Gi
+            storage: 50Gi
   # persistentVolumeClaimRetentionPolicy:
   #   whenDeleted: Retain

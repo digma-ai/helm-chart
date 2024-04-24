@@ -1,9 +1,11 @@
-{{ if .Values.digmaAnalytics.expose }}
-
 kind: Service
 apiVersion: v1
 metadata:
   name: {{ .Release.Name }}-analytics-service-lb
+  {{- if and .Values.digmaAnalytics.service .Values.digmaAnalytics.service.annotations }}
+  annotations:
+    {{ toYaml .Values.digmaAnalytics.service.annotations | indent 4 }}
+  {{- end }}
 spec:
   type: LoadBalancer
   selector:
@@ -13,14 +15,15 @@ spec:
       protocol: TCP
       port: 5051
 
-{{ end }}
-
-{{ if .Values.digmaCollectorApi.expose }}
 ---
 kind: Service
 apiVersion: v1
 metadata:
   name: {{ .Release.Name }}-collector-api-service-lb
+  {{- if and .Values.digmaCollectorApi.service .Values.digmaCollectorApi.service.annotations }}
+  annotations:
+    {{ toYaml .Values.digmaCollectorApi.service.annotations | indent 4 }}
+  {{- end }}
 spec:
   type: LoadBalancer
   selector:
@@ -33,15 +36,17 @@ spec:
       protocol: TCP
       port: 5050
 
-{{ end }}
-
-{{ if and (eq .Values.embeddedJaeger.enabled true) (eq .Values.embeddedJaeger.expose true) }}
+{{ if .Values.embeddedJaeger.enabled }}
 ---
 
 apiVersion: v1
 kind: Service
 metadata:
   name: {{ .Release.Name }}-embedded-jaeger-lb
+  {{- if and .Values.embeddedJaeger.service .Values.embeddedJaeger.service.annotations }}
+  annotations:
+    {{ toYaml .Values.embeddedJaeger.service.annotations | indent 4 }}
+  {{- end }}
 spec:
   type: LoadBalancer
   selector:

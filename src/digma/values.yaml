@@ -1,5 +1,29 @@
 debug: false
 
+size: medium # small | medium | large
+presets:
+  small:
+    digmaCollectorWorker:
+      replicas: 1
+    digmaMeasurementAnalysis: 
+      replicas: 1
+    digmaPipelineWorker: 
+      replicas: 1
+  medium:
+    digmaCollectorWorker:
+      replicas: 4
+    digmaMeasurementAnalysis: 
+      replicas: 4
+    digmaPipelineWorker: 
+      replicas: 1
+  large:
+    digmaCollectorWorker:
+      replicas: 6
+    digmaMeasurementAnalysis: 
+      replicas: 4
+    digmaPipelineWorker: 
+      replicas: 4
+
 deploymentType: Helm
 exposeInternalErrorDetails: false
 
@@ -34,6 +58,9 @@ redis:
     limits: {
       memory: 2Gi,
       cpu: 500m
+=======
+      cpu: 400m
+>>>>>>> main
     }
   }
 
@@ -128,15 +155,15 @@ digmaCollectorApi:
 
 digmaCollectorWorker:
   host: "{{ .Release.Name }}-collector-worker"
-  replicas: 6
+  replicas: "{{ index .Values.presets .Values.size \"digmaCollectorWorker\" \"replicas\" }}"
   resources: {
     requests: {
-      memory: 300Mi,
-      cpu: 200m
+      memory: 200Mi,
+      cpu: 100m
     },
     limits: {
-      memory: 800Mi,
-      cpu: 700m
+      memory: 400Mi,
+      cpu: 600m
     }
   }
 
@@ -149,7 +176,7 @@ digmaAnalytics:
   resources: {
     requests: {
       memory: 300Mi,
-      cpu: 200m
+      cpu: 100m
     },
     limits: {
       memory: 800Mi,
@@ -171,28 +198,28 @@ digmaScheduler:
   }
 
 digmaPipelineWorker:
-  replicas: 4
+  replicas: "{{ index .Values.presets .Values.size \"digmaPipelineWorker\" \"replicas\" }}"
   resources: {
     requests: {
-      memory: 200Mi,
-      cpu: 200m
+      memory: 100Mi,
+      cpu: 50m
     },
     limits: {
-      memory: 500Mi,
+      memory: 300Mi,
       cpu: 500m
     }
   }
 
 digmaMeasurementAnalysis:
-  replicas: 4
+  replicas: "{{ index .Values.presets .Values.size \"digmaMeasurementAnalysis\" \"replicas\" }}"
   resources: {
     requests: {
-      memory: 200Mi,
+      memory: 100Mi,
       cpu: 200m
     },
     limits: {
-      memory: 900Mi,
-      cpu: 900m
+      memory: 500Mi,
+      cpu: 800m
     }
   }
 
@@ -205,3 +232,5 @@ digmaSelfDiagnosis:
 digma:
   environmentName: stag01
   siteName: stag01
+  isCentralize: true
+  licenseKey: 529974cf70824f67aefa98232482f93e

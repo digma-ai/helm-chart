@@ -1,11 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-digma-collector-worker-deployment
+  name: {{ .Release.Name }}-collector-worker-deployment
   labels:
     app: digma-collector-worker
 spec:
-  replicas: {{ .Values.digmaCollectorWorker.replicas }}
+  replicas: {{ tpl .Values.digmaCollectorWorker.replicas . }}
   selector:
     matchLabels:
       app: digma-collector-worker
@@ -25,6 +25,8 @@ spec:
             memory: {{ .Values.digmaCollectorWorker.resources.limits.memory }}
             cpu: {{ .Values.digmaCollectorWorker.resources.limits.cpu }}
         env:
+        {{- include "env.isCentralize" . | nindent  8 }}
+        {{- include "env.licenseKey" . | nindent  8 }}
         {{- include "env.digmaEnv" . | nindent  8 }}
         {{- include "env.digmaSite" . | nindent  8 }}
         {{- include "env.otlpExporter" . | nindent  8 }}
