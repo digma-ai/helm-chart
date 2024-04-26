@@ -459,7 +459,7 @@ spec:
     spec:
       containers:
         - name: digma-measurement-analysis
-          image: digmatic/digma-measurement-analysis:0.3.3
+          image: digmatic/digma-measurement-analysis:0.3.6
           resources:
             requests:
               memory: 100Mi
@@ -493,7 +493,7 @@ spec:
             - name: OtlpExportTraces
               value: "false"
             - name: ApplicationVersion
-              value: 0.3.3
+              value: 0.3.6
             - name: ChartVersion
               value: 1.0.132
             - name: Jaeger__OtlpUrl
@@ -605,7 +605,7 @@ spec:
     spec:
       containers:
         - name: digma-scheduler
-          image: digmatic/digma-scheduler:0.3.3
+          image: digmatic/digma-scheduler:0.3.6
           resources:
             requests:
               memory: 100Mi
@@ -641,7 +641,7 @@ spec:
             - name: OtlpExportTraces
               value: "false"
             - name: ApplicationVersion
-              value: 0.3.3
+              value: 0.3.6
             - name: ChartVersion
               value: 1.0.132
 
