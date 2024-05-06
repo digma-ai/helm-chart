@@ -148,7 +148,7 @@ digmaCollectorApi:
     },
     limits: {
       memory: 300Mi,
-      cpu: 200m
+      cpu: 600m
     }
   }
   service:
