@@ -1,12 +1,4 @@
 ---
-apiVersion: v1
-kind: Secret
-metadata:
-  name: digma-auto-secret
-data:
-  secretKey: "${RANDOM_SECRET}"
-
----
 # Source: digma/templates/external-network.yaml
 # Comment the following section to only expose plugin api internally
 kind: Service
@@ -251,11 +243,6 @@ spec:
               value: "${ANALYTICS_API_SECURED}"
             - name: CollectorUrl
               value: http://digma-collector-api:5049
-            - name: DigmaIdentityConfig__Secret
-              valueFrom:
-                secretKeyRef:
-                  name: digma-auto-secret
-                  key: secretKey
 ---
 # Source: digma/templates/collector-api.yaml
 apiVersion: apps/v1
