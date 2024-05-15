@@ -148,7 +148,7 @@ digmaCollectorApi:
     },
     limits: {
       memory: 600Mi,
-      cpu: 800m
+      cpu: 1
     }
   }
   service:
@@ -227,13 +227,13 @@ digmaMeasurementAnalysis:
   }
 
 digmaSelfDiagnosis:
-  otlpExportTraces: false
+  otlpExportTraces: true
   otlpExportMetrics: true
-  otlpExportLogs: false
+  otlpExportLogs: true
   otlpExporterEndpoint: http://digma-otel-collector-df:4317/
 
 digma:
-  environmentName: stag01
+  environmentName: stag01-PERF
   siteName: stag01
   isCentralize: true
   licenseKey: 529974cf70824f67aefa98232482f93e
