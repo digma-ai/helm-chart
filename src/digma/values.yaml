@@ -139,11 +139,11 @@ digmaCollectorApi:
   resources: {
     requests: {
       memory: 100Mi,
-      cpu: 50m
+      cpu: 200m
     },
     limits: {
-      memory: 300Mi,
-      cpu: 200m
+      memory: 600Mi,
+      cpu: 800m
     }
   }
 
