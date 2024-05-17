@@ -19,24 +19,13 @@ data:
         timeout: 1000ms
         send_batch_size: 500
         send_batch_max_size: 500
-      filter/allow_list:
-        spans:
-          include:
-            match_type: regexp
-            resources:
-              - key: digma.environment
-                value: \[local\]$|^LAC$|-compound$|-compound-test$|-local-digma$
     exporters:
       logging:
         verbosity: detailed
-      otlp/digma-df:
-        endpoint: "digma-collector-api:5050"
+      otlp/meloona:
+        endpoint: "https://collector.meloona01.digma.systems:443"
         tls:
           insecure: true
-        sending_queue:
-          enabled: true
-          num_consumers: 100
-          queue_size: 10000
       # metrics - prometheus
       prometheus:
         endpoint: "0.0.0.0:8889"
@@ -47,7 +36,7 @@ data:
         traces:
           receivers: [otlp]
           processors: [batch]
-          exporters: [otlp/digma-df]
+          exporters: [otlp/meloona]
         metrics:
           receivers: [otlp]
           processors: [batch]

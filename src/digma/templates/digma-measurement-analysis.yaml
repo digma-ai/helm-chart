@@ -39,6 +39,7 @@ spec:
         {{- include "env.otlpExportTraces" . | nindent  8 }}
         {{- include "env.versions" . | nindent  8 }}
         {{- include "env.embeddedJaeger" . | nindent  8 }}
+        {{- include "env.digmaEnvType" . | nindent  8 }}
         - name: OtlpSamplerProbability
           value: {{ .Values.digmaSelfDiagnosis.otlpSamplerProbability| quote}}
         - name: BACKEND_DEPLOYMENT_TYPE
