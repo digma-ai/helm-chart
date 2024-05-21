@@ -230,7 +230,7 @@ digmaSelfDiagnosis:
   otlpExportTraces: true
   otlpExportMetrics: true
   otlpExportLogs: true
-  otlpExporterEndpoint: http://digma-otel-collector-df:4317/
+  otlpExporterEndpoint: https://collector.meloona01.digma.systems:443
 
 digma:
   environmentName: STAG01-PERF
