@@ -55,6 +55,10 @@ data:
           receivers: [otlp]
           processors: [batch, filter/petclinic]
           exporters: [otlp/stag01]
+        traces/meloona:
+          receivers: [otlp]
+          processors: [batch, filter/stag01]
+          exporters: [otlp/meloona]
         metrics:
           receivers: [otlp]
           processors: [batch, filter/stag01]
