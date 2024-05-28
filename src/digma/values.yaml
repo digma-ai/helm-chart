@@ -224,6 +224,7 @@ digmaSelfDiagnosis:
 
 digma:
   environmentName:
+  environmentType:  
   siteName: undefined
   isCentralize: true
   licenseKey:
