@@ -50,16 +50,16 @@ kafka:
 redis:
   host: "{{ .Release.Name }}-redis"
   imageTag: 7.0.5-alpine
-  resources: {
-    requests: {
-      memory: 100Mi,
-      cpu: 50m
-    },
-    limits: {
-      memory: 2Gi,
-      cpu: 400m
-    }
-  }
+  resources:
+    requests:
+      memory: "100Mi"
+      cpu: "50m"
+    limits:
+      memory: "2Gi"
+      cpu: "400m"
+  config:
+    maxmemory: "2g"
+    maxmemoryPolicy: "allkeys-lru"
 
 influx:
   host: "{{ .Release.Name }}-influxdb"
@@ -224,6 +224,7 @@ digmaSelfDiagnosis:
 
 digma:
   environmentName:
+  environmentType:  
   siteName: undefined
   isCentralize: true
   licenseKey:

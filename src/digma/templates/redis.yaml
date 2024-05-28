@@ -31,6 +31,12 @@ spec:
           volumeMounts:
             - name: redis-data
               mountPath: /data
+          command:
+            - "redis-server"
+            - "--maxmemory"
+            - { { .Values.redis.config.maxmemory } }
+            - "--maxmemory-policy"
+            - { { .Values.redis.config.maxmemoryPolicy } }
   volumeClaimTemplates:
     - metadata:
         name: redis-data
