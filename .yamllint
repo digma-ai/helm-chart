@@ -23,3 +23,6 @@ rules:
   colons:
     max-spaces-before: 0  # No spaces before colons
     max-spaces-after: 1  # One space after colons
+  quoted-strings:
+    required: false  # Disable enforcing quoted strings
+  document-end: disable  # Disable checking for document end marker
