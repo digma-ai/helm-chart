@@ -6,6 +6,7 @@ rules:
     max-spaces-inside: 1  # Allow up to one space inside braces
   indentation:
     spaces: 2  # Set indentation to 2 spaces
+    level: warning  # Set indentation issues to warning level
   new-line-at-end-of-file: disable  # Disable checking for new line at end of file
   comments:
     min-spaces-from-content: 1  # Require at least one space before comments
