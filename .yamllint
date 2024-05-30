@@ -9,3 +9,6 @@ rules:
   new-line-at-end-of-file: disable  # Disable checking for new line at end of file
   comments:
     min-spaces-from-content: 1  # Require at least one space before comments
+  line-length:
+    max: 120  # Increase the maximum line length to 120 characters
+    level: warning  # Set the level to warning instead of error
