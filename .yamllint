@@ -13,3 +13,13 @@ rules:
   line-length:
     max: 120  # Increase the maximum line length to 120 characters
     level: warning  # Set the level to warning instead of error
+  trailing-spaces:
+    level: warning  # Warn about trailing spaces instead of error
+  empty-lines:
+    max: 2  # Allow up to 2 consecutive empty lines
+    level: warning  # Set the level to warning instead of error
+  truthy:
+    allowed-values: ["true", "false"]  # Allow 'true' and 'false' as boolean values
+  colons:
+    max-spaces-before: 0  # No spaces before colons
+    max-spaces-after: 1  # One space after colons
