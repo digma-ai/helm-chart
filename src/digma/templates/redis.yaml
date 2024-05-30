@@ -36,7 +36,7 @@ spec:
             - "--maxmemory"
             - {{ .Values.redis.config.maxmemory }}
             - "--maxmemory-policy"
-            - {{ .Values.redis.config.maxmemoryPolicy }}
+            - { { .Values.redis.config.maxmemoryPolicy }}
   volumeClaimTemplates:
     - metadata:
         name: redis-data
