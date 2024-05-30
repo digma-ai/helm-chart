@@ -15,4 +15,4 @@ jobs:
 
       - name: Run Helm Lint
         run: |
-          helm lint ./src/digma
+          helm lint ./src/digma --set digma.licenseKey="dummy-license-key"
