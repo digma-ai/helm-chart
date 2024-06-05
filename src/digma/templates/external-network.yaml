@@ -29,6 +29,9 @@ spec:
   selector:
      app: "digma-collector-api"
   ports:
+    - name: internal
+      protocol: TCP
+      port: 5048
     - name: http
       protocol: TCP
       port: 5049
