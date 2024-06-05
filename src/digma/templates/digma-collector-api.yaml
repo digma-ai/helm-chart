@@ -25,6 +25,7 @@ spec:
             memory: {{ .Values.digmaCollectorApi.resources.limits.memory }}
             cpu: {{ .Values.digmaCollectorApi.resources.limits.cpu }}
         ports:
+        - containerPort: 5048
         - containerPort: 5049
         - containerPort: 5050
         env:
