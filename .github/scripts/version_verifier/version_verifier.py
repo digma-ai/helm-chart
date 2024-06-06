@@ -35,7 +35,7 @@ def validate_image_version(chart_yaml: str, deployment_yaml: str):
             except KeyError as e:
                 print(f"Key error: {e}")
                 return False
-
+    return True
 
 def main():
     deployment_yml = 'rendered-deployment.yaml'
