@@ -16,6 +16,6 @@ jobs:
           cache: 'pip' # caching pip dependencies
       - run: pip install -r .github/scripts/version_verifier/requirements.txt
       - name: Run Version Verifier Script
-        run: python .github/scripts/version_verifier/version_verifier.py 'src/digma/Chart.yaml' 'src/rendered-deployment.yaml'
+        run: python3 .github/scripts/version_verifier/version_verifier.py 'src/digma/Chart.yaml' 'src/rendered-deployment.yaml'
 
     
