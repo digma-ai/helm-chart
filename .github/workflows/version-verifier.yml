@@ -3,7 +3,7 @@ name: Version Verifier
 on: [pull_request]
 
 jobs:
-  lint-helm:
+  verify-version:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -14,7 +14,7 @@ jobs:
         with:
           python-version: '3.9'
           cache: 'pip' # caching pip dependencies
-     
+      - run: pip install -r requirements.txt
       - name: Run Version Verifier Script
         run: python .github/scripts/version_verifier.py 'src/digma/Chart.yaml' 'rendered-deployment.yaml'
 
