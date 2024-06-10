@@ -62,3 +62,6 @@ spec:
           value: '1000'
         - name: Kafka__SpanMeasurementsProcessorCG__WorkerBatchSize
           value: '1000'
+        - name: GCLatencyMode
+          value: 'SustainedLowLatency'
+          
