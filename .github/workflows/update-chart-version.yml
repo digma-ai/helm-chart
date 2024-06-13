@@ -1,0 +1,45 @@
+name: Update Helm Chart Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      app_version:
+        description: 'New app version'
+        required: true
+
+jobs:
+  update-chart:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install PyYAML
+      run: |
+        python -m pip install pyyaml
+
+    - name: Update Helm chart version
+      run: python .github/scripts/update_chart_version.py ${{ github.event.inputs.app_version }}
+      
+    - name: Create new branch and commit changes
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git checkout -b bump_${{ github.event.inputs.app_version }}
+        git add .
+        git commit -m "Update Helm app version to ${{ github.event.inputs.app_version }}"
+        git push origin bump_${{ github.event.inputs.app_version }}
+
+    - name: Create pull request
+      uses: peter-evans/create-pull-request@v4
+      with:
+        branch: bump_${{ github.event.inputs.app_version }}
+        title: 'Update Helm app version ${{ github.event.inputs.app_version }}'
+        body: 'This PR updates the Helm app version to ${{ github.event.inputs.version }}'
+        labels: 'auto-generated'
