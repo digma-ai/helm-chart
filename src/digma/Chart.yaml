@@ -1,9 +1,7 @@
 apiVersion: v2
-# version: this Chart version
-version: 1.0.189
-name: digma
+appVersion: 0.3.62-alpha.6
 description: A Helm chart containing Digma's services and dbs
 home: https://github.com/digma-ai/digma
+name: digma
 type: application
-# appVersion: digma version (affects image tag)
-appVersion: 0.3.62-alpha.5
+version: 1.0.190
