@@ -46,7 +46,7 @@ def update_chart_version(version, chart_file_path):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
+    if len(sys.argv) != 4:
         print("Usage: version_updater.py <new-version> <chart-location> <deployment-location>")
         sys.exit(1)
 
