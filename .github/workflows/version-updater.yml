@@ -25,7 +25,7 @@ jobs:
 
       - name: Run Python script
         run: |
-          python scripts/version_updater.py "${{ github.event.inputs.app_version }}" 'src/digma/Chart.yaml' 'src/rendered-deployment.yaml'
+          python .github/scripts/version_updater.py "${{ github.event.inputs.app_version }}" 'src/digma/Chart.yaml' 'src/rendered-deployment.yaml'
       
       - name: Create new branch and commit changes
         run: |
