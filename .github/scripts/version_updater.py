@@ -1,3 +1,4 @@
+import sys
 from ruamel.yaml import YAML
 
 
@@ -51,12 +52,12 @@ def update_deployment_version(version, chart_version, deployment_yml):
         yml.dump_all(docs, file)
 
 
-def update(version, chart_file_path, deployment_yml):
-    chart_version = update_chart_version(version, chart_file_path)
+def update(version, chart_file_path, chart_version_level, deployment_yml):
+    chart_version = update_chart_version(version, chart_file_path, chart_version_level)
     update_deployment_version(version, chart_version, deployment_yml)
 
 
-def update_chart_version(version, chart_file_path):
+def update_chart_version(version, chart_file_path, chart_version_level):
     yml = YAML()
     with open(chart_file_path, 'r') as file:
         chart = yml.load(file)
@@ -66,7 +67,7 @@ def update_chart_version(version, chart_file_path):
     current_chart_version = chart['version']
     print(f"Current version: {current_chart_version}")
     # Increment the version
-    new_version = increment_version(current_chart_version, 'patch')
+    new_version = increment_version(current_chart_version, chart_version_level)
     print(f"New version: {new_version}")
     # Update the version in the chart data
     chart['version'] = new_version
@@ -75,7 +76,6 @@ def update_chart_version(version, chart_file_path):
         yml.dump(chart, file)
 
     return new_version
-
 
 if __name__ == "__main__":
     if len(sys.argv) != 4:
@@ -86,5 +86,5 @@ if __name__ == "__main__":
     chart_yml = sys.argv[2]
     deployment_yml = sys.argv[3]
     
-    update(new_version, chart_yml, deployment_yml)
+    update(new_version, chart_yml, 'patch', deployment_yml)
 
