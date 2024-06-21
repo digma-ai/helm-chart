@@ -52,3 +52,5 @@ spec:
           value: {{ .Values.traceCollectorThresholds.upsertSpansThresholdSeconds | quote }}
         - name: ThresholdOptions__UpsertSpanFlowMetadataThresholdSeconds
           value: {{ .Values.traceCollectorThresholds.upsertSpanFlowMetadataThresholdSeconds | quote }}
+        - name: TraceTempStorage__TraceForJaegerExpirationInMinutes
+          value: {{ .Values.digmaCollectorWorker.traceForJaegerTTL | quote }}
