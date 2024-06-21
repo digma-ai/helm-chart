@@ -20,7 +20,7 @@ jobs:
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
       - name: Create new branch
         run: |
-            git checkout -b ${{ env.BRANCH_NAME }}
+           git checkout -b ${{ env.BRANCH_NAME }}
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
