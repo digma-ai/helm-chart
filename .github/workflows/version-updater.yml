@@ -36,9 +36,11 @@ jobs:
           git commit -m "Update Helm app version to ${{ github.event.inputs.app_version }}"
           git push origin bump_${{ github.event.inputs.app_version }}
       - name: Create pull request
-        uses: peter-evans/create-pull-request@v4
+        uses: peter-evans/create-pull-request@v6
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           branch: bump_${{ github.event.inputs.app_version }}
           title: 'Update Helm app version ${{ github.event.inputs.app_version }}'
           body: 'This PR updates the Helm app version to ${{ github.event.inputs.app_version }}'
           labels: 'auto-generated'
+          delete-branch: true
