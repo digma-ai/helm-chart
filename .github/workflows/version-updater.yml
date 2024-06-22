@@ -20,7 +20,7 @@ jobs:
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
       - name: Create new branch
         run: |
-            git checkout -b ${{ env.BRANCH_NAME }}
+          git checkout -b ${{ env.BRANCH_NAME }}
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
@@ -46,3 +46,4 @@ jobs:
           title: 'Update Helm app version ${{ github.event.inputs.app_version }}'
           body: 'This PR updates the Helm app version to ${{ github.event.inputs.app_version }}'
           labels: 'auto-generated'
+          delete-branch: true
