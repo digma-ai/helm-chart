@@ -9,6 +9,8 @@ on:
 jobs:
   update_yaml:
     runs-on: ubuntu-latest
+    env:
+      BRANCH_NAME: bump_${{ github.event.inputs.app_version }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -18,7 +20,7 @@ jobs:
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
       - name: Create new branch
         run: |
-            git checkout -b bump_${{ github.event.inputs.app_version }}
+           git checkout -b ${{ env.BRANCH_NAME }}
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
@@ -30,16 +32,17 @@ jobs:
       - name: Run Python script
         run: |
           python .github/scripts/version_updater.py "${{ github.event.inputs.app_version }}" 'src/digma/Chart.yaml' 'src/rendered-deployment.yaml'   
-      - name: Commit changes
+      - name: Commit and push changes
         run: |
           git add .
           git commit -m "Update Helm app version to ${{ github.event.inputs.app_version }}"
-          git push origin bump_${{ github.event.inputs.app_version }}
+          git push origin ${{ env.BRANCH_NAME }}
       - name: Create pull request
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: bump_${{ github.event.inputs.app_version }}
+          branch: ${{ env.BRANCH_NAME }}
+          base: main
           title: 'Update Helm app version ${{ github.event.inputs.app_version }}'
           body: 'This PR updates the Helm app version to ${{ github.event.inputs.app_version }}'
           labels: 'auto-generated'
