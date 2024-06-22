@@ -46,4 +46,3 @@ jobs:
           title: 'Update Helm app version ${{ github.event.inputs.app_version }}'
           body: 'This PR updates the Helm app version to ${{ github.event.inputs.app_version }}'
           labels: 'auto-generated'
-          delete-branch: true
