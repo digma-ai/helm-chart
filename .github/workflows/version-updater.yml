@@ -34,12 +34,5 @@ jobs:
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git add .
           git commit -m "Update Helm app version to ${{ github.event.inputs.app_version }}"
-          git push origin ${{ env.BRANCH_NAME }}  
-      - name: Create pull request
-        uses: peter-evans/create-pull-request@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ env.BRANCH_NAME }}
-          title: 'Update Helm app version ${{ github.event.inputs.app_version }}'
-          body: 'This PR updates the Helm app version to ${{ github.event.inputs.app_version }}'
-          labels: 'auto-generated'
+          git push origin ${{ env.BRANCH_NAME }}
+          gh pr create --base main --head ${{ env.BRANCH_NAME }} --title 'Update Helm app version ${{ github.event.inputs.app_version }}' --body 'This PR updates the Helm app version to ${{ github.event.inputs.app_version }}'
