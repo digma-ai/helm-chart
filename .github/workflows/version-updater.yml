@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       BRANCH_NAME: bump_${{ github.event.inputs.app_version }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
