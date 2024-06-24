@@ -13,16 +13,9 @@ jobs:
       BRANCH_NAME: bump_${{ github.event.inputs.app_version }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
-      - name: Set up Git
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-      - name: Create new branch
-        run: |
-           git checkout -b ${{ env.BRANCH_NAME }}
+        uses: actions/checkout@v4
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.x'
       - name: Install dependencies
@@ -32,17 +25,21 @@ jobs:
       - name: Run Python script
         run: |
           python .github/scripts/version_updater.py "${{ github.event.inputs.app_version }}" 'src/digma/Chart.yaml' 'src/rendered-deployment.yaml'   
-      - name: Commit and push changes
+      - name: Commit
         run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git add .
           git commit -m "Update Helm app version to ${{ github.event.inputs.app_version }}"
+      - name: Push changes
+        run: |
+          git checkout -b ${{ env.BRANCH_NAME }}
           git push origin ${{ env.BRANCH_NAME }}
       - name: Create pull request
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ env.BRANCH_NAME }}
-          base: main
           title: 'Update Helm app version ${{ github.event.inputs.app_version }}'
           body: 'This PR updates the Helm app version to ${{ github.event.inputs.app_version }}'
           labels: 'auto-generated'
