@@ -74,9 +74,12 @@ spec:
         - name: otel-collector-df
           image: otel/opentelemetry-collector-contrib:0.103.0
           resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
             limits:
-              cpu: 500m
-              memory: 500Mi
+              cpu: 200m
+              memory: 300Mi
           ports:
             - containerPort: 4317
           args:
