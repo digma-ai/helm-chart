@@ -1,0 +1,21 @@
+name: Version Verifier
+
+on: [pull_request]
+
+jobs:
+  verify-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+          cache: 'pip' # caching pip dependencies
+      - run: pip install -r .github/scripts/version_verifier/requirements.txt
+      - name: Run Version Verifier Script
+        run: python3 .github/scripts/version_verifier/version_verifier.py 'src/digma/Chart.yaml' 'src/rendered-deployment.yaml'
+
+    

@@ -55,6 +55,6 @@ spec:
         - name: Analytics.Endpoints__Default__Secured
           value: {{ .Values.digmaAnalytics.secured | quote }}
         - name: CollectorUrl
-          value: {{ printf " http://%s:5049" (tpl .Values.digmaCollectorApi.host .)}}
+          value: {{ printf " http://%s:5048" (tpl .Values.digmaCollectorApi.host .)}}
 
 

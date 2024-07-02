@@ -25,6 +25,7 @@ spec:
             memory: {{ .Values.digmaCollectorApi.resources.limits.memory }}
             cpu: {{ .Values.digmaCollectorApi.resources.limits.cpu }}
         ports:
+        - containerPort: 5048
         - containerPort: 5049
         - containerPort: 5050
         env:
@@ -41,7 +42,7 @@ spec:
         {{- include "env.otlpExportTraces" . | nindent  8 }}
         {{- include "env.versions" . | nindent  8 }}
         {{- include "env.embeddedJaeger" . | nindent  8 }}
-        {{- include "env.digmaEnvType" . | nindent  8 }}
+        {{- include "env.digmaEnvType" . | nindent 8 }}
 {{ if .Values.debug }}
         {{- include "env.elasticsearch" . | nindent  8 }}
 {{ end }}

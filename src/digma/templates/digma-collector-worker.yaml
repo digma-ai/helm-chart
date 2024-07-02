@@ -39,7 +39,7 @@ spec:
         {{- include "env.kafka" . | nindent  8 }}
         {{- include "env.versions" . | nindent  8 }}
         {{- include "env.embeddedJaeger" . | nindent  8 }}
-        {{- include "env.digmaEnvType" . | nindent  8 }}
+        {{- include "env.digmaEnvType" . | nindent 8 }}
         - name: OtlpSamplerProbability
           value: {{ .Values.digmaSelfDiagnosis.otlpSamplerProbability| quote}}
         - name: BACKEND_DEPLOYMENT_TYPE
@@ -52,3 +52,5 @@ spec:
           value: {{ .Values.traceCollectorThresholds.upsertSpansThresholdSeconds | quote }}
         - name: ThresholdOptions__UpsertSpanFlowMetadataThresholdSeconds
           value: {{ .Values.traceCollectorThresholds.upsertSpanFlowMetadataThresholdSeconds | quote }}
+        - name: TraceTempStorage__TraceForJaegerExpirationInMinutes
+          value: {{ .Values.digmaCollectorWorker.traceForJaegerTTL | quote }}
