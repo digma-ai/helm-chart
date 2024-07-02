@@ -1,0 +1,84 @@
+{{- if .Values.digmaSelfDiagnosis.otlpExporterEndpoint }}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-k8s-metrics-exporter-deployment
+  labels:
+    app: k8s-metrics-exporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: k8s-metrics-exporter
+  template:
+    metadata:
+      labels:
+        app: k8s-metrics-exporter
+    spec:
+      serviceAccountName: {{ .Release.Name }}-k8s-metrics-exporter
+      containers:
+        - name: k8s-metrics-exporter
+          image: digmatic/k8s-metrics-exporter:0.0.4
+          env:
+          - name: KUBE_NAMESPACE
+            value: {{ .Release.Namespace }}
+          ports:
+            - name: http
+              containerPort: 9090
+              protocol: TCP
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-k8s-metrics-exporter
+spec:
+  selector:
+    app: k8s-metrics-exporter
+  ports:
+  - port: 9090
+    protocol: TCP
+
+---
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Release.Name }}-k8s-metrics-exporter
+  labels:
+    app: k8s-metrics-exporter
+ 
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ .Release.Name }}-k8s-metrics-exporter
+  labels:
+    app: k8s-metrics-exporter
+rules:
+- apiGroups: [""]
+  resources: [pods]
+  verbs: [list]
+- apiGroups: ["metrics.k8s.io"]
+  resources: ["*"]
+  verbs: [list]
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ .Release.Name }}-k8s-metrics-exporter
+  labels:
+    app: k8s-metrics-exporter
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ .Release.Name }}-k8s-metrics-exporter
+subjects:
+- kind: ServiceAccount
+  name: {{ .Release.Name }}-k8s-metrics-exporter
+  namespace: {{ .Release.Namespace }}
+
+{{- end -}}
