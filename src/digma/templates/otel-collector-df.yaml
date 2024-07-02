@@ -1,0 +1,123 @@
+# OpenTelemetry Collector - for Digma dog-fooding (df)
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-otel-collector-config
+data:
+  key-collector-yaml: |
+    receivers:
+      otlp:
+        protocols: 
+          grpc:
+    processors:
+      probabilistic_sampler/30:
+        sampling_percentage: 30
+      probabilistic_sampler/10:
+        sampling_percentage: 10
+      batch:
+        timeout: 1000ms
+        send_batch_size: 500
+        send_batch_max_size: 500
+      filter/petclinic:
+        spans:
+          include:
+            match_type: regexp
+            resources:
+              - key: digma.environment
+                value: ^PETCLINIC$
+      filter/stag01:
+        spans:
+          include:
+            match_type: regexp
+            resources:
+              - key: digma.environment
+                value: ^STAG01-PERF$
+    exporters:
+      logging:
+        verbosity: detailed
+      otlp/meloona:
+        endpoint: "https://collector.meloona01.digma.systems:443"
+        tls:
+          insecure: true
+      otlp/stag01:
+        endpoint: "digma-collector-api:5050"
+        tls:
+          insecure: true
+      # metrics - prometheus
+      prometheus:
+        endpoint: "0.0.0.0:8889"
+        send_timestamps: true
+        metric_expiration: 10m
+    service:
+      pipelines:
+        traces:
+          receivers: [otlp]
+          processors: [batch, filter/petclinic]
+          exporters: [otlp/stag01]
+        traces/meloona:
+          receivers: [otlp]
+          processors: [batch, filter/stag01]
+          exporters: [otlp/meloona]
+        metrics:
+          receivers: [otlp]
+          processors: [batch, filter/stag01]
+          exporters: [prometheus]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: digma-otel-collector-df-deployment
+  labels:
+    app: otel-collector-df
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: otel-collector-df
+  template:
+    metadata:
+      labels:
+        app: otel-collector-df
+    spec:
+      containers:
+        - name: otel-collector-df
+          image: otel/opentelemetry-collector-contrib:0.78.0
+          resources:
+            limits:
+              cpu: 700m
+              memory: 1500Mi
+            requests:
+              cpu: 300m
+              memory: 800Mi
+          ports:
+            - containerPort: 4317
+            - containerPort: 8889 # port to expose digma metrics towards prometheus
+          args:
+            - --config=/conf/collector.yaml
+          volumeMounts:
+            - name: vn-config
+              mountPath: /conf
+              readOnly: true
+      volumes:
+        - name: vn-config # volume name
+          configMap:
+            name: cm-otel-collector-config # configMap name
+            items:
+              - key: "key-collector-yaml"
+                path: "collector.yaml"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: digma-otel-collector-df
+spec:
+  selector:
+    app: otel-collector-df
+  ports:
+    - name: grpc
+      port: 4317
+      protocol: TCP
+    - name: digma-metrics
+      port: 8889
+      protocol: TCP

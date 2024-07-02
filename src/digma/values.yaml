@@ -78,6 +78,7 @@ influx:
     queryConcurrency: 30
     queryQueueSize: 200
     
+
 postgres:
   host: "{{ .Release.Name }}-postgres"
   imageTag: 15.1
@@ -106,6 +107,9 @@ embeddedJaeger:
   host: "{{ .Release.Name }}-embedded-jaeger"
   imageTag: "1.44.0"
   enabled: true
+  exposed: true
+  service:
+    annotations: []
 
 kibana:
   host: "{{ .Release.Name }}-kibana"
@@ -136,6 +140,7 @@ digmaDs:
 
 digmaCollectorApi:
   host: "{{ .Release.Name }}-collector-api"
+  expose: false
   resources: {
     requests: {
       memory: 100Mi,
@@ -146,6 +151,8 @@ digmaCollectorApi:
       cpu: 800m
     }
   }
+  service:
+    annotations: []
 
 digmaCollectorWorker:
   host: "{{ .Release.Name }}-collector-worker"
@@ -165,7 +172,9 @@ digmaCollectorWorker:
 digmaAnalytics:
   host: "{{ .Release.Name }}-analytics"
   replicas: 1
-  secured: true
+  expose: false
+  secured: false
+  accesstoken: pcr5UDZqdvzky1cgj
   resources: {
     requests: {
       memory: 300Mi,
@@ -176,6 +185,8 @@ digmaAnalytics:
       cpu: 800m
     }
   }
+  service:
+    annotations: []
 
 digmaScheduler:
   host: "{{ .Release.Name }}-scheduler"
@@ -211,21 +222,21 @@ digmaMeasurementAnalysis:
       cpu: 200m
     },
     limits: {
-      memory: 500Mi,
+      memory: 600Mi,
       cpu: 800m
     }
   }
 
 digmaSelfDiagnosis:
-  otlpExportTraces: false
-  otlpExportMetrics: false
-  otlpExportLogs: false
-  otlpExporterEndpoint:
-  otlpSamplerProbability: "0.3"
+  otlpExportTraces: true
+  otlpExportMetrics: true
+  otlpExportLogs: true
+  otlpExporterEndpoint: http://digma-otel-collector-df:4317/
 
 digma:
-  environmentName:
-  environmentType:  
-  siteName: undefined
+  environmentName: STAG01-PERF
+  environmentType: public
+  siteName: stag01
   isCentralize: true
-  licenseKey:
+  licenseKey: 529974cf70824f67aefa98232482f93e
+  
