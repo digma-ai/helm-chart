@@ -43,7 +43,7 @@
 # Digma to meloona
 {{- define "env.otlpExporter" -}}
 - name: OtlpExporterUrl
-  value: {{ .Values.digmaSelfDiagnosis.otlpExporterEndpoint }}
+  value: {{ printf "http://%s-otel-collector:4317" (.Release.Name)}}
 {{- end -}}
 
 {{- define "env.otlpExportTraces" -}}
