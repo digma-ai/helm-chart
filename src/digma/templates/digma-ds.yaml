@@ -31,7 +31,7 @@ spec:
         - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
           value: {{ .Values.digmaSelfDiagnosis.otlpExporterEndpoint }}
         - name: OTEL_RESOURCE_ATTRIBUTES
-          value: {{ printf "digma.environment=%s" .Values.digma.environmentName }}
+          value: {{ printf "digma.environment=%s,digma.environment.type=%s" .Values.digma.environmentName .Values.digma.environmentType}}
         # - name: OTEL_TRACES_SAMPLER
         #   value: traceidratio
         # - name: OTEL_TRACES_SAMPLER_ARG

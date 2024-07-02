@@ -160,6 +160,7 @@ digmaCollectorWorker:
       cpu: 600m
     }
   }
+  traceForJaegerTTL: 10
 
 digmaAnalytics:
   host: "{{ .Release.Name }}-analytics"
