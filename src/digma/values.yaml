@@ -171,7 +171,7 @@ digmaCollectorWorker:
 
 digmaAnalytics:
   host: "{{ .Release.Name }}-analytics"
-  replicas: 1
+  replicas: 0
   expose: false
   secured: false
   accesstoken: pcr5UDZqdvzky1cgj

@@ -100,4 +100,3 @@
 - name: DIGMA_ENV_TYPE
   value: {{ .Values.digma.environmentType }}
 {{- end -}}
-
