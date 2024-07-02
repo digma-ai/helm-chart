@@ -19,7 +19,7 @@ spec:
       serviceAccountName: {{ .Release.Name }}-k8s-metrics-exporter
       containers:
         - name: k8s-metrics-exporter
-          image: digmatic/k8s-metrics-exporter:0.0.4
+          image: digmatic/k8s-metrics-exporter:0.0.6
           env:
           - name: KUBE_NAMESPACE
             value: {{ .Release.Namespace }}
@@ -60,6 +60,9 @@ metadata:
 rules:
 - apiGroups: [""]
   resources: [pods]
+  verbs: [list]
+- apiGroups: [apps]
+  resources: [deployments, statefulsets]
   verbs: [list]
 - apiGroups: ["metrics.k8s.io"]
   resources: ["*"]
