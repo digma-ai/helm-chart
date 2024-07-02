@@ -221,7 +221,7 @@ digmaSelfDiagnosis:
   otlpExportMetrics: false
   otlpExportLogs: false
   otlpExporterEndpoint:
-  otlpSamplerProbability: "0.3"
+  otlpSamplerProbability: "0.1"
 
 digma:
   environmentName:
