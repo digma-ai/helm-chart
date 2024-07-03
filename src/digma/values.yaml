@@ -86,6 +86,7 @@ postgres:
   username: postgres
   password: postgres
   maxConnections: 400
+  loggingCollector: off # for debugging turn it on
   resources: {
     requests: {
       memory: 1Gi,
