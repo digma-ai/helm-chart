@@ -87,6 +87,7 @@ postgres:
   password: postgres
   maxConnections: 400
   loggingCollector: off # for debugging turn it on
+  sharedBuffers: "800MB"
   resources: {
     requests: {
       memory: 1Gi,
@@ -163,7 +164,7 @@ digmaCollectorWorker:
       cpu: 100m
     },
     limits: {
-      memory: 400Mi,
+      memory: 800Mi,
       cpu: 600m
     }
   }

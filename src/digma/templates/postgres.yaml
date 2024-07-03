@@ -28,7 +28,15 @@ spec:
             cpu: {{ .Values.postgres.resources.limits.cpu }}
         ports:
           - containerPort: 5432
-        args: ["-c" ,"max_connections={{ .Values.postgres.maxConnections }}", "-c", "shared_buffers=800MB", "-c", "logging_collector={{ .Values.postgres.loggingCollector }}", "-c","log_directory=log"]
+        args:
+          - "-c"
+          - "max_connections={{ .Values.postgres.maxConnections }}"
+          - "-c"
+          - "shared_buffers={{ .Values.postgres.sharedBuffers }}"
+          - "-c"
+          - "logging_collector={{ .Values.postgres.loggingCollector }}"
+          - "-c"
+          - "log_directory=log"
         env:
         - name: POSTGRES_NAME
           value: postgres
@@ -46,7 +54,7 @@ spec:
       - name: dshm
         emptyDir:
           medium: Memory
-          sizeLimit: "800Mi"
+          sizeLimit: "800Mi"  
   volumeClaimTemplates:
     - metadata:
         name: postgres-data
