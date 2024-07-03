@@ -17,6 +17,14 @@ spec:
       labels:
         app: grafana
     spec:
+      initContainers:
+      - name: init-grafana
+        image: busybox:1.28
+        command:
+        - 'sh', 
+        - '-c', 
+        - "until nslookup myservice.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for myservice; sleep 2; done"
+ 
       containers:
       - name: grafana
         image: grafana/grafana:latest
