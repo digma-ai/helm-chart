@@ -86,7 +86,6 @@ postgres:
   username: postgres
   password: postgres
   maxConnections: 400
-  maxMemory: 800MB # mapped to shared_buffers
   resources: {
     requests: {
       memory: 1Gi,
