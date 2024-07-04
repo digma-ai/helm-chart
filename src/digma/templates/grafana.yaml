@@ -71,7 +71,7 @@ spec:
           cd helm-chart/src/digma/grafana-dashboards;
 
           mkdir -p /var/lib/grafana/dashboards;
-          cp -r dashboards/* /var/lib/grafana/dashboards/;
+          cp -r ./* /var/lib/grafana/dashboards/;
 
           echo 'Finished setting grafana config files'
         volumeMounts:
