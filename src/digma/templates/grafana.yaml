@@ -19,28 +19,65 @@ spec:
     spec:
       initContainers:
       - name: init-grafana
-        image: busybox:1.28
+        image: alpine/git:2.45.2
         command:
-        - 'sh', 
-        - '-c', 
-        - "until nslookup myservice.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for myservice; sleep 2; done"
- 
+        - 'sh'
+        - '-c'
+        - |
+          git clone -b local-prom-grafana https://github.com/digma-ai/helm-chart;
+          cd helm-chart/src/digma/grafana-config;
+
+          mkdir -p /var/lib/grafana/dashboards;
+          mkdir -p /etc/grafana/provisioning/dashboards;
+          mkdir -p /etc/grafana/provisioning/datasources;
+
+          cp -r dashboards/* /var/lib/grafana/dashboards/;
+          cp dashboard.yaml /etc/grafana/provisioning/dashboards/main.yaml;
+          cp datasource.yaml /etc/grafana/provisioning/datasources/main.yaml;
+        
+          chown -R 472:472 /var/lib/grafana/;
+          chown -R 472:472 /etc/grafana/;
+          ls -l /var/lib
+          ls -l /etc
+          echo 'Finished setting grafana config files'
+        securityContext:
+          runAsUser: 0
+          runAsNonRoot: false
+          capabilities:
+            add:
+              - CHOWN
+        volumeMounts:
+        - name: grafana-data
+          mountPath: /var/lib/grafana
+          subPath: grafana-var-lib
+        - name: grafana-data
+          mountPath: /etc/grafana
+          subPath: grafana-etc
+
       containers:
       - name: grafana
-        image: grafana/grafana:latest
+        image: grafana/grafana:10.3.3
+        securityContext:
+          runAsUser: 472
+          runAsGroup: 472
+          fsGroup: 472
+          runAsNonRoot: true
         env:
         - name: GF_SECURITY_ADMIN_USER
           value: admin
         - name: GF_SECURITY_ADMIN_PASSWORD
           value: admin
         - name: GF_USERS_ALLOW_SIGN_UP
-          value: false
+          value: 'false'
         ports:
         - containerPort: 9000
         volumeMounts:
         - name: grafana-data
           mountPath: /var/lib/grafana
-          subPath: grafana-data
+          subPath: grafana-var-lib
+        - name: grafana-data
+          mountPath: /etc/grafana
+          subPath: grafana-etc
 
   volumeClaimTemplates:
   - metadata:
@@ -52,5 +89,16 @@ spec:
         requests:
           storage: 20Gi
 ---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-grafana
+spec:
+  selector:
+    app: grafana
+  ports:
+  - port: 3000
+    protocol: TCP
 
 {{- end }}
