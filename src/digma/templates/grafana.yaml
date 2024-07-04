@@ -1,9 +1,9 @@
 {{- if eq .Values.digmaSelfDiagnosis.otlpExporterEndpoint "local" }}
 
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-grafana-stateful-set
+  name: {{ .Release.Name }}-grafana-deployment
   labels:
     app: grafana
 spec:
@@ -17,6 +17,11 @@ spec:
       labels:
         app: grafana
     spec:
+      volumes:
+      - name: grafana-provisioning
+        emptyDir: {}
+      - name: grafana-dashboards
+        emptyDir: {}
       initContainers:
       - name: init-grafana
         image: alpine/git:2.45.2
@@ -34,34 +39,17 @@ spec:
           cp -r dashboards/* /var/lib/grafana/dashboards/;
           cp dashboard.yaml /etc/grafana/provisioning/dashboards/main.yaml;
           cp datasource.yaml /etc/grafana/provisioning/datasources/main.yaml;
-        
-          chown -R 472:472 /var/lib/grafana/;
-          chown -R 472:472 /etc/grafana/;
-          ls -l /var/lib
-          ls -l /etc
+
           echo 'Finished setting grafana config files'
-        securityContext:
-          runAsUser: 0
-          runAsNonRoot: false
-          capabilities:
-            add:
-              - CHOWN
         volumeMounts:
-        - name: grafana-data
-          mountPath: /var/lib/grafana
-          subPath: grafana-var-lib
-        - name: grafana-data
-          mountPath: /etc/grafana
-          subPath: grafana-etc
+        - name: grafana-provisioning
+          mountPath: /etc/grafana/provisioning
+        - name: grafana-dashboards
+          mountPath: /var/lib/grafana/dashboards
 
       containers:
       - name: grafana
         image: grafana/grafana:10.3.3
-        securityContext:
-          runAsUser: 472
-          runAsGroup: 472
-          fsGroup: 472
-          runAsNonRoot: true
         env:
         - name: GF_SECURITY_ADMIN_USER
           value: admin
@@ -72,22 +60,10 @@ spec:
         ports:
         - containerPort: 9000
         volumeMounts:
-        - name: grafana-data
-          mountPath: /var/lib/grafana
-          subPath: grafana-var-lib
-        - name: grafana-data
-          mountPath: /etc/grafana
-          subPath: grafana-etc
-
-  volumeClaimTemplates:
-  - metadata:
-      name: grafana-data
-    spec:
-      accessModes:
-        - ReadWriteOnce
-      resources:
-        requests:
-          storage: 20Gi
+        - name: grafana-provisioning
+          mountPath: /etc/grafana/provisioning
+        - name: grafana-dashboards
+          mountPath: /var/lib/grafana/dashboards
 ---
 
 apiVersion: v1
