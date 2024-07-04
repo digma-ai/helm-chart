@@ -67,7 +67,9 @@ spec:
         - 'sh'
         - '-c'
         - |
-          git clone -b local-prom-grafana https://github.com/digma-ai/helm-chart;
+          # FOR DEBBUGING DASHBOARDS CHANGES:
+          # git clone -b <YOUR-BRANCH> https://github.com/digma-ai/helm-chart;
+          git clone https://github.com/digma-ai/helm-chart;
           cd helm-chart/src/digma/grafana-dashboards;
 
           mkdir -p /var/lib/grafana/dashboards;
