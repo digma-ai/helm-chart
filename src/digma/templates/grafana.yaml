@@ -68,7 +68,7 @@ spec:
         - '-c'
         - |
           git clone -b local-prom-grafana https://github.com/digma-ai/helm-chart;
-          cd helm-chart/src/digma/grafana-config;
+          cd helm-chart/src/digma/grafana-dashboards;
 
           mkdir -p /var/lib/grafana/dashboards;
           cp -r dashboards/* /var/lib/grafana/dashboards/;
