@@ -1,5 +1,36 @@
 {{- if eq .Values.digmaSelfDiagnosis.otlpExporterEndpoint "local" }}
 
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-grafana-config
+data:
+  datasources-yml: |
+    apiVersion: 1
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        url: {{ printf "http://%s-prometheus:9090" (.Release.Name)}}
+        isDefault: true
+        access: proxy
+        editable: true
+        uid: prometheusdatasource
+
+  dashboards-yml: |
+    apiVersion: 1
+    providers:
+      - name: "Dashboard provider"
+        orgId: 1
+        type: file
+        disableDeletion: false
+        updateIntervalSeconds: 10
+        allowUiUpdates: true
+        options:
+          path: /var/lib/grafana/dashboards
+          foldersFromFilesStructure: true
+---
+
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -19,9 +50,16 @@ spec:
     spec:
       volumes:
       - name: grafana-provisioning
-        emptyDir: {}
+        configMap:
+          name: {{ .Release.Name }}-grafana-config
+          items:
+          - key: "datasources-yml"
+            path: "datasources/main.yml"
+          - key: "dashboards-yml"
+            path: "dashboards/main.yml" 
       - name: grafana-dashboards
         emptyDir: {}
+        
       initContainers:
       - name: init-grafana
         image: alpine/git:2.45.2
@@ -33,17 +71,10 @@ spec:
           cd helm-chart/src/digma/grafana-config;
 
           mkdir -p /var/lib/grafana/dashboards;
-          mkdir -p /etc/grafana/provisioning/dashboards;
-          mkdir -p /etc/grafana/provisioning/datasources;
-
           cp -r dashboards/* /var/lib/grafana/dashboards/;
-          cp dashboard.yaml /etc/grafana/provisioning/dashboards/main.yaml;
-          cp datasource.yaml /etc/grafana/provisioning/datasources/main.yaml;
 
           echo 'Finished setting grafana config files'
         volumeMounts:
-        - name: grafana-provisioning
-          mountPath: /etc/grafana/provisioning
         - name: grafana-dashboards
           mountPath: /var/lib/grafana/dashboards
 
