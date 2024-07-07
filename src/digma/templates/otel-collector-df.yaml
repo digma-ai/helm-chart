@@ -37,15 +37,24 @@ data:
     exporters:
       logging:
         verbosity: detailed
-      otlp:
-        endpoint: {{.Values.digmaSelfDiagnosis.otlpExporterEndpoint}}
+      {{- if eq .Values.digmaSelfDiagnosis.otlpExporterEndpoint "local" }}
       prometheus:
         endpoint: 0.0.0.0:7777
         send_timestamps: true
         metric_expiration: 10m
+      {{- else }}
+      otlp:
+        endpoint: {{.Values.digmaSelfDiagnosis.otlpExporterEndpoint}}
+      {{- end }}
 
     service:
       pipelines:
+        {{- if eq .Values.digmaSelfDiagnosis.otlpExporterEndpoint "local" }}
+        metrics:
+          receivers: [otlp, kafkametrics, prometheus/k8s_metrics]
+          processors: [attributes/add_source_env, batch]
+          exporters: [prometheus]
+        {{- else }}
         traces:
           receivers: [otlp]
           processors: [batch]
@@ -53,11 +62,8 @@ data:
         metrics:
           receivers: [otlp, kafkametrics, prometheus/k8s_metrics]
           processors: [attributes/add_source_env, batch]
-          exporters: [otlp, prometheus]
-        logs:
-          receivers: [otlp]
-          processors: [batch]
           exporters: [otlp]
+        {{- end }}
 
 ---
 
