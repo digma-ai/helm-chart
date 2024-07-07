@@ -28,6 +28,15 @@ data:
         options:
           path: /var/lib/grafana/dashboards
           foldersFromFilesStructure: true
+
+  dashboard-environment-json: |
+{{ .Files.Get "grafana-dashboards/Environment.json" | indent 4 }}
+
+  dashboard-activities-json: |
+{{ .Files.Get "grafana-dashboards/Activities.json" | indent 4 }}
+
+  dashboard-kafka-json: |
+{{ .Files.Get "grafana-dashboards/Kafka.json" | indent 4 }}
 ---
 
 
@@ -58,28 +67,16 @@ spec:
           - key: "dashboards-yml"
             path: "dashboards/main.yml" 
       - name: grafana-dashboards
-        emptyDir: {}
+        configMap:
+          name: {{ .Release.Name }}-grafana-config
+          items:
+          - key: "dashboard-environment-json"
+            path: "Environment.json"
+          - key: "dashboard-activities-json"
+            path: "Activities.json"
+          - key: "dashboard-kafka-json"
+            path: "kafka.json"
         
-      initContainers:
-      - name: init-grafana
-        image: alpine/git:2.45.2
-        command:
-        - 'sh'
-        - '-c'
-        - |
-          # FOR DEBBUGING DASHBOARDS CHANGES:
-          # git clone -b <YOUR-BRANCH> https://github.com/digma-ai/helm-chart;
-          git clone https://github.com/digma-ai/helm-chart;
-          cd helm-chart/src/digma/grafana-dashboards;
-
-          mkdir -p /var/lib/grafana/dashboards;
-          cp -r ./* /var/lib/grafana/dashboards/;
-
-          echo 'Finished setting grafana config files'
-        volumeMounts:
-        - name: grafana-dashboards
-          mountPath: /var/lib/grafana/dashboards
-
       containers:
       - name: grafana
         image: grafana/grafana:10.3.3
