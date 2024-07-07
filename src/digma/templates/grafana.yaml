@@ -29,14 +29,7 @@ data:
           path: /var/lib/grafana/dashboards
           foldersFromFilesStructure: true
 
-  dashboard-environment-json: |
-{{ .Files.Get "grafana-dashboards/Environment.json" | indent 4 }}
-
-  dashboard-activities-json: |
-{{ .Files.Get "grafana-dashboards/Activities.json" | indent 4 }}
-
-  dashboard-kafka-json: |
-{{ .Files.Get "grafana-dashboards/Kafka.json" | indent 4 }}
+{{ (.Files.Glob "grafana-dashboards/*").AsConfig | indent 2 }}
 ---
 
 
@@ -70,12 +63,10 @@ spec:
         configMap:
           name: {{ .Release.Name }}-grafana-config
           items:
-          - key: "dashboard-environment-json"
-            path: "Environment.json"
-          - key: "dashboard-activities-json"
-            path: "Activities.json"
-          - key: "dashboard-kafka-json"
-            path: "kafka.json"
+          {{- range $path, $_ := .Files.Glob "grafana-dashboards/*" }}
+            - key: {{ base $path }}
+              path: {{ base $path }}
+          {{- end }}
         
       containers:
       - name: grafana
