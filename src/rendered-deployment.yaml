@@ -219,6 +219,8 @@ spec:
           value: Server=digma-postgres;Port=5432;Database=digma_analytics;User Id=postgres;Password=postgres;
         - name: OtlpExporterUrl
           value:
+        - name: Kafka__Urls__0
+          value: digma-kafka:9092
         - name: OtlpExportLogs
           value: 'false'
         - name: OtlpExportMetrics
