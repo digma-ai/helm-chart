@@ -192,7 +192,7 @@ spec:
     spec:
       containers:
       - name: digma-analytics
-        image: digmatic/digma-analytics:0.3.68
+        image: digmatic/digma-analytics:0.3.71
         resources:
           requests:
             memory: 300Mi
@@ -219,6 +219,8 @@ spec:
           value: Server=digma-postgres;Port=5432;Database=digma_analytics;User Id=postgres;Password=postgres;
         - name: OtlpExporterUrl
           value:
+        - name: Kafka__Urls__0
+          value: digma-kafka:9092
         - name: OtlpExportLogs
           value: 'false'
         - name: OtlpExportMetrics
@@ -226,7 +228,7 @@ spec:
         - name: OtlpExportTraces
           value: 'false'
         - name: ApplicationVersion
-          value: 0.3.68
+          value: 0.3.71
         - name: ChartVersion
           value: 1.0.197
 
@@ -262,7 +264,7 @@ spec:
     spec:
       containers:
       - name: digma-collector-api
-        image: digmatic/digma-collector:0.3.68
+        image: digmatic/digma-collector:0.3.71
         resources:
           requests:
             memory: 100Mi
@@ -297,7 +299,7 @@ spec:
         - name: OtlpExportTraces
           value: 'false'
         - name: ApplicationVersion
-          value: 0.3.68
+          value: 0.3.71
         - name: ChartVersion
           value: 1.0.197
         - name: Jaeger__OtlpUrl
@@ -327,7 +329,7 @@ spec:
     spec:
       containers:
       - name: digma-collector-worker
-        image: digmatic/digma-collector-worker:0.3.68
+        image: digmatic/digma-collector-worker:0.3.71
         resources:
           requests:
             memory: 200Mi
@@ -361,7 +363,7 @@ spec:
         - name: Kafka__Urls__0
           value: digma-kafka:9092
         - name: ApplicationVersion
-          value: 0.3.68
+          value: 0.3.71
         - name: ChartVersion
           value: 1.0.197
         - name: Jaeger__OtlpUrl
@@ -439,7 +441,7 @@ spec:
     spec:
       containers:
       - name: digma-measurement-analysis
-        image: digmatic/digma-measurement-analysis:0.3.68
+        image: digmatic/digma-measurement-analysis:0.3.71
         resources:
           requests:
             memory: 100Mi
@@ -473,7 +475,7 @@ spec:
         - name: OtlpExportTraces
           value: 'false'
         - name: ApplicationVersion
-          value: 0.3.68
+          value: 0.3.71
         - name: ChartVersion
           value: 1.0.197
         - name: Jaeger__OtlpUrl
@@ -520,7 +522,7 @@ spec:
     spec:
       containers:
       - name: digma-pipeline-worker
-        image: digmatic/digma-pipeline-worker:0.3.68
+        image: digmatic/digma-pipeline-worker:0.3.71
         resources:
           requests:
             memory: 100Mi
@@ -554,7 +556,7 @@ spec:
         - name: Kafka__Urls__0
           value: digma-kafka:9092
         - name: ApplicationVersion
-          value: 0.3.68
+          value: 0.3.71
         - name: ChartVersion
           value: 1.0.197
         - name: Jaeger__OtlpUrl
@@ -585,7 +587,7 @@ spec:
     spec:
       containers:
       - name: digma-scheduler
-        image: digmatic/digma-scheduler:0.3.68
+        image: digmatic/digma-scheduler:0.3.71
         resources:
           requests:
             memory: 100Mi
@@ -621,7 +623,7 @@ spec:
         - name: OtlpExportTraces
           value: 'false'
         - name: ApplicationVersion
-          value: 0.3.68
+          value: 0.3.71
         - name: ChartVersion
           value: 1.0.197
 
