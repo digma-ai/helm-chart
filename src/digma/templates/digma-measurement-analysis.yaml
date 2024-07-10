@@ -64,5 +64,3 @@ spec:
           value: '1000'
         - name: GCLatencyMode
           value: 'SustainedLowLatency'
-        - name: Ignore_SpanRelationsDurationConsumer
-          value: 'true'
