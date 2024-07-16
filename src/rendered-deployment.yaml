@@ -192,7 +192,7 @@ spec:
     spec:
       containers:
       - name: digma-analytics
-        image: digmatic/digma-analytics:0.3.73
+        image: digmatic/digma-analytics:0.3.74
         resources:
           requests:
             memory: 300Mi
@@ -228,7 +228,7 @@ spec:
         - name: OtlpExportTraces
           value: 'false'
         - name: ApplicationVersion
-          value: 0.3.73
+          value: 0.3.74
         - name: ChartVersion
           value: 1.0.201
 
@@ -264,7 +264,7 @@ spec:
     spec:
       containers:
       - name: digma-collector-api
-        image: digmatic/digma-collector:0.3.73
+        image: digmatic/digma-collector:0.3.74
         resources:
           requests:
             memory: 100Mi
@@ -299,7 +299,7 @@ spec:
         - name: OtlpExportTraces
           value: 'false'
         - name: ApplicationVersion
-          value: 0.3.73
+          value: 0.3.74
         - name: ChartVersion
           value: 1.0.201
         - name: Jaeger__OtlpUrl
@@ -329,7 +329,7 @@ spec:
     spec:
       containers:
       - name: digma-collector-worker
-        image: digmatic/digma-collector-worker:0.3.73
+        image: digmatic/digma-collector-worker:0.3.74
         resources:
           requests:
             memory: 200Mi
@@ -363,7 +363,7 @@ spec:
         - name: Kafka__Urls__0
           value: digma-kafka:9092
         - name: ApplicationVersion
-          value: 0.3.73
+          value: 0.3.74
         - name: ChartVersion
           value: 1.0.201
         - name: Jaeger__OtlpUrl
@@ -372,14 +372,6 @@ spec:
           value: '0.3'
         - name: BACKEND_DEPLOYMENT_TYPE
           value: Helm
-        - name: ThresholdOptions__RecentActivityUpdateThresholdSeconds
-          value: '5'
-        - name: ThresholdOptions__UpsertEndpointThresholdSeconds
-          value: '5'
-        - name: ThresholdOptions__UpsertSpansThresholdSeconds
-          value: '5'
-        - name: ThresholdOptions__UpsertSpanFlowMetadataThresholdSeconds
-          value: '5'
 ---
 # Source: digma/templates/digma-ds.yaml
 apiVersion: apps/v1
@@ -441,7 +433,7 @@ spec:
     spec:
       containers:
       - name: digma-measurement-analysis
-        image: digmatic/digma-measurement-analysis:0.3.73
+        image: digmatic/digma-measurement-analysis:0.3.74
         resources:
           requests:
             memory: 100Mi
@@ -475,7 +467,7 @@ spec:
         - name: OtlpExportTraces
           value: 'false'
         - name: ApplicationVersion
-          value: 0.3.73
+          value: 0.3.74
         - name: ChartVersion
           value: 1.0.201
         - name: Jaeger__OtlpUrl
@@ -484,6 +476,14 @@ spec:
           value: '0.3'
         - name: BACKEND_DEPLOYMENT_TYPE
           value: Helm
+        - name: ThresholdOptions__RecentActivityUpdateThresholdSeconds
+          value: '5'
+        - name: ThresholdOptions__UpsertEndpointThresholdSeconds
+          value: '5'
+        - name: ThresholdOptions__UpsertSpansThresholdSeconds
+          value: '5'
+        - name: ThresholdOptions__UpsertSpanFlowMetadataThresholdSeconds
+          value: '5'
         - name: Kafka__SpanDurationSummaryCG__Workers
           value: '2'
         - name: Kafka__SpanDurationTotalCG__Workers
@@ -522,7 +522,7 @@ spec:
     spec:
       containers:
       - name: digma-pipeline-worker
-        image: digmatic/digma-pipeline-worker:0.3.73
+        image: digmatic/digma-pipeline-worker:0.3.74
         resources:
           requests:
             memory: 100Mi
@@ -556,7 +556,7 @@ spec:
         - name: Kafka__Urls__0
           value: digma-kafka:9092
         - name: ApplicationVersion
-          value: 0.3.73
+          value: 0.3.74
         - name: ChartVersion
           value: 1.0.201
         - name: Jaeger__OtlpUrl
@@ -587,7 +587,7 @@ spec:
     spec:
       containers:
       - name: digma-scheduler
-        image: digmatic/digma-scheduler:0.3.73
+        image: digmatic/digma-scheduler:0.3.74
         resources:
           requests:
             memory: 100Mi
@@ -623,7 +623,7 @@ spec:
         - name: OtlpExportTraces
           value: 'false'
         - name: ApplicationVersion
-          value: 0.3.73
+          value: 0.3.74
         - name: ChartVersion
           value: 1.0.201
 
