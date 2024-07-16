@@ -44,13 +44,3 @@ spec:
           value: {{ .Values.digmaSelfDiagnosis.otlpSamplerProbability| quote}}
         - name: BACKEND_DEPLOYMENT_TYPE
           value: {{ .Values.deploymentType | quote}}
-        - name: ThresholdOptions__RecentActivityUpdateThresholdSeconds
-          value: {{ .Values.traceCollectorThresholds.recentActivityUpdateThresholdSeconds | quote }}
-        - name: ThresholdOptions__UpsertEndpointThresholdSeconds
-          value: {{ .Values.traceCollectorThresholds.upsertEndpointThresholdSeconds | quote }}
-        - name: ThresholdOptions__UpsertSpansThresholdSeconds
-          value: {{ .Values.traceCollectorThresholds.upsertSpansThresholdSeconds | quote }}
-        - name: ThresholdOptions__UpsertSpanFlowMetadataThresholdSeconds
-          value: {{ .Values.traceCollectorThresholds.upsertSpanFlowMetadataThresholdSeconds | quote }}
-        - name: TraceTempStorage__TraceForJaegerExpirationInMinutes
-          value: {{ .Values.digmaCollectorWorker.traceForJaegerTTL | quote }}

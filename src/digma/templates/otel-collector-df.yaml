@@ -25,7 +25,7 @@ data:
             match_type: regexp
             resources:
               - key: digma.environment
-                value: ^PETCLINIC$
+                value: PETCLINIC$
       filter/stag01:
         spans:
           include:
