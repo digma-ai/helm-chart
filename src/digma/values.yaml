@@ -223,16 +223,16 @@ digmaMeasurementAnalysis:
       cpu: 200m
     },
     limits: {
-      memory: 600Mi,
+      memory: 800Mi,
       cpu: 800m
     }
   }
 
 digmaSelfDiagnosis:
+  otlpExporterEndpoint: https://collector.meloona01.digma.systems:443
   otlpExportTraces: true
   otlpExportMetrics: true
-  otlpExportLogs: true
-  otlpExporterEndpoint: http://digma-otel-collector-df:4317/
+  otlpSamplerProbability: "1"
 
 digma:
   environmentName: STAG01-PERF
