@@ -211,7 +211,7 @@ digmaMeasurementAnalysis:
       cpu: 200m
     },
     limits: {
-      memory: 500Mi,
+      memory: 800Mi,
       cpu: 800m
     }
   }
