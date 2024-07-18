@@ -204,7 +204,7 @@ digmaPipelineWorker:
       cpu: 50m
     },
     limits: {
-      memory: 300Mi,
+      memory: 400Mi,
       cpu: 500m
     }
   }
@@ -217,7 +217,7 @@ digmaMeasurementAnalysis:
       cpu: 200m
     },
     limits: {
-      memory: 500Mi,
+      memory: 800Mi,
       cpu: 800m
     }
   }
