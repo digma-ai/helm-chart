@@ -9,6 +9,8 @@ presets:
       replicas: 1
     digmaPipelineWorker: 
       replicas: 1
+    digmaSpanProcessor: 
+      replicas: 1
   medium:
     digmaCollectorWorker:
       replicas: 4
@@ -16,12 +18,16 @@ presets:
       replicas: 4
     digmaPipelineWorker: 
       replicas: 1
+    digmaSpanProcessor: 
+      replicas: 1
   large:
     digmaCollectorWorker:
       replicas: 6
     digmaMeasurementAnalysis: 
       replicas: 4
     digmaPipelineWorker: 
+      replicas: 4
+    digmaSpanProcessor: 
       replicas: 4
 
 deploymentType: Helm
@@ -205,6 +211,19 @@ digmaPipelineWorker:
 
 digmaMeasurementAnalysis:
   replicas: "{{ index .Values.presets .Values.size \"digmaMeasurementAnalysis\" \"replicas\" }}"
+  resources: {
+    requests: {
+      memory: 100Mi,
+      cpu: 200m
+    },
+    limits: {
+      memory: 500Mi,
+      cpu: 800m
+    }
+  }
+
+digmaSpanProcessor:
+  replicas: "{{ index .Values.presets .Values.size \"digmaSpanProcessor\" \"replicas\" }}"
   resources: {
     requests: {
       memory: 100Mi,
