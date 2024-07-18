@@ -139,6 +139,8 @@ digmaDs:
 
 digmaCollectorApi:
   host: "{{ .Release.Name }}-collector-api"
+  expose: false
+  secured: false
   service:
     annotations:
       service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
@@ -208,7 +210,7 @@ digmaPipelineWorker:
       cpu: 50m
     },
     limits: {
-      memory: 300Mi,
+      memory: 400Mi,
       cpu: 500m
     }
   }
