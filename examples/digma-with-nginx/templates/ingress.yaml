@@ -1,0 +1,66 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-analytics-nginx-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: analytics.digma.{{ required "'domain' variable was not set" .Values.domain }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ tpl .Values.digma.digmaAnalytics.host . }}
+            port:
+              number: 5051
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-collector-http-nginx-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/enable-debug: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: collector-http.digma.{{ required "'domain' variable was not set" .Values.domain }}
+    http:
+      paths:
+      - path: /(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: {{ tpl .Values.digma.digmaCollectorApi.host . }}
+            port:
+              number: 5049
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-collector-grpc-nginx-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/enable-debug: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: collector-grpc.digma.{{ required "'domain' variable was not set" .Values.domain }}
+    http:
+      paths:
+      - path: /(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: {{ tpl .Values.digma.digmaCollectorApi.host . }}
+            port:
+              number: 5050

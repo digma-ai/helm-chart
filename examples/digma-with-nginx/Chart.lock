@@ -1,0 +1,6 @@
+dependencies:
+- name: digma
+  repository: https://digma-ai.github.io/helm-chart
+  version: 1.0.206
+digest: sha256:2485d2829e372948c86648cb3247e390180dc14173295c87167d11d2014e4614
+generated: "2024-07-23T03:26:11.0978252-04:00"
