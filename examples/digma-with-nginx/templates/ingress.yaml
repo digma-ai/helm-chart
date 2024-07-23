@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ .Release.Name }}-analytics-nginx-ingress
+  name: {{ .Release.Name }}-analytics-ingress
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
@@ -23,7 +23,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ .Release.Name }}-collector-http-nginx-ingress
+  name: {{ .Release.Name }}-collector-http-ingress
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$1
     nginx.ingress.kubernetes.io/enable-debug: "true"
@@ -46,7 +46,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ .Release.Name }}-collector-grpc-nginx-ingress
+  name: {{ .Release.Name }}-collector-grpc-ingress
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$1
     nginx.ingress.kubernetes.io/enable-debug: "true"
@@ -64,3 +64,25 @@ spec:
             name: {{ tpl .Values.digma.digmaCollectorApi.host . }}
             port:
               number: 5050
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-jaeger-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: jaeger.digma.{{ required "'domain' variable was not set" .Values.domain }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ tpl .Values.digma.embeddedJaeger.host . }}
+            port:
+              number: 17686

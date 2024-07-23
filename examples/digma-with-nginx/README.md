@@ -2,9 +2,13 @@
 This repo shows an example of using digma and exposing its endpoints via **nginx**.
 
 1. Build dependencies:<br/>
-<code>helm dependency build</code>
+    ``` bash
+    helm dependency build
+    ```
 
 2. Modify the <code>ingress.yaml</code> file with your <code>ingressClassName</code> if needed.
 
-3. Run: <br/>
-<code>helm install digma . -n digma --set domain=[YOUR-DOMAIN]</code>
+3. Install chart: <br/>
+    ``` bash
+    helm install digma . -n digma  --set digma.digma.licenseKey=[LICENSE] --set domain=[DOMAIN]
+    ```

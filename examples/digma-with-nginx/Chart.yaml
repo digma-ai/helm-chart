@@ -5,5 +5,5 @@ home: https://github.com/digma-ai/examples/digma-with-nginx
 type: application
 dependencies:
 - name: digma
-  version: 1.0.206
+  version: 1.0.207
   repository: "https://digma-ai.github.io/helm-chart"
