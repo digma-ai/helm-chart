@@ -25,6 +25,8 @@
 {{- define "env.redis" -}}
 - name: CacheSettings__RedisConnection
   value: {{ tpl .Values.redis.host . }}
+- name: ExternalLogging__ConnectionString
+  value: {{ tpl .Values.redis.host . }}
 {{- end -}}
 
 
