@@ -158,11 +158,11 @@ digmaCollectorWorker:
   replicas: "{{ index .Values.presets .Values.size \"digmaCollectorWorker\" \"replicas\" }}"
   resources: {
     requests: {
-      memory: 200Mi,
-      cpu: 100m
+      memory: 300Mi,
+      cpu: 300m
     },
     limits: {
-      memory: 400Mi,
+      memory: 600Mi,
       cpu: 600m
     }
   }
@@ -196,12 +196,12 @@ digmaScheduler:
   host: "{{ .Release.Name }}-scheduler"
   resources: {
     requests: {
-      memory: 100Mi,
-      cpu: 50m
+      memory: 300Mi,
+      cpu: 200m
     },
     limits: {
-      memory: 300Mi,
-      cpu: 300m
+      memory: 600Mi,
+      cpu: 500m
     }
   }
 
