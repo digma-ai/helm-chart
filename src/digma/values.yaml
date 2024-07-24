@@ -106,9 +106,9 @@ embeddedJaeger:
   host: "{{ .Release.Name }}-embedded-jaeger"
   imageTag: "1.44.0"
   enabled: true
+  loadbalancer: true
   service:
-    annotations:
-      service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+    annotations: []
 
 kibana:
   host: "{{ .Release.Name }}-kibana"
@@ -139,11 +139,9 @@ digmaDs:
 
 digmaCollectorApi:
   host: "{{ .Release.Name }}-collector-api"
+  loadbalancer: true
   expose: false
   secured: false
-  service:
-    annotations:
-      service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
   resources: {
     requests: {
       memory: 100Mi,
@@ -154,6 +152,8 @@ digmaCollectorApi:
       cpu: 800m
     }
   }
+  service:
+    annotations: []
 
 digmaCollectorWorker:
   host: "{{ .Release.Name }}-collector-worker"
@@ -172,12 +172,10 @@ digmaCollectorWorker:
 
 digmaAnalytics:
   host: "{{ .Release.Name }}-analytics"
+  loadbalancer: true
   accesstoken: pcr5UDZqdvzky1cgj
   replicas: 1
   secured: false
-  service:
-    annotations:
-      service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
   resources: {
     requests: {
       memory: 300Mi,
@@ -188,6 +186,8 @@ digmaAnalytics:
       cpu: 800m
     }
   }
+  service:
+    annotations: []
 
 digmaScheduler:
   host: "{{ .Release.Name }}-scheduler"
