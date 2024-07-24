@@ -166,6 +166,12 @@ digmaCollectorWorker:
       cpu: 600m
     }
   }
+  sampling: {
+    enable: true
+  }
+  extendedObservability: {
+    enable: true
+  }
   traceForJaegerTTL: 10
 
 digmaAnalytics:
