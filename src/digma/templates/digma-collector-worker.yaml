@@ -46,3 +46,7 @@ spec:
           value: {{ .Values.deploymentType | quote}}
         - name: TraceTempStorage__TraceForJaegerExpirationInMinutes
           value: {{ .Values.digmaCollectorWorker.traceForJaegerTTL | quote }}
+        - name: ExtendedObservability__Enable
+          value: {{ .Values.digmaCollectorWorker.extendedObservability.enable | quote }}
+        - name: Sampling__Enable
+          value: {{ .Values.digmaCollectorWorker.sampling.enable | quote }}
