@@ -40,6 +40,8 @@ spec:
         {{- include "env.versions" . | nindent  8 }}
         {{- include "env.embeddedJaeger" . | nindent  8 }}
         {{- include "env.digmaEnvType" . | nindent 8 }}
+        - name: BlockedTrace__TraceSpansLimit
+          value: "3000"
         - name: OtlpSamplerProbability
           value: {{ .Values.digmaSelfDiagnosis.otlpSamplerProbability| quote}}
         - name: BACKEND_DEPLOYMENT_TYPE
