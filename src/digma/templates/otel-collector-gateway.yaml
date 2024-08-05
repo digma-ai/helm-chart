@@ -1,0 +1,126 @@
+{{- if .Values.otelCollectorGateway.enabled }}
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-otel-collector-gateway-config
+data:
+  key-collector-yaml: |
+    receivers:
+      otlp:
+        protocols: 
+          grpc:
+            endpoint: 0.0.0.0:5050
+          http:
+            endpoint: 0.0.0.0:5049
+
+    processors:
+      batch:
+      probabilistic_sampler:
+        sampling_percentage: {{ .Values.otelCollectorGateway.samplingPercentage }}
+
+    exporters:
+      logging:
+        verbosity: normal
+      otlp/digma-collector:        
+        endpoint: {{ printf "http://%s:5050" (tpl .Values.digmaCollectorApi.host .)}}
+        tls:
+          insecure: true
+
+    service:
+      pipelines:
+        traces:
+          receivers: [otlp]
+          processors: [batch, probabilistic_sampler]
+          exporters: [otlp/digma-collector, logging]
+
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-otel-collector-gateway-deployment
+  labels:
+    app: otel-collector-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: otel-collector-gateway
+  template:
+    metadata:
+      labels:
+        app: otel-collector-gateway
+    spec:
+      containers:
+        - name: otel-collector-gateway
+          image: otel/opentelemetry-collector-contrib:0.103.0
+          env:
+          - name: K8S_NODE_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.nodeName
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              cpu: 200m
+              memory: 300Mi
+          ports:
+            - containerPort: 4317
+          args:
+            - --config=/conf/collector.yaml
+          volumeMounts:
+            - name: vn-config
+              mountPath: /conf
+              readOnly: true
+      volumes:
+        - name: vn-config # volume name
+          configMap:
+            name: {{ .Release.Name }}-otel-collector-gateway-config # configMap name
+            items:
+              - key: "key-collector-yaml"
+                path: "collector.yaml"
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-otel-collector-gateway
+spec:
+  selector:
+    app: otel-collector-gateway
+  ports:
+  - name: http
+    protocol: TCP
+    port: 5049
+  - name: grpc
+    protocol: TCP
+    port: 5050
+
+{{ if .Values.otelCollectorGateway.loadbalancer }}
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Release.Name }}-otel-collector-gateway-service-lb
+  {{- if and .Values.otelCollectorGateway.service .Values.otelCollectorGateway.service.annotations }}
+  annotations:
+    {{ toYaml .Values.otelCollectorGateway.service.annotations | indent 4 }}
+  {{- end }}
+spec:
+  type: LoadBalancer
+  selector:
+    app: otel-collector-gateway
+  ports:
+  - name: http
+    protocol: TCP
+    port: 5049
+  - name: grpc
+    protocol: TCP
+    port: 5050
+{{ end }}
+
+{{- end -}}
