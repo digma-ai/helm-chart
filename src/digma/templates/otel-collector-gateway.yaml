@@ -56,6 +56,8 @@ spec:
       containers:
         - name: otel-collector-gateway
           image: otel/opentelemetry-collector-contrib:0.103.0
+          args:
+            - --config=/conf/collector.yaml
           env:
           - name: K8S_NODE_NAME
             valueFrom:
@@ -68,10 +70,6 @@ spec:
             limits:
               cpu: 200m
               memory: 300Mi
-          ports:
-            - containerPort: 4317
-          args:
-            - --config=/conf/collector.yaml
           volumeMounts:
             - name: vn-config
               mountPath: /conf
