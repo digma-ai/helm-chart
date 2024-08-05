@@ -154,6 +154,11 @@ digmaCollectorApi:
   }
   service:
     annotations: []
+  env:
+    ignoreEndpoints: |
+      [
+        { "Route": "/health", "Method": "GET", "Service": "*" }
+      ]
 
 digmaCollectorWorker:
   host: "{{ .Release.Name }}-collector-worker"
