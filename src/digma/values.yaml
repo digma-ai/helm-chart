@@ -154,11 +154,6 @@ digmaCollectorApi:
   }
   service:
     annotations: []
-  env:
-    ignoreEndpoints: |
-      [
-        { "Route": "/health", "Method": "GET", "Service": "*" }
-      ]
 
 digmaCollectorWorker:
   host: "{{ .Release.Name }}-collector-worker"
@@ -180,6 +175,11 @@ digmaCollectorWorker:
     enable: true
   }
   traceForJaegerTTL: 10
+  env:
+    ignoreEndpoints: |
+      [
+        { "Route": "/owners", "Method": "GET", "Service": "*" }
+      ]
 
 digmaAnalytics:
   host: "{{ .Release.Name }}-analytics"
