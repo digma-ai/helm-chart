@@ -54,7 +54,7 @@ spec:
           value: {{ .Values.digmaCollectorWorker.sampling.enable | quote }}
         {{- range $index, $element := .Values.digmaCollectorWorker.env.ignoreEndpoints }}
         - name: Filter__IgnoreEndpoints__{{$index}}__Route
-          value: {{ $element.Route | quote } }
+          value: {{ $element.Route | quote }}
         - name: Filter__IgnoreEndpoints__{{$index}}__Method
           value: {{ $element.Method | quote }}
         - name: Filter__IgnoreEndpoints__{{$index}}__Service
