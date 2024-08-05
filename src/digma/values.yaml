@@ -174,10 +174,13 @@ digmaCollectorWorker:
   }
   traceForJaegerTTL: 10
   env:
-    ignoreEndpoints: |
-      [
-        { "Route": "/owners", "Method": "GET", "Service": "*" }
-      ]
+    ignoreEndpoints:
+      - Route: "/owners"
+        Method: "GET"
+        Service: "*"
+      - Route: "/healthcheck"
+        Method: "POST"
+        Service: "HealthService"  
 
 digmaAnalytics:
   host: "{{ .Release.Name }}-analytics"

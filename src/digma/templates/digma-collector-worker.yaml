@@ -52,6 +52,11 @@ spec:
           value: {{ .Values.digmaCollectorWorker.extendedObservability.enable | quote }}
         - name: Sampling__Enable
           value: {{ .Values.digmaCollectorWorker.sampling.enable | quote }}
-        - name: Filter__IgnoreEndpoints
-          value: |
-            {{ .Values.digmaCollectorWorker.env.ignoreEndpoints | quote }}  
+        {{- range $index, $element := .Values.digmaCollectorWorker.env.ignoreEndpoints }}
+        - name: Filter__IgnoreEndpoints__{{$index}}__Route
+          value: {{ $element.Route | quote }}
+        - name: Filter__IgnoreEndpoints__{{$index}}__Method
+          value: {{ $element.Method | quote }}
+        - name: Filter__IgnoreEndpoints__{{$index}}__Service
+          value: {{ $element.Service | quote }}
+        {{- end }} 
