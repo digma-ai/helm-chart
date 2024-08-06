@@ -175,12 +175,9 @@ digmaCollectorWorker:
   traceForJaegerTTL: 10
   env:
     ignoreEndpoints:
-      - Route: "/owners"
+      - Route: "/health"
         Method: "GET"
-        Service: "*"
-      - Route: "/healthcheck"
-        Method: "POST"
-        Service: "HealthService"  
+        Service: "*"  
 
 digmaAnalytics:
   host: "{{ .Release.Name }}-analytics"
@@ -239,6 +236,13 @@ digmaMeasurementAnalysis:
       cpu: 800m
     }
   }
+
+otelCollectorGateway:
+  enabled: false
+  samplingPercentage: 100
+  loadbalancer: false
+  service:
+    annotations: []
 
 digmaSelfDiagnosis:
   otlpExporterEndpoint: https://collector.meloona01.digma.systems:443

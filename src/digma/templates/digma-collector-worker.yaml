@@ -59,4 +59,4 @@ spec:
           value: {{ $element.Method | quote }}
         - name: Filter__IgnoreEndpoints__{{$index}}__Service
           value: {{ $element.Service | quote }}
-        {{- end }} 
+        {{- end }}  
