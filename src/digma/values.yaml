@@ -236,6 +236,13 @@ digmaMeasurementAnalysis:
     }
   }
 
+otelCollectorGateway:
+  enabled: false
+  samplingPercentage: 100
+  loadbalancer: false
+  service:
+    annotations: []
+
 digmaSelfDiagnosis:
   otlpExportTraces: false
   otlpExportMetrics: false
