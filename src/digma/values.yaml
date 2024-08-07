@@ -186,6 +186,14 @@ digmaCollectorWorker:
       RouteRegex: ""
       Method: "GET"
       Service: "*"
+    {{- if .Values.IgnoredEndpoints }}
+    {{- range .Values.IgnoredEndpoints }}
+    - Route: "{{ .Route }}"
+      RouteRegex: "{{ .RouteRegex }}"
+      Method: "{{ .Method }}"
+      Service: "{{ .Service }}"
+    {{- end }}
+    {{- end }}  
 
 digmaAnalytics:
   host: "{{ .Release.Name }}-analytics"
@@ -265,3 +273,10 @@ digma:
   siteName: undefined
   isCentralize: true
   licenseKey:
+    
+# Custom Ignored Endpoints
+IgnoredEndpoints:
+  - Route: "/custom-endpoint"
+    RouteRegex: ""
+    Method: "GET"
+    Service: "*" 
