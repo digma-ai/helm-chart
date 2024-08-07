@@ -56,7 +56,7 @@ spec:
         - name: Filter__IgnoreEndpoints__{{$index}}__Route
           value: {{ $element.Route | quote }}
         - name: Filter__IgnoreEndpoints__{{$index}}__RouteRegex
-          value: {{ $element.RouteRegex | quote }}  
+          value: {{ $element.RouteRegex | quote }}
         - name: Filter__IgnoreEndpoints__{{$index}}__Method
           value: {{ $element.Method | quote }}
         - name: Filter__IgnoreEndpoints__{{$index}}__Service

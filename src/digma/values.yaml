@@ -177,7 +177,7 @@ digmaCollectorWorker:
     - Route: "/health"
       RouteRegex: ""
       Method: "GET"
-      Service: "*"  
+      Service: "*"
     - Route: "/healthcheck"
       RouteRegex: ""
       Method: "GET"
@@ -185,7 +185,15 @@ digmaCollectorWorker:
     - Route: "/metrics"
       RouteRegex: ""
       Method: "GET"
-      Service: "*" 
+      Service: "*"
+    {{- if .Values.IgnoredEndpoints }}
+    {{- range .Values.IgnoredEndpoints }}
+    - Route: "{{ .Route }}"
+      RouteRegex: "{{ .RouteRegex }}"
+      Method: "{{ .Method }}"
+      Service: "{{ .Service }}"
+    {{- end }}
+    {{- end }}  
 
 digmaAnalytics:
   host: "{{ .Release.Name }}-analytics"
@@ -264,3 +272,10 @@ digma:
   siteName: stag01
   isCentralize: true
   licenseKey: 529974cf70824f67aefa98232482f93e
+    
+# Custom Ignored Endpoints
+IgnoredEndpoints:
+  - Route: "/custom-endpoint"
+    RouteRegex: ""
+    Method: "GET"
+    Service: "*" 
