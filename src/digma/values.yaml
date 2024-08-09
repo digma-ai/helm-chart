@@ -108,7 +108,8 @@ embeddedJaeger:
   enabled: true
   loadbalancer: true
   service:
-    annotations: []
+    annotations:
+      networking.gke.io/load-balancer-type: "External"
 
 kibana:
   host: "{{ .Release.Name }}-kibana"
@@ -151,7 +152,8 @@ digmaCollectorApi:
     }
   }
   service:
-    annotations: []
+    annotations:
+      networking.gke.io/load-balancer-type: "External"
 
 digmaCollectorWorker:
   host: "{{ .Release.Name }}-collector-worker"
@@ -192,7 +194,7 @@ digmaAnalytics:
   loadbalancer: true
   accesstoken: pcr5UDZqdvzky1cgj
   replicas: 1
-  secured: false
+  secured: true
   resources: {
     requests: {
       memory: 300Mi,
@@ -204,7 +206,8 @@ digmaAnalytics:
     }
   }
   service:
-    annotations: []
+    annotations:
+      networking.gke.io/load-balancer-type: "External"
 
 digmaScheduler:
   host: "{{ .Release.Name }}-scheduler"
@@ -259,8 +262,8 @@ digmaSelfDiagnosis:
   otlpSamplerProbability: "1"
   
 digma:
-  environmentName: STAG01-PERF
+  environmentName: STAGING
   environmentType: public
-  siteName: stag01
+  siteName: staging
   isCentralize: true
   licenseKey: 529974cf70824f67aefa98232482f93e
