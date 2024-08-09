@@ -190,8 +190,9 @@ digmaCollectorWorker:
 digmaAnalytics:
   host: "{{ .Release.Name }}-analytics"
   loadbalancer: true
+  accesstoken: pcr5UDZqdvzky1cgj
   replicas: 1
-  secured: true
+  secured: false
   resources: {
     requests: {
       memory: 300Mi,
@@ -252,16 +253,14 @@ otelCollectorGateway:
     annotations: []
 
 digmaSelfDiagnosis:
-  otlpExportTraces: false
-  otlpExportMetrics: false
-  otlpExportLogs: false
-  otlpExporterEndpoint: # either a url or 'local'
-  otlpSamplerProbability: "0.1"
+  otlpExporterEndpoint: https://collector.meloona01.digma.systems:443
+  otlpExportTraces: true
+  otlpExportMetrics: true
+  otlpSamplerProbability: "1"
   
-
 digma:
-  environmentName:
-  environmentType:  
-  siteName: undefined
+  environmentName: STAG01-PERF
+  environmentType: public
+  siteName: stag01
   isCentralize: true
-  licenseKey:
+  licenseKey: 529974cf70824f67aefa98232482f93e
