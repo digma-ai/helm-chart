@@ -186,14 +186,6 @@ digmaCollectorWorker:
       RouteRegex: ""
       Method: "GET"
       Service: "*"
-    {{- if .Values.IgnoredEndpoints }}
-    {{- range .Values.IgnoredEndpoints }}
-    - Route: "{{ .Route }}"
-      RouteRegex: "{{ .RouteRegex }}"
-      Method: "{{ .Method }}"
-      Service: "{{ .Service }}"
-    {{- end }}
-    {{- end }}  
 
 digmaAnalytics:
   host: "{{ .Release.Name }}-analytics"
