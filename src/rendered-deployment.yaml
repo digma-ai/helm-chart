@@ -648,7 +648,7 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: digma-embedded-jaeger-stateful-set
+  name: digma-embedded-jaeger-stateful-set-persisted
   labels:
     app: embedded-jaeger
 spec:
@@ -679,7 +679,21 @@ spec:
         - name: BADGER_DIRECTORY_KEY
           value: /badger/key
         - name: BADGER_SPAN_STORE_TTL
-          value: 336h0m0s       # BADGER store ttl default is 72h
+          value: 336h0m0s      # BADGER store ttl default is 72h
+        volumeMounts:
+        - name: badger-data
+          mountPath: /badger
+  volumeClaimTemplates:
+  - metadata:
+      name: badger-data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 20Gi
+  # persistentVolumeClaimRetentionPolicy:
+  #   whenDeleted: Retain  
 ---
 # Source: digma/templates/influxdb.yaml
 apiVersion: apps/v1
