@@ -25,7 +25,7 @@ presets:
       replicas: 4
 
 deploymentType: Helm
-exposeInternalErrorDetails: false
+exposeInternalErrorDetails: true
 
 traceCollectorThresholds:
   recentActivityUpdateThresholdSeconds: 5
