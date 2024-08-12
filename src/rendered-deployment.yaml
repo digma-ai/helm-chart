@@ -648,7 +648,7 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: digma-embedded-jaeger-stateful-set
+  name: digma-embedded-jaeger-stateful-set-persisted
   labels:
     app: embedded-jaeger
 spec:

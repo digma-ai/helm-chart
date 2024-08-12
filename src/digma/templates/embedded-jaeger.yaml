@@ -3,7 +3,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ .Release.Name }}-embedded-jaeger-stateful-set
+  name: {{ .Release.Name }}-embedded-jaeger-stateful-set-persisted
   labels:
     app: embedded-jaeger
 spec:
