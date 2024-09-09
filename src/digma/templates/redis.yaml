@@ -16,6 +16,7 @@ spec:
         app: redis
     spec:
       terminationGracePeriodSeconds: 5
+      {{- include "imagePullSecrets" . | nindent  6 }}
       containers:
         - name: redis
           image: redis:{{ .Values.redis.imageTag }}

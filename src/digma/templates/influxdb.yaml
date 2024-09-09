@@ -16,6 +16,7 @@ spec:
         app: influxdb
     spec:
       terminationGracePeriodSeconds: 5
+      {{- include "imagePullSecrets" . | nindent  6 }}
       containers:
       - name: influxdb
         image: influxdb:{{ .Values.influx.imageTag }}

@@ -53,6 +53,7 @@ spec:
       labels:
         app: otel-collector-gateway
     spec:
+      {{- include "imagePullSecrets" . | nindent  6 }}
       containers:
         - name: otel-collector-gateway
           image: otel/opentelemetry-collector-contrib:0.103.0
