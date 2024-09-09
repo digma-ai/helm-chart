@@ -16,6 +16,7 @@ spec:
         app: postgres
     spec:
       terminationGracePeriodSeconds: 5
+      {{- include "imagePullSecrets" . | nindent  6 }}
       containers:
       - name: postgres
         image: postgres:{{ .Values.postgres.imageTag }}

@@ -15,6 +15,7 @@ spec:
       labels:
         app: "digma-debug-services"
     spec:
+      {{- include "imagePullSecrets" . | nindent  6 }}
       containers:
 
       - name: kafka-ui

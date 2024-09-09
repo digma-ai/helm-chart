@@ -18,6 +18,7 @@ spec:
         app: embedded-jaeger
     spec:
       terminationGracePeriodSeconds: 5
+      {{- include "imagePullSecrets" . | nindent  6 }}
       containers:
       - name: embedded-jaeger
         image: jaegertracing/all-in-one:{{ .Values.embeddedJaeger.imageTag }}
