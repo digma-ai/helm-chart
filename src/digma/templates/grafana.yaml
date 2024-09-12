@@ -49,6 +49,7 @@ spec:
       labels:
         app: grafana
     spec:
+      {{- include "imagePullSecrets" . | nindent  6 }}
       volumes:
       - name: grafana-provisioning
         configMap:

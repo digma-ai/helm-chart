@@ -83,6 +83,7 @@ spec:
       labels:
         app: otel-collector-df
     spec:
+      {{- include "imagePullSecrets" . | nindent  6 }}
       containers:
         - name: otel-collector-df
           image: otel/opentelemetry-collector-contrib:0.103.0

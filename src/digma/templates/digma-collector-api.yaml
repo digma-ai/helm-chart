@@ -14,6 +14,7 @@ spec:
       labels:
         app: digma-collector-api
     spec:
+      {{- include "imagePullSecrets" . | nindent  6 }}
       containers:
       - name: digma-collector-api
         image: digmatic/digma-collector:{{ .Chart.AppVersion }}

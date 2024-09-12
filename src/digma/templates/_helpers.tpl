@@ -102,3 +102,10 @@
 - name: DIGMA_ENV_TYPE
   value: {{ .Values.digma.environmentType }}
 {{- end -}}
+
+{{- define "imagePullSecrets" -}}
+{{- if .Values.imagePullSecretName -}}
+imagePullSecrets:
+- name: {{ .Values.imagePullSecretName }}
+{{- end -}}
+{{- end -}}

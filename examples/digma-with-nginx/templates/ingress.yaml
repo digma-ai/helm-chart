@@ -12,7 +12,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {{ tpl .Values.digma.digmaAnalytics.host . }}
+            name: digma-analytics
             port:
               number: 5051
 
@@ -32,7 +32,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {{ tpl .Values.digma.digmaCollectorApi.host . }}
+            name: digma-collector-api
             port:
               number: 5049
 
@@ -54,7 +54,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {{ tpl .Values.digma.digmaCollectorApi.host . }}
+            name: digma-collector-api
             port:
               number: 5050
 
@@ -74,6 +74,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {{ tpl .Values.digma.embeddedJaeger.host . }}
+            name: digma-embedded-jaeger
             port:
               number: 16686

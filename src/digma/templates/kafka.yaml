@@ -16,6 +16,7 @@ spec:
         app: kafka
     spec:
       terminationGracePeriodSeconds: 5
+      {{- include "imagePullSecrets" . | nindent  6 }}
       securityContext:
         fsGroup: 1001
       containers:
