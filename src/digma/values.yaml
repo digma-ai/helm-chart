@@ -108,6 +108,7 @@ embeddedJaeger:
   imageTag: "1.44.0"
   enabled: true
   loadbalancer: true
+  volumeSize: 20Gi
   service:
     annotations:
       networking.gke.io/load-balancer-type: "External"
