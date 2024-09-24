@@ -1,0 +1,94 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-elasticsearch
+  labels:
+    app: {{ .Release.Name }}-elasticsearch
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-elasticsearch
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-elasticsearch
+    initContainers:
+        - name: init-permissions
+          image: busybox
+          command: [ "sh", "-c", "mkdir -p /usr/share/elasticsearch/data && chmod -R 777 /usr/share/elasticsearch/data" ]
+          volumeMounts:
+            - name: data
+              mountPath: /usr/share/elasticsearch/data      
+    spec:
+      initContainers:
+        - name: init-permissions
+          image: busybox
+          command: [ "sh", "-c", "mkdir -p /usr/share/elasticsearch/data && chmod -R 777 /usr/share/elasticsearch/data" ]
+          volumeMounts:
+            - name: data
+              mountPath: /usr/share/elasticsearch/data
+      containers:
+        - name: elasticsearch
+          image: "docker.elastic.co/elasticsearch/elasticsearch:{{ .Values.elastic.imageTag }}"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9200
+              name: http
+            - containerPort: 9300
+              name: transport
+          env:
+            - name: xpack.security.enabled
+              value: "false"
+            - name: xpack.security.transport.ssl.enabled
+              value: "false"
+            - name: discovery.type
+              value: "single-node"
+            - name: ES_JAVA_OPTS
+              value: "-Xmx1g -Xms1g"
+          resources:
+            requests:
+              memory: "{{ .Values.elastic.resources.requests.memory }}"
+              cpu: "{{ .Values.elastic.resources.requests.cpu }}"
+            limits:
+              memory: "{{ .Values.elastic.resources.limits.memory }}"
+              cpu: "{{ .Values.elastic.resources.limits.cpu }}"
+          volumeMounts:
+            - name: data
+              mountPath: /usr/share/elasticsearch/data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-elasticsearch-pvc
+  
+---
+  
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Release.Name }}-elasticsearch-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 40Gi
+        
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-elasticsearch
+  labels:
+    app: {{ .Release.Name }}-elasticsearch
+spec:
+  type: ClusterIP
+  ports:
+    - port: 9200
+      targetPort: 9200
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ .Release.Name }}-elasticsearch
+              

@@ -105,13 +105,35 @@ pgadmin:
 
 embeddedJaeger:
   host: "{{ .Release.Name }}-embedded-jaeger"
-  imageTag: "1.44.0"
+  imageTag: "1.61.0"
   enabled: true
   loadbalancer: true
-  volumeSize: 20Gi
   service:
     annotations:
       networking.gke.io/load-balancer-type: "External"
+  resources: {
+    requests: {
+      memory: 1Gi,
+      cpu: 500m
+    },
+    limits: {
+      memory: 2Gi,
+      cpu: 1
+    }
+  }    
+      
+elastic:
+  imageTag: "8.15.1"
+  resources: {
+    requests: {
+      memory: 1Gi,
+      cpu: 500m
+    },
+    limits: {
+      memory: 2Gi,
+      cpu: 1
+    }
+  }      
 
 kibana:
   host: "{{ .Release.Name }}-kibana"
