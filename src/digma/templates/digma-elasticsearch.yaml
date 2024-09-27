@@ -13,13 +13,6 @@ spec:
     metadata:
       labels:
         app: {{ .Release.Name }}-elasticsearch
-    initContainers:
-        - name: init-permissions
-          image: busybox
-          command: [ "sh", "-c", "mkdir -p /usr/share/elasticsearch/data && chmod -R 777 /usr/share/elasticsearch/data" ]
-          volumeMounts:
-            - name: data
-              mountPath: /usr/share/elasticsearch/data      
     spec:
       initContainers:
         - name: init-permissions
