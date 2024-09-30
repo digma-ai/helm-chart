@@ -22,8 +22,6 @@ spec:
           ports:
             - containerPort: 9200
               name: http
-            - containerPort: 9300
-              name: transport
           env:
             - name: xpack.security.enabled
               value: "false"
