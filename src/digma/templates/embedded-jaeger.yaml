@@ -1,9 +1,9 @@
 {{ if .Values.embeddedJaeger.enabled }}
 
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-embedded-jaeger-stateful-set-persisted
+  name: {{ .Release.Name }}-embedded-jaeger
   labels:
     app: embedded-jaeger
 spec:
@@ -25,31 +25,13 @@ spec:
         args: ["--query.additional-headers", "Access-Control-Allow-Origin: *"]
         env:
         - name: SPAN_STORAGE_TYPE
-          value: badger
+          value: elasticsearch
+        - name: ES_SERVER_URLS
+          value: "http://{{ .Release.Name }}-elasticsearch:9200"
+        - name: ES_INDEX_PREFIX
+          value: "digma"
         - name: COLLECTOR_OTLP_ENABLED
-          value: "true" # enable OTEL receiver
-        - name: BADGER_EPHEMERAL
-          value: "false"
-        - name: BADGER_DIRECTORY_VALUE
-          value: "/badger/data"
-        - name: BADGER_DIRECTORY_KEY
-          value: "/badger/key"
-        - name: BADGER_SPAN_STORE_TTL
-          value: "336h0m0s" # BADGER store ttl default is 72h
+          value: "true"
         - name: COLLECTOR_OTLP_GRPC_MAX_MESSAGE_SIZE
           value: "41943040"
-        volumeMounts:
-        - name: badger-data
-          mountPath: /badger
-  volumeClaimTemplates:
-    - metadata:
-        name: badger-data
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        resources:
-          requests:
-            storage: {{ .Values.embeddedJaeger.volumeSize }}
-  # persistentVolumeClaimRetentionPolicy:
-  #   whenDeleted: Retain
 {{ end }}
