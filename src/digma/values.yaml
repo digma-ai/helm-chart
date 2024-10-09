@@ -105,15 +105,47 @@ pgadmin:
 
 embeddedJaeger:
   host: "{{ .Release.Name }}-embedded-jaeger"
-  imageTag: "1.44.0"
+  imageTag: "1.61.0"
   enabled: true
   loadbalancer: true
-  volumeSize: 20Gi
   service:
-    annotations: []
-
+    annotations:
+      networking.gke.io/load-balancer-type: "External"
+  resources: {
+    requests: {
+      memory: 1Gi,
+      cpu: 500m
+    },
+    limits: {
+      memory: 2Gi,
+      cpu: 1
+    }
+  }    
+      
+elastic:
+  imageTag: "8.15.1"
+  resources: {
+    requests: {
+      memory: 2Gi,
+      cpu: 1
+    },
+    limits: {
+      memory: 4Gi,
+      cpu: 2
+    }
+  }      
+  
 kibana:
-  host: "{{ .Release.Name }}-kibana"
+  imageTag: "8.9.1"
+  security:
+    enabled: false
+  resources:
+    requests:
+      memory: "500Mi"
+      cpu: "250m"
+    limits:
+      memory: "1Gi"
+      cpu: "500m"
 
 redisCommander:
   host: "{{ .Release.Name }}-redis-commander"
@@ -153,7 +185,8 @@ digmaCollectorApi:
     }
   }
   service:
-    annotations: []
+    annotations:
+      networking.gke.io/load-balancer-type: "External"
 
 digmaCollectorWorker:
   host: "{{ .Release.Name }}-collector-worker"
@@ -192,6 +225,7 @@ digmaCollectorWorker:
 digmaAnalytics:
   host: "{{ .Release.Name }}-analytics"
   loadbalancer: true
+  accesstoken: pcr5UDZqdvzky1cgj
   replicas: 1
   secured: true
   resources: {
@@ -205,7 +239,8 @@ digmaAnalytics:
     }
   }
   service:
-    annotations: []
+    annotations:
+      networking.gke.io/load-balancer-type: "External"
 
 digmaScheduler:
   host: "{{ .Release.Name }}-scheduler"
@@ -254,16 +289,14 @@ otelCollectorGateway:
     annotations: []
 
 digmaSelfDiagnosis:
-  otlpExportTraces: false
-  otlpExportMetrics: false
-  otlpExportLogs: false
-  otlpExporterEndpoint: # either a url or 'local'
-  otlpSamplerProbability: "0.1"
+  otlpExporterEndpoint: https://collector.meloona01.digma.systems:443
+  otlpExportTraces: true
+  otlpExportMetrics: true
+  otlpSamplerProbability: "1"
   
-
 digma:
-  environmentName:
-  environmentType:  
-  siteName: undefined
+  environmentName: STAGING
+  environmentType: public
+  siteName: staging
   isCentralize: true
-  licenseKey:
+  licenseKey: 529974cf70824f67aefa98232482f93e

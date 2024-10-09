@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-kibana
+  labels:
+    app: {{ .Release.Name }}-kibana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-kibana
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-kibana
+    spec:
+      containers:
+          - name: kibana
+            image: "docker.elastic.co/kibana/kibana:{{ .Values.kibana.imageTag }}"
+            imagePullPolicy: IfNotPresent
+            ports:
+              - containerPort: 5601
+                name: ui
+            env:
+              - name: ELASTICSEARCH_USERNAME
+                value: "admin"
+              - name: ELASTICSEARCH_PASSWORD
+                value: "admin"
+              - name: ELASTICSEARCH_HOSTS
+                value: "http://{{ .Release.Name }}-elasticsearch:9200"
+              - name: SERVER_PUBLICBASEURL
+                value: "http://{{ .Release.Name }}-kibana:5601"    
+            resources:
+              requests:
+                memory: "{{ .Values.kibana.resources.requests.memory }}"
+                cpu: "{{ .Values.kibana.resources.requests.cpu }}"
+              limits:
+                memory: "{{ .Values.kibana.resources.limits.memory }}"
+                cpu: "{{ .Values.kibana.resources.limits.cpu }}"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-kibana
+  labels:
+    app: {{ .Release.Name }}-kibana
+spec:
+  type: ClusterIP
+  ports:
+    - port: 5601
+      targetPort: 5601
+      protocol: TCP
+      name: ui
+  selector:
+    app: {{ .Release.Name }}-kibana
