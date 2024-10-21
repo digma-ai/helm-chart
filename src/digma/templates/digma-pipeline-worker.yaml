@@ -45,5 +45,3 @@ spec:
           value: {{ .Values.digmaSelfDiagnosis.otlpSamplerProbability| quote}}
         - name: BACKEND_DEPLOYMENT_TYPE
           value: {{ .Values.deploymentType | quote }}
-        - name: Ds__Url
-          value: {{ printf "http://%s:5054" (tpl .Values.digmaDs.host .) }}
