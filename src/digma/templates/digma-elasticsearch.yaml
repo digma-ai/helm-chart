@@ -1,3 +1,4 @@
+{{- if eq .Values.embeddedJaeger.storage "elasticsearch" }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -129,3 +130,4 @@ spec:
             - name: ELASTICSEARCH_URL
               value: "http://{{ .Release.Name }}-elasticsearch:9200"
       restartPolicy: OnFailure
+{{- end }}
