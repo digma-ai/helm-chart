@@ -49,9 +49,9 @@ spec:
           value: {{ .Values.digmaSelfDiagnosis.otlpSamplerProbability| quote}}
         - name: BACKEND_DEPLOYMENT_TYPE
           value: {{ .Values.deploymentType | quote}}
-        {{ - if eq .Values.embeddedJaeger.storage "elasticsearch" }}
+{{- if eq .Values.embeddedJaeger.storage "elasticsearch" }}
         - name: ElasticSearch__Uri
           value: http://{{ .Release.Name }}-elasticsearch:9200
-        {{ - end }}  
+{{ - end }}  
 
 
