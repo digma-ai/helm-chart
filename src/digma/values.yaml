@@ -109,12 +109,13 @@ embeddedJaeger:
   enabled: true
   loadbalancer: true
   storage: "badger" # can be "badger" or "elasticsearch"
-  volumeSize: 20Gi #volumeSize only for badger
+  volumeSize:  #volumeSize only for badger
   service:
     annotations: []
 
 elastic:
   imageTag: "8.15.1"
+  storage: 80Gi
   resources: {
     requests: {
       memory: 2Gi,
