@@ -52,6 +52,6 @@ spec:
 {{- if eq .Values.embeddedJaeger.storage "elasticsearch" }}
         - name: ElasticSearch__Uri
           value: http://{{ .Release.Name }}-elasticsearch:9200
-{{ - end }}  
+{{- end }}  
 
 
