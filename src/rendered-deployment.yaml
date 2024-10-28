@@ -103,20 +103,6 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: digma-ds
-spec:
-  type: ClusterIP
-  selector:
-    app: digma-ds
-  ports:
-  - name: http
-    protocol: TCP
-    port: 5054
----
-# Source: digma/templates/internal-network.yaml
-apiVersion: v1
-kind: Service
-metadata:
   name: digma-analytics
 spec:
   type: ClusterIP
@@ -192,7 +178,7 @@ spec:
     spec:
       containers:
       - name: digma-analytics
-        image: digmatic/digma-analytics:0.3.128
+        image: digmatic/digma-analytics:0.3.147
         resources:
           requests:
             memory: 300Mi
@@ -230,9 +216,9 @@ spec:
         - name: OtlpExportTraces
           value: 'false'
         - name: ApplicationVersion
-          value: 0.3.128
+          value: 0.3.147
         - name: ChartVersion
-          value: 1.0.241
+          value: 1.0.248
 
         - name: OtlpSamplerProbability
           value: '0.3'
@@ -266,7 +252,7 @@ spec:
     spec:
       containers:
       - name: digma-collector-api
-        image: digmatic/digma-collector:0.3.128
+        image: digmatic/digma-collector:0.3.147
         resources:
           requests:
             memory: 100Mi
@@ -303,9 +289,9 @@ spec:
         - name: OtlpExportTraces
           value: 'false'
         - name: ApplicationVersion
-          value: 0.3.128
+          value: 0.3.147
         - name: ChartVersion
-          value: 1.0.241
+          value: 1.0.248
         - name: Jaeger__OtlpUrl
           value: http://digma-embedded-jaeger:4317
 
@@ -333,7 +319,7 @@ spec:
     spec:
       containers:
       - name: digma-collector-worker
-        image: digmatic/digma-collector-worker:0.3.128
+        image: digmatic/digma-collector-worker:0.3.147
         resources:
           requests:
             memory: 200Mi
@@ -369,56 +355,15 @@ spec:
         - name: Kafka__Urls__0
           value: digma-kafka:9092
         - name: ApplicationVersion
-          value: 0.3.128
+          value: 0.3.147
         - name: ChartVersion
-          value: 1.0.241
+          value: 1.0.248
         - name: Jaeger__OtlpUrl
           value: http://digma-embedded-jaeger:4317
         - name: OtlpSamplerProbability
           value: '0.3'
         - name: BACKEND_DEPLOYMENT_TYPE
           value: Helm
----
-# Source: digma/templates/digma-ds.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: digma-ds-deployment
-  labels:
-    app: digma-ds
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: digma-ds
-  template:
-    metadata:
-      labels:
-        app: digma-ds
-    spec:
-      containers:
-      - name: digma-ds
-        image: digmatic/ds:0.0.22
-        command: [gunicorn, -w 4, --statsd-host=statsd-exporter:9125, -b 0.0.0.0:5054,
-          app.main:app]
-        resources:
-          requests:
-            memory: 300Mi
-            cpu: 100m
-          limits:
-            memory: 500Mi
-            cpu: 700m
-        ports:
-        - containerPort: 5054
-        env:
-        - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-          value:
-        - name: OTEL_RESOURCE_ATTRIBUTES
-          value: digma.environment=%!s(<nil>)
-          # - name: OTEL_TRACES_SAMPLER
-          #   value: traceidratio
-          # - name: OTEL_TRACES_SAMPLER_ARG
-          #   value:  "0.3"
 ---
 # Source: digma/templates/digma-measurement-analysis.yaml
 apiVersion: apps/v1
@@ -439,7 +384,7 @@ spec:
     spec:
       containers:
       - name: digma-measurement-analysis
-        image: digmatic/digma-measurement-analysis:0.3.128
+        image: digmatic/digma-measurement-analysis:0.3.147
         resources:
           requests:
             memory: 100Mi
@@ -475,9 +420,9 @@ spec:
         - name: OtlpExportTraces
           value: 'false'
         - name: ApplicationVersion
-          value: 0.3.128
+          value: 0.3.147
         - name: ChartVersion
-          value: 1.0.241
+          value: 1.0.248
         - name: Jaeger__OtlpUrl
           value: http://digma-embedded-jaeger:4317
         - name: OtlpSamplerProbability
@@ -530,7 +475,7 @@ spec:
     spec:
       containers:
       - name: digma-pipeline-worker
-        image: digmatic/digma-pipeline-worker:0.3.128
+        image: digmatic/digma-pipeline-worker:0.3.147
         resources:
           requests:
             memory: 100Mi
@@ -566,17 +511,15 @@ spec:
         - name: Kafka__Urls__0
           value: digma-kafka:9092
         - name: ApplicationVersion
-          value: 0.3.128
+          value: 0.3.147
         - name: ChartVersion
-          value: 1.0.241
+          value: 1.0.248
         - name: Jaeger__OtlpUrl
           value: http://digma-embedded-jaeger:4317
         - name: OtlpSamplerProbability
           value: '0.3'
         - name: BACKEND_DEPLOYMENT_TYPE
           value: Helm
-        - name: Ds__Url
-          value: http://digma-ds:5054
 ---
 # Source: digma/templates/digma-scheduler.yaml
 apiVersion: apps/v1
@@ -597,7 +540,7 @@ spec:
     spec:
       containers:
       - name: digma-scheduler
-        image: digmatic/digma-scheduler:0.3.128
+        image: digmatic/digma-scheduler:0.3.147
         resources:
           requests:
             memory: 100Mi
@@ -635,9 +578,9 @@ spec:
         - name: OtlpExportTraces
           value: 'false'
         - name: ApplicationVersion
-          value: 0.3.128
+          value: 0.3.147
         - name: ChartVersion
-          value: 1.0.241
+          value: 1.0.248
 
         - name: OtlpSamplerProbability
           value: '0.3'
