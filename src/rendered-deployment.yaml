@@ -437,24 +437,10 @@ spec:
           value: '5'
         - name: ThresholdOptions__UpsertSpanFlowMetadataThresholdSeconds
           value: '5'
-        - name: Kafka__SpanDurationSummaryCG__Workers
+        - name: Kafka__SpanUpsertCG__Workers
           value: '2'
-        - name: Kafka__SpanDurationTotalCG__Workers
+        - name: Kafka__AllMeasurementsCG__Workers
           value: '2'
-        - name: Kafka__SpanUsageStatsCG__Workers
-          value: '2'
-        - name: Kafka__BottleneckCG__Workers
-          value: '2'
-        - name: Kafka__SpanDurationSummaryCG__WorkerBatchSize
-          value: '1000'
-        - name: Kafka__SpanDurationTotalCG__WorkerBatchSize
-          value: '1000'
-        - name: Kafka__SpanUsageStatsCG__WorkerBatchSize
-          value: '1000'
-        - name: Kafka__BottleneckCG__WorkerBatchSize
-          value: '1000'
-        - name: Kafka__SpanMeasurementsProcessorCG__WorkerBatchSize
-          value: '1000'
 ---
 # Source: digma/templates/digma-pipeline-worker.yaml
 apiVersion: apps/v1
