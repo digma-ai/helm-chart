@@ -108,7 +108,7 @@ embeddedJaeger:
   imageTag: "1.61.0"
   enabled: true
   loadbalancer: true
-  storage: "elasticsearch" # can be "badger" or "elasticsearch"
+  storage: "badger" # can be "badger" or "elasticsearch"
   volumeSize:  #volumeSize only for badger
   service:
     annotations: []
