@@ -17,6 +17,12 @@ spec:
         app: {{ .Release.Name }}-elasticsearch
     spec:
       containers:
+        - name: log-reader
+          image: busybox
+          command: ["/bin/sh", "-c", "sleep 3600"]
+          volumeMounts:
+          - name: data
+            mountPath: /usr/share/elasticsearch/logs
         - name: elasticsearch
           image: "docker.elastic.co/elasticsearch/elasticsearch:{{ .Values.elastic.imageTag }}"
           imagePullPolicy: IfNotPresent
@@ -40,6 +46,8 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /usr/share/elasticsearch/data
+            - name: data
+              mountPath: /usr/share/elasticsearch/logs
   volumeClaimTemplates:
     - metadata:
         name: data
