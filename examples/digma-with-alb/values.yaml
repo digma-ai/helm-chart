@@ -1,0 +1,11 @@
+domain: 
+
+digma:
+  size: small
+  digmaAnalytics:
+    secured: false
+    loadbalancer: false
+  digmaCollectorApi:
+    loadbalancer: false
+  embeddedJaeger:
+    loadbalancer: false

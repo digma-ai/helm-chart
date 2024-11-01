@@ -1,7 +1,7 @@
 apiVersion: v2
-version: 1.0.1
-name: digma-with-nginx
-home: https://github.com/digma-ai/helm-chart/examples/digma-with-nginx
+version: 1.0.0
+name: digma-with-alb
+home: https://github.com/digma-ai/helm-chart/examples/digma-with-alb
 type: application
 dependencies:
 - name: digma
