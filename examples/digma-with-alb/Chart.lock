@@ -1,0 +1,6 @@
+dependencies:
+- name: digma
+  repository: file://../../src/digma
+  version: 1.0.252
+digest: sha256:0d97843718f286b49d48c717c917f70d58faa6d4e7637eac06020ee12ea0cb94
+generated: "2024-10-31T09:37:22.5609045-04:00"

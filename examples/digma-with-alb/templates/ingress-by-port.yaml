@@ -1,0 +1,96 @@
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: {{ .Release.Name }}-analytics-ingress
+#   annotations:    
+#     alb.ingress.kubernetes.io/scheme: internet-facing
+#     alb.ingress.kubernetes.io/target-type: ip
+#     alb.ingress.kubernetes.io/group.name: {{ .Release.Name }}
+#     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 5051}]'
+# spec:
+#   ingressClassName: alb
+#   rules:
+#   - host: {{ .Values.domain }} # for certificate discovery
+#     http:
+#       paths:
+#       - path: /
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: digma-analytics
+#             port:
+#               number: 5051
+
+# ---
+
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: {{ .Release.Name }}-collector-http-ingress  
+#   annotations:    
+#     alb.ingress.kubernetes.io/scheme: internet-facing
+#     alb.ingress.kubernetes.io/target-type: ip
+#     alb.ingress.kubernetes.io/group.name: {{ .Release.Name }}
+#     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 5049}]'
+# spec:
+#   ingressClassName: alb
+#   rules:
+#   - http:
+#       paths:
+#       - path: /
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: digma-collector-api
+#             port:
+#               number: 5049
+
+# ---
+
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: {{ .Release.Name }}-collector-grpc-ingress
+#   annotations:    
+#     alb.ingress.kubernetes.io/scheme: internet-facing
+#     alb.ingress.kubernetes.io/target-type: ip
+#     alb.ingress.kubernetes.io/group.name: {{ .Release.Name }}
+#     alb.ingress.kubernetes.io/backend-protocol-version: GRPC
+#     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 5050}]'
+# spec:
+#   ingressClassName: alb
+#   rules:
+#   - host: {{ .Values.domain }} # for certificate discovery
+#     http:
+#       paths:
+#       - path: /
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: digma-collector-api
+#             port:
+#               number: 5050
+
+# ---
+
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: {{ .Release.Name }}-jaeger-ingress
+#   annotations:    
+#     alb.ingress.kubernetes.io/scheme: internet-facing
+#     alb.ingress.kubernetes.io/target-type: ip
+#     alb.ingress.kubernetes.io/group.name: {{ .Release.Name }}
+#     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 16686}]'
+# spec:
+#   ingressClassName: alb
+#   rules:
+#   - http:
+#       paths:
+#       - path: /
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: digma-embedded-jaeger
+#             port:
+#               number: 16686
