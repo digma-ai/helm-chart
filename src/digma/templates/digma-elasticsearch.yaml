@@ -18,6 +18,13 @@ spec:
     spec:
       terminationGracePeriodSeconds: 5
       {{- include "imagePullSecrets" . | nindent  6 }}
+      initContainers:
+        - name: add-permissions
+          image: busybox
+          command: [ 'sh', '-c', 'chown -R 1000:1000 /usr/share/elasticsearch/logs' ]
+          volumeMounts:
+            - mountPath: /usr/share/elasticsearch/logs
+              name: data
       containers:
         - name: elasticsearch
           image: "elasticsearch:{{ .Values.elastic.imageTag }}"
@@ -42,6 +49,8 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /usr/share/elasticsearch/data
+            - name: data
+              mountPath: /usr/share/elasticsearch/logs  
   volumeClaimTemplates:
     - metadata:
         name: data
