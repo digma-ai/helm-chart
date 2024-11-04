@@ -16,9 +16,11 @@ spec:
       labels:
         app: {{ .Release.Name }}-elasticsearch
     spec:
+      terminationGracePeriodSeconds: 5
+      {{- include "imagePullSecrets" . | nindent  6 }}
       containers:
         - name: elasticsearch
-          image: "docker.elastic.co/elasticsearch/elasticsearch:{{ .Values.elastic.imageTag }}"
+          image: "elasticsearch:{{ .Values.elastic.imageTag }}"
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 9200
