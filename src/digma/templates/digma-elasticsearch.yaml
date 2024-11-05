@@ -34,6 +34,8 @@ spec:
               value: "false"
             - name: discovery.type
               value: "single-node"
+            - name: ES_JAVA_OPTS
+              value: "-server -Xms1G -Xmx2G"  
           resources:
             requests:
               memory: "{{ .Values.elastic.resources.requests.memory }}"
