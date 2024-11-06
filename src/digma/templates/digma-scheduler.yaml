@@ -13,6 +13,13 @@ spec:
     metadata:
       labels:
         app: digma-scheduler
+        {{- range $key, $value := .Values.digmaScheduler.labels }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+      annotations:
+        {{- range $key, $value := .Values.digmaScheduler.annotations }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
     spec:
       {{- include "imagePullSecrets" . | nindent  6 }}
       containers:

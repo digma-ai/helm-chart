@@ -14,6 +14,13 @@ spec:
     metadata:
       labels:
         app: redis
+        {{- range $key, $value := .Values.redis.labels }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+      annotations:
+        {{- range $key, $value := .Values.redis.annotations }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
     spec:
       terminationGracePeriodSeconds: 5
       {{- include "imagePullSecrets" . | nindent  6 }}

@@ -5,6 +5,7 @@ metadata:
   name: {{ .Release.Name }}-debug-deployment
   labels:
     app: digma-debug-services
+
 spec:
   replicas: 1
   selector:

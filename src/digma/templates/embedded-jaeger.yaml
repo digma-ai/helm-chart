@@ -17,6 +17,13 @@ spec:
     metadata:
       labels:
         app: embedded-jaeger
+        {{- range $key, $value := .Values.embeddedJaeger.labels }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+      annotations:
+        {{- range $key, $value := .Values.embeddedJaeger.annotations }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
     spec:
       terminationGracePeriodSeconds: 5
         {{- include "imagePullSecrets" . | nindent  6 }}

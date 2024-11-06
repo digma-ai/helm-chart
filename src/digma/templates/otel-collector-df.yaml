@@ -82,6 +82,13 @@ spec:
     metadata:
       labels:
         app: otel-collector-df
+        {{- range $key, $value := .Values.otelCollectorDf.labels }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+      annotations:
+        {{- range $key, $value := .Values.otelCollectorDf.annotations }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
     spec:
       {{- include "imagePullSecrets" . | nindent  6 }}
       containers:
@@ -119,7 +126,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-otel-collector
+  name: {{ tpl .Values.otelCollectorDf.host . }}
 spec:
   selector:
     app: otel-collector-df

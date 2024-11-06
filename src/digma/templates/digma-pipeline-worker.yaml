@@ -13,6 +13,13 @@ spec:
     metadata:
       labels:
         app: digma-pipeline-worker
+        {{- range $key, $value := .Values.digmaPipelineWorker.labels }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+      annotations:
+        {{- range $key, $value := .Values.digmaPipelineWorker.annotations }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
     spec:
       {{- include "imagePullSecrets" . | nindent  6 }}
       containers:

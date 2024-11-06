@@ -13,6 +13,13 @@ spec:
     metadata:
       labels:
         app: digma-analytics
+        {{- range $key, $value := .Values.digmaAnalytics.labels }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+      annotations:
+        {{- range $key, $value := .Values.digmaAnalytics.annotations }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
     spec:
       {{- include "imagePullSecrets" . | nindent  6 }}
       containers:

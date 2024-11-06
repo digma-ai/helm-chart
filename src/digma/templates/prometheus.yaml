@@ -32,6 +32,13 @@ spec:
     metadata:
       labels:
         app: prometheus
+        {{- range $key, $value := .Values.prometheus.labels }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+      annotations:
+        {{- range $key, $value := .Values.prometheus.annotations }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
     spec:
       securityContext:
         fsGroup: 2000 
@@ -81,7 +88,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-prometheus
+  name: {{ tpl .Values.prometheus.host . }}
 spec:
   selector:
     app: prometheus
