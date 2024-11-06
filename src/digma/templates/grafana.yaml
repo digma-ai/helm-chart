@@ -57,6 +57,7 @@ spec:
         {{- end }}
     spec:
       {{- include "imagePullSecrets" . | nindent  6 }}
+      imagePullPolicy: always
       volumes:
       - name: grafana-provisioning
         configMap:

@@ -43,6 +43,7 @@ spec:
       securityContext:
         fsGroup: 2000 
       {{- include "imagePullSecrets" . | nindent  6 }}
+      imagePullPolicy: always
       containers:
       - name: prometheus
         image: prom/prometheus:v2.53.0

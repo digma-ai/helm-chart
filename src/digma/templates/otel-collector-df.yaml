@@ -91,6 +91,7 @@ spec:
         {{- end }}
     spec:
       {{- include "imagePullSecrets" . | nindent  6 }}
+      imagePullPolicy: always
       containers:
         - name: otel-collector-df
           image: otel/opentelemetry-collector-contrib:0.103.0

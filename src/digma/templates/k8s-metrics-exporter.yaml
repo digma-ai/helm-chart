@@ -18,6 +18,7 @@ spec:
     spec:
       serviceAccountName: {{ .Release.Name }}-k8s-metrics-exporter
       {{- include "imagePullSecrets" . | nindent  6 }}
+      imagePullPolicy: always
       containers:
         - name: k8s-metrics-exporter
           image: digmatic/k8s-metrics-exporter:0.0.9

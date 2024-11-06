@@ -25,6 +25,7 @@ spec:
     spec:
       terminationGracePeriodSeconds: 5
       {{- include "imagePullSecrets" . | nindent  6 }}
+      imagePullPolicy: always
       initContainers:
         - name: add-permissions
           image: busybox

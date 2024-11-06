@@ -22,6 +22,7 @@ spec:
         {{- end }}
     spec:
       {{- include "imagePullSecrets" . | nindent  6 }}
+      imagePullPolicy: always
       containers:
       - name: digma-collector-api
         image: digmatic/digma-collector:{{ .Chart.AppVersion }}
