@@ -293,6 +293,10 @@ prometheus:
   labels: {}
   args: []
 
+k8sMetricsExporter:
+  annotations: {}
+  labels: {}
+
 otelCollectorGateway:
   host: "{{ .Release.Name }}-otel-collector-gateway"
   enabled: false

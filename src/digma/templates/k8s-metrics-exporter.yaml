@@ -15,6 +15,13 @@ spec:
     metadata:
       labels:
         app: k8s-metrics-exporter
+        {{- range $key, $value := .Values.k8sMetricsExporter.labels }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+      annotations:
+        {{- range $key, $value := .Values.k8sMetricsExporter.annotations }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
     spec:
       serviceAccountName: {{ .Release.Name }}-k8s-metrics-exporter
       {{- include "imagePullSecrets" . | nindent  6 }}
