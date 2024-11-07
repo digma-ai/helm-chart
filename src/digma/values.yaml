@@ -27,6 +27,8 @@ presets:
 deploymentType: Helm
 exposeInternalErrorDetails: true
 imagePullSecretName:
+tolerations:
+nodeSelector:
 
 traceCollectorThresholds:
   recentActivityUpdateThresholdSeconds: 5

@@ -18,6 +18,8 @@ spec:
     spec:
       serviceAccountName: {{ .Release.Name }}-k8s-metrics-exporter
       {{- include "imagePullSecrets" . | nindent  6 }}
+      {{- include "tolerations" . | nindent  6 }}
+      {{- include "nodeSelector" . | nindent  6 }}
       imagePullPolicy: always
       containers:
         - name: k8s-metrics-exporter

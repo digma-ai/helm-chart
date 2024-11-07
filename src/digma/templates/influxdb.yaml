@@ -24,6 +24,8 @@ spec:
     spec:
       terminationGracePeriodSeconds: 5
       {{- include "imagePullSecrets" . | nindent  6 }}
+      {{- include "tolerations" . | nindent  6 }}
+      {{- include "nodeSelector" . | nindent  6 }}
       imagePullPolicy: always
       containers:
       - name: influxdb
