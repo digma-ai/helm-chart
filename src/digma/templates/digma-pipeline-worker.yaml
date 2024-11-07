@@ -25,7 +25,7 @@ spec:
       {{- include "tolerations" . | nindent  6 }}
       {{- include "nodeSelector" . | nindent  6 }}
       affinity:
-        {{- toYaml .Values.digmaMeasurementAnalysis.affinity | nindent 8 }}
+        {{- toYaml .Values.digmaPipelineWorker.affinity | nindent 8 }}
       containers:
       - name: digma-pipeline-worker
         image: digmatic/digma-pipeline-worker:{{ .Chart.AppVersion }}
