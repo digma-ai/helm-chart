@@ -48,8 +48,17 @@ spec:
     metadata:
       labels:
         app: grafana
+        {{- range $key, $value := .Values.grafana.labels }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+      annotations:
+        {{- range $key, $value := .Values.grafana.annotations }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
     spec:
       {{- include "imagePullSecrets" . | nindent  6 }}
+      {{- include "tolerations" . | nindent  6 }}
+      {{- include "nodeSelector" . | nindent  6 }}
       volumes:
       - name: grafana-provisioning
         configMap:
@@ -71,6 +80,11 @@ spec:
       containers:
       - name: grafana
         image: grafana/grafana:10.3.3
+        imagePullPolicy: Always
+        args:
+          {{- range .Values.grafana.args }}
+          - {{ . }}
+          {{- end }}
         env:
         - name: GF_SECURITY_ADMIN_USER
           value: admin
@@ -90,7 +104,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-grafana
+  name: {{ tpl .Values.grafana.host . }}
 spec:
   selector:
     app: grafana

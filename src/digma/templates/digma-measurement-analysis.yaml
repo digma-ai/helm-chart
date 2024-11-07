@@ -13,11 +13,23 @@ spec:
     metadata:
       labels:
         app: digma-measurement-analysis
+        {{- range $key, $value := .Values.digmaMeasurementAnalysis.labels }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+      annotations:
+        {{- range $key, $value := .Values.digmaMeasurementAnalysis.annotations }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
     spec:
       {{- include "imagePullSecrets" . | nindent  6 }}
+      {{- include "tolerations" . | nindent  6 }}
+      {{- include "nodeSelector" . | nindent  6 }}
+      affinity:
+        {{- toYaml .Values.digmaMeasurementAnalysis.affinity | nindent 8 }}
       containers:
       - name: digma-measurement-analysis
         image: digmatic/digma-measurement-analysis:{{ .Chart.AppVersion }}
+        imagePullPolicy: Always
         resources:
           requests:
             memory: {{ .Values.digmaMeasurementAnalysis.resources.requests.memory }}

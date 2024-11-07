@@ -82,11 +82,21 @@ spec:
     metadata:
       labels:
         app: otel-collector-df
+        {{- range $key, $value := .Values.otelCollectorDf.labels }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+      annotations:
+        {{- range $key, $value := .Values.otelCollectorDf.annotations }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
     spec:
       {{- include "imagePullSecrets" . | nindent  6 }}
+      {{- include "tolerations" . | nindent  6 }}
+      {{- include "nodeSelector" . | nindent  6 }}
       containers:
         - name: otel-collector-df
           image: otel/opentelemetry-collector-contrib:0.103.0
+          imagePullPolicy: Always
           env:
           - name: K8S_NODE_NAME
             valueFrom:
@@ -119,7 +129,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-otel-collector
+  name: {{ tpl .Values.otelCollectorDf.host . }}
 spec:
   selector:
     app: otel-collector-df

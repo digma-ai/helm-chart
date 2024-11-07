@@ -13,11 +13,21 @@ spec:
     metadata:
       labels:
         app: digma-scheduler
+        {{- range $key, $value := .Values.digmaScheduler.labels }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+      annotations:
+        {{- range $key, $value := .Values.digmaScheduler.annotations }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
     spec:
       {{- include "imagePullSecrets" . | nindent  6 }}
+      {{- include "tolerations" . | nindent  6 }}
+      {{- include "nodeSelector" . | nindent  6 }}
       containers:
       - name: digma-scheduler
         image: digmatic/digma-scheduler:{{ .Chart.AppVersion }}
+        imagePullPolicy: Always
         resources:
           requests:
             memory: {{ .Values.digmaScheduler.resources.requests.memory }}

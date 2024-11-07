@@ -15,12 +15,22 @@ spec:
     metadata:
       labels:
         app: k8s-metrics-exporter
+        {{- range $key, $value := .Values.k8sMetricsExporter.labels }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+      annotations:
+        {{- range $key, $value := .Values.k8sMetricsExporter.annotations }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
     spec:
       serviceAccountName: {{ .Release.Name }}-k8s-metrics-exporter
       {{- include "imagePullSecrets" . | nindent  6 }}
+      {{- include "tolerations" . | nindent  6 }}
+      {{- include "nodeSelector" . | nindent  6 }}
       containers:
         - name: k8s-metrics-exporter
           image: digmatic/k8s-metrics-exporter:0.0.9
+          imagePullPolicy: Always
           env:
           - name: KUBE_NAMESPACE
             value: {{ .Release.Namespace }}

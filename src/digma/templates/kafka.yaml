@@ -14,14 +14,28 @@ spec:
     metadata:
       labels:
         app: kafka
+        {{- range $key, $value := .Values.kafka.labels }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+      annotations:
+        {{- range $key, $value := .Values.kafka.annotations }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
     spec:
       terminationGracePeriodSeconds: 5
       {{- include "imagePullSecrets" . | nindent  6 }}
+      {{- include "tolerations" . | nindent  6 }}
+      {{- include "nodeSelector" . | nindent  6 }}
       securityContext:
         fsGroup: 1001
       containers:
       - name: kafka
         image: bitnami/kafka:{{ .Values.kafka.imageTag }}
+        imagePullPolicy: Always
+        args:
+          {{- range .Values.kafka.args }}
+          - {{ . }}
+          {{- end }}
         resources:
           requests:
             memory: {{ .Values.kafka.resources.requests.memory }}

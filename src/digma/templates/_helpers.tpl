@@ -109,3 +109,13 @@ imagePullSecrets:
 - name: {{ .Values.imagePullSecretName }}
 {{- end -}}
 {{- end -}}
+
+{{- define "tolerations" -}}
+tolerations:
+  {{- toYaml .Values.tolerations | nindent 8 }}
+{{- end -}}
+
+{{- define "nodeSelector" -}}
+nodeSelector:
+  {{- toYaml .Values.nodeSelector | nindent 8 }}
+{{- end -}}

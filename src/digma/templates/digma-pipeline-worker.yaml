@@ -13,11 +13,23 @@ spec:
     metadata:
       labels:
         app: digma-pipeline-worker
+        {{- range $key, $value := .Values.digmaPipelineWorker.labels }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+      annotations:
+        {{- range $key, $value := .Values.digmaPipelineWorker.annotations }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
     spec:
       {{- include "imagePullSecrets" . | nindent  6 }}
+      {{- include "tolerations" . | nindent  6 }}
+      {{- include "nodeSelector" . | nindent  6 }}
+      affinity:
+        {{- toYaml .Values.digmaPipelineWorker.affinity | nindent 8 }}
       containers:
       - name: digma-pipeline-worker
         image: digmatic/digma-pipeline-worker:{{ .Chart.AppVersion }}
+        imagePullPolicy: Always
         resources:
           requests:
             memory: {{ .Values.digmaPipelineWorker.resources.requests.memory }}

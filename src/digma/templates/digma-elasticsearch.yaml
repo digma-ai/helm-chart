@@ -15,15 +15,28 @@ spec:
     metadata:
       labels:
         app: {{ .Release.Name }}-elasticsearch
+        {{- range $key, $value := .Values.elastic.labels }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+      annotations:
+        {{- range $key, $value := .Values.elastic.annotations }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
     spec:
       terminationGracePeriodSeconds: 5
       {{- include "imagePullSecrets" . | nindent  6 }}
+      {{- include "tolerations" . | nindent  6 }}
+      {{- include "nodeSelector" . | nindent  6 }}
       securityContext:
-        fsGroup: 1000 
+        fsGroup: 1000
       containers:
         - name: elasticsearch
           image: "elasticsearch:{{ .Values.elastic.imageTag }}"
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
+          args:
+            {{- range .Values.elastic.args }}
+            - {{ . }}
+            {{- end }}
           ports:
             - containerPort: 9200
               name: http

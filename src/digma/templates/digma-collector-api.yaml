@@ -13,11 +13,21 @@ spec:
     metadata:
       labels:
         app: digma-collector-api
+        {{- range $key, $value := .Values.digmaCollectorApi.labels }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+      annotations:
+        {{- range $key, $value := .Values.digmaCollectorApi.annotations }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
     spec:
       {{- include "imagePullSecrets" . | nindent  6 }}
+      {{- include "tolerations" . | nindent  6 }}
+      {{- include "nodeSelector" . | nindent  6 }}
       containers:
       - name: digma-collector-api
         image: digmatic/digma-collector:{{ .Chart.AppVersion }}
+        imagePullPolicy: Always
         resources:
           requests:
             memory: {{ .Values.digmaCollectorApi.resources.requests.memory }}

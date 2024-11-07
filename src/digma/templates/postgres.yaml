@@ -14,12 +14,22 @@ spec:
     metadata:
       labels:
         app: postgres
+        {{- range $key, $value := .Values.postgres.labels }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+      annotations:
+        {{- range $key, $value := .Values.postgres.annotations }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
     spec:
       terminationGracePeriodSeconds: 5
       {{- include "imagePullSecrets" . | nindent  6 }}
+      {{- include "tolerations" . | nindent  6 }}
+      {{- include "nodeSelector" . | nindent  6 }}
       containers:
       - name: postgres
         image: postgres:{{ .Values.postgres.imageTag }}
+        imagePullPolicy: Always
         resources:
           requests:
             memory: {{ .Values.postgres.resources.requests.memory }}
@@ -29,7 +39,18 @@ spec:
             cpu: {{ .Values.postgres.resources.limits.cpu }}
         ports:
           - containerPort: 5432
-        args: ["-c" ,"max_connections={{ .Values.postgres.maxConnections }}", "-c", "shared_buffers={{ .Values.postgres.maxMemory }}", "-c", "logging_collector=on", "-c","log_directory=log"]
+        args: 
+          - '-c'
+          - 'max_connections={{ .Values.postgres.maxConnections }}'
+          - '-c'
+          - 'shared_buffers={{ .Values.postgres.maxMemory }}'
+          - '-c'
+          - 'logging_collector=on'
+          - '-c'
+          - 'log_directory=log'
+          {{- range .Values.postgres.args }}
+          - {{ . }}
+          {{- end }}
         env:
         - name: POSTGRES_NAME
           value: postgres

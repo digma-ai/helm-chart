@@ -5,6 +5,7 @@ metadata:
   name: {{ .Release.Name }}-debug-deployment
   labels:
     app: digma-debug-services
+
 spec:
   replicas: 1
   selector:
@@ -16,10 +17,13 @@ spec:
         app: "digma-debug-services"
     spec:
       {{- include "imagePullSecrets" . | nindent  6 }}
+      {{- include "tolerations" . | nindent  6 }}
+      {{- include "nodeSelector" . | nindent  6 }}
       containers:
 
       - name: kafka-ui
         image: provectuslabs/kafka-ui:v0.7.1
+        imagePullPolicy: Always
         env:
         - name: KAFKA_CLUSTERS_0_NAME
           value: h4U35I9QRnGhbgsEQAlXAw
@@ -28,6 +32,7 @@ spec:
 
       - name: pgadmin
         image: dpage/pgadmin4
+        imagePullPolicy: Always
         volumeMounts:
         - name: pgadmin-data
           mountPath: /var/lib/pgadmin

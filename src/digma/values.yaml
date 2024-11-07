@@ -27,6 +27,8 @@ presets:
 deploymentType: Helm
 exposeInternalErrorDetails: true
 imagePullSecretName:
+tolerations:
+nodeSelector:
 
 traceCollectorThresholds:
   recentActivityUpdateThresholdSeconds: 5
@@ -47,6 +49,9 @@ kafka:
       cpu: 1000m
     }
   }
+  annotations: {}
+  labels: {}
+  args: []
   
 redis:
   host: "{{ .Release.Name }}-redis"
@@ -61,6 +66,9 @@ redis:
   config:
     maxmemory: "2g"
     maxmemoryPolicy: "allkeys-lru"
+  annotations: {}
+  labels: {}
+  args: []
 
 influx:
   host: "{{ .Release.Name }}-influxdb"
@@ -78,6 +86,9 @@ influx:
   config: 
     queryConcurrency: 30
     queryQueueSize: 200
+  annotations: {}
+  labels: {}
+  args: []
     
 postgres:
   host: "{{ .Release.Name }}-postgres"
@@ -97,6 +108,9 @@ postgres:
       cpu: 1000m
     }
   }
+  annotations: {}
+  labels: {}
+  args: []
 
 pgadmin:
   host: "{{ .Release.Name }}-pgadmin"
@@ -111,7 +125,10 @@ embeddedJaeger:
   storage: "badger" # can be "badger" or "elasticsearch"
   volumeSize:  #volumeSize only for badger
   service:
-    annotations: []
+    annotations: {}
+  annotations: {}
+  labels: {}
+  args: []
 
 elastic:
   imageTag: "8.15.1"
@@ -126,6 +143,9 @@ elastic:
       cpu: 2
     }
   }
+  annotations: {}
+  labels: {}
+  args: []
 
 kibana:
   host: "{{ .Release.Name }}-kibana"
@@ -153,7 +173,9 @@ digmaCollectorApi:
     }
   }
   service:
-    annotations: []
+    annotations: {}
+  annotations: {}
+  labels: {}
 
 digmaCollectorWorker:
   host: "{{ .Release.Name }}-collector-worker"
@@ -188,6 +210,9 @@ digmaCollectorWorker:
       RouteRegex: ""
       Method: "GET"
       Service: "*"
+  annotations: {}
+  labels: {}
+  affinity:
 
 digmaAnalytics:
   host: "{{ .Release.Name }}-analytics"
@@ -205,7 +230,9 @@ digmaAnalytics:
     }
   }
   service:
-    annotations: []
+    annotations: {}
+  annotations: {}
+  labels: {}
 
 digmaScheduler:
   host: "{{ .Release.Name }}-scheduler"
@@ -219,6 +246,8 @@ digmaScheduler:
       cpu: 500m
     }
   }
+  annotations: {}
+  labels: {}
 
 digmaPipelineWorker:
   replicas: "{{ index .Values.presets .Values.size \"digmaPipelineWorker\" \"replicas\" }}"
@@ -232,6 +261,9 @@ digmaPipelineWorker:
       cpu: 500m
     }
   }
+  annotations: {}
+  labels: {}
+  affinity:
 
 digmaMeasurementAnalysis:
   replicas: "{{ index .Values.presets .Values.size \"digmaMeasurementAnalysis\" \"replicas\" }}"
@@ -245,13 +277,40 @@ digmaMeasurementAnalysis:
       cpu: 800m
     }
   }
+  annotations: {}
+  labels: {}
+  affinity:
+
+grafana:
+  host: "{{ .Release.Name }}-grafana"
+  annotations: {}
+  labels: {}
+  args: []
+
+prometheus:
+  host: "{{ .Release.Name }}-prometheus"
+  annotations: {}
+  labels: {}
+  args: []
+
+k8sMetricsExporter:
+  annotations: {}
+  labels: {}
 
 otelCollectorGateway:
+  host: "{{ .Release.Name }}-otel-collector-gateway"
   enabled: false
   samplingPercentage: 100
   loadbalancer: false
   service:
-    annotations: []
+    annotations: {}
+  annotations: {}
+  labels: {}
+
+otelCollectorDf:
+  host: "{{ .Release.Name }}-otel-collector"
+  annotations: {}
+  labels: {}
 
 digmaSelfDiagnosis:
   otlpExportTraces: false
