@@ -26,10 +26,10 @@ spec:
       {{- include "imagePullSecrets" . | nindent  6 }}
       {{- include "tolerations" . | nindent  6 }}
       {{- include "nodeSelector" . | nindent  6 }}
-      imagePullPolicy: always
       containers:
       - name: postgres
         image: postgres:{{ .Values.postgres.imageTag }}
+        imagePullPolicy: Always
         resources:
           requests:
             memory: {{ .Values.postgres.resources.requests.memory }}
@@ -40,10 +40,14 @@ spec:
         ports:
           - containerPort: 5432
         args: 
-          - "-c max_connections={{ .Values.postgres.maxConnections }}"
-          - "-c shared_buffers={{ .Values.postgres.maxMemory }}" 
-          - "-c logging_collector=on" 
-          - "-c log_directory=log"
+          - '-c'
+          - 'max_connections={{ .Values.postgres.maxConnections }}'
+          - '-c'
+          - 'shared_buffers={{ .Values.postgres.maxMemory }}'
+          - '-c'
+          - 'logging_collector=on'
+          - '-c'
+          - 'log_directory=log'
           {{- range .Values.postgres.args }}
           - {{ . }}
           {{- end }}

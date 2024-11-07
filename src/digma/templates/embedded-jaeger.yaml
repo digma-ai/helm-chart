@@ -26,13 +26,13 @@ spec:
         {{- end }}
     spec:
       terminationGracePeriodSeconds: 5
-        {{- include "imagePullSecrets" . | nindent  6 }}
+      {{- include "imagePullSecrets" . | nindent  6 }}
       {{- include "tolerations" . | nindent  6 }}
       {{- include "nodeSelector" . | nindent  6 }}
-      imagePullPolicy: always
       containers:
         - name: embedded-jaeger
           image: jaegertracing/all-in-one:1.44.0
+          imagePullPolicy: Always
           args: ["--query.additional-headers", "Access-Control-Allow-Origin: *"]
           env:
             - name: SPAN_STORAGE_TYPE
@@ -79,14 +79,15 @@ spec:
       labels:
         app: embedded-jaeger
     spec:
-      imagePullPolicy: always
       initContainers:
         - name: wait-for-elasticsearch
+          imagePullPolicy: Always
           image: busybox:1.28
           command: [ 'sh', '-c', 'until nc -z {{ .Release.Name }}-elasticsearch 9200; do echo waiting for elasticsearch; sleep 5; done;' ]
       containers:
       - name: embedded-jaeger
         image: jaegertracing/all-in-one:{{ .Values.embeddedJaeger.imageTag }}
+        imagePullPolicy: Always
         args: 
           - "--query.additional-headers Access-Control-Allow-Origin: *"
           {{- range .Values.embeddedJaeger.args }}

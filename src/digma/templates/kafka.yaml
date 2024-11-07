@@ -26,12 +26,12 @@ spec:
       {{- include "imagePullSecrets" . | nindent  6 }}
       {{- include "tolerations" . | nindent  6 }}
       {{- include "nodeSelector" . | nindent  6 }}
-      imagePullPolicy: always
       securityContext:
         fsGroup: 1001
       containers:
       - name: kafka
         image: bitnami/kafka:{{ .Values.kafka.imageTag }}
+        imagePullPolicy: Always
         args:
           {{- range .Values.kafka.args }}
           - {{ . }}

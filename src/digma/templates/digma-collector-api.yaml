@@ -24,10 +24,10 @@ spec:
       {{- include "imagePullSecrets" . | nindent  6 }}
       {{- include "tolerations" . | nindent  6 }}
       {{- include "nodeSelector" . | nindent  6 }}
-      imagePullPolicy: always
       containers:
       - name: digma-collector-api
         image: digmatic/digma-collector:{{ .Chart.AppVersion }}
+        imagePullPolicy: Always
         resources:
           requests:
             memory: {{ .Values.digmaCollectorApi.resources.requests.memory }}

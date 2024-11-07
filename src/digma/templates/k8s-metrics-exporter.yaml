@@ -20,10 +20,10 @@ spec:
       {{- include "imagePullSecrets" . | nindent  6 }}
       {{- include "tolerations" . | nindent  6 }}
       {{- include "nodeSelector" . | nindent  6 }}
-      imagePullPolicy: always
       containers:
         - name: k8s-metrics-exporter
           image: digmatic/k8s-metrics-exporter:0.0.9
+          imagePullPolicy: Always
           env:
           - name: KUBE_NAMESPACE
             value: {{ .Release.Namespace }}

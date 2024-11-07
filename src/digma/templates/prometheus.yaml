@@ -45,10 +45,10 @@ spec:
       {{- include "imagePullSecrets" . | nindent  6 }}
       {{- include "tolerations" . | nindent  6 }}
       {{- include "nodeSelector" . | nindent  6 }}
-      imagePullPolicy: always
       containers:
       - name: prometheus
         image: prom/prometheus:v2.53.0
+        imagePullPolicy: Always
         args:
         - '--storage.tsdb.path=/prometheus'
         - '--config.file=/etc/prometheus/prometheus.yml'

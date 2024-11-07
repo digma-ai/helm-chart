@@ -27,10 +27,10 @@ spec:
       {{- include "imagePullSecrets" . | nindent  6 }}
       {{- include "tolerations" . | nindent  6 }}
       {{- include "nodeSelector" . | nindent  6 }}
-      imagePullPolicy: always
       initContainers:
         - name: add-permissions
           image: busybox
+          imagePullPolicy: Always
           command: [ 'sh', '-c', 'chown -R 1000:1000 /usr/share/elasticsearch/logs' ]
           volumeMounts:
             - mountPath: /usr/share/elasticsearch/logs
@@ -38,7 +38,7 @@ spec:
       containers:
         - name: elasticsearch
           image: "elasticsearch:{{ .Values.elastic.imageTag }}"
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           args:
             {{- range .Values.elastic.args }}
             - {{ . }}

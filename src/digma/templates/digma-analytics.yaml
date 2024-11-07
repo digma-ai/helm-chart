@@ -24,11 +24,10 @@ spec:
       {{- include "imagePullSecrets" . | nindent  6 }}
       {{- include "tolerations" . | nindent  6 }}
       {{- include "nodeSelector" . | nindent  6 }}
-      imagePullPolicy: always
       containers:
       - name: digma-analytics
         image: digmatic/digma-analytics:{{ .Chart.AppVersion }}
-        
+        imagePullPolicy: Always
         resources:
           requests:
             memory: {{ .Values.digmaAnalytics.resources.requests.memory }}

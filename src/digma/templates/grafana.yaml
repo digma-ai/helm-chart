@@ -59,7 +59,6 @@ spec:
       {{- include "imagePullSecrets" . | nindent  6 }}
       {{- include "tolerations" . | nindent  6 }}
       {{- include "nodeSelector" . | nindent  6 }}
-      imagePullPolicy: always
       volumes:
       - name: grafana-provisioning
         configMap:
@@ -81,6 +80,7 @@ spec:
       containers:
       - name: grafana
         image: grafana/grafana:10.3.3
+        imagePullPolicy: Always
         args:
           {{- range .Values.grafana.args }}
           - {{ . }}

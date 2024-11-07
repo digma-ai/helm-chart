@@ -26,10 +26,10 @@ spec:
       {{- include "imagePullSecrets" . | nindent  6 }}
       {{- include "tolerations" . | nindent  6 }}
       {{- include "nodeSelector" . | nindent  6 }}
-      imagePullPolicy: always
       containers:
         - name: redis
           image: redis:{{ .Values.redis.imageTag }}
+          imagePullPolicy: Always
           args:
             - "--maxmemory {{ .Values.redis.config.maxmemory }}"
             - "--maxmemory-policy {{ .Values.redis.config.maxmemoryPolicy }}"

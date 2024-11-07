@@ -6,7 +6,6 @@ metadata:
   labels:
     app: sample-app-go
 spec:
-  imagePullPolicy: always
   containers:
     - name: sample-app-go
       image: golang:1.17
