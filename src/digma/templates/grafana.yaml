@@ -79,6 +79,10 @@ spec:
       containers:
       - name: grafana
         image: grafana/grafana:10.3.3
+        args:
+          {{- range .Values.grafana.args }}
+          - {{ . }}
+          {{- end }}
         env:
         - name: GF_SECURITY_ADMIN_USER
           value: admin

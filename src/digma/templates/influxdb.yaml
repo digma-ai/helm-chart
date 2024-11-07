@@ -28,6 +28,10 @@ spec:
       containers:
       - name: influxdb
         image: influxdb:{{ .Values.influx.imageTag }}
+        args:
+          {{- range .Values.influx.args }}
+          - {{ . }}
+          {{- end }}
         resources:
           requests:
             memory: {{ .Values.influx.resources.requests.memory }}

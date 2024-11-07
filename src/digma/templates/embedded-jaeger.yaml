@@ -85,7 +85,11 @@ spec:
       containers:
       - name: embedded-jaeger
         image: jaegertracing/all-in-one:{{ .Values.embeddedJaeger.imageTag }}
-        args: ["--query.additional-headers", "Access-Control-Allow-Origin: *"]
+        args: 
+          - "--query.additional-headers Access-Control-Allow-Origin: *"
+          {{- range .Values.embeddedJaeger.args }}
+          - {{ . }}
+          {{- end }}
         env:
         - name: SPAN_STORAGE_TYPE
           value: elasticsearch

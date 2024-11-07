@@ -30,6 +30,10 @@ spec:
       containers:
       - name: kafka
         image: bitnami/kafka:{{ .Values.kafka.imageTag }}
+        args:
+          {{- range .Values.kafka.args }}
+          - {{ . }}
+          {{- end }}
         resources:
           requests:
             memory: {{ .Values.kafka.resources.requests.memory }}

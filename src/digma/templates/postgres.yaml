@@ -37,7 +37,14 @@ spec:
             cpu: {{ .Values.postgres.resources.limits.cpu }}
         ports:
           - containerPort: 5432
-        args: ["-c" ,"max_connections={{ .Values.postgres.maxConnections }}", "-c", "shared_buffers={{ .Values.postgres.maxMemory }}", "-c", "logging_collector=on", "-c","log_directory=log"]
+        args: 
+          - "-c max_connections={{ .Values.postgres.maxConnections }}"
+          - "-c shared_buffers={{ .Values.postgres.maxMemory }}" 
+          - "-c logging_collector=on" 
+          - "-c log_directory=log"
+          {{- range .Values.postgres.args }}
+          - {{ . }}
+          {{- end }}
         env:
         - name: POSTGRES_NAME
           value: postgres

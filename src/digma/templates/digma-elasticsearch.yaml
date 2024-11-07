@@ -37,6 +37,10 @@ spec:
         - name: elasticsearch
           image: "elasticsearch:{{ .Values.elastic.imageTag }}"
           imagePullPolicy: IfNotPresent
+          args:
+            {{- range .Values.elastic.args }}
+            - {{ . }}
+            {{- end }}
           ports:
             - containerPort: 9200
               name: http
