@@ -24,6 +24,8 @@ spec:
       {{- include "imagePullSecrets" . | nindent  6 }}
       {{- include "tolerations" . | nindent  6 }}
       {{- include "nodeSelector" . | nindent  6 }}
+      affinity:
+        {{- toYaml .Values.digmaMeasurementAnalysis.affinity | nindent 8 }}
       imagePullPolicy: always
       containers:
       - name: digma-measurement-analysis

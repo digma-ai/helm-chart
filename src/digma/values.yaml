@@ -212,6 +212,7 @@ digmaCollectorWorker:
       Service: "*"
   annotations: []
   labels: []
+  affinity:
 
 digmaAnalytics:
   host: "{{ .Release.Name }}-analytics"
@@ -262,6 +263,7 @@ digmaPipelineWorker:
   }
   annotations: []
   labels: []
+  affinity:
 
 digmaMeasurementAnalysis:
   replicas: "{{ index .Values.presets .Values.size \"digmaMeasurementAnalysis\" \"replicas\" }}"
@@ -277,6 +279,7 @@ digmaMeasurementAnalysis:
   }
   annotations: []
   labels: []
+  affinity:
 
 grafana:
   host: "{{ .Release.Name }}-grafana"
