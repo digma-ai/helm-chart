@@ -89,7 +89,8 @@ spec:
         image: jaegertracing/all-in-one:{{ .Values.embeddedJaeger.imageTag }}
         imagePullPolicy: Always
         args: 
-          - "--query.additional-headers Access-Control-Allow-Origin: *"
+          - "--query.additional-headers"
+          - "Access-Control-Allow-Origin: *"
           {{- range .Values.embeddedJaeger.args }}
           - {{ . }}
           {{- end }}

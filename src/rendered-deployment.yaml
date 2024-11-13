@@ -218,7 +218,7 @@ spec:
         - name: ApplicationVersion
           value: 0.3.153
         - name: ChartVersion
-          value: 1.0.254
+          value: 1.0.255
 
         - name: OtlpSamplerProbability
           value: '0.3'
@@ -291,7 +291,7 @@ spec:
         - name: ApplicationVersion
           value: 0.3.153
         - name: ChartVersion
-          value: 1.0.254
+          value: 1.0.255
         - name: Jaeger__OtlpUrl
           value: http://digma-embedded-jaeger:4317
 
@@ -357,7 +357,7 @@ spec:
         - name: ApplicationVersion
           value: 0.3.153
         - name: ChartVersion
-          value: 1.0.254
+          value: 1.0.255
         - name: Jaeger__OtlpUrl
           value: http://digma-embedded-jaeger:4317
         - name: OtlpSamplerProbability
@@ -422,7 +422,7 @@ spec:
         - name: ApplicationVersion
           value: 0.3.153
         - name: ChartVersion
-          value: 1.0.254
+          value: 1.0.255
         - name: Jaeger__OtlpUrl
           value: http://digma-embedded-jaeger:4317
         - name: OtlpSamplerProbability
@@ -499,7 +499,7 @@ spec:
         - name: ApplicationVersion
           value: 0.3.153
         - name: ChartVersion
-          value: 1.0.254
+          value: 1.0.255
         - name: Jaeger__OtlpUrl
           value: http://digma-embedded-jaeger:4317
         - name: OtlpSamplerProbability
@@ -566,7 +566,7 @@ spec:
         - name: ApplicationVersion
           value: 0.3.153
         - name: ChartVersion
-          value: 1.0.254
+          value: 1.0.255
 
         - name: OtlpSamplerProbability
           value: '0.3'
