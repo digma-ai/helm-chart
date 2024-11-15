@@ -1,63 +1,99 @@
-{{ if .Values.digmaAnalytics.loadbalancer }}
+# Analytics Service
 kind: Service
 apiVersion: v1
 metadata:
-  name: {{ .Release.Name }}-analytics-service-lb
-  {{- if and .Values.digmaAnalytics.service .Values.digmaAnalytics.service.annotations }}
-  annotations:
-    {{ toYaml .Values.digmaAnalytics.service.annotations | indent 4 }}
-  {{- end }}
+  name: {{ .Release.Name }}-analytics-service
+  namespace: {{ .Release.Namespace }}
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
-     app: "digma-analytics"
+    app: "digma-analytics"
   ports:
     - name: analytics
       protocol: TCP
       port: 5051
----
-{{ end }}
+      targetPort: 5051
 
-{{ if .Values.digmaCollectorApi.loadbalancer }}
+---
+
+# Collector API Service
 kind: Service
 apiVersion: v1
 metadata:
-  name: {{ .Release.Name }}-collector-api-service-lb
-  {{- if and .Values.digmaCollectorApi.service .Values.digmaCollectorApi.service.annotations }}
-  annotations:
-    {{ toYaml .Values.digmaCollectorApi.service.annotations | indent 4 }}
-  {{- end }}
+  name: {{ .Release.Name }}-collector-api-service
+  namespace: {{ .Release.Namespace }}
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
-     app: "digma-collector-api"
+    app: "digma-collector-api"
   ports:
     - name: http
       protocol: TCP
       port: 5049
+      targetPort: 5049
     - name: grpc
       protocol: TCP
       port: 5050
----
-{{ end }}
+      targetPort: 5050
 
-{{ if and (eq .Values.embeddedJaeger.enabled true) (eq .Values.embeddedJaeger.loadbalancer true) }}
-apiVersion: v1
+---
+
+# Jaeger Service
 kind: Service
+apiVersion: v1
 metadata:
-  name: {{ .Release.Name }}-embedded-jaeger-lb
-  {{- if and .Values.embeddedJaeger.service .Values.embeddedJaeger.service.annotations }}
-  annotations:
-    {{ toYaml .Values.embeddedJaeger.service.annotations | indent 4 }}
-  {{- end }}
+  name: {{ .Release.Name }}-embedded-jaeger
+  namespace: {{ .Release.Namespace }}
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
-     app: "embedded-jaeger"
+    app: "embedded-jaeger"
   ports:
-  - name: api
-    port: 17686
-    protocol: TCP
-    targetPort: 16686
+    - name: jaeger-api
+      port: 16686
+      protocol: TCP
+      targetPort: 16686
+
+---
+
+# Ingress Resource
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-ingress
+  namespace: {{ .Release.Namespace }}
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: jaeger.{{- if .Values.ingressController.host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-embedded-jaeger
+                port:
+                  number: 16686
+    - host: api.{{- if .Values.ingressController.host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-analytics-service
+                port:
+                  number: 5051
+    - host: collector.{{- if .Values.ingressController.host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-collector-api-service
+                port:
+                  number: 5049
 ---
 {{ end }}

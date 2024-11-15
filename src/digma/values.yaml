@@ -120,8 +120,9 @@ pgadmin:
 embeddedJaeger:
   host: "{{ .Release.Name }}-embedded-jaeger"
   imageTag: "1.61.0"
+  ingress: true
   enabled: true
-  loadbalancer: true
+  loadbalancer: false
   storage: "badger" # can be "badger" or "elasticsearch"
   volumeSize:  #volumeSize only for badger
   service:
@@ -161,7 +162,8 @@ elasticsearch:
 
 digmaCollectorApi:
   host: "{{ .Release.Name }}-collector-api"
-  loadbalancer: true
+  ingress: true
+  loadbalancer: false
   resources: {
     requests: {
       memory: 100Mi,
@@ -216,7 +218,8 @@ digmaCollectorWorker:
 
 digmaAnalytics:
   host: "{{ .Release.Name }}-analytics"
-  loadbalancer: true
+  ingress: true
+  loadbalancer: false
   replicas: 1
   secured: true
   resources: {
@@ -280,6 +283,22 @@ digmaMeasurementAnalysis:
   annotations: {}
   labels: {}
   affinity:
+    
+ingressController:
+  enabled: true
+  replicaCount: 1
+  serviceType: LoadBalancer
+  host: azure.digma.systems
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-resource-group: MELOONA
+  resources:
+    requests:
+      memory: "200Mi"
+      cpu: "100m"
+    limits:
+      memory: "500Mi"
+      cpu: "500m"
+ 
 
 grafana:
   host: "{{ .Release.Name }}-grafana"
@@ -318,11 +337,11 @@ digmaSelfDiagnosis:
   otlpExportLogs: false
   otlpExporterEndpoint: # either a url or 'local'
   otlpSamplerProbability: "0.1"
-  
 
 digma:
-  environmentName:
-  environmentType:  
-  siteName: undefined
+  environmentName: MELOONA
+  environmentType: Public 
+  siteName: MELOONA
   isCentralize: true
   licenseKey:
+  host: digma.azure.zom

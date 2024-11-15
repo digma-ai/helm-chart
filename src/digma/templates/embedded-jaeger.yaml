@@ -1,6 +1,6 @@
 {{- if .Values.embeddedJaeger.enabled }}
   
-{{- if eq .Values.embeddedJaeger.storage "badger" }}
+  {{- if eq .Values.embeddedJaeger.storage "badger" }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -22,8 +22,8 @@ spec:
         {{- end }}
       annotations:
         {{- range $key, $value := .Values.embeddedJaeger.annotations }}
-        {{ $key }}: {{ $value }}
-        {{- end }}
+          {{ $key }}: {{ $value }}
+          {{- end }}
     spec:
       terminationGracePeriodSeconds: 5
       {{- include "imagePullSecrets" . | nindent  6 }}
@@ -69,7 +69,6 @@ metadata:
   labels:
     app: embedded-jaeger
 spec:
-  serviceName: {{ tpl .Values.embeddedJaeger.host . }}  
   replicas: 1
   selector:
     matchLabels:
@@ -85,25 +84,29 @@ spec:
           image: busybox:1.28
           command: [ 'sh', '-c', 'until nc -z {{ .Release.Name }}-elasticsearch 9200; do echo waiting for elasticsearch; sleep 5; done;' ]
       containers:
-      - name: embedded-jaeger
-        image: jaegertracing/all-in-one:{{ .Values.embeddedJaeger.imageTag }}
-        imagePullPolicy: Always
-        args: 
-          - "--query.additional-headers"
-          - "Access-Control-Allow-Origin: *"
-          {{- range .Values.embeddedJaeger.args }}
-          - {{ . }}
-          {{- end }}
-        env:
-        - name: SPAN_STORAGE_TYPE
-          value: elasticsearch
-        - name: ES_SERVER_URLS
-          value: "http://{{ .Release.Name }}-elasticsearch:9200"
-        - name: ES_INDEX_PREFIX
-          value: "digma"
-        - name: COLLECTOR_OTLP_ENABLED
-          value: "true"
-        - name: COLLECTOR_OTLP_GRPC_MAX_MESSAGE_SIZE
-          value: "41943040"
-{{- end }}
+        - name: embedded-jaeger
+          image: jaegertracing/all-in-one:{{ .Values.embeddedJaeger.imageTag }}
+          imagePullPolicy: Always
+          args:
+            - "--query.additional-headers"
+            - "Access-Control-Allow-Origin: *"
+            {{- range .Values.embeddedJaeger.args }}
+            - {{ . }}
+            {{- end }}
+          env:
+            - name: SPAN_STORAGE_TYPE
+              value: elasticsearch
+            - name: ES_SERVER_URLS
+              value: "http://{{ .Release.Name }}-elasticsearch:9200"
+            - name: ES_INDEX_PREFIX
+              value: "digma"
+            - name: COLLECTOR_OTLP_ENABLED
+              value: "true"
+            - name: COLLECTOR_OTLP_GRPC_MAX_MESSAGE_SIZE
+              value: "41943040"
+          ports:
+            - containerPort: 16686
+              name: jaeger-ui
+              protocol: TCP
+  {{- end }}
 {{- end }}
