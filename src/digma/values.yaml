@@ -318,7 +318,19 @@ digmaSelfDiagnosis:
   otlpExportLogs: false
   otlpExporterEndpoint: # either a url or 'local'
   otlpSamplerProbability: "0.1"
-  
+
+uiService:
+  host:host: "{{ .Release.Name }}-uiService"
+  image:
+    repository: "my-ui-image"
+    tag: "latest"
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "250m"
+    limits:
+      memory: "128Mi"
+      cpu: "500m"
 
 digma:
   environmentName:
