@@ -53,7 +53,7 @@ metadata:
 spec:
   type: LoadBalancer
   selector:
-     app: "embedded-jaeger-proxy"
+     app: "embedded-jaeger"
   ports:
   - name: api
     port: 17686
