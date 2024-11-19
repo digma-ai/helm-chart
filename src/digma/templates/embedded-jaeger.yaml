@@ -105,13 +105,5 @@ spec:
           value: "true"
         - name: COLLECTOR_OTLP_GRPC_MAX_MESSAGE_SIZE
           value: "41943040"
-
-      - name: jaeger-secutiry-proxy
-        image: nginx:1.27.2
-        imagePullPolicy: Always
-
----
-
-
 {{- end }}
 {{- end }}
