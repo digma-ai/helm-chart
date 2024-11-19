@@ -1,0 +1,60 @@
+{{- if .Values.embeddedJaeger.enabled }}
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-embedded-jaeger-proxy-files
+data:
+{{- range $path, $file := .Files.Glob "embedded-jaeger-proxy-files/*" }}
+  {{ $path | base }}: |
+    {{ tpl ($file | toString) $ | nindent 4 }}
+{{- end }}
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-embedded-jaeger-proxy-deployment
+  labels:
+    app: embedded-jaeger-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: embedded-jaeger-proxy
+  template:
+    metadata:
+      labels:
+        app: embedded-jaeger-proxy
+    spec:
+      containers:
+        - name: embedded-jaeger-proxy
+          image: nginx:1.27
+          volumeMounts:
+            - name: files
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+            - name: files
+              mountPath: /etc/nginx/login-page.html
+              subPath: login-page.html
+      volumes:
+        - name: files
+          configMap:
+            name: {{ .Release.Name }}-embedded-jaeger-proxy-files
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ tpl .Values.embeddedJaeger.proxyHost . }}
+spec:
+  type: ClusterIP
+  selector:
+     app: "embedded-jaeger-proxy"
+  ports:
+  - name: api
+    port: 16686
+    protocol: TCP
+
+{{- end }}
