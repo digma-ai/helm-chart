@@ -56,16 +56,36 @@ spec:
 
 ---
 
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Release.Name }}-tls-secret
+  namespace: {{ .Release.Namespace }}
+type: kubernetes.io/tls
+data:
+  tls.crt: {{ .Values.tls.crt | b64enc | quote }}
+  tls.key: {{ .Values.tls.key | b64enc | quote }}
+  
+---
+
 # Ingress Resource
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ .Release.Name }}-ingress
   namespace: {{ .Release.Namespace }}
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - api.{{ .Values.ingressController.host }}
+        - jaeger.{{ .Values.ingressController.host }}
+        - collector.{{ .Values.ingressController.host }}
+      secretName: {{ .Release.Name }}-tls-secret
   rules:
-    - host: jaeger.{{- if .Values.ingressController.host }}
+    - host: jaeger.{{ .Values.ingressController.host }}
       http:
         paths:
           - path: /
@@ -75,7 +95,7 @@ spec:
                 name: {{ .Release.Name }}-embedded-jaeger
                 port:
                   number: 16686
-    - host: api.{{- if .Values.ingressController.host }}
+    - host: api.{{ .Values.ingressController.host }}
       http:
         paths:
           - path: /
@@ -85,7 +105,7 @@ spec:
                 name: {{ .Release.Name }}-analytics-service
                 port:
                   number: 5051
-    - host: collector.{{- if .Values.ingressController.host }}
+    - host: collector.{{ .Values.ingressController.host }}
       http:
         paths:
           - path: /
@@ -95,5 +115,3 @@ spec:
                 name: {{ .Release.Name }}-collector-api-service
                 port:
                   number: 5049
----
-{{ end }}
