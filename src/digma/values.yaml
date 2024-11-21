@@ -248,6 +248,21 @@ digmaScheduler:
   }
   annotations: {}
   labels: {}
+  envVars: []
+  #- name: "EmailGateway__Url"
+  #  value: ""
+  #- name: "EmailGateway__ApiKey"
+  #  value: ""
+  #- name: "EmailReport__Recipients__To"
+  #  value: ""
+  #- name: "EmailReport__Recipients__Cc"
+  #  value: ""
+  #- name: "EmailReport__Recipients__Bcc"
+  #  value: ""
+  #- name: "EmailReport__ScheduledTime"
+  #  value: "13:00:00"
+  #- name: "EmailReport__UIServiceBaseUrl"
+  #  value: ""
 
 digmaPipelineWorker:
   replicas: "{{ index .Values.presets .Values.size \"digmaPipelineWorker\" \"replicas\" }}"
@@ -312,6 +327,25 @@ otelCollectorDf:
   annotations: {}
   labels: {}
 
+digmaUi:
+  host: "{{ .Release.Name }}-ui"
+  loadbalancer: true
+  imageTag: 2.1.4
+  resources: {
+    requests: {
+      memory: 100Mi,
+      cpu: 100m
+    },
+    limits: {
+      memory: 200Mi,
+      cpu: 200m
+    }
+  }
+  service:
+    annotations: {}
+  annotations: {}
+  labels: {}
+  
 digmaSelfDiagnosis:
   otlpExportTraces: false
   otlpExportMetrics: false

@@ -36,7 +36,7 @@ spec:
             memory: {{ .Values.digmaScheduler.resources.limits.memory }}
             cpu: {{ .Values.digmaScheduler.resources.limits.cpu }}
         ports:
-        - containerPort: 5053
+        - containerPort: 3053
         env:
         {{- include "env.isCentralize" . | nindent  8 }}
         {{- include "env.licenseKey" . | nindent  8 }}
@@ -63,5 +63,8 @@ spec:
         - name: ElasticSearch__Uri
           value: http://{{ .Release.Name }}-elasticsearch:9200
 {{- end }}  
-
+        {{- range .Values.digmaScheduler.envVars }}
+        - name: "{{ .name }}"
+          value: "{{ .value }}"
+        {{- end }}
 
