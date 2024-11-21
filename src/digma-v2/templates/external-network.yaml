@@ -1,0 +1,21 @@
+
+# {{ if and (eq .Values.embeddedJaeger.enabled true) (eq .Values.embeddedJaeger.loadbalancer true) }}
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: {{ .Release.Name }}-embedded-jaeger-lb
+#   {{- if and .Values.embeddedJaeger.service .Values.embeddedJaeger.service.annotations }}
+#   annotations:
+#     {{ toYaml .Values.embeddedJaeger.service.annotations | indent 4 }}
+#   {{- end }}
+# spec:
+#   type: LoadBalancer
+#   selector:
+#      app: "embedded-jaeger"
+#   ports:
+#   - name: api
+#     port: 17686
+#     protocol: TCP
+#     targetPort: 16686
+# ---
+# {{ end }}

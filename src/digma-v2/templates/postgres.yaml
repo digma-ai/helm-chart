@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-postgres-stateful-set
+  labels:
+    app: postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  serviceName: {{ tpl .Values.postgres.host . }}
+  template:
+    metadata:
+      labels:
+        app: postgres
+        {{- range $key, $value := .Values.postgres.labels }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+      annotations:
+        {{- range $key, $value := .Values.postgres.annotations }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+    spec:
+      terminationGracePeriodSeconds: 5
+      {{- include "imagePullSecrets" . | nindent  6 }}
+      {{- include "tolerations" . | nindent  6 }}
+      {{- include "nodeSelector" . | nindent  6 }}
+      containers:
+      - name: postgres
+        image: postgres:{{ .Values.postgres.imageTag }}
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: {{ .Values.postgres.resources.requests.memory }}
+            cpu: {{ .Values.postgres.resources.requests.cpu }}
+          limits:
+            memory: {{ .Values.postgres.resources.limits.memory }}
+            cpu: {{ .Values.postgres.resources.limits.cpu }}
+        ports:
+          - containerPort: 5432
+        args: 
+          - '-c'
+          - 'max_connections={{ .Values.postgres.maxConnections }}'
+          - '-c'
+          - 'shared_buffers={{ .Values.postgres.maxMemory }}'
+          - '-c'
+          - 'logging_collector=on'
+          - '-c'
+          - 'log_directory=log'
+          {{- range .Values.postgres.args }}
+          - {{ . }}
+          {{- end }}
+        env:
+        - name: POSTGRES_NAME
+          value: postgres
+        - name: POSTGRES_USER
+          value: {{ .Values.postgres.username }}
+        - name: POSTGRES_PASSWORD
+          value: {{ .Values.postgres.password }}
+        volumeMounts:
+        - name: postgres-data
+          mountPath: /var/lib/postgresql/data
+          subPath: postgres
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 20Gi
+  # persistentVolumeClaimRetentionPolicy:
+  #   whenDeleted: Retain

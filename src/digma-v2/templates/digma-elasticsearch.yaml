@@ -1,0 +1,93 @@
+{{- if eq .Values.embeddedJaeger.storage "elasticsearch" }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-elasticsearch-stateful-set
+  labels:
+    app: {{ .Release.Name }}-elasticsearch
+spec:
+  serviceName: {{ .Release.Name }}-elasticsearch
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-elasticsearch
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-elasticsearch
+        {{- range $key, $value := .Values.elastic.labels }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+      annotations:
+        {{- range $key, $value := .Values.elastic.annotations }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+    spec:
+      terminationGracePeriodSeconds: 5
+      {{- include "imagePullSecrets" . | nindent  6 }}
+      {{- include "tolerations" . | nindent  6 }}
+      {{- include "nodeSelector" . | nindent  6 }}
+      securityContext:
+        fsGroup: 1000
+      containers:
+        - name: elasticsearch
+          image: "elasticsearch:{{ .Values.elastic.imageTag }}"
+          imagePullPolicy: Always
+          args:
+            {{- range .Values.elastic.args }}
+            - {{ . }}
+            {{- end }}
+          ports:
+            - containerPort: 9200
+              name: http
+          env:
+            - name: xpack.security.enabled
+              value: "false"
+            - name: xpack.security.transport.ssl.enabled
+              value: "false"
+            - name: discovery.type
+              value: "single-node"
+            - name: ES_JAVA_OPTS
+              value: "-server -Xms1G -Xmx2G"  
+          resources:
+            requests:
+              memory: "{{ .Values.elastic.resources.requests.memory }}"
+              cpu: "{{ .Values.elastic.resources.requests.cpu }}"
+            limits:
+              memory: "{{ .Values.elastic.resources.limits.memory }}"
+              cpu: "{{ .Values.elastic.resources.limits.cpu }}"
+          volumeMounts:
+            - name: data
+              mountPath: /usr/share/elasticsearch/data
+            - name: data
+              mountPath: /usr/share/elasticsearch/logs
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+        labels:
+          app: {{ .Release.Name }}-elasticsearch
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: {{ .Values.elastic.storage }}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-elasticsearch
+  labels:
+    app: {{ .Release.Name }}-elasticsearch
+spec:
+  type: ClusterIP
+  ports:
+    - port: 9200
+      targetPort: 9200
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ .Release.Name }}-elasticsearch
+      
+{{- end }}

@@ -1,0 +1,17 @@
+annotations:
+  category: Infrastructure
+apiVersion: v2
+appVersion: 0.3.153
+dependencies:
+- name: common
+  repository: oci://registry-1.docker.io/bitnamicharts
+  version: 2.x.x
+  tags:
+  - bitnami-common
+name: digma
+description: A Helm chart containing Digma's services and dbs
+home: https://github.com/digma-ai/digma
+icon: https://digma.ai/wp-content/uploads/2024/02/logo-alt-1.svg
+type: application
+version: 1.0.254
+

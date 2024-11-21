@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "digma.otel-collector" . }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: otel-collector
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+data: # config.yaml:
+  config.yaml: |-
+    extensions:
+      health_check:
+        endpoint: "0.0.0.0:13133"
+    receivers:
+      otlp:
+        protocols:
+          {{- if .Values.otelCollector.service.ports.grpc }}
+          grpc:
+            endpoint: 0.0.0.0:{{ .Values.otelCollector.service.ports.grpc }}
+          {{- end }}
+          {{- if .Values.otelCollector.service.ports.http }}
+          http:
+            endpoint: 0.0.0.0:{{ .Values.otelCollector.service.ports.http }}
+          {{- end }}
+    processors:
+      batch:
+      probabilistic_sampler:
+        sampling_percentage: {{ .Values.otelCollector.samplingPercentage }}
+    exporters:
+      logging:
+        loglevel: debug
+      otlp/collector-api:
+        {{- if .Values.otelCollector.service.ports.grpc }}
+        endpoint: {{ include "digma.otel-collector" . }}:{{ .Values.collectorApi.service.ports.grpc }}
+        {{- else if .Values.otelCollector.service.ports.http }}
+        endpoint: {{ include "digma.otel-collector" . }}:{{ .Values.collectorApi.service.ports.http }}
+        {{- end }}
+        tls:
+          insecure: true
+    service:
+      extensions: [health_check]
+      pipelines:
+        traces:
+          receivers: [otlp]
+          processors: [batch, probabilistic_sampler]
+          exporters: [otlp/collector-api, logging]

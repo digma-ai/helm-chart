@@ -1,0 +1,33 @@
+{{- if .Values.analyticsApi.ingress.enabled }}
+apiVersion: {{ include "common.capabilities.ingress.apiVersion" . }}
+kind: Ingress
+metadata:
+  name: {{ include "digma.analytics-api" . }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: analytics-api
+  {{- if or .Values.analyticsApi.ingress.annotations .Values.commonAnnotations }}
+  {{- $annotations := include "common.tplvalues.merge" ( dict "values" ( list .Values.analyticsApi.ingress.annotations .Values.commonAnnotations ) "context" . ) }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if and .Values.analyticsApi.ingress.ingressClassName (include "common.ingress.supportsIngressClassname" .) }}
+  ingressClassName: {{ .Values.analyticsApi.ingress.ingressClassName | quote }}
+  {{- end }}
+  rules:
+    {{- if .Values.analyticsApi.ingress.hostname }}
+    - host: {{ tpl .Values.analyticsApi.ingress.hostname $ | quote }}
+      http:
+        paths:
+          {{- if .Values.analyticsApi.ingress.extraPaths }}
+          {{- toYaml .Values.analyticsApi.ingress.extraPaths | nindent 10 }}
+          {{- end }}
+          - path: {{ default "/" .Values.analyticsApi.ingress.path }}
+            {{- if eq "true" (include "common.ingress.supportsPathType" .) }}
+            pathType: {{ .Values.analyticsApi.ingress.pathType }}
+            {{- end }}
+            backend: {{- include "common.ingress.backend" (dict "serviceName" (include "digma.analytics-api" $) "servicePort" "analytics" "context" $)  | nindent 14 }}
+    {{- end }}
+    {{- if .Values.analyticsApi.ingress.extraRules }}
+    {{- include "common.tplvalues.render" (dict "value" .Values.analyticsApi.ingress.extraRules "context" $) | nindent 4 }}
+    {{- end }}
+{{- end }}
