@@ -15,14 +15,10 @@ data: # config.yaml:
     receivers:
       otlp:
         protocols:
-          {{- if .Values.otelCollector.service.ports.grpc }}
           grpc:
             endpoint: 0.0.0.0:{{ .Values.otelCollector.service.ports.grpc }}
-          {{- end }}
-          {{- if .Values.otelCollector.service.ports.http }}
           http:
             endpoint: 0.0.0.0:{{ .Values.otelCollector.service.ports.http }}
-          {{- end }}
     processors:
       batch:
       probabilistic_sampler:
@@ -30,12 +26,8 @@ data: # config.yaml:
     exporters:
       logging:
         loglevel: debug
-      otlp/collector-api:
-        {{- if .Values.otelCollector.service.ports.grpc }}
-        endpoint: {{ include "digma.otel-collector" . }}:{{ .Values.collectorApi.service.ports.grpc }}
-        {{- else if .Values.otelCollector.service.ports.http }}
+      otlphttp:
         endpoint: {{ include "digma.otel-collector" . }}:{{ .Values.collectorApi.service.ports.http }}
-        {{- end }}
         tls:
           insecure: true
     service:
@@ -44,4 +36,4 @@ data: # config.yaml:
         traces:
           receivers: [otlp]
           processors: [batch, probabilistic_sampler]
-          exporters: [otlp/collector-api, logging]
+          exporters: [otlphttp, logging]

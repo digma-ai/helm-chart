@@ -260,7 +260,7 @@ otelCollector:
       health: 13133
       ## should set http or grpc not both of them
       grpc: 4317
-      #http: 4318
+      http: 4318
   ## Extra labels for pods
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
   ##
@@ -282,76 +282,147 @@ otelCollector:
   ## Service. Set up the URL
   ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
   ##
-  ingress:
-    ##  Enable ingress controller resource
-    ##
-    enabled: true
-    ##  Override API Version (automatically detected if not set)
-    ##
-    apiVersion: ""
-    ##  Default host for the ingress resource
-    ##
-    hostname: 123.collector.prod.digma.systems
-    ## IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
-    ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
-    ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
-    ##
-    ingressClassName: "alb"
-    ## Ingress Path type
-    ##
-    pathType: ImplementationSpecific
-    
-    ## Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
-    ## For a full list of possible ingress annotations, please see
-    ## ref: https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/nginx-configuration/annotations.md
-    ## Use this parameter to set the required annotations for cert-manager, see
-    ## ref: https://cert-manager.io/docs/usage/ingress/#supported-annotations
-    ##
-    ## e.g:
-    ## annotations:
-    ##   kubernetes.io/ingress.class: nginx
-    ##   cert-manager.io/cluster-issuer: cluster-issuer-name
-    ##
-    annotations:
-      alb.ingress.kubernetes.io/scheme: internet-facing
-      alb.ingress.kubernetes.io/target-type: ip #facilitating efficient load balancing for services exposed via ClusterIP
-      alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
-      alb.ingress.kubernetes.io/backend-protocol-version: GRPC
-      alb.ingress.kubernetes.io/backend-protocol: HTTP
-      #alb.ingress.kubernetes.io/load-balancer-attributes: routing.http2.enabled=true
-      alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-1:585085114703:certificate/6fb85051-a156-4b9c-8b32-bdd771df6641
-      # alb.ingress.kubernetes.io/healthcheck-path: "/health"
-      # alb.ingress.kubernetes.io/healthcheck-protocol: "HTTP"
-      # alb.ingress.kubernetes.io/healthcheck-port: "health"
-      # alb.ingress.kubernetes.io/healthcheck-interval-seconds: "30"
-      # alb.ingress.kubernetes.io/healthcheck-timeout-seconds: "5"
-      # alb.ingress.kubernetes.io/healthcheck-healthy-threshold-count: "3"
-      # alb.ingress.kubernetes.io/healthcheck-unhealthy-threshold-count: "3"
+  grpc:
+    ingress:
+      ##  Enable ingress controller resource
+      ##
+      enabled: true
+      ##  Override API Version (automatically detected if not set)
+      ##
+      apiVersion: ""
+      ##  Default host for the ingress resource
+      ##
+      hostname: collector.grpc.account123.prod.digma.systems
+      ## IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
+      ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
+      ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
+      ##
+      ingressClassName: "alb"
+      ## Ingress Path type
+      ##
+      pathType: ImplementationSpecific
+      
+      ## Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
+      ## For a full list of possible ingress annotations, please see
+      ## ref: https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/nginx-configuration/annotations.md
+      ## Use this parameter to set the required annotations for cert-manager, see
+      ## ref: https://cert-manager.io/docs/usage/ingress/#supported-annotations
+      ##
+      ## e.g:
+      ## annotations:
+      ##   kubernetes.io/ingress.class: nginx
+      ##   cert-manager.io/cluster-issuer: cluster-issuer-name
+      ##
+      annotations:
+        alb.ingress.kubernetes.io/scheme: internet-facing
+        alb.ingress.kubernetes.io/target-type: ip #facilitating efficient load balancing for services exposed via ClusterIP
+        alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
+        alb.ingress.kubernetes.io/backend-protocol-version: GRPC
+        alb.ingress.kubernetes.io/backend-protocol: HTTP
+        #alb.ingress.kubernetes.io/load-balancer-attributes: routing.http2.enabled=true
+        alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-1:585085114703:certificate/6fb85051-a156-4b9c-8b32-bdd771df6641
+        # alb.ingress.kubernetes.io/healthcheck-path: "/health"
+        # alb.ingress.kubernetes.io/healthcheck-protocol: "HTTP"
+        # alb.ingress.kubernetes.io/healthcheck-port: "health"
+        # alb.ingress.kubernetes.io/healthcheck-interval-seconds: "30"
+        # alb.ingress.kubernetes.io/healthcheck-timeout-seconds: "5"
+        # alb.ingress.kubernetes.io/healthcheck-healthy-threshold-count: "3"
+        # alb.ingress.kubernetes.io/healthcheck-unhealthy-threshold-count: "3"
 
-      alb.ingress.kubernetes.io/group.name: "externals"
-    ## Additional arbitrary path/backend objects
-    ## For example: The ALB ingress controller requires a special rule for handling SSL redirection.
-    ## extraPaths:
-    ## - path: /*
-    ##   backend:
-    ##     serviceName: ssl-redirect
-    ##     servicePort: use-annotation
-    ##
-    extraPaths: []
-    ## Additional rules to be covered with this ingress record
-    ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-rules
-    ## e.g:
-    ## extraRules:
-    ## - host: example.local
-    ##     http:
-    ##       path: /
-    ##       backend:
-    ##         service:
-    ##           name: example-svc
-    ##           port:
-    ##             name: http
-    ##
-    extraRules: []
+        alb.ingress.kubernetes.io/group.name: "externals"
+      ## Additional arbitrary path/backend objects
+      ## For example: The ALB ingress controller requires a special rule for handling SSL redirection.
+      ## extraPaths:
+      ## - path: /*
+      ##   backend:
+      ##     serviceName: ssl-redirect
+      ##     servicePort: use-annotation
+      ##
+      extraPaths: []
+      ## Additional rules to be covered with this ingress record
+      ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-rules
+      ## e.g:
+      ## extraRules:
+      ## - host: example.local
+      ##     http:
+      ##       path: /
+      ##       backend:
+      ##         service:
+      ##           name: example-svc
+      ##           port:
+      ##             name: http
+      ##
+      extraRules: []
+  http:
+    ingress:
+      ##  Enable ingress controller resource
+      ##
+      enabled: true
+      ##  Override API Version (automatically detected if not set)
+      ##
+      apiVersion: ""
+      ##  Default host for the ingress resource
+      ##
+      hostname: collector.http.account123.prod.digma.systems
+      ## IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
+      ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
+      ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
+      ##
+      ingressClassName: "alb"
+      ## Ingress Path type
+      ##
+      pathType: ImplementationSpecific
+      
+      ## Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
+      ## For a full list of possible ingress annotations, please see
+      ## ref: https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/nginx-configuration/annotations.md
+      ## Use this parameter to set the required annotations for cert-manager, see
+      ## ref: https://cert-manager.io/docs/usage/ingress/#supported-annotations
+      ##
+      ## e.g:
+      ## annotations:
+      ##   kubernetes.io/ingress.class: nginx
+      ##   cert-manager.io/cluster-issuer: cluster-issuer-name
+      ##
+      annotations:
+        alb.ingress.kubernetes.io/scheme: internet-facing
+        alb.ingress.kubernetes.io/target-type: ip #facilitating efficient load balancing for services exposed via ClusterIP
+        alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
+        alb.ingress.kubernetes.io/backend-protocol: HTTP
+        #alb.ingress.kubernetes.io/load-balancer-attributes: routing.http2.enabled=true
+        alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-1:585085114703:certificate/6fb85051-a156-4b9c-8b32-bdd771df6641
+        alb.ingress.kubernetes.io/healthcheck-path: "/health"
+        alb.ingress.kubernetes.io/healthcheck-protocol: "HTTP"
+        alb.ingress.kubernetes.io/healthcheck-port: "health"
+        alb.ingress.kubernetes.io/healthcheck-interval-seconds: "30"
+        alb.ingress.kubernetes.io/healthcheck-timeout-seconds: "5"
+        alb.ingress.kubernetes.io/healthcheck-healthy-threshold-count: "3"
+        alb.ingress.kubernetes.io/healthcheck-unhealthy-threshold-count: "3"
+
+        alb.ingress.kubernetes.io/group.name: "externals"
+      ## Additional arbitrary path/backend objects
+      ## For example: The ALB ingress controller requires a special rule for handling SSL redirection.
+      ## extraPaths:
+      ## - path: /*
+      ##   backend:
+      ##     serviceName: ssl-redirect
+      ##     servicePort: use-annotation
+      ##
+      extraPaths: []
+      ## Additional rules to be covered with this ingress record
+      ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-rules
+      ## e.g:
+      ## extraRules:
+      ## - host: example.local
+      ##     http:
+      ##       path: /
+      ##       backend:
+      ##         service:
+      ##           name: example-svc
+      ##           port:
+      ##             name: http
+      ##
+      extraRules: []
 collectorApi:
   image:
     registry: docker.io
@@ -538,7 +609,7 @@ analyticsApi:
     apiVersion: ""
     ## Default host for the ingress resource
     ##
-    hostname: 123.api.prod.digma.systems
+    hostname: api.account123.prod.digma.systems
     ## IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
     ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
     ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/

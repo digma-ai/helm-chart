@@ -13,7 +13,7 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor
 trace.set_tracer_provider(TracerProvider())
 tracer = trace.get_tracer(__name__)
 #http://localhost:4317
-exporter = OTLPSpanExporter(endpoint="123.collector.prod.digma.systems/v1/trace", insecure=True)
+exporter = OTLPSpanExporter(endpoint="http://localhost:4317");
 span_processor = BatchSpanProcessor(exporter)
 trace.get_tracer_provider().add_span_processor(span_processor)
 
