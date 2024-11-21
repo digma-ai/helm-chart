@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-digma-collector-dogfooding-worker-deployment
+  labels:
+    app: digma-collector-dogfooding-worker
+spec:
+  replicas: {{ .Values.digmaCollectorDogfoodingWorker.replicas }}
+  selector:
+    matchLabels:
+      app: digma-collector-dogfooding-worker
+  template:
+    metadata:
+      labels:
+        app: digma-collector-dogfooding-worker
+    spec:
+      containers:
+      - name: digma-collector-dogfooding-worker
+        image: digmatic/digma-collector-dogfooding-worker:{{ .Chart.AppVersion }}
+        resources:
+          requests:
+            memory: {{ .Values.digmaCollectorDogfoodingWorker.resources.requests.memory }}
+            cpu: {{ .Values.digmaCollectorDogfoodingWorker.resources.requests.cpu }}
+          limits:
+            memory: {{ .Values.digmaCollectorDogfoodingWorker.resources.limits.memory }}
+            cpu: {{ .Values.digmaCollectorDogfoodingWorker.resources.limits.cpu }}
+        env:
+        - name: IsCentralize
+          value: {{ .Values.digma.isCentralize| quote }}
+        {{- include "env.licenseKey" . | nindent  8 }}
+        {{- include "env.digmaSite" . | nindent  8 }}
+        {{- include "env.otlpExporter" . | nindent  8 }}
+        {{- include "env.otlpExportLogs" . | nindent  8 }}
+        {{- include "env.otlpExportMetrics" . | nindent  8 }}
+        {{- include "env.otlpExportTraces" . | nindent  8 }}
+        {{- include "env.otlpSamplerProbability" . | nindent  8 }}
+        {{- include "env.redis" . | nindent  8 }}
+        {{- include "env.influx" . | nindent  8 }}
+        {{- include "env.postgres" . | nindent  8 }}
+        {{- include "env.kafka" . | nindent  8 }}
+        {{- include "env.versions" . | nindent  8 }}
+        {{- include "env.embeddedJaeger" . | nindent 8 }}
+        {{- include "env.digmaEnvType" . | nindent  8 }}
+        - name: BACKEND_DEPLOYMENT_TYPE
+          value: {{ .Values.deploymentType | quote }}
+        - name: DEPLOYMENT_ENV
+          value: {{ .Values.digma.environmentName | quote}}
+        - name: AwsStorage__BucketName
+          value: {{ .Values.awsStorage.bucketName | quote }}
+        - name: AwsStorage__Region
+          value: {{ .Values.awsStorage.region | quote }}
+        - name: AwsStorage__RoleArn
+          value: {{ .Values.awsStorage.roleArn | quote }}
+        - name: ConsumerDefinition__ConcurrentMessageLimit
+          value: "10"
+        - name: ThresholdOptions__RecentActivityUpdateThresholdSeconds
+          value: {{ .Values.traceCollectorThresholds.recentActivityUpdateThresholdSeconds | quote }}
+        - name: ThresholdOptions__UpsertEndpointThresholdSeconds
+          value: {{ .Values.traceCollectorThresholds.upsertEndpointThresholdSeconds | quote }}
+        - name: ThresholdOptions__UpsertSpansThresholdSeconds
+          value: {{ .Values.traceCollectorThresholds.upsertSpansThresholdSeconds | quote }}
+        - name: ThresholdOptions__UpsertSpanFlowMetadataThresholdSeconds
+          value: {{ .Values.traceCollectorThresholds.upsertSpanFlowMetadataThresholdSeconds | quote }}

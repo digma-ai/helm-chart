@@ -84,6 +84,8 @@ spec:
         - api.{{ .Values.ingressController.host }}
         - jaeger.{{ .Values.ingressController.host }}
         - collector.{{ .Values.ingressController.host }}
+        - prometheus.{{ .Values.ingressController.host }}
+        - grafana.{{ .Values.ingressController.host }}
       secretName: {{ .Release.Name }}-tls-secret
   rules:
     - host: jaeger.{{ .Values.ingressController.host }}
@@ -116,6 +118,26 @@ spec:
                 name: {{ .Release.Name }}-collector-api-service
                 port:
                   number: 5049
+    - host: prometheus.{{ .Values.ingressController.host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ tpl .Values.prometheus.host . }}
+                port:
+                  number: 9090           
+    - host: grafana.{{ .Values.ingressController.host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ tpl .Values.grafana.host . }}
+                port:
+                  number: 3000
 
 ---
 
@@ -147,6 +169,6 @@ spec:
             pathType: ImplementationSpecific
             backend:
               service:
-                name: {{ .Release.Name }}-collector-api-service
+                name: otel-collector-meloona-gateway
                 port:
-                  number: 5050
+                  number: 4317

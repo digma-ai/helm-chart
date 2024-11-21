@@ -46,7 +46,7 @@ spec:
             - /nginx-ingress-controller
             - --ingress-class=nginx
             - --configmap=$(POD_NAMESPACE)/nginx-configuration
-            - --v=5
+            - --v=3
           env:
             - name: POD_NAME
               valueFrom:

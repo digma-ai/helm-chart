@@ -1,0 +1,176 @@
+# OpenTelemetry Collector - for Digma dog-fooding (df)
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-otel-collector-meloona-gateway-config
+data:
+  key-collector-yaml: |
+    receivers:
+      otlp:
+        protocols: 
+          grpc:
+    processors:
+      probabilistic_sampler/30:
+        sampling_percentage: 30
+      probabilistic_sampler/10:
+        sampling_percentage: 10
+      batch:
+        timeout: 1000ms
+        send_batch_size: 500
+        send_batch_max_size: 500
+      filter/meloona_only:
+        error_mode: ignore
+        traces:
+          span:
+            - 'resource.attributes["digma.environment"] != "MELOONA"'
+        metrics:
+          metric:
+            - 'resource.attributes["digma.environment"] != "MELOONA"'
+        logs:
+          log_record:
+            - 'resource.attributes["digma.environment"] != "MELOONA"'
+      filter/customers_only:
+        error_mode: ignore
+        metrics:
+          metric:
+          - 'IsMatch(resource.attributes["source_env"], "^STAG01-PERF$|^PETCLINIC|-POC$|^LAC$|^MELOONA$") == true'
+      filter/meloona_only_exclude_df_worker:
+        error_mode: ignore
+        traces:
+          span:
+            - 'resource.attributes["digma.environment"] != "MELOONA" or resource.attributes["service.name"] == "Digma.Collector.Dogfooding.Worker"'
+        metrics:
+          metric:
+            - 'resource.attributes["digma.environment"] != "MELOONA" or resource.attributes["service.name"] == "Digma.Collector.Dogfooding.Worker"'
+        logs:
+          log_record:
+            - 'resource.attributes["digma.environment"] != "MELOONA" or resource.attributes["service.name"] == "Digma.Collector.Dogfooding.Worker"'
+      filter/allow_list:
+        spans:
+          include:
+            match_type: regexp
+            resources:
+              - key: digma.environment
+                #value: \[local\]$|^LAC$|-compound$|-compound-test$|-local-digma$|^PETCLINIC|^STAG01-PERF$|-POC$|^STAGING$
+                value: ^STAG01-PERF$|^PETCLINIC|-POC$|^STAGING$|^TEST$|^LAC$
+    exporters:
+      logging:
+        verbosity: detailed
+      coralogix:
+        private_key: "3edc684b-8916-2ebc-430e-ad76394219b1"
+        application_name: "Digma"
+        subsystem_name: "Local"
+        # The Coralogix traces ingress endpoint
+        traces:
+          endpoint: "otel-traces.coralogix.com:443"
+        metrics:
+          endpoint: "otel-metrics.coralogix.com:443"
+        logs:
+          endpoint: "otel-logs.coralogix.com:443"
+        application_name_attributes:
+          - "digma.environment"
+        subsystem_name_attributes:
+          - "service.name"
+
+      # traces - digma
+      otlp/digma-df:
+        endpoint: {{ printf "http://%s:5050" (tpl .Values.digmaCollectorApi.host .)}}
+        tls:
+          insecure: true
+        sending_queue:
+          enabled: true
+          num_consumers: 100
+          queue_size: 10000
+          # traces - digma
+      otlp/digma-meloona-df:
+        endpoint: {{ printf "http://%s:5060" (tpl .Values.digmaCollectorApi.host .)}}
+        tls:
+          insecure: true
+        sending_queue:
+          enabled: true
+          num_consumers: 100
+          queue_size: 10000
+
+      # metrics - prometheus
+      prometheus:
+        endpoint: 0.0.0.0:7777
+        send_timestamps: true
+        metric_expiration: 10m
+
+    service:
+      pipelines:
+        traces:
+          receivers: [otlp]
+          processors: [filter/allow_list, batch]
+          exporters: [otlp/digma-df]
+        traces/2:
+          receivers: [otlp]
+          processors: [filter/meloona_only_exclude_df_worker, probabilistic_sampler/10, batch]
+          exporters: [otlp/digma-meloona-df]
+        traces/3:
+          receivers: [otlp]
+          processors: [filter/meloona_only, probabilistic_sampler/30, batch]
+          exporters: [coralogix]
+        # metrics:
+        #   receivers: [otlp]
+        #   processors: [batch]
+        #   exporters: [logging]
+
+        metrics/of_customers:
+          receivers: [otlp]
+          processors: [filter/customers_only, batch]
+          exporters: [prometheus]
+        # logs:
+        #   receivers: [otlp]
+        #   processors: [batch]
+        #   exporters: [logging]
+        logs/2:
+          receivers: [otlp]
+          processors: [filter/meloona_only, batch]
+          exporters: [coralogix]
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-otel-collector-meloona-gateway-deployment
+  labels:
+    app: otel-collector-meloona-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: otel-collector-meloona-gateway
+  template:
+    metadata:
+      labels:
+        app: otel-collector-meloona-gateway
+    spec:
+      containers:
+        - name: otel-collector-meloona-gateway
+          image: otel/opentelemetry-collector-contrib:{{ .Values.otelCollectorDf.imageTag }}
+          resources:
+            limits:
+              cpu: 700m
+              memory: 1500Mi
+            requests:
+              cpu: 300m
+              memory: 800Mi
+          ports:
+            - containerPort: 4317
+            - containerPort: 7777 # port to expose metrics towards prometheus
+          args:
+            - --config=/conf/collector.yaml
+          volumeMounts:
+            - name: vn-config
+              mountPath: /conf
+              readOnly: true
+      volumes:
+        - name: vn-config # volume name
+          configMap:
+            name: {{ .Release.Name }}-otel-collector-meloona-gateway-config # configMap name
+            items:
+              - key: "key-collector-yaml"
+                path: "collector.yaml"
