@@ -65,16 +65,17 @@ type: kubernetes.io/tls
 data:
   tls.crt: {{ .Values.tls.crt | b64enc | quote }}
   tls.key: {{ .Values.tls.key | b64enc | quote }}
-  
+
 ---
 
-# Ingress Resource
+# Ingress Resource for HTTP Services
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ .Release.Name }}-ingress
   namespace: {{ .Release.Namespace }}
   annotations:
+    kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
 spec:
   ingressClassName: nginx
@@ -115,3 +116,37 @@ spec:
                 name: {{ .Release.Name }}-collector-api-service
                 port:
                   number: 5049
+
+---
+
+# Collector GRPC Ingress
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-collector-grpc-ingress
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
+    nginx.ingress.kubernetes.io/backend-http2: "true"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - collector-grpc.{{ .Values.ingressController.host }}
+      secretName: {{ .Release.Name }}-tls-secret
+  rules:
+    - host: collector-grpc.{{ .Values.ingressController.host }}
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ .Release.Name }}-collector-api-service
+                port:
+                  number: 5050

@@ -1,9 +1,19 @@
 {{- if .Values.ingressController.enabled }}
 
+---
+
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: {{ .Release.Name }}-nginx-ingress-sa
+  name: {{ .Release.Name }}-ingress-nginx
+  namespace: {{ .Release.Namespace }}
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-configuration
   namespace: {{ .Release.Namespace }}
 
 ---
@@ -11,86 +21,103 @@ metadata:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-nginx-ingress-controller
+  name: {{ .Release.Name }}-ingress-nginx-controller
   namespace: {{ .Release.Namespace }}
   labels:
-    app: nginx-ingress
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: {{ .Release.Name }}
 spec:
   replicas: {{ .Values.ingressController.replicaCount }}
   selector:
     matchLabels:
-      app: nginx-ingress
+      app.kubernetes.io/name: ingress-nginx
+      app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: nginx-ingress
+        app.kubernetes.io/name: ingress-nginx
+        app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
-      serviceAccountName: {{ .Release.Name }}-nginx-ingress-sa
+      serviceAccountName: {{ .Release.Name }}-ingress-nginx
       containers:
-          - name: nginx-ingress-controller
-            image: nginx/nginx-ingress:3.7.1
-            args:
-              - -nginx-plus=false
-              - -enable-custom-resources=false
-            env:
-              - name: POD_NAME
-                valueFrom:
-                  fieldRef:
-                    fieldPath: metadata.name
-              - name: POD_NAMESPACE
-                valueFrom:
-                  fieldRef:
-                    fieldPath: metadata.namespace
+        - name: controller
+          image: registry.k8s.io/ingress-nginx/controller:v1.9.1
+          args:
+            - /nginx-ingress-controller
+            - --ingress-class=nginx
+            - --configmap=$(POD_NAMESPACE)/nginx-configuration
+            - --v=5
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+            - name: https
+              containerPort: 443
+              protocol: TCP
 
 ---
 
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-nginx-ingress
+  name: {{ .Release.Name }}-ingress-nginx-controller
   namespace: {{ .Release.Namespace }}
   labels:
-    app: nginx-ingress
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: {{ .Release.Name }}
 spec:
   type: LoadBalancer
   ports:
     - name: http
       port: 80
-      targetPort: 80
+      targetPort: http
       protocol: TCP
     - name: https
       port: 443
-      targetPort: 443
+      targetPort: https
       protocol: TCP
   selector:
-    app: nginx-ingress
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: {{ .Release.Name }}
 
 ---
 
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ .Release.Name }}-nginx-ingress-cluster-role
+  name: {{ .Release.Name }}-ingress-nginx
 rules:
+  # Core API group resources
   - apiGroups:
-      - networking.k8s.io
+      - ""
     resources:
-      - ingressclasses
-      - ingresses
-      - ingresses/status
+      - configmaps
+      - endpoints
+      - nodes
+      - pods
+      - secrets
+      - services
+      - namespaces
     verbs:
       - get
       - list
       - watch
-      - update
+  # Networking API group resources
   - apiGroups:
-      - ""
+      - "networking.k8s.io"
     resources:
-      - services
-      - endpoints
-      - pods
-      - secrets
-      - events
+      - ingresses
+      - ingresses/status
+      - ingressclasses
     verbs:
       - get
       - list
@@ -98,6 +125,8 @@ rules:
       - create
       - update
       - patch
+      - delete
+  # Coordination API group resources (for leader election)
   - apiGroups:
       - "coordination.k8s.io"
     resources:
@@ -105,48 +134,39 @@ rules:
     verbs:
       - get
       - list
-      - watch
       - create
       - update
+  # Discovery API group resources
   - apiGroups:
-      - discovery.k8s.io
+      - "discovery.k8s.io"
     resources:
       - endpointslices
     verbs:
       - get
       - list
       - watch
+  # Events (for logging)
   - apiGroups:
       - ""
     resources:
-      - configmaps
+      - events
     verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - ""
-    resources:
-      - nodes
-    verbs:
-      - get
-      - list
-      - watch
-
+      - create
+      - patch
 
 ---
 
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ .Release.Name }}-nginx-ingress-cluster-role-binding
+  name: {{ .Release.Name }}-ingress-nginx
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ .Release.Name }}-nginx-ingress-cluster-role
+  name: {{ .Release.Name }}-ingress-nginx
 subjects:
   - kind: ServiceAccount
-    name: {{ .Release.Name }}-nginx-ingress-sa
+    name: {{ .Release.Name }}-ingress-nginx
     namespace: {{ .Release.Namespace }}
 
 ---
@@ -156,6 +176,6 @@ kind: IngressClass
 metadata:
   name: nginx
 spec:
-  controller: nginx.org/ingress-controller
-  
+  controller: k8s.io/ingress-nginx
+
 {{- end }}

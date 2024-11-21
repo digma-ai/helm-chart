@@ -221,7 +221,7 @@ digmaAnalytics:
   ingress: true
   loadbalancer: false
   replicas: 1
-  secured: true
+  secured: false
   resources: {
     requests: {
       memory: 300Mi,
