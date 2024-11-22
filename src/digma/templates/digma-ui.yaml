@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-digma-ui-deployment
+  labels:
+    app: digma-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: digma-ui
+  template:
+    metadata:
+      labels:
+        app: digma-ui
+    spec:
+      containers:
+      - name: digma-ui
+        image: digmaai/digma-ui:{{ .Values.digmaUi.imageTag }}
+        resources:
+          requests:
+            memory: {{ .Values.digmaUi.resources.requests.memory }}
+            cpu: {{ .Values.digmaUi.resources.requests.cpu }}
+          limits:
+            memory: {{ .Values.digmaUi.resources.limits.memory }}
+            cpu: {{ .Values.digmaUi.resources.limits.cpu }}
+        ports:
+        - containerPort: 80
+        env:
+        - name: IsCentralize
+          value: {{ .Values.digma.isCentralize | quote}}
+        - name: PLUGIN_API_URL
+          value: {{ printf " https://%s:5051" (tpl .Values.digmaAnalytics.host .)}}
+        - name: PLUGIN_API_TOKEN
+          value: {{ .Values.digmaAnalytics.accessToken }}

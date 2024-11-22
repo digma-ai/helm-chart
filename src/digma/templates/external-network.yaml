@@ -61,3 +61,23 @@ spec:
     targetPort: 16686
 ---
 {{ end }}
+
+{{ if .Values.digmaUi.loadbalancer }}
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Release.Name }}-ui-service-lb
+  {{- if and .Values.digmaUi.service .Values.digmaUi.service.annotations }}
+  annotations:
+    {{ toYaml .Values.digmaUi.service.annotations | indent 4 }}
+  {{- end }}
+spec:
+  type: LoadBalancer
+  selector:
+     app: "digma-ui"
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+---
+{{ end }}
