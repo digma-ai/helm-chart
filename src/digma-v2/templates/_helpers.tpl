@@ -7,12 +7,66 @@
 {{- end -}}
 {{- end -}}
 
+{{/*
+Return the proper postgres fullname
+*/}}
+{{- define "digma.postgresql" -}}
+{{- include "common.names.dependency.fullname" (dict "chartName" "postgresql" "chartValues" .Values.postgresql "context" $) -}}
+{{- end -}}
+
+{{- define "digma.influx.fullname" -}}
+{{- include "common.names.dependency.fullname" (dict "chartName" "influxdb" "chartValues" .Values.influxdb "context" $) -}}
+{{- end -}}
+
+{{- define "env.influx" -}}
+- name: influx2__Url
+  value: {{ printf "http://%s:%v" (include "digma.influx.fullname" .) .Values.influxdb.service.ports.http }}
+{{- end -}}
+
+{{/*
+Return the proper redis fullname
+*/}}
+{{- define "digma.redis.fullname" -}}
+{{- include "common.names.dependency.fullname" (dict "chartName" "redis" "chartValues" .Values.redis "context" $) -}}
+{{- end -}}
+
+{{/*
+Create a default fully qualified Redis name.
+*/}}
+{{- define "digma.redis.host" -}}
+{{- if .Values.redis.enabled -}}
+    {{- printf "%s-master" (include "digma.redis.fullname" .) | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+    {{- print .Values.externalRedis.host -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Return the proper scheduler fullname
+*/}}
+{{- define "digma.scheduler" -}}
+  {{- printf "%s-scheduler" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+{{- end -}}
+
+{{/*
+Return the proper digma fullname
+*/}}
+{{- define "digma.jaeger" -}}
+  {{- printf "%s-jaeger" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+{{- end -}}
 
 {{/*
 Return the proper collector-worker fullname
 */}}
 {{- define "digma.collector-worker" -}}
   {{- printf "%s-collector-worker" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+{{- end -}}
+
+{{/*
+Return the proper pipeline-worker fullname
+*/}}
+{{- define "digma.pipeline-worker" -}}
+  {{- printf "%s-pipeline-worker" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
 {{- end -}}
 
 {{/*
@@ -58,7 +112,7 @@ Return the proper analytics api fullname
 
 {{- define "env.postgres" -}}
 - name: ConnectionStrings__Postgres
-  value:  {{ printf "Server=%s;Port=%v;Database=digma_analytics;User Id=%s;Password=%s;" ( tpl .Values.postgres.host . ) .Values.postgres.port .Values.postgres.username .Values.postgres.password}}
+  value:  {{ printf "Server=%s;Port=%v;Database=digma_analytics;User Id=%s;Password=%s;" ( include "digma.postgresql" . )  .Values.postgresql.primary.service.ports.postgresql .Values.postgresql.auth.username .Values.postgresql.auth.password}}
 {{- end -}}
 
 
@@ -70,22 +124,14 @@ Return the proper analytics api fullname
 
 {{- define "env.redis" -}}
 - name: CacheSettings__RedisConnection
-  value: {{ tpl .Values.redis.host . }}
+  value: {{ (include "digma.redis.host" .) }}
 - name: ExternalLogging__ConnectionString
-  value: {{ tpl .Values.redis.host . }}
+  value: {{ (include "digma.redis.host" .) }}
 {{- end -}}
 
-
-{{- define "env.influx" -}}
-- name: influx2__Url
-  value: {{ printf " http://%s:8086" (tpl .Values.influx.host .)}}
-{{- end -}}
-
-{{- define "env.embeddedJaeger" -}}
-{{- if .Values.embeddedJaeger.enabled -}}
+{{- define "env.jaeger" -}}
 - name: Jaeger__OtlpUrl
-  value: {{ printf " http://%s:4317" (tpl .Values.embeddedJaeger.host .)}}
-{{- end -}}
+  value: {{ printf "http://%s:%v" (include "digma.jaeger" .) .Values.jaeger.service.ports.grpc_internal }}
 {{- end -}}
 
 # Digma to meloona

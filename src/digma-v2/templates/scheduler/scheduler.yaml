@@ -1,61 +1,62 @@
 apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
 kind: Deployment
 metadata:
-  name: {{ include "digma.collector-api" . }}
+  name: {{ include "digma.scheduler" . }}
   labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
-    app.kubernetes.io/component: collector-api
+    app.kubernetes.io/component: scheduler
   {{- if .Values.commonAnnotations }}
   annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 spec:
-  {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.collectorApi.podLabels .Values.commonLabels ) "context" . ) }}
-  replicas: {{ include "replicas.value" (dict "value" .Values.collectorApi.replicas "context" .) }}
+  {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.scheduler.podLabels .Values.commonLabels ) "context" . ) }}
+  replicas: {{ include "replicas.value" (dict "value" .Values.scheduler.replicas "context" .) }}
   selector:
     matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 6 }}
-      app.kubernetes.io/component: collector-api
+      app.kubernetes.io/component: scheduler
   template:
     metadata:
       labels: 
         {{- include "common.labels.standard" ( dict "customLabels" $podLabels "context" $ ) | nindent 8 }}
-        app.kubernetes.io/component: collector-api
+        app.kubernetes.io/component: scheduler
       annotations:
         {{- if .Values.commonAnnotations }}
         {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
         {{- end }}
-        {{- if .Values.collectorApi.podAnnotations }}
-        {{- include "common.tplvalues.render" (dict "value" .Values.collectorApi.podAnnotations "context" .) | nindent 8 }}
+        {{- if .Values.scheduler.podAnnotations }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.scheduler.podAnnotations "context" .) | nindent 8 }}
         {{- end }}
     spec:
-      {{- include "common.images.pullSecrets" ( dict "images" (list .Values.collectorApi.image) "global" .Values.global) | nindent 6 }}
-      {{- if .Values.collectorApi.nodeSelector }}
-      nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.collectorApi.nodeSelector "context" .) | nindent 8 }}
+      {{- include "common.images.pullSecrets" ( dict "images" (list .Values.scheduler.image) "global" .Values.global) | nindent 6 }}
+      {{- if .Values.scheduler.affinity }}
+      affinity: {{- include "common.tplvalues.render" ( dict "value" .Values.scheduler.affinity "context" $) | nindent 8 }}
       {{- end }}
-      {{- if .Values.collectorApi.tolerations }}
-      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.collectorApi.tolerations "context" .) | nindent 8 }}
+      {{- if .Values.scheduler.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.scheduler.nodeSelector "context" .) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.scheduler.tolerations }}
+      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.scheduler.tolerations "context" .) | nindent 8 }}
       {{- end }}
       containers:
-      - name: digma-collector-api
-        image: {{ include "common.images.image" (dict "imageRoot" .Values.collectorApi.image "global" .Values.global "chart" .Chart) }}
-        imagePullPolicy: {{ .Values.collectorApi.image.pullPolicy }}
-        resources: {{- toYaml .Values.collectorApi.resources | nindent 12 }}
+      - name: digma-scheduler
+        image: {{ include "common.images.image" (dict "imageRoot" .Values.scheduler.image "global" .Values.global "chart" .Chart) }}
+        imagePullPolicy: {{ .Values.scheduler.image.pullPolicy }}
+        resources: {{- toYaml .Values.scheduler.resources | nindent 12 }}
         ports:
-        - containerPort: {{ .Values.collectorApi.service.ports.internal }}
-        - containerPort: {{ .Values.collectorApi.service.ports.http }}
-        - containerPort: {{ .Values.collectorApi.service.ports.grpc }}
+        - containerPort: {{ .Values.scheduler.service.ports.internal }}
         env:
         {{- include "env.isCentralize" . | nindent  8 }}
         {{- include "env.licenseKey" . | nindent  8 }}
         {{- include "env.digmaEnv" . | nindent  8 }}
         {{- include "env.digmaSite" . | nindent  8 }}
-        {{- include "env.postgres" . | nindent  8 }}
         {{- include "env.redis" . | nindent  8 }}
+        {{- include "env.influx" . | nindent  8 }}
+        {{- include "env.postgres" . | nindent  8 }}
         {{- include "env.kafka" . | nindent  8 }}
         {{- include "env.otlpExporter" . | nindent  8 }}
         {{- include "env.otlpExportLogs" . | nindent  8 }}
         {{- include "env.otlpExportMetrics" . | nindent  8 }}
         {{- include "env.otlpExportTraces" . | nindent  8 }}
         {{- include "env.versions" . | nindent  8 }}
-        {{- include "env.jaeger" . | nindent  8 }}
         {{- include "env.digmaEnvType" . | nindent 8 }}
 {{ if .Values.debug }}
         {{- include "env.elasticsearch" . | nindent  8 }}
@@ -64,3 +65,8 @@ spec:
           value: {{ .Values.digmaSelfDiagnosis.otlpSamplerProbability| quote}}
         - name: BACKEND_DEPLOYMENT_TYPE
           value: {{ .Values.deploymentType | quote}}
+        - name: ElasticSearch__Uri
+          value: http://{{ .Release.Name }}-elasticsearch:9200
+
+
+

@@ -37,7 +37,7 @@ spec:
       tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.collectorWorker.tolerations "context" .) | nindent 8 }}
       {{- end }}
       containers:
-      - name: digma-collector-orker
+      - name: digma-collector-worker
         image: {{ include "common.images.image" (dict "imageRoot" .Values.collectorWorker.image "global" .Values.global "chart" .Chart) }}
         imagePullPolicy: {{ .Values.collectorWorker.image.pullPolicy }}
         resources: {{- toYaml .Values.collectorWorker.resources | nindent 12 }}
@@ -55,7 +55,7 @@ spec:
         {{- include "env.postgres" . | nindent  8 }}
         {{- include "env.kafka" . | nindent  8 }}
         {{- include "env.versions" . | nindent  8 }}
-        {{- include "env.embeddedJaeger" . | nindent  8 }}
+        {{- include "env.jaeger" . | nindent  8 }}
         {{- include "env.digmaEnvType" . | nindent 8 }}
 
         - name: OtlpSamplerProbability

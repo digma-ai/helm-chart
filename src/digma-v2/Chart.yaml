@@ -1,8 +1,17 @@
 annotations:
   category: Infrastructure
 apiVersion: v2
-appVersion: 0.3.153
+appVersion: 0.3.162-alpha.4
 dependencies:
+- name: influxdb
+  repository: oci://registry-1.docker.io/bitnamicharts
+  version: 6.3.22
+- name: redis
+  repository: oci://registry-1.docker.io/bitnamicharts
+  version: 20.3.0
+- name: postgresql
+  repository: oci://registry-1.docker.io/bitnamicharts
+  version: 16.2.1
 - name: common
   repository: oci://registry-1.docker.io/bitnamicharts
   version: 2.x.x

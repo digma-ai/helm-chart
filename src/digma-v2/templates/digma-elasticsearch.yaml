@@ -1,4 +1,3 @@
-{{- if eq .Values.embeddedJaeger.storage "elasticsearch" }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -90,4 +89,3 @@ spec:
   selector:
     app: {{ .Release.Name }}-elasticsearch
       
-{{- end }}

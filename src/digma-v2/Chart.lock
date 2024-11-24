@@ -1,6 +1,15 @@
 dependencies:
+- name: influxdb
+  repository: oci://registry-1.docker.io/bitnamicharts
+  version: 6.3.22
+- name: redis
+  repository: oci://registry-1.docker.io/bitnamicharts
+  version: 20.3.0
+- name: postgresql
+  repository: oci://registry-1.docker.io/bitnamicharts
+  version: 16.2.1
 - name: common
   repository: oci://registry-1.docker.io/bitnamicharts
   version: 2.27.0
-digest: sha256:b711ab5874abf868a0c64353a790f17771758cee6f802acb9819be004c8460af
-generated: "2024-11-12T14:32:04.986998+02:00"
+digest: sha256:276274f25fd59d23494fca25159385838532e6a0701dfdcab57082f219b314db
+generated: "2024-11-24T19:13:54.729889+02:00"

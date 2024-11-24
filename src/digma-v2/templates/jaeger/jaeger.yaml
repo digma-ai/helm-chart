@@ -1,0 +1,66 @@
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ include "digma.jaeger" . }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: jaeger
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.jaeger.podLabels .Values.commonLabels ) "context" . ) }}
+  replicas: {{ include "replicas.value" (dict "value" .Values.jaeger.replicas "context" .) }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 6 }}
+      app.kubernetes.io/component: jaeger
+  template:
+    metadata:
+      labels: 
+        {{- include "common.labels.standard" ( dict "customLabels" $podLabels "context" $ ) | nindent 8 }}
+        app.kubernetes.io/component: jaeger
+      annotations:
+        {{- if .Values.commonAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.jaeger.podAnnotations }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.jaeger.podAnnotations "context" .) | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- include "common.images.pullSecrets" ( dict "images" (list .Values.jaeger.image) "global" .Values.global) | nindent 6 }}
+      {{- if .Values.jaeger.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.jaeger.nodeSelector "context" .) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.jaeger.tolerations }}
+      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.jaeger.tolerations "context" .) | nindent 8 }}
+      {{- end }}
+      initContainers:
+        - name: wait-for-elasticsearch
+          imagePullPolicy: Always
+          image: busybox:1.28
+          command: [ 'sh', '-c', 'until nc -z {{ .Release.Name }}-elasticsearch 9200; do echo waiting for elasticsearch; sleep 5; done;' ]
+      containers:
+      - name: digma-jaeger
+        image: {{ include "common.images.image" (dict "imageRoot" .Values.jaeger.image "global" .Values.global) }}
+        imagePullPolicy: {{ .Values.jaeger.image.pullPolicy }}
+        resources: {{- toYaml .Values.jaeger.resources | nindent 12 }}
+        args: 
+        {{- range .Values.jaeger.args }}
+        - {{ . }}
+        {{- end }}
+        ports:
+        - containerPort: {{ .Values.jaeger.service.ports.grpc_internal }}
+        - containerPort: {{ .Values.jaeger.service.ports.http_ui }}
+        env:
+        - name: SPAN_STORAGE_TYPE
+          value: elasticsearch
+        - name: ES_SERVER_URLS
+          value: "http://{{ .Release.Name }}-elasticsearch:9200"
+        - name: ES_INDEX_PREFIX
+          value: "digma"
+        - name: COLLECTOR_OTLP_ENABLED
+          value: "true"
+        - name: COLLECTOR_OTLP_GRPC_MAX_MESSAGE_SIZE
+          value: "41943040"
+        - name: JAEGER_QUERY_CORS_ORIGINS
+          value: "*"
+

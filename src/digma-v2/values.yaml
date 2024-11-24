@@ -31,21 +31,21 @@ presets:
       replicas: 1
     measurementAnalysis: 
       replicas: 1
-    digmaPipelineWorker: 
+    pipelineWorker: 
       replicas: 1
   medium:
     collectorWorker:
       replicas: 4
     measurementAnalysis: 
       replicas: 4
-    digmaPipelineWorker: 
+    pipelineWorker: 
       replicas: 1
   large:
     collectorWorker:
       replicas: 6
     measurementAnalysis: 
       replicas: 4
-    digmaPipelineWorker: 
+    pipelineWorker: 
       replicas: 4
 
 deploymentType: Helm
@@ -77,26 +77,8 @@ kafka:
   labels: {}
   args: []
   
-redis:
-  host: "{{ .Release.Name }}-redis"
-  imageTag: 7.0.5-alpine
-  resources:
-    requests:
-      memory: "100Mi"
-      cpu: "50m"
-    limits:
-      memory: "2Gi"
-      cpu: "400m"
-  config:
-    maxmemory: "2g"
-    maxmemoryPolicy: "allkeys-lru"
-  annotations: {}
-  labels: {}
-  args: []
 
-influx:
-  host: "{{ .Release.Name }}-influxdb"
-  imageTag: 2.7.1
+influxdb:
   resources: {
     requests: {
       memory: 500Mi,
@@ -107,52 +89,294 @@ influx:
       cpu: 2000m
     }
   }
-  config: 
-    queryConcurrency: 30
-    queryQueueSize: 200
-  annotations: {}
-  labels: {}
-  args: []
-    
-postgres:
-  host: "{{ .Release.Name }}-postgres"
-  imageTag: 15.1
-  port: 5432
-  username: postgres
-  password: postgres
-  maxConnections: 400
-  maxMemory: 800MB # mapped to shared_buffers
-  resources: {
-    requests: {
-      memory: 1Gi,
-      cpu: 200m
-    },
-    limits: {
-      memory: 2Gi,
-      cpu: 1000m
+  auth:
+    user:
+      org: digma
+      username: admin
+      password: "12345678"
+      bucket: errors
+    admin:
+      org: digma
+      username: admin
+      password: "12345678"
+      token: dc61908e-05bc-411a-9fe2-e3356b8dc7c0
+      bucket: errors
+      retention: 4w
+  service:
+    ports:
+      http: 8086
+  persistence:
+    enabled: true
+    accessModes:
+    - ReadWriteOnce
+    size: 50Gi
+  ## Extra labels for pods
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  ##
+  podLabels: {}
+  ## Annotations for pods
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+  ##
+  podAnnotations: {}
+
+  ## Node labels for pods assignment
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  ##
+  nodeSelector: {}
+  ## Tolerations for pods assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  ##
+  tolerations: []
+## https://github.com/bitnami/charts/tree/f29e7aa40d82f5ee914ca9f642743e5b1c4ce128/bitnami/postgresql#readme
+postgresql:
+  enabled: true
+  auth:
+    database: postgres
+    username: postgres
+    password: postgres
+    enablePostgresUser: false
+  architecture: standalone
+  containerPorts:
+    postgresql: 5432
+  primary:
+    resources: {
+      requests: {
+        memory: 1Gi,
+        cpu: 200m
+      },
+      limits: {
+        memory: 2Gi,
+        cpu: 1000m
+      }
     }
-  }
-  annotations: {}
-  labels: {}
-  args: []
+    networkPolicy:
+      enabled: false
+    service:
+      ports:
+        postgresql: 5432
+    persistence:
+      enabled: true
+      accessModes:
+      - ReadWriteOnce
+      size: 20Gi
+    extendedConfiguration: |
+      shared_buffers = '800MB'
+      logging_collector = on
+      log_directory ='log'
+
+    extraEnvVars:
+      - name: POSTGRESQL_MAX_CONNECTIONS
+        value: "400"
+
+    ## Extra labels for pods
+    ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+    ##
+    podLabels: {}
+    ## Annotations for pods
+    ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+    ##
+    podAnnotations: {}
+
+    ## Node labels for pods assignment
+    ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+    ##
+    nodeSelector: {}
+    ## Tolerations for pods assignment
+    ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+    ##
+    tolerations: []
+
+## Redis&reg; chart configuration
+## ref: https://github.com/bitnami/charts/blob/main/bitnami/redis/values.yaml
+## @param redis.enabled Switch to enable or disable the Redis&reg; helm
+## @param redis.auth.enabled Enable password authentication
+## @param redis.auth.password Redis&reg; password
+## @param redis.auth.existingSecret The name of an existing secret with Redis&reg; credentials
+## @param redis.architecture Redis&reg; architecture. Allowed values: `standalone` or `replication`
+##
+redis:
+  enabled: true
+  auth:
+    enabled: false
+  architecture: standalone
+  master:
+    extraFlags:
+        ## The maxmemory configuration directive is used in order to configure Redis(R) to use a specified
+        ## amount of memory for the data set. Setting maxmemory to zero results into no memory limits
+        ## see https://redis.io/topics/lru-cache for more details
+        ##
+        - "--maxmemory 2g"
+        ## The exact behavior Redis(R) follows when the maxmemory limit is reached is configured using the
+        ## maxmemory-policy configuration directive
+        ## allkeys-lru: evict keys by trying to remove the less recently used (LRU) keys first, in order
+        ## to make space for the new data added
+        ##
+        - "--maxmemory-policy allkeys-lru"
+    resources:
+      requests:
+        memory: "100Mi"
+        cpu: "50m"
+      limits:
+        memory: "2Gi"
+        cpu: "400m"
+    persistence:
+      enabled: true
+      accessModes:
+      - ReadWriteOnce
+      size: 10Gi
+    ## Extra labels for pods
+    ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+    ##
+    podLabels: {}
+    ## Annotations for pods
+    ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+    ##
+    podAnnotations: {}
+
+    ## Node labels for pods assignment
+    ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+    ##
+    nodeSelector: {}
+    ## Tolerations for pods assignment
+    ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+    ##
+    tolerations: []
+
 
 pgadmin:
   host: "{{ .Release.Name }}-pgadmin"
   email: admin@admin.com
   password: admin
 
-embeddedJaeger:
-  host: "{{ .Release.Name }}-embedded-jaeger"
-  imageTag: "1.61.0"
-  enabled: true
-  loadbalancer: true
-  storage: "badger" # can be "badger" or "elasticsearch"
-  volumeSize:  #volumeSize only for badger
+jaeger:
+  image:
+    registry: docker.io
+    repository:  jaegertracing/all-in-one
+    tag: 1.61.0
+    ## Specify a imagePullPolicy
+    ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+    ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
+    ##
+    pullPolicy: IfNotPresent
+    ## Optionally specify an array of imagePullSecrets.
+    ## Secrets must be manually created in the namespace.
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+    ## e.g:
+    ## pullSecrets:
+    ##   - myRegistryKeySecretName
+    ##
+    pullSecrets: []
+  replicas: 1
+  resources: {
+    requests: {
+      memory: 300Mi,
+      cpu: 100m
+    },
+    limits: {
+      memory: 800Mi,
+      cpu: 800m
+    }
+  }
   service:
+    ## Kubernetes service type (`ClusterIP`, `NodePort` or `LoadBalancer`)
+    ##
+    type: ClusterIP
+
+    ports: 
+      grpc_internal: 4317
+      http_ui: 16686
+
+    ## Annotations for service
+    ##
     annotations: {}
-  annotations: {}
-  labels: {}
+  ## Extra labels for pods
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  ##
+  podLabels: {}
+  ## Annotations for pods
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+  ##
+  podAnnotations: {}
+
+  ## Node labels for pods assignment
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  ##
+  nodeSelector: {}
+  ## Tolerations for pods assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  ##
+  tolerations: []
+
+  ## Configure the ingress resource that allows you to access the
+  ## Service. Set up the URL
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
+  ##
+  ingress:
+    ## Enable ingress controller resource
+    ##
+    enabled: true
+    ## Override API Version (automatically detected if not set)
+    ##
+    apiVersion: ""
+    ## Default host for the ingress resource
+    ##
+    hostname: 123.jaeger.digma.systems
+    ## IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
+    ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
+    ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
+    ##
+    ingressClassName: "alb"
+    ## Ingress Path type
+    ##
+    pathType: ImplementationSpecific
+    ## The Path to service. You may need to set this to '/*' in order to use this with ALB ingress controllers
+    ##
+    path: /*
+    ## Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
+    ## For a full list of possible ingress annotations, please see
+    ## ref: https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/nginx-configuration/annotations.md
+    ## Use this parameter to set the required annotations for cert-manager, see
+    ## ref: https://cert-manager.io/docs/usage/ingress/#supported-annotations
+    ##
+    ## e.g:
+    ## annotations:
+    ##   kubernetes.io/ingress.class: nginx
+    ##   cert-manager.io/cluster-issuer: cluster-issuer-name
+    ##
+    annotations:
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/target-type: ip #facilitating efficient load balancing for services exposed via ClusterIP
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]'
+      alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-1:585085114703:certificate/b3e183fd-0615-4b61-b37e-2605b9eb4283
+      alb.ingress.kubernetes.io/group.name: "digma-public"
+
+
+    ## Additional arbitrary path/backend objects
+    ## For example: The ALB ingress controller requires a special rule for handling SSL redirection.
+    ## extraPaths:
+    ## - path: /*
+    ##   backend:
+    ##     serviceName: ssl-redirect
+    ##     servicePort: use-annotation
+    ##
+    extraPaths: []
+    ## Additional rules to be covered with this ingress record
+    ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-rules
+    ## e.g:
+    ## extraRules:
+    ## - host: example.local
+    ##     http:
+    ##       path: /
+    ##       backend:
+    ##         service:
+    ##           name: example-svc
+    ##           port:
+    ##             name: http
+    ##
+    extraRules: []
+  ## Unique key you’ll need to provide any IDE that connects to this Digma instance, you can choose any token you'd like
   args: []
+
 
 elastic:
   imageTag: "8.15.1"
@@ -256,6 +480,7 @@ collectorWorker:
         RouteRegex: ""
         Method: "GET"
         Service: "*"
+
 otelCollector:
   image:
     registry: docker.io
@@ -354,7 +579,7 @@ otelCollector:
         alb.ingress.kubernetes.io/backend-protocol-version: GRPC
         alb.ingress.kubernetes.io/backend-protocol: HTTP
         #alb.ingress.kubernetes.io/load-balancer-attributes: routing.http2.enabled=true
-        alb.ingress.kubernetes.io/certificate-arn: 
+        alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-1:585085114703:certificate/b3e183fd-0615-4b61-b37e-2605b9eb4283
         # alb.ingress.kubernetes.io/healthcheck-path: "/health"
         # alb.ingress.kubernetes.io/healthcheck-protocol: "HTTP"
         # alb.ingress.kubernetes.io/healthcheck-port: "health"
@@ -362,8 +587,7 @@ otelCollector:
         # alb.ingress.kubernetes.io/healthcheck-timeout-seconds: "5"
         # alb.ingress.kubernetes.io/healthcheck-healthy-threshold-count: "3"
         # alb.ingress.kubernetes.io/healthcheck-unhealthy-threshold-count: "3"
-
-        alb.ingress.kubernetes.io/group.name: "externals"
+        alb.ingress.kubernetes.io/group.name: "digma-public"
       ## Additional arbitrary path/backend objects
       ## For example: The ALB ingress controller requires a special rule for handling SSL redirection.
       ## extraPaths:
@@ -424,7 +648,7 @@ otelCollector:
         alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
         alb.ingress.kubernetes.io/backend-protocol: HTTP
         #alb.ingress.kubernetes.io/load-balancer-attributes: routing.http2.enabled=true
-        alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-1:585085114703:certificate/829b61e8-acaf-4046-acd3-e970fb8b39de
+        alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-1:585085114703:certificate/b3e183fd-0615-4b61-b37e-2605b9eb4283
         alb.ingress.kubernetes.io/healthcheck-path: "/health"
         alb.ingress.kubernetes.io/healthcheck-protocol: "HTTP"
         alb.ingress.kubernetes.io/healthcheck-port: "health"
@@ -433,7 +657,7 @@ otelCollector:
         alb.ingress.kubernetes.io/healthcheck-healthy-threshold-count: "3"
         alb.ingress.kubernetes.io/healthcheck-unhealthy-threshold-count: "3"
 
-        alb.ingress.kubernetes.io/group.name: "externals"
+        alb.ingress.kubernetes.io/group.name: "digma-public"
       ## Additional arbitrary path/backend objects
       ## For example: The ALB ingress controller requires a special rule for handling SSL redirection.
       ## extraPaths:
@@ -670,7 +894,7 @@ analyticsApi:
       alb.ingress.kubernetes.io/scheme: internet-facing
       alb.ingress.kubernetes.io/target-type: ip #facilitating efficient load balancing for services exposed via ClusterIP
       alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]'
-      alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-1:585085114703:certificate/829b61e8-acaf-4046-acd3-e970fb8b39de
+      alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-1:585085114703:certificate/b3e183fd-0615-4b61-b37e-2605b9eb4283
       alb.ingress.kubernetes.io/healthcheck-path: "/healthz"
       alb.ingress.kubernetes.io/healthcheck-protocol: "HTTP"
       alb.ingress.kubernetes.io/healthcheck-port: "traffic-port"
@@ -678,7 +902,7 @@ analyticsApi:
       alb.ingress.kubernetes.io/healthcheck-timeout-seconds: "5"
       alb.ingress.kubernetes.io/healthcheck-healthy-threshold-count: "3"
       alb.ingress.kubernetes.io/healthcheck-unhealthy-threshold-count: "3"
-      alb.ingress.kubernetes.io/group.name: "externals"
+      alb.ingress.kubernetes.io/group.name: "digma-public"
 
 
     ## Additional arbitrary path/backend objects
@@ -758,8 +982,25 @@ measurementAnalysis:
   tolerations: []
 
 
-digmaScheduler:
-  host: "{{ .Release.Name }}-scheduler"
+scheduler:
+  image:
+    registry: docker.io
+    repository: digmatic/digma-scheduler
+    ## Specify a imagePullPolicy
+    ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+    ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
+    ##
+    pullPolicy: IfNotPresent
+    ## Optionally specify an array of imagePullSecrets.
+    ## Secrets must be manually created in the namespace.
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+    ## e.g:
+    ## pullSecrets:
+    ##   - myRegistryKeySecretName
+    ##
+    pullSecrets: []
+  replicas: 1
+
   resources: {
     requests: {
       memory: 300Mi,
@@ -770,11 +1011,57 @@ digmaScheduler:
       cpu: 500m
     }
   }
-  annotations: {}
-  labels: {}
+  service:
+    ## service type (`ClusterIP`, `NodePort` or `LoadBalancer`)
+    ##
+    type: ClusterIP
+    ##  Annotations for service
+    ##
+    annotations: {}
 
-digmaPipelineWorker:
-  replicas: "{{ index .Values.presets .Values.size \"digmaPipelineWorker\" \"replicas\" }}"
+    ports:
+      internal: 3053
+
+  ## Extra labels for pods
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  ##
+  podLabels: {}
+  ## Annotations for pods
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+  ##
+  podAnnotations: {}
+
+  ## Affinity for pod assignment
+  ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ##
+  affinity: {}
+  ## Node labels for pods assignment
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  ##
+  nodeSelector: {}
+  ## Tolerations for pods assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  ##
+  tolerations: []
+
+pipelineWorker:
+  image:
+    registry: docker.io
+    repository: digmatic/digma-pipeline-worker
+    ## Specify a imagePullPolicy
+    ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+    ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
+    ##
+    pullPolicy: IfNotPresent
+    ## Optionally specify an array of imagePullSecrets.
+    ## Secrets must be manually created in the namespace.
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+    ## e.g:
+    ## pullSecrets:
+    ##   - myRegistryKeySecretName
+    ##
+    pullSecrets: []
+  replicas: "{{ index .Values.presets .Values.size \"pipelineWorker\" \"replicas\" }}"
   resources: {
     requests: {
       memory: 100Mi,
@@ -785,9 +1072,27 @@ digmaPipelineWorker:
       cpu: 500m
     }
   }
-  annotations: {}
-  labels: {}
-  affinity:
+  ## Extra labels for pods
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  ##
+  podLabels: {}
+  ## Annotations for pods
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+  ##
+  podAnnotations: {}
+
+  ## Affinity for pod assignment
+  ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ##
+  affinity: {}
+  ## Node labels for pods assignment
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  ##
+  nodeSelector: {}
+  ## Tolerations for pods assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  ##
+  tolerations: []
 
 
 grafana:
