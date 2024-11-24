@@ -9,7 +9,7 @@ metadata:
   {{- end }}
 spec:
   {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.analyticsApi.podLabels .Values.commonLabels ) "context" . ) }}
-  replicas: {{ .Values.analyticsApi.replicas }}
+  replicas: {{ include "replicas.value" (dict "value" .Values.analyticsApi.replicas "context" .) }}
   selector:
     matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 6 }}
       app.kubernetes.io/component: analytics-api

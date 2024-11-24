@@ -27,7 +27,7 @@ data: # config.yaml:
       logging:
         loglevel: debug
       otlphttp:
-        endpoint: {{ include "digma.otel-collector" . }}:{{ .Values.collectorApi.service.ports.http }}
+        endpoint: http://{{ include "digma.collector-api" . }}:{{ .Values.collectorApi.service.ports.http }}
         tls:
           insecure: true
     service:

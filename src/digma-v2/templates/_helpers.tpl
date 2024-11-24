@@ -1,3 +1,27 @@
+{{- define "replicas.value" -}}
+{{- $value := .value -}}
+{{- if (typeOf $value | eq "float64") -}}
+{{ $value }}
+{{- else -}}
+{{ tpl $value .context }}
+{{- end -}}
+{{- end -}}
+
+
+{{/*
+Return the proper collector-worker fullname
+*/}}
+{{- define "digma.collector-worker" -}}
+  {{- printf "%s-collector-worker" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+{{- end -}}
+
+{{/*
+Return the proper measurement-analysis fullname
+*/}}
+{{- define "digma.measurement-analysis" -}}
+  {{- printf "%s-measurement-analysis" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+{{- end -}}
+
 {{/*
 Return the proper otel collector fullname
 */}}

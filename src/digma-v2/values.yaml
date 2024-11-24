@@ -27,23 +27,23 @@ debug: false
 size: medium # small | medium | large
 presets:
   small:
-    digmaCollectorWorker:
+    collectorWorker:
       replicas: 1
-    digmaMeasurementAnalysis: 
+    measurementAnalysis: 
       replicas: 1
     digmaPipelineWorker: 
       replicas: 1
   medium:
-    digmaCollectorWorker:
+    collectorWorker:
       replicas: 4
-    digmaMeasurementAnalysis: 
+    measurementAnalysis: 
       replicas: 4
     digmaPipelineWorker: 
       replicas: 1
   large:
-    digmaCollectorWorker:
+    collectorWorker:
       replicas: 6
-    digmaMeasurementAnalysis: 
+    measurementAnalysis: 
       replicas: 4
     digmaPipelineWorker: 
       replicas: 4
@@ -184,10 +184,24 @@ elasticsearch:
   host: "{{ .Release.Name }}-elasticsearch"
 
 
-
-digmaCollectorWorker:
-  host: "{{ .Release.Name }}-collector-worker"
-  replicas: "{{ index .Values.presets .Values.size \"digmaCollectorWorker\" \"replicas\" }}"
+collectorWorker:
+  image:
+    registry: docker.io
+    repository: digmatic/digma-collector-worker
+    ## Specify a imagePullPolicy
+    ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+    ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
+    ##
+    pullPolicy: IfNotPresent
+    ## Optionally specify an array of imagePullSecrets.
+    ## Secrets must be manually created in the namespace.
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+    ## e.g:
+    ## pullSecrets:
+    ##   - myRegistryKeySecretName
+    ##
+    pullSecrets: []
+  replicas: "{{ index .Values.presets .Values.size \"collectorWorker\" \"replicas\" }}"
   resources: {
     requests: {
       memory: 300Mi,
@@ -198,30 +212,50 @@ digmaCollectorWorker:
       cpu: 600m
     }
   }
-  sampling: {
-    enable: true
-  }
-  extendedObservability: {
-    enable: true
-  }
-  traceForJaegerTTL: 10
-  ignoreEndpoints:
-    - Route: "/health"
-      RouteRegex: ""
-      Method: "GET"
-      Service: "*"
-    - Route: "/healthcheck"
-      RouteRegex: ""
-      Method: "GET"
-      Service: "*"
-    - Route: "/metrics"
-      RouteRegex: ""
-      Method: "GET"
-      Service: "*"
-  annotations: {}
-  labels: {}
-  affinity:
+  ## Extra labels for pods
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  ##
+  podLabels: {}
+  ## Annotations for pods
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+  ##
+  podAnnotations: {}
 
+  ## Affinity for pod assignment
+  ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ##
+  affinity: {}
+  ## Node labels for pods assignment
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  ##
+  nodeSelector: {}
+  ## Tolerations for pods assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  ##
+  tolerations: []
+  env:
+  - name: "Sampling__Enable"
+    value: "true"
+  - name: "ExtendedObservability__Enable"
+    value: "true"
+  - name: "TraceTempStorage__TraceForJaegerExpirationInMinutes"
+    value: "10"
+  - name: BlockedTrace__TraceSpansLimit
+    value: "3000"
+  app:
+    ignoreEndpoints:
+      - Route: "/health"
+        RouteRegex: ""
+        Method: "GET"
+        Service: "*"
+      - Route: "/healthcheck"
+        RouteRegex: ""
+        Method: "GET"
+        Service: "*"
+      - Route: "/metrics"
+        RouteRegex: ""
+        Method: "GET"
+        Service: "*"
 otelCollector:
   image:
     registry: docker.io
@@ -292,7 +326,7 @@ otelCollector:
       apiVersion: ""
       ##  Default host for the ingress resource
       ##
-      hostname: collector.grpc.account123.prod.digma.systems
+      hostname: 123.collector-grpc.digma.systems
       ## IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
       ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
       ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
@@ -320,7 +354,7 @@ otelCollector:
         alb.ingress.kubernetes.io/backend-protocol-version: GRPC
         alb.ingress.kubernetes.io/backend-protocol: HTTP
         #alb.ingress.kubernetes.io/load-balancer-attributes: routing.http2.enabled=true
-        alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-1:585085114703:certificate/6fb85051-a156-4b9c-8b32-bdd771df6641
+        alb.ingress.kubernetes.io/certificate-arn: 
         # alb.ingress.kubernetes.io/healthcheck-path: "/health"
         # alb.ingress.kubernetes.io/healthcheck-protocol: "HTTP"
         # alb.ingress.kubernetes.io/healthcheck-port: "health"
@@ -363,7 +397,7 @@ otelCollector:
       apiVersion: ""
       ##  Default host for the ingress resource
       ##
-      hostname: collector.http.account123.prod.digma.systems
+      hostname: 123.collector-http.digma.systems
       ## IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
       ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
       ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
@@ -390,7 +424,7 @@ otelCollector:
         alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
         alb.ingress.kubernetes.io/backend-protocol: HTTP
         #alb.ingress.kubernetes.io/load-balancer-attributes: routing.http2.enabled=true
-        alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-1:585085114703:certificate/6fb85051-a156-4b9c-8b32-bdd771df6641
+        alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-1:585085114703:certificate/829b61e8-acaf-4046-acd3-e970fb8b39de
         alb.ingress.kubernetes.io/healthcheck-path: "/health"
         alb.ingress.kubernetes.io/healthcheck-protocol: "HTTP"
         alb.ingress.kubernetes.io/healthcheck-port: "health"
@@ -609,7 +643,7 @@ analyticsApi:
     apiVersion: ""
     ## Default host for the ingress resource
     ##
-    hostname: api.account123.prod.digma.systems
+    hostname: 123.api.digma.systems
     ## IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
     ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
     ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
@@ -636,7 +670,7 @@ analyticsApi:
       alb.ingress.kubernetes.io/scheme: internet-facing
       alb.ingress.kubernetes.io/target-type: ip #facilitating efficient load balancing for services exposed via ClusterIP
       alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]'
-      alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-1:585085114703:certificate/6fb85051-a156-4b9c-8b32-bdd771df6641
+      alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-1:585085114703:certificate/829b61e8-acaf-4046-acd3-e970fb8b39de
       alb.ingress.kubernetes.io/healthcheck-path: "/healthz"
       alb.ingress.kubernetes.io/healthcheck-protocol: "HTTP"
       alb.ingress.kubernetes.io/healthcheck-port: "traffic-port"
@@ -673,6 +707,57 @@ analyticsApi:
   ## Unique key you’ll need to provide any IDE that connects to this Digma instance, you can choose any token you'd like
   accessToken:
 
+measurementAnalysis:
+  image:
+    registry: docker.io
+    repository: digmatic/digma-measurement-analysis
+    ## Specify a imagePullPolicy
+    ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+    ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
+    ##
+    pullPolicy: IfNotPresent
+    ## Optionally specify an array of imagePullSecrets.
+    ## Secrets must be manually created in the namespace.
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+    ## e.g:
+    ## pullSecrets:
+    ##   - myRegistryKeySecretName
+    ##
+    pullSecrets: []
+  replicas: "{{ index .Values.presets .Values.size \"measurementAnalysis\" \"replicas\" }}"
+  resources: {
+    requests: {
+      memory: 100Mi,
+      cpu: 200m
+    },
+    limits: {
+      memory: 800Mi,
+      cpu: 800m
+    }
+  }
+  ## Extra labels for pods
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  ##
+  podLabels: {}
+  ## Annotations for pods
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+  ##
+  podAnnotations: {}
+
+  ## Affinity for pod assignment
+  ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ##
+  affinity: {}
+  ## Node labels for pods assignment
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  ##
+  nodeSelector: {}
+  ## Tolerations for pods assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  ##
+  tolerations: []
+
+
 digmaScheduler:
   host: "{{ .Release.Name }}-scheduler"
   resources: {
@@ -704,21 +789,6 @@ digmaPipelineWorker:
   labels: {}
   affinity:
 
-digmaMeasurementAnalysis:
-  replicas: "{{ index .Values.presets .Values.size \"digmaMeasurementAnalysis\" \"replicas\" }}"
-  resources: {
-    requests: {
-      memory: 100Mi,
-      cpu: 200m
-    },
-    limits: {
-      memory: 800Mi,
-      cpu: 800m
-    }
-  }
-  annotations: {}
-  labels: {}
-  affinity:
 
 grafana:
   host: "{{ .Release.Name }}-grafana"
