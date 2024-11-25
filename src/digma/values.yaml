@@ -304,6 +304,7 @@ grafana:
 
 prometheus:
   host: "{{ .Release.Name }}-prometheus"
+  target: "{{ .Release.Name }}-otel-collector:7777"
   annotations: {}
   labels: {}
   args: []
