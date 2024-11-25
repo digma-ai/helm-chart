@@ -57,9 +57,6 @@ spec:
         {{- include "env.versions" . | nindent  8 }}
         {{- include "env.jaeger" . | nindent  8 }}
         {{- include "env.digmaEnvType" . | nindent 8 }}
-{{ if .Values.debug }}
-        {{- include "env.elasticsearch" . | nindent  8 }}
-{{ end }}
         - name: OtlpSamplerProbability
           value: {{ .Values.digmaSelfDiagnosis.otlpSamplerProbability| quote}}
         - name: BACKEND_DEPLOYMENT_TYPE

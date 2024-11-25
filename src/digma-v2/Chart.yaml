@@ -3,6 +3,9 @@ annotations:
 apiVersion: v2
 appVersion: 0.3.162-alpha.4
 dependencies:
+- name: elasticsearch
+  repository: oci://registry-1.docker.io/bitnamicharts
+  version: 21.3.26
 - name: influxdb
   repository: oci://registry-1.docker.io/bitnamicharts
   version: 6.3.22

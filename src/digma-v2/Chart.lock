@@ -1,4 +1,7 @@
 dependencies:
+- name: elasticsearch
+  repository: oci://registry-1.docker.io/bitnamicharts
+  version: 21.3.26
 - name: influxdb
   repository: oci://registry-1.docker.io/bitnamicharts
   version: 6.3.22
@@ -11,5 +14,5 @@ dependencies:
 - name: common
   repository: oci://registry-1.docker.io/bitnamicharts
   version: 2.27.0
-digest: sha256:276274f25fd59d23494fca25159385838532e6a0701dfdcab57082f219b314db
-generated: "2024-11-24T19:13:54.729889+02:00"
+digest: sha256:a08e7f4c5cf420cad3937089fd776b5f472379a53b1508acac15490995f2127c
+generated: "2024-11-25T08:29:07.849519+02:00"

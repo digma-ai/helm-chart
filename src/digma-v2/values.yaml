@@ -378,23 +378,6 @@ jaeger:
   args: []
 
 
-elastic:
-  imageTag: "8.15.1"
-  storage: 80Gi
-  resources: {
-    requests: {
-      memory: 2Gi,
-      cpu: 1
-    },
-    limits: {
-      memory: 4Gi,
-      cpu: 2
-    }
-  }
-  annotations: {}
-  labels: {}
-  args: []
-
 kibana:
   host: "{{ .Release.Name }}-kibana"
 
@@ -403,9 +386,6 @@ redisCommander:
 
 elasticApmServer:
   host: "{{ .Release.Name }}-apm"
-
-elasticsearch:
-  host: "{{ .Release.Name }}-elasticsearch"
 
 
 collectorWorker:
@@ -930,7 +910,6 @@ analyticsApi:
     extraRules: []
   ## Unique key you’ll need to provide any IDE that connects to this Digma instance, you can choose any token you'd like
   accessToken:
-
 measurementAnalysis:
   image:
     registry: docker.io
@@ -980,8 +959,6 @@ measurementAnalysis:
   ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
   ##
   tolerations: []
-
-
 scheduler:
   image:
     registry: docker.io
@@ -1043,7 +1020,6 @@ scheduler:
   ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
   ##
   tolerations: []
-
 pipelineWorker:
   image:
     registry: docker.io
@@ -1093,7 +1069,97 @@ pipelineWorker:
   ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
   ##
   tolerations: []
+# @section Elasticsearch chart configuration
+## https://github.com/bitnami/charts/blob/main/bitnami/elasticsearch/values.yaml
+##
+elasticsearch:
+  ## @param elasticsearch.enabled Whether to deploy a elasticsearch server to use as Mastodon's search engine
+  ## To use an external server set this to false and configure the externalElasticsearch parameters
+  ##
+  enabled: true
+  ## @param elasticsearch.sysctlImage.enabled Enable kernel settings modifier image for Elasticsearch
+  ##
+  sysctlImage:
+    enabled: true
+  ## @param elasticsearch.security.enabled Enable security settings for Elasticsearch
+  ## @param elasticsearch.security.existingSecret Name of an existing secret containing the elasticsearch credentials
+  ## @param elasticsearch.security.tls.restEncryption Enable TLS encryption for REST API
+  ##
+  security:
+    enabled: false
+    existingSecret: ""
+    tls:
+      restEncryption: false
+  ## Elasticsearch master-eligible node parameters
+  ## @param elasticsearch.master.replicaCount Desired number of Elasticsearch master-eligible nodes
+  ##
+  master:
+    masterOnly: false
+    replicaCount: 1
+    terminationGracePeriodSeconds: 5
+    podSecurityContext:
+      enabled: true
+      fsGroup: 1000
+    persistence:
+      enabled: true
+      size: 80Gi
+      accessModes:
+      - ReadWriteOnce
+    resources: {
+      requests: {
+        memory: 2Gi,
+        cpu: 1
+      },
+      limits: {
+        memory: 4Gi,
+        cpu: 2
+      }
+    }
+    extraEnvVars:
+    - name: ES_JAVA_OPTS
+      value: "-server -Xms1G -Xmx2G"
+    ## Extra labels for pods
+    ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+    ##
+    podLabels: {}
+    ## Annotations for pods
+    ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+    ##
+    podAnnotations: {}
 
+    ## Affinity for pod assignment
+    ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+    ##
+    affinity: {}
+    ## Node labels for pods assignment
+    ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+    ##
+    nodeSelector: {}
+    ## Tolerations for pods assignment
+    ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+    ##
+    tolerations: []
+    
+  ## Elasticsearch coordinating-only node parameters
+  ## @param elasticsearch.coordinating.replicaCount Desired number of Elasticsearch coordinating-only nodes
+  ##
+  coordinating:
+    replicaCount: 0
+  ## Elasticsearch data node parameters
+  ## @param elasticsearch.data.replicaCount Desired number of Elasticsearch data nodes
+  ##
+  data:
+    replicaCount: 0
+  ## Elasticsearch ingest node parameters
+  ## @param elasticsearch.ingest.replicaCount Desired number of Elasticsearch ingest nodes
+  ##
+  ingest:
+    replicaCount: 0
+  ## @param elasticsearch.service.ports.restAPI Elasticsearch REST API port
+  ##
+  service:
+    ports:
+      restAPI: 9200
 
 grafana:
   host: "{{ .Release.Name }}-grafana"

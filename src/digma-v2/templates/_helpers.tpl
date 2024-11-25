@@ -158,17 +158,18 @@ Return the proper analytics api fullname
 {{- end -}}
 
 
-{{- define "env.otlpExporter2ElasticApm" -}}
-- name: OtlpExporterUrl
-  value: {{ printf "http://%s:8200" (tpl .Values.elasticApmServer.host .)}}
+{{- define "digma.elasticsearch.fullname" -}}
+{{- include "common.names.dependency.fullname" (dict "chartName" "elasticsearch" "chartValues" .Values.elasticsearch "context" $) -}}
 {{- end -}}
 
+{{- define "digma.elasticsearch.url" -}}
+ {{ printf "http://%s:%v" (include "digma.elasticsearch.fullname" .) .Values.elasticsearch.service.ports.restAPI }}
+{{- end -}}
 
 {{- define "env.elasticsearch" -}}
-- name: ElasticSearch
-  value: {{ printf " http://%s:9200" (tpl .Values.elasticsearch.host .)}}
+- name: ElasticSearch__Uri
+  value: {{ include "digma.elasticsearch.url" . }}
 {{- end -}}
-
 
 {{- define "env.versions" -}}
 - name: ApplicationVersion

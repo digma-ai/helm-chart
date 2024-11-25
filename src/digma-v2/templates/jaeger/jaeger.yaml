@@ -54,7 +54,7 @@ spec:
         - name: SPAN_STORAGE_TYPE
           value: elasticsearch
         - name: ES_SERVER_URLS
-          value: "http://{{ .Release.Name }}-elasticsearch:9200"
+          value: {{include "digma.elasticsearch.url" .}}
         - name: ES_INDEX_PREFIX
           value: "digma"
         - name: COLLECTOR_OTLP_ENABLED
