@@ -158,6 +158,19 @@ Return the proper analytics api fullname
 {{- end -}}
 
 
+{{- define "digma.grafana.fullname" -}}
+{{- include "common.names.dependency.fullname" (dict "chartName" "grafana" "chartValues" .Values.grafana "context" $) -}}
+{{- end -}}
+
+{{- define "digma.prometheus.fullname" -}}
+{{- include "common.names.dependency.fullname" (dict "chartName" "prometheus" "chartValues" .Values.prometheus "context" $) -}}
+{{- end -}}
+
+{{- define "digma.prometheus.url" -}}
+{{ printf "http://%s:%v" (include "digma.prometheus.fullname" .) .Values.prometheus.server.service.ports.http }}
+{{- end -}}
+
+
 {{- define "digma.elasticsearch.fullname" -}}
 {{- include "common.names.dependency.fullname" (dict "chartName" "elasticsearch" "chartValues" .Values.elasticsearch "context" $) -}}
 {{- end -}}

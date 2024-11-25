@@ -1,4 +1,10 @@
 dependencies:
+- name: prometheus
+  repository: oci://registry-1.docker.io/bitnamicharts
+  version: 1.3.28
+- name: grafana
+  repository: oci://registry-1.docker.io/bitnamicharts
+  version: 11.3.26
 - name: elasticsearch
   repository: oci://registry-1.docker.io/bitnamicharts
   version: 21.3.17
@@ -14,5 +20,5 @@ dependencies:
 - name: common
   repository: oci://registry-1.docker.io/bitnamicharts
   version: 2.27.0
-digest: sha256:4f977709c7866998469dffff9de93c482ca07c2e6f398002cbee5701dbf41e8f
-generated: "2024-11-25T13:25:56.56313+02:00"
+digest: sha256:4f43b121c4ed575f16fbd8f810cb21d99b5075f87053ff142015563ee7d2485d
+generated: "2024-11-25T13:54:03.674065+02:00"

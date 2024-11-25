@@ -1161,13 +1161,48 @@ elasticsearch:
     ports:
       restAPI: 9200
 
-grafana:
+grafana2:
   host: "{{ .Release.Name }}-grafana"
   annotations: {}
   labels: {}
   args: []
 
+grafana:
+  admin:
+    user: admin
+    password: admin
+  dashboardsProvider:
+    enabled: true
+  dashboardsConfigMaps:
+    - configMapName: digma-grafana-dashboards
+      fileName: Activities.json
+    - configMapName: digma-grafana-dashboards
+      fileName: Environment.json
+    - configMapName: digma-grafana-dashboards
+      fileName: Kafka.json
+  datasources:
+    secretDefinition:
+      apiVersion: 1
+      datasources:
+        - name: Prometheus
+          type: prometheus
+          access: proxy
+          orgId: 1
+          url: "http://digma-prometheus-server:9090"
+          version: 1
+          editable: true
+          isDefault: true
 prometheus:
+  fullnameOverride: "digma-prometheus"
+  alertmanager:
+    enabled: false
+  server:
+    service:
+      type: ClusterIP
+      ports:
+        http: 9090
+
+prometheus2:
   host: "{{ .Release.Name }}-prometheus"
   annotations: {}
   labels: {}
