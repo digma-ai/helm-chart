@@ -45,6 +45,8 @@ data:
       {{- else }}
       otlp:
         endpoint: {{.Values.digmaSelfDiagnosis.otlpExporterEndpoint}}
+        tls:
+          insecure: true
       {{- end }}
 
     service:
