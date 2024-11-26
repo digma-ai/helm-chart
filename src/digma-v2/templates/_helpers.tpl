@@ -114,6 +114,14 @@ Return the proper analytics api fullname
 {{- end -}}
 
 {{/*
+Return the proper ui fullname
+*/}}
+{{- define "digma.ui" -}}
+  {{- printf "%s-ui" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+{{- end -}}
+
+
+{{/*
 Return the proper metrics exporter fullname
 */}}
 {{- define "digma.k8s-metrics-exporter" -}}
