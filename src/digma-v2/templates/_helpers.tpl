@@ -76,6 +76,22 @@ Return the proper measurement-analysis fullname
   {{- printf "%s-measurement-analysis" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
 {{- end -}}
 
+
+{{/*
+Return the proper otel collector df fullname
+*/}}
+{{- define "digma.otel-collector-df" -}}
+  {{- printf "%s-otel-collector-df" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+{{- end -}}
+
+{{/*
+Return the proper otel collector df fullname
+*/}}
+{{- define "digma.otel-collector-df-prometheus-scraper-url" -}}
+{{ printf "%s:%v" (include "digma.otel-collector-df" .) .Values.otelCollectorDf.service.ports.prometheus_scraper }}
+{{- end -}}
+
+
 {{/*
 Return the proper otel collector fullname
 */}}
@@ -163,6 +179,10 @@ Return the proper analytics api fullname
 {{- end -}}
 
 {{- define "digma.prometheus.fullname" -}}
+  {{- printf "%s-service" (include "digma.prometheus" .) }}
+{{- end -}}
+
+{{- define "digma.prometheus" -}}
 {{- include "common.names.dependency.fullname" (dict "chartName" "prometheus" "chartValues" .Values.prometheus "context" $) -}}
 {{- end -}}
 

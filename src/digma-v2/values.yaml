@@ -1174,33 +1174,45 @@ grafana:
   dashboardsProvider:
     enabled: true
   dashboardsConfigMaps:
-    - configMapName: digma-grafana-dashboards
-      fileName: Activities.json
-    - configMapName: digma-grafana-dashboards
-      fileName: Environment.json
-    - configMapName: digma-grafana-dashboards
-      fileName: Kafka.json
+  - configMapName: digma-grafana-activities-dashboards
+    fileName: activities.json
+  - configMapName: digma-grafana-environment-dashboards
+    fileName: environment.json
+  - configMapName: digma-grafana-kafka-dashboards
+    fileName: kafka.json
   datasources:
-    secretDefinition:
-      apiVersion: 1
-      datasources:
-        - name: Prometheus
-          type: prometheus
-          access: proxy
-          orgId: 1
-          url: "http://digma-prometheus-server:9090"
-          version: 1
-          editable: true
-          isDefault: true
+    secretName: grafana-datasource
+    # secretDefinition:
+    #   apiVersion: 1
+    #   datasources:
+    #     - name: Prometheus
+    #       type: prometheus
+    #       access: proxy
+    #       orgId: 1
+    #       url: "http://digma-prometheus-server:9090"
+    #       version: 1
+    #       editable: true
+    #       isDefault: true
 prometheus:
   fullnameOverride: "digma-prometheus"
   alertmanager:
     enabled: false
   server:
+    existingConfigmap: "digma-prometheus-service"
+    existingConfigmapKey: "prometheus.yaml"
     service:
       type: ClusterIP
       ports:
         http: 9090
+    ## persistence:
+    ##   enabled: true
+    ##   accessModes:
+    ##   - ReadWriteOnce
+    ##   size: 20Gi
+    ## extraScrapeConfigs:
+    ## - job_name: otel-collector
+    ##   static_configs:
+    ##   - targets: ["digma-otel-collector-df:777"]
 
 prometheus2:
   host: "{{ .Release.Name }}-prometheus"
@@ -1213,21 +1225,69 @@ k8sMetricsExporter:
   labels: {}
 
 otelCollectorDf:
-  host: "{{ .Release.Name }}-otel-collector"
-  annotations: {}
-  labels: {}
+  fullnameOverride: "digma-otel-collector-df" # because we need to use this name other value in file
+  image:
+    registry: docker.io
+    repository: otel/opentelemetry-collector-contrib
+    tag: 0.103.0
+    ## Specify a imagePullPolicy
+    ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+    ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
+    ##
+    pullPolicy: IfNotPresent
+    ## Optionally specify an array of imagePullSecrets.
+    ## Secrets must be manually created in the namespace.
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+    ## e.g:
+    ## pullSecrets:
+    ##   - myRegistryKeySecretName
+    ##
+    pullSecrets: []
+  replicas: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 100Mi
+    limits:
+      cpu: 200m
+      memory: 300Mi
+  service:
+    ## @param Annotations for service
+    ##
+    annotations: {}
+    ports:
+      grpc: 4317
+      prometheus_scraper: 8889
+  ## Extra labels for pods
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  ##
+  podLabels: {}
+  ##  Annotations for pods
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+  ##
+  podAnnotations: {}
 
+  ##  Node labels for pods assignment
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  ##
+  nodeSelector: {}
+  ##  Tolerations for pods assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  ##
+  tolerations: []
+  
 digmaSelfDiagnosis:
   otlpExportTraces: false
   otlpExportMetrics: false
   otlpExportLogs: false
-  otlpExporterEndpoint: # either a url or 'local'
+  otlpExporterEndpoint: local # either a url or 'local'
   otlpSamplerProbability: "0.1"
-  
+
+
 
 digma:
-  environmentName:
-  environmentType:  
+  environmentName: digma
+  environmentType: Public
   siteName: undefined
   isCentralize: true
   licenseKey: "7df80c6f820a4ec5a81fe6325769c88b"

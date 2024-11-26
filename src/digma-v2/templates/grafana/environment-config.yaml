@@ -1,11 +1,12 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: digma-grafana-dashboards
+  name: digma-grafana-environment-dashboards
   labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
-    app.kubernetes.io/component: digma-grafana-dashboards
+    app.kubernetes.io/component:  digma-grafana-environment-dashboards
   {{- if .Values.commonAnnotations }}
   annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 data:
-{{ (.Files.Glob "grafana-dashboards/*").AsConfig | indent 2 }}
+  environment.json: |
+    {{ .Files.Get "grafana-dashboards/Environment.json" | nindent 4 }}
