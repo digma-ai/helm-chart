@@ -119,3 +119,8 @@ tolerations:
 nodeSelector:
   {{- toYaml .Values.nodeSelector | nindent 8 }}
 {{- end -}}
+
+{{- define "env.otlpSamplerProbability" -}}
+- name: OtlpSamplerProbability
+  value: {{ quote .Values.digmaSelfDiagnosis.otlpSamplerProbability }}
+{{- end -}}

@@ -1,4 +1,4 @@
-{{- if eq .Values.digmaSelfDiagnosis.otlpExporterEndpoint "local" }}
+{{- if .Values.grafana.enabled }}
 
 apiVersion: v1
 kind: ConfigMap

@@ -100,7 +100,15 @@ spec:
     - name: grpc
       protocol: TCP
       port: 5050
-
+{{- if .Values.digmaCollectorApi.additionalPorts }}
+  {{- range .Values.digmaCollectorApi.additionalPorts }}
+    - name: {{ .name }}
+      port: {{ .port }}
+      protocol: {{ .protocol }}
+  {{- end }}
+{{- else }}
+  # No additional ports specified
+{{- end }}
 ---
 
 apiVersion: v1
