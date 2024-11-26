@@ -113,6 +113,19 @@ Return the proper analytics api fullname
   {{- printf "%s-analytics-api" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
 {{- end -}}
 
+{{/*
+Return the proper metrics exporter fullname
+*/}}
+{{- define "digma.k8s-metrics-exporter" -}}
+  {{- printf "%s-k8s-metrics-exporter" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+{{- end -}}
+
+
+{{- define "digma.k8s-metrics-exporter-target" -}}
+{{ printf "%s:%v" ( include "digma.k8s-metrics-exporter" . ) .Values.metricsExporter.service.ports.http}}
+{{- end -}}
+
+
 
 {{- define "env.digmaEnv" -}}
 - name: DEPLOYMENT_ENV

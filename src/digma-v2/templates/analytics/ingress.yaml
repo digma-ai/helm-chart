@@ -25,7 +25,7 @@ spec:
             {{- if eq "true" (include "common.ingress.supportsPathType" .) }}
             pathType: {{ .Values.analyticsApi.ingress.pathType }}
             {{- end }}
-            backend: {{- include "common.ingress.backend" (dict "serviceName" (include "digma.analytics-api" $) "servicePort" "analytics" "context" $)  | nindent 14 }}
+            backend: {{- include "common.ingress.backend" (dict "serviceName" (include "digma.analytics-api" $) "servicePort" "http" "context" $)  | nindent 14 }}
     {{- end }}
     {{- if .Values.analyticsApi.ingress.extraRules }}
     {{- include "common.tplvalues.render" (dict "value" .Values.analyticsApi.ingress.extraRules "context" $) | nindent 4 }}

@@ -251,7 +251,7 @@ pgadmin:
 jaeger:
   image:
     registry: docker.io
-    repository:  jaegertracing/all-in-one
+    repository: jaegertracing/all-in-one
     tag: 1.61.0
     ## Specify a imagePullPolicy
     ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
@@ -813,6 +813,8 @@ analyticsApi:
     ## Kubernetes service type (`ClusterIP`, `NodePort` or `LoadBalancer`)
     ##
     type: ClusterIP
+    ports:
+      http: 5051
     ## Annotations for service
     ##
     annotations: {}
@@ -1182,17 +1184,32 @@ grafana:
     fileName: kafka.json
   datasources:
     secretName: grafana-datasource
-    # secretDefinition:
-    #   apiVersion: 1
-    #   datasources:
-    #     - name: Prometheus
-    #       type: prometheus
-    #       access: proxy
-    #       orgId: 1
-    #       url: "http://digma-prometheus-server:9090"
-    #       version: 1
-    #       editable: true
-    #       isDefault: true
+  grafana:
+    resources: 
+      requests: 
+        memory: 512Mi
+        cpu: 500m
+      limits: 
+        memory: 768Mi
+        cpu: 750m
+    ## Extra labels for pods
+    ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+    ##
+    podLabels: {}
+    ##  Annotations for pods
+    ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+    ##
+    podAnnotations: {}
+
+    ##  Node labels for pods assignment
+    ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+    ##
+    nodeSelector: {}
+    ##  Tolerations for pods assignment
+    ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+    ##
+    tolerations: []
+
 prometheus:
   fullnameOverride: "digma-prometheus"
   alertmanager:
@@ -1204,25 +1221,93 @@ prometheus:
       type: ClusterIP
       ports:
         http: 9090
-    ## persistence:
-    ##   enabled: true
-    ##   accessModes:
-    ##   - ReadWriteOnce
-    ##   size: 20Gi
-    ## extraScrapeConfigs:
-    ## - job_name: otel-collector
-    ##   static_configs:
-    ##   - targets: ["digma-otel-collector-df:777"]
+    resources: 
+      requests: 
+        memory: 512Mi
+        cpu: 500m
+      limits: 
+        memory: 768Mi
+        cpu: 750m
+    ## Extra labels for pods
+    ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+    ##
+    podLabels: {}
+    ##  Annotations for pods
+    ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+    ##
+    podAnnotations: {}
 
-prometheus2:
-  host: "{{ .Release.Name }}-prometheus"
-  annotations: {}
-  labels: {}
-  args: []
+    ##  Node labels for pods assignment
+    ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+    ##
+    nodeSelector: {}
+    ##  Tolerations for pods assignment
+    ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+    ##
+    tolerations: []
+        
+  persistence:
+    enabled: true
+    accessModes:
+    - ReadWriteOnce
+    size: 20Gi
 
-k8sMetricsExporter:
-  annotations: {}
-  labels: {}
+
+metricsExporter:
+  image:
+    registry: docker.io
+    repository: digmatic/k8s-metrics-exporter
+    tag: 0.0.9
+    ## Specify a imagePullPolicy
+    ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+    ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
+    ##
+    pullPolicy: IfNotPresent
+    ## Optionally specify an array of imagePullSecrets.
+    ## Secrets must be manually created in the namespace.
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+    ## e.g:
+    ## pullSecrets:
+    ##   - myRegistryKeySecretName
+    ##
+    pullSecrets: []
+  replicas: 1
+  resources: 
+    requests: 
+      memory: 512Mi
+      cpu: 500m
+    limits: 
+      memory: 768Mi
+      cpu: 750m
+  service:
+    ports:
+      http: 9090
+    ## Annotations for service
+    ##
+    annotations: {}
+  serviceAccount:
+    annotations: {}
+
+  ## Extra labels for pods
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  ##
+  podLabels: {}
+  ## Annotations for pods
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+  ##
+  podAnnotations: {}
+
+  ## Node labels for pods assignment
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  ##
+  nodeSelector: {}
+  ## Tolerations for pods assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  ##
+  tolerations: []
+
+
+
 
 otelCollectorDf:
   fullnameOverride: "digma-otel-collector-df" # because we need to use this name other value in file

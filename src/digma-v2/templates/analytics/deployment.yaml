@@ -39,7 +39,7 @@ spec:
         imagePullPolicy: {{ .Values.analyticsApi.image.pullPolicy }}
         resources: {{- toYaml .Values.analyticsApi.resources | nindent 12 }}
         ports:
-        - containerPort: 5051
+        - containerPort: {{ .Values.analyticsApi.service.ports.http }}
         env:
         {{- include "env.isCentralize" . | nindent  8 }}
         {{- include "env.licenseKey" . | nindent  8 }}

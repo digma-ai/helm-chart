@@ -27,7 +27,7 @@ data:
             - job_name: k8s-metrics
               scrape_interval: 5s
               static_configs:
-                - targets: [{{ printf "%s-k8s-metrics-exporter:9090" (.Release.Name)}}]
+                - targets: [{{ include "digma.k8s-metrics-exporter-target" .}}]
 
     processors:
       batch:

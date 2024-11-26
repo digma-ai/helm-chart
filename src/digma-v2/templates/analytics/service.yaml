@@ -12,9 +12,9 @@ metadata:
 spec:
   type: {{ .Values.analyticsApi.service.type }}
   ports:
-    - name: analytics
+    - name: http
       protocol: TCP
-      port: 5051
+      port: {{ .Values.analyticsApi.service.ports.http }}
   {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.analyticsApi.podLabels .Values.commonLabels ) "context" . ) }}
   selector: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 4 }}
     app.kubernetes.io/component: analytics-api
