@@ -22,8 +22,6 @@ commonLabels: {}
 commonAnnotations: {}
 
 
-debug: false
-
 size: medium # small | medium | large
 presets:
   small:
@@ -62,16 +60,13 @@ traceCollectorThresholds:
   
 
 influxdb:
-  resources: {
-    requests: {
-      memory: 500Mi,
+  resources: 
+    requests: 
+      memory: 500Mi
       cpu: 500m
-    },
-    limits: {
-      memory: 2Gi,
+    limits: 
+      memory: 2Gi
       cpu: 2000m
-    }
-  }
   auth:
     user:
       org: digma
@@ -122,16 +117,15 @@ postgresql:
   containerPorts:
     postgresql: 5432
   primary:
-    resources: {
-      requests: {
-        memory: 1Gi,
+    resources:
+      requests: 
+        memory: 1Gi
         cpu: 200m
-      },
-      limits: {
-        memory: 2Gi,
+      limits: 
+        memory: 2Gi
         cpu: 1000m
-      }
-    }
+      
+    
     networkPolicy:
       enabled: false
     service:
@@ -250,16 +244,13 @@ jaeger:
     ##
     pullSecrets: []
   replicas: 1
-  resources: {
-    requests: {
-      memory: 300Mi,
-      cpu: 100m
-    },
-    limits: {
-      memory: 800Mi,
-      cpu: 800m
-    }
-  }
+  resources: 
+    requests: 
+      memory: 512Mi
+      cpu: 500m
+    limits: 
+      memory: 768Mi
+      cpu: 750m
   service:
     ## Kubernetes service type (`ClusterIP`, `NodePort` or `LoadBalancer`)
     ##
@@ -389,16 +380,13 @@ collectorWorker:
     ##
     pullSecrets: []
   replicas: "{{ index .Values.presets .Values.size \"collectorWorker\" \"replicas\" }}"
-  resources: {
-    requests: {
-      memory: 300Mi,
+  resources: 
+    requests: 
+      memory: 300Mi
       cpu: 300m
-    },
-    limits: {
-      memory: 600Mi,
+    limits: 
+      memory: 600Mi
       cpu: 600m
-    }
-  }
   ## Extra labels for pods
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
   ##
@@ -662,16 +650,13 @@ collectorApi:
     ##
     pullSecrets: []
   replicas: 1
-  resources: {
-    requests: {
-      memory: 100Mi,
+  resources: 
+    requests: 
+      memory: 100Mi
       cpu: 200m
-    },
-    limits: {
-      memory: 600Mi,
+    limits: 
+      memory: 600Mi
       cpu: 800m
-    }
-  }
   service:
     ## service type (`ClusterIP`, `NodePort` or `LoadBalancer`)
     ##
@@ -782,16 +767,13 @@ analyticsApi:
     pullSecrets: []
   secured: false # must be false if ingress.enabled=true
   replicas: 1
-  resources: {
-    requests: {
-      memory: 300Mi,
+  resources: 
+    requests: 
+      memory: 300Mi
       cpu: 100m
-    },
-    limits: {
-      memory: 800Mi,
+    limits: 
+      memory: 800Mi
       cpu: 800m
-    }
-  }
   service:
     ## Kubernetes service type (`ClusterIP`, `NodePort` or `LoadBalancer`)
     ##
@@ -913,16 +895,13 @@ measurementAnalysis:
     ##
     pullSecrets: []
   replicas: "{{ index .Values.presets .Values.size \"measurementAnalysis\" \"replicas\" }}"
-  resources: {
-    requests: {
-      memory: 100Mi,
+  resources: 
+    requests: 
+      memory: 100Mi
       cpu: 200m
-    },
-    limits: {
-      memory: 800Mi,
+    limits: 
+      memory: 800Mi
       cpu: 800m
-    }
-  }
   ## Extra labels for pods
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
   ##
@@ -963,16 +942,13 @@ scheduler:
     pullSecrets: []
   replicas: 1
 
-  resources: {
-    requests: {
-      memory: 300Mi,
+  resources: 
+    requests: 
+      memory: 300Mi
       cpu: 200m
-    },
-    limits: {
-      memory: 600Mi,
+    limits: 
+      memory: 600Mi
       cpu: 500m
-    }
-  }
   service:
     ## service type (`ClusterIP`, `NodePort` or `LoadBalancer`)
     ##
@@ -1023,16 +999,13 @@ pipelineWorker:
     ##
     pullSecrets: []
   replicas: "{{ index .Values.presets .Values.size \"pipelineWorker\" \"replicas\" }}"
-  resources: {
-    requests: {
-      memory: 100Mi,
+  resources: 
+    requests: 
+      memory: 100Mi
       cpu: 50m
-    },
-    limits: {
-      memory: 400Mi,
+    limits: 
+      memory: 400Mi
       cpu: 500m
-    }
-  }
   ## Extra labels for pods
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
   ##
@@ -1211,16 +1184,13 @@ elasticsearch:
       size: 80Gi
       accessModes:
       - ReadWriteOnce
-    resources: {
-      requests: {
-        memory: 2Gi,
+    resources: 
+      requests: 
+        memory: 2Gi
         cpu: 1
-      },
-      limits: {
-        memory: 4Gi,
+      limits: 
+        memory: 4Gi
         cpu: 2
-      }
-    }
     extraEnvVars:
     - name: ES_JAVA_OPTS
       value: "-server -Xms1G -Xmx2G"
@@ -1481,9 +1451,6 @@ kafka:
       accessModes:
       - ReadWriteOnce
       size: 80Gi
-    extraEnvVars:
-    - name: KAFKA_CFG_LOG_ROLL_MS
-      value: "500000"
   listeners:
     client:
       protocol: PLAINTEXT
@@ -1493,9 +1460,10 @@ kafka:
       protocol: PLAINTEXT
     controller:
       protocol: PLAINTEXT
-  extraConfig:
-    - logRetentionCheckIntervalMs: 100000
-    - logRetentionHours: 0.16
+  extraConfig: |
+    log.retention.check.interval.ms = 100000
+    log.roll.ms = 500000
+    log.retention.minutes = 10
   service:
     ports:
       client: 9092
@@ -1508,7 +1476,51 @@ digmaSelfDiagnosis:
   otlpSamplerProbability: "0.1"
 
 
+debug:
+  enabled: true
+  pullSecrets: []
+  kafkaUi:
+    image:
+      registry: docker.io
+      repository: provectuslabs/kafka-ui
+      tag: v0.7.1
+      ## Specify a imagePullPolicy
+      ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+      ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
+      ##
+      pullPolicy: IfNotPresent
+    port: 8080
 
+  redisCommander:
+    image:
+      registry: docker.io
+      repository: rediscommander/redis-commander
+      tag: latest
+      ## Specify a imagePullPolicy
+      ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+      ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
+      ##
+      pullPolicy: IfNotPresent
+    port: 8081
+   
+  pgadmin:
+    image:
+      registry: docker.io
+      repository: dpage/pgadmin4
+      tag: latest
+      ## Specify a imagePullPolicy
+      ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+      ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
+      ##
+      pullPolicy: IfNotPresent
+    port: 8082
+    env:
+    - name: "PGADMIN_DEFAULT_USER"
+      value: "admin"
+    - name: PGADMIN_DEFAULT_EMAIL
+      value: "admin@admin.com"
+    - name: PGADMIN_DEFAULT_PASSWORD
+      value: "admin"
 digma:
   environmentName: digma
   environmentType: Public

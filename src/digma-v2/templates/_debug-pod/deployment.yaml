@@ -1,0 +1,79 @@
+{{ if .Values.debug.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "digma.debug" . }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: debug-pod
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.debug.podLabels .Values.commonLabels ) "context" . ) }}
+  replicas: 1
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 6 }}
+      app.kubernetes.io/component: debug-pod
+  template:
+    metadata:
+      labels: 
+        {{- include "common.labels.standard" ( dict "customLabels" $podLabels "context" $ ) | nindent 8 }}
+        app.kubernetes.io/component: debug-pod
+      annotations:
+        {{- if .Values.commonAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.debug.podAnnotations }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.debug.podAnnotations "context" .) | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- include "common.images.pullSecrets" ( dict "images" (list .Values.debug) "global" .Values.global) | nindent 6 }}
+      {{- if .Values.debug.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.debug.nodeSelector "context" .) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.debug.tolerations }}
+      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.debug.tolerations "context" .) | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: digma-kafka-ui
+        image: {{ include "common.images.image" (dict "imageRoot" .Values.debug.kafkaUi.image "global" .Values.global) }}
+        imagePullPolicy: {{ .Values.debug.kafkaUi.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.debug.kafkaUi.port }}
+        env:
+        - name: KAFKA_CLUSTERS_0_NAME
+          value: {{ .Values.kafka.kraft.clusterId }}
+        - name: KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS
+          value: {{include "digma.kafka.client" .}}
+
+      - name: digma-pgadmin
+        image: {{ include "common.images.image" (dict "imageRoot" .Values.debug.pgadmin.image "global" .Values.global) }}
+        imagePullPolicy: {{ .Values.debug.pgadmin.image.pullPolicy }}
+        volumeMounts:
+        - name: pgadmin-data
+          mountPath: /var/lib/pgadmin
+        - name: pgadmin-config
+          mountPath: /pgadmin4/servers.json
+          subPath: servers.json 
+        ports:
+        - containerPort: {{ .Values.debug.pgadmin.port }}
+        env:
+        - name: PGADMIN_LISTEN_PORT
+          value: {{ .Values.debug.pgadmin.port | quote}}
+        {{- include "common.tplvalues.render" (dict "value" .Values.debug.pgadmin.env "context" $) | nindent 8 }}
+        
+      - name: digma-redis-commander
+        image: {{ include "common.images.image" (dict "imageRoot" .Values.debug.redisCommander.image "global" .Values.global) }}
+        imagePullPolicy: {{ .Values.debug.redisCommander.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.debug.redisCommander.port }}
+        env:
+        - name: REDIS_HOSTS
+          value: {{ include "digma.redis.host" .}}
+      volumes:
+      - name: pgadmin-data
+        emptyDir: {}
+      - name: pgadmin-config
+        configMap:
+          name: debug-pgadmin-config
+{{ end }}

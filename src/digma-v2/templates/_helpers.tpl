@@ -23,6 +23,15 @@ Return the proper postgres fullname
   value: {{ printf "http://%s:%v" (include "digma.influx.fullname" .) .Values.influxdb.service.ports.http }}
 {{- end -}}
 
+
+
+{{/*
+Return the proper debug fullname
+*/}}
+{{- define "digma.debug" -}}
+{{- include "common.names.dependency.fullname" (dict "chartName" "debug" "chartValues" .Values.debug "context" $) -}}
+{{- end -}}
+
 {{/*
 Return the proper redis fullname
 */}}
@@ -31,7 +40,7 @@ Return the proper redis fullname
 {{- end -}}
 
 {{/*
-Create a default fully qualified Redis name.
+Create a default fully qualified Redis host name.
 */}}
 {{- define "digma.redis.host" -}}
 {{- if .Values.redis.enabled -}}
