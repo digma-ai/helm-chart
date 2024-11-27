@@ -59,23 +59,6 @@ traceCollectorThresholds:
   upsertEndpointThresholdSeconds: 5
   upsertSpansThresholdSeconds: 5
   upsertSpanFlowMetadataThresholdSeconds: 5
-
-kafka:
-  host: "{{ .Release.Name }}-kafka"
-  imageTag: 3.5.1
-  resources: {
-    requests: {
-      memory: 400Mi,
-      cpu: 200m
-    },
-    limits: {
-      memory: 3Gi,
-      cpu: 1000m
-    }
-  }
-  annotations: {}
-  labels: {}
-  args: []
   
 
 influxdb:
@@ -1378,7 +1361,7 @@ metricsExporter:
   image:
     registry: docker.io
     repository: digmatic/k8s-metrics-exporter
-    tag: 0.0.10-alpha.2
+    tag: 0.0.10-alpha.3
     ## Specify a imagePullPolicy
     ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
     ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
@@ -1402,7 +1385,7 @@ metricsExporter:
       cpu: 750m
   service:
     ports:
-      http: 9090
+      http: 9091
     ## Annotations for service
     ##
     annotations: {}
@@ -1481,7 +1464,42 @@ otelCollectorDf:
   ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
   ##
   tolerations: []
-  
+
+kafka:
+  kraft:
+    clusterId: h4U35I9QRnGhbgsEQAlXAw
+  controller:
+    resources:
+      requests:
+        memory: 400Mi
+        cpu: 200m
+      limits: 
+        memory: 3Gi
+        cpu: 1000m
+    persistence:
+      enabled: true
+      accessModes:
+      - ReadWriteOnce
+      size: 80Gi
+    extraEnvVars:
+    - name: KAFKA_CFG_LOG_ROLL_MS
+      value: "500000"
+  listeners:
+    client:
+      protocol: PLAINTEXT
+    interbroker:
+      protocol: PLAINTEXT
+    external:
+      protocol: PLAINTEXT
+    controller:
+      protocol: PLAINTEXT
+  extraConfig:
+    - logRetentionCheckIntervalMs: 100000
+    - logRetentionHours: 0.16
+  service:
+    ports:
+      client: 9092
+      controller: 9093
 digmaSelfDiagnosis:
   otlpExportTraces: false
   otlpExportMetrics: false

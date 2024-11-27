@@ -28,7 +28,7 @@ spec:
         - name: KAFKA_CLUSTERS_0_NAME
           value: h4U35I9QRnGhbgsEQAlXAw
         - name: KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS
-          value: {{ tpl .Values.kafka.host . }}:9092
+          value: {{include "digma.kafka.client" .}}
 
       - name: pgadmin
         image: dpage/pgadmin4

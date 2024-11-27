@@ -16,7 +16,7 @@ data:
       kafkametrics:
         protocol_version: 2.0.0
         collection_interval: 10s
-        brokers: [{{ printf "%s:9092" (tpl .Values.kafka.host .)}}]
+        brokers: [{{include "digma.kafka.client" .}}]
         scrapers:
           - brokers
           - topics

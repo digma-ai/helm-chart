@@ -153,12 +153,6 @@ Return the proper metrics exporter fullname
 {{- end -}}
 
 
-{{- define "env.kafka" -}}
-- name: Kafka__Urls__0
-  value: {{ tpl .Values.kafka.host . }}:9092
-{{- end -}}
-
-
 {{- define "env.redis" -}}
 - name: CacheSettings__RedisConnection
   value: {{ (include "digma.redis.host" .) }}
@@ -209,6 +203,19 @@ Return the proper metrics exporter fullname
 
 {{- define "digma.prometheus.url" -}}
 {{ printf "http://%s:%v" (include "digma.prometheus.fullname" .) .Values.prometheus.server.service.ports.http }}
+{{- end -}}
+
+{{- define "digma.kafka.fullname" -}}
+{{- include "common.names.dependency.fullname" (dict "chartName" "kafka" "chartValues" .Values.kafka "context" $) -}}
+{{- end -}}
+
+{{- define "digma.kafka.client" -}}
+{{ printf "%s:%v" (include "digma.kafka.fullname" .) .Values.kafka.service.ports.client }}
+{{- end -}}
+
+{{- define "env.kafka" -}}
+- name: Kafka__Urls__0
+  value: {{include "digma.kafka.client" .}}
 {{- end -}}
 
 
