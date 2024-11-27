@@ -8,46 +8,17 @@
 {{- end -}}
 
 {{/*
-Return the proper postgres fullname
+Return the proper analytics api fullname
 */}}
-{{- define "digma.postgresql" -}}
-{{- include "common.names.dependency.fullname" (dict "chartName" "postgresql" "chartValues" .Values.postgresql "context" $) -}}
-{{- end -}}
-
-{{- define "digma.influx.fullname" -}}
-{{- include "common.names.dependency.fullname" (dict "chartName" "influxdb" "chartValues" .Values.influxdb "context" $) -}}
-{{- end -}}
-
-{{- define "env.influx" -}}
-- name: influx2__Url
-  value: {{ printf "http://%s:%v" (include "digma.influx.fullname" .) .Values.influxdb.service.ports.http }}
-{{- end -}}
-
-
-
-{{/*
-Return the proper debug fullname
-*/}}
-{{- define "digma.debug" -}}
-{{- include "common.names.dependency.fullname" (dict "chartName" "debug" "chartValues" .Values.debug "context" $) -}}
+{{- define "digma.analytics-api" -}}
+  {{- printf "%s-analytics-api" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
 {{- end -}}
 
 {{/*
-Return the proper redis fullname
+Return the proper collector api fullname
 */}}
-{{- define "digma.redis.fullname" -}}
-{{- include "common.names.dependency.fullname" (dict "chartName" "redis" "chartValues" .Values.redis "context" $) -}}
-{{- end -}}
-
-{{/*
-Create a default fully qualified Redis host name.
-*/}}
-{{- define "digma.redis.host" -}}
-{{- if .Values.redis.enabled -}}
-    {{- printf "%s-master" (include "digma.redis.fullname" .) | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-    {{- print .Values.externalRedis.host -}}
-{{- end -}}
+{{- define "digma.collector-api" -}}
+  {{- printf "%s-collector-api" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
 {{- end -}}
 
 {{/*
@@ -57,12 +28,6 @@ Return the proper scheduler fullname
   {{- printf "%s-scheduler" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
 {{- end -}}
 
-{{/*
-Return the proper digma fullname
-*/}}
-{{- define "digma.jaeger" -}}
-  {{- printf "%s-jaeger" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
-{{- end -}}
 
 {{/*
 Return the proper collector-worker fullname
@@ -85,21 +50,12 @@ Return the proper measurement-analysis fullname
   {{- printf "%s-measurement-analysis" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
 {{- end -}}
 
-
 {{/*
-Return the proper otel collector df fullname
+Return the proper ui fullname
 */}}
-{{- define "digma.otel-collector-df" -}}
-  {{- printf "%s-otel-collector-df" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+{{- define "digma.ui" -}}
+  {{- printf "%s-ui" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
 {{- end -}}
-
-{{/*
-Return the proper otel collector df fullname
-*/}}
-{{- define "digma.otel-collector-df-prometheus-scraper-url" -}}
-{{ printf "%s:%v" (include "digma.otel-collector-df" .) .Values.otelCollectorDf.service.ports.prometheus_scraper }}
-{{- end -}}
-
 
 {{/*
 Return the proper otel collector fullname
@@ -109,24 +65,163 @@ Return the proper otel collector fullname
 {{- end -}}
 
 {{/*
-Return the proper collector api fullname
+Return the proper otel collector df (dogfooding) fullname
 */}}
-{{- define "digma.collector-api" -}}
-  {{- printf "%s-collector-api" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
-{{- end -}}
-  
-{{/*
-Return the proper analytics api fullname
-*/}}
-{{- define "digma.analytics-api" -}}
-  {{- printf "%s-analytics-api" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+{{- define "digma.otel-collector-df" -}}
+  {{- printf "%s-otel-collector-df" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
 {{- end -}}
 
 {{/*
-Return the proper ui fullname
+Return the proper otel collector df scraper url
 */}}
-{{- define "digma.ui" -}}
-  {{- printf "%s-ui" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+{{- define "digma.otel-collector-df-prometheus-scraper-url" -}}
+{{ printf "%s:%v" (include "digma.otel-collector-df" .) .Values.otelCollectorDf.service.ports.prometheus_scraper }}
+{{- end -}}
+
+{{/*
+Return the proper postgres fullname
+*/}}
+{{- define "digma.postgresql" -}}
+{{- include "common.names.dependency.fullname" (dict "chartName" "postgresql" "chartValues" .Values.postgresql "context" $) -}}
+{{- end -}}
+
+{{/*
+Return postgres connectivity env
+*/}}
+{{- define "env.postgres" -}}
+- name: ConnectionStrings__Postgres
+  value:  {{ printf "Server=%s;Port=%v;Database=digma_analytics;User Id=%s;Password=%s;" ( include "digma.postgresql" . )  .Values.postgresql.primary.service.ports.postgresql .Values.postgresql.auth.username .Values.postgresql.auth.password}}
+{{- end -}}
+
+{{/*
+Return the proper influx fullname
+*/}}
+{{- define "digma.influx.fullname" -}}
+{{- include "common.names.dependency.fullname" (dict "chartName" "influxdb" "chartValues" .Values.influxdb "context" $) -}}
+{{- end -}}
+
+{{/*
+Return influx connectivity env
+*/}}
+{{- define "env.influx" -}}
+- name: influx2__Url
+  value: {{ printf "http://%s:%v" (include "digma.influx.fullname" .) .Values.influxdb.service.ports.http }}
+{{- end -}}
+
+{{/*
+Return the proper redis fullname
+*/}}
+{{- define "digma.redis.fullname" -}}
+{{- include "common.names.dependency.fullname" (dict "chartName" "redis" "chartValues" .Values.redis "context" $) -}}
+{{- end -}}
+
+{{/*
+Return redis connectivity env
+*/}}
+{{- define "env.redis" -}}
+- name: CacheSettings__RedisConnection
+  value: {{ (include "digma.redis.host" .) }}
+- name: ExternalLogging__ConnectionString
+  value: {{ (include "digma.redis.host" .) }}
+{{- end -}}
+
+
+{{/*
+Return the proper redis host
+*/}}
+{{- define "digma.redis.host" -}}
+{{- if .Values.redis.enabled -}}
+    {{- printf "%s-master" (include "digma.redis.fullname" .) | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+    {{- print .Values.externalRedis.host -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Return the proper jaeger fullname
+*/}}
+{{- define "digma.jaeger" -}}
+  {{- printf "%s-jaeger" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+{{- end -}}
+
+{{/*
+Return jaeger connectivity env
+*/}}
+{{- define "env.jaeger" -}}
+- name: Jaeger__OtlpUrl
+  value: {{ printf "http://%s:%v" (include "digma.jaeger" .) .Values.jaeger.service.ports.grpc_internal }}
+{{- end -}}
+
+{{/*
+Return the proper elasticsearch fullname
+*/}}
+{{- define "digma.elasticsearch.fullname" -}}
+{{- include "common.names.dependency.fullname" (dict "chartName" "elasticsearch" "chartValues" .Values.elasticsearch "context" $) -}}
+{{- end -}}
+
+{{/*
+Return elasticsearch url
+*/}}
+{{- define "digma.elasticsearch.url" -}}
+ {{ printf "http://%s:%v" (include "digma.elasticsearch.fullname" .) .Values.elasticsearch.service.ports.restAPI }}
+{{- end -}}
+
+{{/*
+Return elasticsearch connectivity env
+*/}}
+{{- define "env.elasticsearch" -}}
+- name: ElasticSearch__Uri
+  value: {{ include "digma.elasticsearch.url" . }}
+{{- end -}}
+
+{{/*
+Return the proper kafka fullname
+*/}}
+{{- define "digma.kafka.fullname" -}}
+{{- include "common.names.dependency.fullname" (dict "chartName" "kafka" "chartValues" .Values.kafka "context" $) -}}
+{{- end -}}
+
+{{/*
+Return kafka client url
+*/}}
+{{- define "digma.kafka.client" -}}
+{{ printf "%s:%v" (include "digma.kafka.fullname" .) .Values.kafka.service.ports.client }}
+{{- end -}}
+
+{{/*
+Return kafka connectivity env
+*/}}
+{{- define "env.kafka" -}}
+- name: Kafka__Urls__0
+  value: {{include "digma.kafka.client" .}}
+{{- end -}}
+
+{{/*
+Return the proper grafana fullname
+*/}}
+{{- define "digma.grafana.fullname" -}}
+{{- include "common.names.dependency.fullname" (dict "chartName" "grafana" "chartValues" .Values.grafana "context" $) -}}
+{{- end -}}
+
+{{/*
+Return the proper prometheus fullname
+*/}}
+{{- define "digma.prometheus.fullname" -}}
+{{- printf "%s-service" (include "digma.prometheus" .) }}
+{{- end -}}
+
+{{/*
+Return the proper prometheus name
+*/}}
+{{- define "digma.prometheus" -}}
+{{- include "common.names.dependency.fullname" (dict "chartName" "prometheus" "chartValues" .Values.prometheus "context" $) -}}
+{{- end -}}
+
+{{/*
+Return prometheus url
+*/}}
+{{- define "digma.prometheus.url" -}}
+{{ printf "http://%s:%v" (include "digma.prometheus.fullname" .) .Values.prometheus.server.service.ports.http }}
 {{- end -}}
 
 
@@ -134,14 +229,15 @@ Return the proper ui fullname
 Return the proper metrics exporter fullname
 */}}
 {{- define "digma.k8s-metrics-exporter" -}}
-  {{- printf "%s-k8s-metrics-exporter" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+{{- printf "%s-k8s-metrics-exporter" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
 {{- end -}}
 
-
+{{/*
+Return metrics exporter target url
+*/}}
 {{- define "digma.k8s-metrics-exporter-target" -}}
 {{ printf "%s:%v" ( include "digma.k8s-metrics-exporter" . ) .Values.metricsExporter.service.ports.http}}
 {{- end -}}
-
 
 
 {{- define "env.digmaEnv" -}}
@@ -156,23 +252,6 @@ Return the proper metrics exporter fullname
 {{- end -}}
 
 
-{{- define "env.postgres" -}}
-- name: ConnectionStrings__Postgres
-  value:  {{ printf "Server=%s;Port=%v;Database=digma_analytics;User Id=%s;Password=%s;" ( include "digma.postgresql" . )  .Values.postgresql.primary.service.ports.postgresql .Values.postgresql.auth.username .Values.postgresql.auth.password}}
-{{- end -}}
-
-
-{{- define "env.redis" -}}
-- name: CacheSettings__RedisConnection
-  value: {{ (include "digma.redis.host" .) }}
-- name: ExternalLogging__ConnectionString
-  value: {{ (include "digma.redis.host" .) }}
-{{- end -}}
-
-{{- define "env.jaeger" -}}
-- name: Jaeger__OtlpUrl
-  value: {{ printf "http://%s:%v" (include "digma.jaeger" .) .Values.jaeger.service.ports.grpc_internal }}
-{{- end -}}
 
 # Digma to meloona
 {{- define "env.otlpExporter" -}}
@@ -198,48 +277,6 @@ Return the proper metrics exporter fullname
 {{- end -}}
 
 
-{{- define "digma.grafana.fullname" -}}
-{{- include "common.names.dependency.fullname" (dict "chartName" "grafana" "chartValues" .Values.grafana "context" $) -}}
-{{- end -}}
-
-{{- define "digma.prometheus.fullname" -}}
-  {{- printf "%s-service" (include "digma.prometheus" .) }}
-{{- end -}}
-
-{{- define "digma.prometheus" -}}
-{{- include "common.names.dependency.fullname" (dict "chartName" "prometheus" "chartValues" .Values.prometheus "context" $) -}}
-{{- end -}}
-
-{{- define "digma.prometheus.url" -}}
-{{ printf "http://%s:%v" (include "digma.prometheus.fullname" .) .Values.prometheus.server.service.ports.http }}
-{{- end -}}
-
-{{- define "digma.kafka.fullname" -}}
-{{- include "common.names.dependency.fullname" (dict "chartName" "kafka" "chartValues" .Values.kafka "context" $) -}}
-{{- end -}}
-
-{{- define "digma.kafka.client" -}}
-{{ printf "%s:%v" (include "digma.kafka.fullname" .) .Values.kafka.service.ports.client }}
-{{- end -}}
-
-{{- define "env.kafka" -}}
-- name: Kafka__Urls__0
-  value: {{include "digma.kafka.client" .}}
-{{- end -}}
-
-
-{{- define "digma.elasticsearch.fullname" -}}
-{{- include "common.names.dependency.fullname" (dict "chartName" "elasticsearch" "chartValues" .Values.elasticsearch "context" $) -}}
-{{- end -}}
-
-{{- define "digma.elasticsearch.url" -}}
- {{ printf "http://%s:%v" (include "digma.elasticsearch.fullname" .) .Values.elasticsearch.service.ports.restAPI }}
-{{- end -}}
-
-{{- define "env.elasticsearch" -}}
-- name: ElasticSearch__Uri
-  value: {{ include "digma.elasticsearch.url" . }}
-{{- end -}}
 
 {{- define "env.versions" -}}
 - name: ApplicationVersion
@@ -285,3 +322,12 @@ tolerations:
 nodeSelector:
   {{- toYaml .Values.nodeSelector | nindent 8 }}
 {{- end -}}
+
+
+{{/*
+Return the proper debug fullname
+*/}}
+{{- define "digma.debug" -}}
+{{- printf "%s-debug" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+{{- end -}}
+
