@@ -1,3 +1,4 @@
+{{- if eq "true" (include "digma.observability.enabled" .) }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -40,19 +41,19 @@ data:
     exporters:
       logging:
         verbosity: detailed
-      {{- if eq .Values.digmaSelfDiagnosis.otlpExporterEndpoint "local" }}
+      {{- if eq .Values.observability.useLocal true }}
       prometheus:
         endpoint: 0.0.0.0:{{ .Values.otelCollectorDf.service.ports.prometheus_scraper }}
         send_timestamps: true
         metric_expiration: 10m
       {{- else }}
       otlp:
-        endpoint: {{.Values.digmaSelfDiagnosis.otlpExporterEndpoint}}
+        endpoint: {{.Values.observability.otlp.remoteEndpoint}}
       {{- end }}
 
     service:
       pipelines:
-        {{- if eq .Values.digmaSelfDiagnosis.otlpExporterEndpoint "local" }}
+        {{- if eq .Values.observability.useLocal true }}
         metrics:
           receivers: [otlp, kafkametrics, prometheus/k8s_metrics]
           processors: [attributes/add_source_env, batch]
@@ -67,3 +68,4 @@ data:
           processors: [attributes/add_source_env, batch]
           exporters: [otlp]
         {{- end }}
+{{- end }}

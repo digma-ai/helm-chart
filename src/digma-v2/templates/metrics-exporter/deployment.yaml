@@ -1,3 +1,4 @@
+{{- if eq "true" (include "digma.observability.enabled" .) }}
 apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
 kind: Deployment
 metadata:
@@ -44,3 +45,4 @@ spec:
           value: {{ .Release.Namespace }}
         ports:
         - containerPort: {{ .Values.metricsExporter.service.ports.http }}
+{{- end }}

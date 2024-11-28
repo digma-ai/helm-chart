@@ -79,6 +79,20 @@ Return the proper otel collector df scraper url
 {{- end -}}
 
 {{/*
+Return the proper otel collector df grpc url
+*/}}
+{{- define "digma.otel-collector-df-grpc" -}}
+{{ printf "http://%s:%v" (include "digma.otel-collector-df" .) .Values.otelCollectorDf.service.ports.grpc }}
+{{- end -}}
+
+{{/*
+Return the proper debug fullname
+*/}}
+{{- define "digma.debug" -}}
+{{- printf "%s-debug" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+{{- end -}}
+
+{{/*
 Return the proper postgres fullname
 */}}
 {{- define "digma.postgresql" -}}
@@ -203,6 +217,7 @@ Return the proper grafana fullname
 {{- include "common.names.dependency.fullname" (dict "chartName" "grafana" "chartValues" .Values.grafana "context" $) -}}
 {{- end -}}
 
+
 {{/*
 Return the proper prometheus fullname
 */}}
@@ -251,31 +266,33 @@ Return metrics exporter target url
   value: {{ .Values.digma.siteName }}
 {{- end -}}
 
+{{/*
+Return true if observability enabled
+*/}}
+{{- define "digma.observability.enabled" -}}
+{{- if or (.Values.observability.useLocal) (not (empty (default "" .Values.observability.otlp.remoteEndpoint))) }}
+{{- print "true" -}}
+{{- else -}}
+{{- print "false" -}}
+{{- end -}}
+{{- end -}}
 
 
-# Digma to meloona
-{{- define "env.otlpExporter" -}}
+
+{{- define "env.otlp" -}}
+  {{- if eq "true" (include "digma.observability.enabled" .) }}
 - name: OtlpExporterUrl
-  value: {{ printf "http://%s-otel-collector:4317" (.Release.Name)}}
-{{- end -}}
-
-{{- define "env.otlpExportTraces" -}}
+  value: {{ include "digma.otel-collector-df-grpc" .}}
+- name: OtlpSamplerProbability
+  value: {{ .Values.observability.otlp.samplerProbability| quote }}
 - name: OtlpExportTraces
-  value: {{ quote .Values.digmaSelfDiagnosis.otlpExportTraces }}
-{{- end -}}
-
-
-{{- define "env.otlpExportMetrics" -}}
+  value: {{ quote .Values.observability.otlp.exportTraces }}
 - name: OtlpExportMetrics
-  value: {{ quote .Values.digmaSelfDiagnosis.otlpExportMetrics }}
-{{- end -}}
-
-
-{{- define "env.otlpExportLogs" -}}
+  value: {{ quote .Values.observability.otlp.exportMetrics }}
 - name: OtlpExportLogs
-  value: {{ quote .Values.digmaSelfDiagnosis.otlpExportLogs }}
+  value: {{ quote .Values.observability.otlp.exportLogs }}
+  {{- end -}}
 {{- end -}}
-
 
 
 {{- define "env.versions" -}}
@@ -301,33 +318,5 @@ Return metrics exporter target url
 {{- define "env.digmaEnvType" -}}
 - name: DIGMA_ENV_TYPE
   value: {{ .Values.digma.environmentType }}
-{{- end -}}
-
-
-
-
-{{- define "imagePullSecrets" -}}
-{{- if .Values.imagePullSecretName -}}
-imagePullSecrets:
-- name: {{ .Values.imagePullSecretName }}
-{{- end -}}
-{{- end -}}
-
-{{- define "tolerations" -}}
-tolerations:
-  {{- toYaml .Values.tolerations | nindent 8 }}
-{{- end -}}
-
-{{- define "nodeSelector" -}}
-nodeSelector:
-  {{- toYaml .Values.nodeSelector | nindent 8 }}
-{{- end -}}
-
-
-{{/*
-Return the proper debug fullname
-*/}}
-{{- define "digma.debug" -}}
-{{- printf "%s-debug" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
 {{- end -}}
 

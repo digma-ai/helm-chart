@@ -1,3 +1,4 @@
+{{ if .Values.observability.useLocal }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -17,3 +18,4 @@ data:
       - job_name: otel-collector
         static_configs:
           - targets: [{{ include "digma.otel-collector-df-prometheus-scraper-url" .}}]
+{{- end }}

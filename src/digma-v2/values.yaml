@@ -48,9 +48,7 @@ presets:
 
 deploymentType: Helm
 exposeInternalErrorDetails: true
-imagePullSecretName:
-tolerations:
-nodeSelector:
+
 
 traceCollectorThresholds:
   recentActivityUpdateThresholdSeconds: 5
@@ -1236,13 +1234,6 @@ elasticsearch:
   service:
     ports:
       restAPI: 9200
-
-grafana2:
-  host: "{{ .Release.Name }}-grafana"
-  annotations: {}
-  labels: {}
-  args: []
-
 grafana:
   admin:
     user: admin
@@ -1285,6 +1276,7 @@ grafana:
     tolerations: []
 
 prometheus:
+  enabled: false
   fullnameOverride: "digma-prometheus"
   alertmanager:
     enabled: false
@@ -1468,16 +1460,9 @@ kafka:
     ports:
       client: 9092
       controller: 9093
-digmaSelfDiagnosis:
-  otlpExportTraces: false
-  otlpExportMetrics: false
-  otlpExportLogs: false
-  otlpExporterEndpoint: local # either a url or 'local'
-  otlpSamplerProbability: "0.1"
-
 
 debug:
-  enabled: true
+  enabled: false
   pullSecrets: []
   kafkaUi:
     image:
@@ -1515,12 +1500,27 @@ debug:
       pullPolicy: IfNotPresent
     port: 8082
     env:
-    - name: "PGADMIN_DEFAULT_USER"
-      value: "admin"
     - name: PGADMIN_DEFAULT_EMAIL
       value: "admin@admin.com"
     - name: PGADMIN_DEFAULT_PASSWORD
       value: "admin"
+
+## Digma observability
+## @param useLocal [default: true]
+## @param otlp.remoteEndpoint Please note this parameter, if set, will override the useLocal with false
+## @param otlp.samplerProbability [default: 0.1]
+## @param otlp.exportTraces [default: false]
+## @param otlp.exportMetrics [default: false] 
+##
+observability:
+  useLocal: false
+  otlp:
+    remoteEndpoint:
+    samplerProbability: 0.1
+    exportTraces: true
+    exportMetrics: true
+    exportLogs: false
+
 digma:
   environmentName: digma
   environmentType: Public

@@ -1,3 +1,4 @@
+{{- if eq "true" (include "digma.observability.enabled" .) }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -20,3 +21,4 @@ spec:
   - name: prometheus-scraper
     protocol: TCP
     port: {{ .Values.otelCollectorDf.service.ports.prometheus_scraper }}
+{{- end }}

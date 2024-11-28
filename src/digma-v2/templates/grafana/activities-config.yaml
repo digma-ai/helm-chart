@@ -1,3 +1,4 @@
+{{ if .Values.observability.useLocal }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -12,3 +13,4 @@ metadata:
 data:
   activities.json: |
     {{ .Files.Get "grafana-dashboards/Activities.json" | nindent 4 }}
+{{- end }}

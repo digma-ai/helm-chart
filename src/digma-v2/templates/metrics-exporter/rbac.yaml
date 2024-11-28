@@ -1,3 +1,4 @@
+{{- if eq "true" (include "digma.observability.enabled" .) }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -33,3 +34,4 @@ subjects:
 - kind: ServiceAccount
   name: {{ include "digma.k8s-metrics-exporter" . }}
   namespace: {{ include "common.names.namespace" . | quote }}
+{{- end }}
