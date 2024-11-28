@@ -10,5 +10,5 @@ metadata:
   {{- end }}
 data:
   environment.json: |
-    {{ .Files.Get "grafana-dashboards/Environment.json" | nindent 4 }}
+    {{ .Files.Get "files/grafana-dashboards/Environment.json" | nindent 4 }}
 {{- end }}

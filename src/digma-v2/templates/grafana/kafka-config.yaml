@@ -10,5 +10,5 @@ metadata:
   {{- end }}
 data:
   kafka.json: |
-    {{ .Files.Get "grafana-dashboards/Kafka.json" | nindent 4 }}
+    {{ .Files.Get "files/grafana-dashboards/Kafka.json" | nindent 4 }}
 {{- end }}

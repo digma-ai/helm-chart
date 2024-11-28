@@ -12,5 +12,5 @@ metadata:
   {{- end }}
 data:
   activities.json: |
-    {{ .Files.Get "grafana-dashboards/Activities.json" | nindent 4 }}
+    {{ .Files.Get "files/grafana-dashboards/Activities.json" | nindent 4 }}
 {{- end }}
