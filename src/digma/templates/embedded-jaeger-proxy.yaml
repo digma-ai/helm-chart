@@ -1,0 +1,67 @@
+{{- if .Values.embeddedJaeger.enabled }}
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-embedded-jaeger-proxy-files
+data:
+  nginxConf: |
+{{ tpl (.Files.Get "embedded-jaeger-proxy-files/nginx.conf") $ | indent 4 }}
+
+  loginPageHtml: | 
+{{ .Files.Get "embedded-jaeger-proxy-files/login-page.html" | indent 4 }}
+
+  indexJs: |
+{{ .Files.Get "embedded-jaeger-proxy-files/index.js" | indent 4 }}
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-embedded-jaeger-proxy-deployment
+  labels:
+    app: embedded-jaeger-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: embedded-jaeger-proxy
+  template:
+    metadata:
+      labels:
+        app: embedded-jaeger-proxy
+    spec:
+      containers:
+        - name: embedded-jaeger-proxy
+          image: nginx:1.27
+          volumeMounts:
+            - name: files
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginxConf
+            - name: files
+              mountPath: /etc/nginx/login-page.html
+              subPath: loginPageHtml
+            - name: files
+              mountPath: /etc/nginx/index.js
+              subPath: indexJs
+      volumes:
+        - name: files
+          configMap:
+            name: {{ .Release.Name }}-embedded-jaeger-proxy-files
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ tpl .Values.embeddedJaeger.proxyHost . }}
+spec:
+  type: ClusterIP
+  selector:
+     app: "embedded-jaeger-proxy"
+  ports:
+  - name: api
+    port: 16686
+    protocol: TCP
+
+{{- end }}

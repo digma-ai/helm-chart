@@ -67,5 +67,3 @@ spec:
           value: {{ .Values.digmaAnalytics.secured | quote }}
         - name: CollectorUrl
           value: {{ printf " http://%s:5048" (tpl .Values.digmaCollectorApi.host .)}}
-
-
