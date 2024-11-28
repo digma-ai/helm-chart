@@ -44,19 +44,11 @@ spec:
         ports:
         - containerPort: {{ .Values.scheduler.service.ports.internal }}
         env:
-        {{- include "env.isCentralize" . | nindent  8 }}
-        {{- include "env.licenseKey" . | nindent  8 }}
-        {{- include "env.digmaEnv" . | nindent  8 }}
-        {{- include "env.digmaSite" . | nindent  8 }}
+        {{- include "env.digma.app.common" . | nindent  8 }}
         {{- include "env.redis" . | nindent  8 }}
         {{- include "env.influx" . | nindent  8 }}
         {{- include "env.postgres" . | nindent  8 }}
         {{- include "env.kafka" . | nindent  8 }}
-        {{- include "env.otlp" . | nindent  8 }}
-        {{- include "env.versions" . | nindent  8 }}
-        {{- include "env.digmaEnvType" . | nindent 8 }}
-        - name: BACKEND_DEPLOYMENT_TYPE
-          value: {{ .Values.deploymentType | quote}}
         {{- include "env.elasticsearch" . | nindent  8 }}
 
 

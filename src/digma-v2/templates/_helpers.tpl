@@ -255,16 +255,10 @@ Return metrics exporter target url
 {{- end -}}
 
 
-{{- define "env.digmaEnv" -}}
-- name: DEPLOYMENT_ENV
-  value: {{ .Values.digma.environmentName }}
-{{- end -}}
+
+
 
       
-{{- define "env.digmaSite" -}}
-- name: Site
-  value: {{ .Values.digma.siteName }}
-{{- end -}}
 
 {{/*
 Return true if observability enabled
@@ -278,9 +272,24 @@ Return true if observability enabled
 {{- end -}}
 
 
-
-{{- define "env.otlp" -}}
+{{- define "env.digma.app.common" -}}
+- name: BACKEND_DEPLOYMENT_TYPE
+  value: Helm
+- name: IsCentralize
+  value: "true"
+- name: DIGMA_LICENSE_KEY
+  value: {{ required "A valid .Values.digma.licenseKey entry is required. If you've signed up for a free Digma account you should have received a Digma license to use. check https://docs.digma.ai/digma-developer-guide/installation/central-on-prem-install" .Values.digma.licenseKey }}
+- name: ApplicationVersion
+  value: {{.Chart.AppVersion}}
+- name: ChartVersion
+  value: {{.Chart.Version}}
   {{- if eq "true" (include "digma.observability.enabled" .) }}
+- name: Site
+  value: {{ .Values.observability.siteName }}
+- name: DEPLOYMENT_ENV
+  value: {{ .Values.observability.environmentName }}
+- name: DIGMA_ENV_TYPE
+  value: "Public"
 - name: OtlpExporterUrl
   value: {{ include "digma.otel-collector-df-grpc" .}}
 - name: OtlpSamplerProbability
@@ -295,28 +304,7 @@ Return true if observability enabled
 {{- end -}}
 
 
-{{- define "env.versions" -}}
-- name: ApplicationVersion
-  value: {{.Chart.AppVersion}}
-- name: ChartVersion
-  value: {{.Chart.Version}}
-{{- end -}}
 
 
 
-{{- define "env.isCentralize" -}}
-- name: IsCentralize
-  value: {{.Values.digma.isCentralize | quote}}
-{{- end -}}
-
-
-{{- define "env.licenseKey" -}}
-- name: DIGMA_LICENSE_KEY
-  value: {{ required "A valid .Values.digma.licenseKey entry is required. If you've signed up for a free Digma account you should have received a Digma license to use. check https://docs.digma.ai/digma-developer-guide/installation/central-on-prem-install" .Values.digma.licenseKey }}
-{{- end -}}
-
-{{- define "env.digmaEnvType" -}}
-- name: DIGMA_ENV_TYPE
-  value: {{ .Values.digma.environmentType }}
-{{- end -}}
 

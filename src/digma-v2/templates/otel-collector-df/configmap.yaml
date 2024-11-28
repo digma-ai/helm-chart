@@ -35,7 +35,7 @@ data:
       attributes/add_source_env:
         actions:
           - key: source_env
-            value: {{.Values.digma.environmentName}}
+            value: {{.Values.observability.environmentName}}
             action: insert
 
     exporters:
