@@ -14,10 +14,12 @@
 *.swp
 *.bak
 *.tmp
-*.orig
 *~
 # Various IDEs
 .project
 .idea/
 *.tmproj
-.vscode/
+# img folder
+img/
+# Changelog
+CHANGELOG.md
