@@ -85,6 +85,7 @@ Return the proper otel collector df grpc url
 {{ printf "http://%s:%v" (include "digma.otel-collector-df" .) .Values.otelCollectorDf.service.ports.grpc }}
 {{- end -}}
 
+
 {{/*
 Return the proper debug fullname
 */}}
