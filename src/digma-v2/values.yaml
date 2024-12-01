@@ -28,7 +28,7 @@ digma:
     #replicas based on a given preset
     size: medium
   accessToken: 
-  licenseKey: "7df80c6f820a4ec5a81fe6325769c88b"
+  licenseKey:
 
 ## @section Global parameters
 ## Global Docker image parameters
@@ -191,23 +191,25 @@ otelCollector:
     ingress:
       ##  Enable ingress controller resource
       ##
-      enabled: true
+      enabled: false
+      ## Ingress Path type
+      ##
+      pathType: ImplementationSpecific
       ##  Override API Version (automatically detected if not set)
       ##
       apiVersion: ""
       ##  Default host for the ingress resource
       ##
-      hostname: 123.collector-grpc.digma.systems
+      hostname: 
       ## IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
       ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
       ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
       ##
-      ingressClassName: "alb"
-      ## Ingress Path type
+      ingressClassName:
+      ## @param ingress.path The Path to Spark. You may need to set this to '/*' in order to use this with ALB ingress controllers.
       ##
-      pathType: ImplementationSpecific
-      
-      ## Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
+      path: /
+      ## @param ingress.annotations Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
       ## For a full list of possible ingress annotations, please see
       ## ref: https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/nginx-configuration/annotations.md
       ## Use this parameter to set the required annotations for cert-manager, see
@@ -219,21 +221,6 @@ otelCollector:
       ##   cert-manager.io/cluster-issuer: cluster-issuer-name
       ##
       annotations:
-        alb.ingress.kubernetes.io/scheme: internet-facing
-        alb.ingress.kubernetes.io/target-type: ip #facilitating efficient load balancing for services exposed via ClusterIP
-        alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
-        alb.ingress.kubernetes.io/backend-protocol-version: GRPC
-        alb.ingress.kubernetes.io/backend-protocol: HTTP
-        #alb.ingress.kubernetes.io/load-balancer-attributes: routing.http2.enabled=true
-        alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-1:585085114703:certificate/b3e183fd-0615-4b61-b37e-2605b9eb4283
-        # alb.ingress.kubernetes.io/healthcheck-path: "/health"
-        # alb.ingress.kubernetes.io/healthcheck-protocol: "HTTP"
-        # alb.ingress.kubernetes.io/healthcheck-port: "health"
-        # alb.ingress.kubernetes.io/healthcheck-interval-seconds: "30"
-        # alb.ingress.kubernetes.io/healthcheck-timeout-seconds: "5"
-        # alb.ingress.kubernetes.io/healthcheck-healthy-threshold-count: "3"
-        # alb.ingress.kubernetes.io/healthcheck-unhealthy-threshold-count: "3"
-        alb.ingress.kubernetes.io/group.name: "digma-public"
       ## Additional arbitrary path/backend objects
       ## For example: The ALB ingress controller requires a special rule for handling SSL redirection.
       ## extraPaths:
@@ -261,23 +248,25 @@ otelCollector:
     ingress:
       ##  Enable ingress controller resource
       ##
-      enabled: true
+      enabled: false
+      ## Ingress Path type
+      ##
+      pathType: ImplementationSpecific
       ##  Override API Version (automatically detected if not set)
       ##
       apiVersion: ""
       ##  Default host for the ingress resource
       ##
-      hostname: 123.collector-http.digma.systems
+      hostname:
       ## IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
       ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
       ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
       ##
-      ingressClassName: "alb"
-      ## Ingress Path type
+      ingressClassName:
+      ## @param ingress.path The Path to Spark. You may need to set this to '/*' in order to use this with ALB ingress controllers.
       ##
-      pathType: ImplementationSpecific
-      
-      ## Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
+      path: /
+      ## @param ingress.annotations Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
       ## For a full list of possible ingress annotations, please see
       ## ref: https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/nginx-configuration/annotations.md
       ## Use this parameter to set the required annotations for cert-manager, see
@@ -288,22 +277,7 @@ otelCollector:
       ##   kubernetes.io/ingress.class: nginx
       ##   cert-manager.io/cluster-issuer: cluster-issuer-name
       ##
-      annotations:
-        alb.ingress.kubernetes.io/scheme: internet-facing
-        alb.ingress.kubernetes.io/target-type: ip #facilitating efficient load balancing for services exposed via ClusterIP
-        alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
-        alb.ingress.kubernetes.io/backend-protocol: HTTP
-        #alb.ingress.kubernetes.io/load-balancer-attributes: routing.http2.enabled=true
-        alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-1:585085114703:certificate/b3e183fd-0615-4b61-b37e-2605b9eb4283
-        alb.ingress.kubernetes.io/healthcheck-path: "/health"
-        alb.ingress.kubernetes.io/healthcheck-protocol: "HTTP"
-        alb.ingress.kubernetes.io/healthcheck-port: "health"
-        alb.ingress.kubernetes.io/healthcheck-interval-seconds: "30"
-        alb.ingress.kubernetes.io/healthcheck-timeout-seconds: "5"
-        alb.ingress.kubernetes.io/healthcheck-healthy-threshold-count: "3"
-        alb.ingress.kubernetes.io/healthcheck-unhealthy-threshold-count: "3"
-
-        alb.ingress.kubernetes.io/group.name: "digma-public"
+      annotations: {}
       ## Additional arbitrary path/backend objects
       ## For example: The ALB ingress controller requires a special rule for handling SSL redirection.
       ## extraPaths:
@@ -391,6 +365,9 @@ collectorApi:
     ## Enable ingress controller resource
     ##
     enabled: false
+    ## Ingress Path type
+    ##
+    pathType: ImplementationSpecific
     ## Override API Version (automatically detected if not set)
     ##
     apiVersion: ""
@@ -402,12 +379,9 @@ collectorApi:
     ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
     ##
     ingressClassName: "alb"
-    ## Ingress Path type
-    ##
-    pathType: ImplementationSpecific
     ## The Path to service. You may need to set this to '/*' in order to use this with ALB ingress controllers
     ##
-    path: /*
+    path: /
     ## Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
     ## For a full list of possible ingress annotations, please see
     ## ref: https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/nginx-configuration/annotations.md
@@ -503,24 +477,24 @@ analyticsApi:
   ingress:
     ## Enable ingress controller resource
     ##
-    enabled: true
+    enabled: false
+    ## Ingress Path type
+    ##
+    pathType: ImplementationSpecific
     ## Override API Version (automatically detected if not set)
     ##
     apiVersion: ""
     ## Default host for the ingress resource
     ##
-    hostname: 123.api.digma.systems
+    hostname:
     ## IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
     ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
     ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
     ##
-    ingressClassName: "alb"
-    ## Ingress Path type
-    ##
-    pathType: ImplementationSpecific
+    ingressClassName: ""
     ## The Path to service. You may need to set this to '/*' in order to use this with ALB ingress controllers
     ##
-    path: /*
+    path: /
     ## Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
     ## For a full list of possible ingress annotations, please see
     ## ref: https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/nginx-configuration/annotations.md
@@ -533,20 +507,6 @@ analyticsApi:
     ##   cert-manager.io/cluster-issuer: cluster-issuer-name
     ##
     annotations:
-      alb.ingress.kubernetes.io/scheme: internet-facing
-      alb.ingress.kubernetes.io/target-type: ip #facilitating efficient load balancing for services exposed via ClusterIP
-      alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]'
-      alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-1:585085114703:certificate/b3e183fd-0615-4b61-b37e-2605b9eb4283
-      alb.ingress.kubernetes.io/healthcheck-path: "/healthz"
-      alb.ingress.kubernetes.io/healthcheck-protocol: "HTTP"
-      alb.ingress.kubernetes.io/healthcheck-port: "traffic-port"
-      alb.ingress.kubernetes.io/healthcheck-interval-seconds: "30"
-      alb.ingress.kubernetes.io/healthcheck-timeout-seconds: "5"
-      alb.ingress.kubernetes.io/healthcheck-healthy-threshold-count: "3"
-      alb.ingress.kubernetes.io/healthcheck-unhealthy-threshold-count: "3"
-      alb.ingress.kubernetes.io/group.name: "digma-public"
-
-
     ## Additional arbitrary path/backend objects
     ## For example: The ALB ingress controller requires a special rule for handling SSL redirection.
     ## extraPaths:
@@ -791,24 +751,24 @@ ui:
   ingress:
     ## Enable ingress controller resource
     ##
-    enabled: true
+    enabled: false
+    ## Ingress Path type
+    ##
+    pathType: ImplementationSpecific
     ## Override API Version (automatically detected if not set)
     ##
     apiVersion: ""
     ## Default host for the ingress resource
     ##
-    hostname: 123.ui.digma.systems
+    hostname:
     ## IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
     ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
     ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
     ##
     ingressClassName: "alb"
-    ## Ingress Path type
-    ##
-    pathType: ImplementationSpecific
     ## The Path to service. You may need to set this to '/*' in order to use this with ALB ingress controllers
     ##
-    path: /*
+    path: /
     ## Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
     ## For a full list of possible ingress annotations, please see
     ## ref: https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/nginx-configuration/annotations.md
@@ -821,13 +781,6 @@ ui:
     ##   cert-manager.io/cluster-issuer: cluster-issuer-name
     ##
     annotations:
-      alb.ingress.kubernetes.io/scheme: internet-facing
-      alb.ingress.kubernetes.io/target-type: ip #facilitating efficient load balancing for services exposed via ClusterIP
-      alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]'
-      alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-1:585085114703:certificate/b3e183fd-0615-4b61-b37e-2605b9eb4283
-      alb.ingress.kubernetes.io/group.name: "digma-public"
-
-
     ## Additional arbitrary path/backend objects
     ## For example: The ALB ingress controller requires a special rule for handling SSL redirection.
     ## extraPaths:
@@ -1171,24 +1124,24 @@ jaeger:
   ingress:
     ## Enable ingress controller resource
     ##
-    enabled: true
+    enabled: false
+    ## Ingress Path type
+    ##
+    pathType: ImplementationSpecific
     ## Override API Version (automatically detected if not set)
     ##
     apiVersion: ""
     ## Default host for the ingress resource
     ##
-    hostname: 123.jaeger.digma.systems
+    hostname: 
     ## IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
     ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
     ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
     ##
-    ingressClassName: "alb"
-    ## Ingress Path type
-    ##
-    pathType: ImplementationSpecific
+    ingressClassName: ""
     ## The Path to service. You may need to set this to '/*' in order to use this with ALB ingress controllers
     ##
-    path: /*
+    path: /
     ## Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
     ## For a full list of possible ingress annotations, please see
     ## ref: https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/nginx-configuration/annotations.md
@@ -1201,13 +1154,6 @@ jaeger:
     ##   cert-manager.io/cluster-issuer: cluster-issuer-name
     ##
     annotations:
-      alb.ingress.kubernetes.io/scheme: internet-facing
-      alb.ingress.kubernetes.io/target-type: ip #facilitating efficient load balancing for services exposed via ClusterIP
-      alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]'
-      alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-1:585085114703:certificate/b3e183fd-0615-4b61-b37e-2605b9eb4283
-      alb.ingress.kubernetes.io/group.name: "digma-public"
-
-
     ## Additional arbitrary path/backend objects
     ## For example: The ALB ingress controller requires a special rule for handling SSL redirection.
     ## extraPaths:
@@ -1231,7 +1177,6 @@ jaeger:
     ##             name: http
     ##
     extraRules: []
-  ## Unique key you’ll need to provide any IDE that connects to this Digma instance, you can choose any token you'd like
   args: []
 
 ## ref: https://github.com/bitnami/charts/blob/main/bitnami/elasticsearch/values.yaml

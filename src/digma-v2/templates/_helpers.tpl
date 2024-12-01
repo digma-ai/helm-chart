@@ -254,12 +254,6 @@ Return metrics exporter target url
 {{ printf "%s:%v" ( include "digma.k8s-metrics-exporter" . ) .Values.metricsExporter.service.ports.http}}
 {{- end -}}
 
-
-
-
-
-      
-
 {{/*
 Return true if observability enabled
 */}}
