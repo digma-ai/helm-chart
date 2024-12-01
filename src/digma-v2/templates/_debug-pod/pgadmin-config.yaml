@@ -1,0 +1,26 @@
+{{ if .Values.debug.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: debug-pgadmin-config
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component:  debug-pgadmin-config
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+data:
+  servers.json: |
+    {
+      "Servers": {
+        "1": {
+          "Name": "PostgreSQL Server",
+          "Group": "Servers",
+          "Host": "{{ include "digma.postgresql" .}}",
+          "Port": {{.Values.postgresql.primary.service.ports.postgresql}},
+          "Username": "{{.Values.postgresql.auth.username}}",
+          "SSLMode": "prefer",
+          "MaintenanceDB": "postgres"
+        }
+      }
+    }
+ {{- end }}

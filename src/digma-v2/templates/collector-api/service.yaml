@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "digma.collector-api" . }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: collector-api
+  {{- if or .Values.collectorApi.service.annotations .Values.commonAnnotations }}
+  {{- $annotations := include "common.tplvalues.merge" ( dict "values" ( list .Values.collectorApi.service.annotations .Values.commonAnnotations ) "context" . ) }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $) | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.collectorApi.service.type }}
+  ports:
+    - name: internal
+      protocol: TCP
+      port: {{ .Values.collectorApi.service.ports.internal }}
+    - name: http
+      protocol: TCP
+      port: {{ .Values.collectorApi.service.ports.http }}
+    - name: grpc
+      protocol: TCP
+      port: {{ .Values.collectorApi.service.ports.grpc }}
+  {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.collectorApi.podLabels .Values.commonLabels ) "context" . ) }}
+  selector: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: collector-api

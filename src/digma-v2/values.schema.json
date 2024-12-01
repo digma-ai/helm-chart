@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "size": {
+      "type": "string",
+      "enum": ["small", "medium", "large"],
+      "description": "This value controls of how mush resources digma will get"
+    }
+  }
+}

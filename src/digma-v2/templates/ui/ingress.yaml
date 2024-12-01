@@ -1,0 +1,44 @@
+{{- if .Values.ui.ingress.enabled }}
+apiVersion: {{ include "common.capabilities.ingress.apiVersion" . }}
+kind: Ingress
+metadata:
+  name: {{ include "digma.ui" . }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: ui
+  {{- if or .Values.ui.ingress.annotations .Values.commonAnnotations }}
+  {{- $annotations := include "common.tplvalues.merge" ( dict "values" ( list .Values.ui.ingress.annotations .Values.commonAnnotations ) "context" . ) }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if and .Values.ui.ingress.ingressClassName (include "common.ingress.supportsIngressClassname" .) }}
+  ingressClassName: {{ .Values.ui.ingress.ingressClassName | quote }}
+  {{- end }}
+  rules:
+    {{- if .Values.ui.ingress.hostname }}
+    - host: {{ tpl .Values.ui.ingress.hostname $ | quote }}
+      http:
+        paths:
+          {{- if .Values.ui.ingress.extraPaths }}
+          {{- toYaml .Values.ui.ingress.extraPaths | nindent 10 }}
+          {{- end }}
+          - path: {{ default "/" .Values.ui.ingress.path }}
+            {{- if eq "true" (include "common.ingress.supportsPathType" .) }}
+            pathType: {{ .Values.ui.ingress.pathType }}
+            {{- end }}
+            backend: {{- include "common.ingress.backend" (dict "serviceName" (include "digma.ui" $) "servicePort" "http" "context" $)  | nindent 14 }}
+    {{- end }}
+    {{- if .Values.ui.ingress.extraRules }}
+    {{- include "common.tplvalues.render" (dict "value" .Values.ui.ingress.extraRules "context" $) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.ui.ingress.tls .Values.ui.ingress.extraTls }}
+  tls:
+    {{- if .Values.ui.ingress.tls }}
+    - hosts:
+        - {{ .Values.ui.ingress.hostname | quote }}
+      secretName: {{ printf "%s-tls" .Values.ingress.hostname }}
+    {{- end }}
+    {{- if .Values.ui.ingress.extraTls }}
+    {{- include "common.tplvalues.render" (dict "value" .Values.ui.ingress.extraTls "context" $) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+{{- end }}
