@@ -4,17 +4,17 @@ Next steps:
   run command: "kubectl get service {{.Release.Namespace}}-analytics-service-lb -n {{.Release.Namespace}} -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'"
 
 1.2 Copy the DIGMA API endpoint "https://<DIGMA_API-external-endpoint>:5051" and set it as the url in the Digma's IDE api (IntelliJ) settings.
-{{ if .Values.digmaCollectorApi.expose }}
+{{ if .Values.collectorApi.expose }}
 2.1 You configured Digma OTEL Collector with external DNS. To get Collector OTEL external endpoint address please run command:
   run command: "kubectl get service {{ .Release.Name }}-collector-api-service-lb -n {{.Release.Namespace}} -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'"
 
 2.2. Add Digma's collector endpoint "http://<CollectorOTEL-external-endpoint>>:5050" in your app or OTLP collector config file.
 {{ else }}
-2. Add Digma's collector endpoint "http://{{ tpl .Values.digmaCollectorApi.host . }}.{{.Release.Namespace}}:5050" in your app or OTLP collector config file.
+2. Add Digma's collector endpoint "http://xxx.{{.Release.Namespace}}:5050" in your app or OTLP collector config file.
 {{ end }}
-{{ if .Values.embeddedJaeger.enabled }}
+
 3.1 To get Jaeger Query external endpoint address please run command:
   run command: "kubectl get service {{.Release.Namespace}}-embedded-jaeger-lb -n {{.Release.Namespace}} -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'"
 
 3.2. Add Jaeger's endpoint "http(or https)://<Jaeger-external-endpoint>:17686" to Digma's IDE 'Jaeger Query URL(for embedded mode)' settings.
-{{ end }}
+
