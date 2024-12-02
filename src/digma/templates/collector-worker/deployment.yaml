@@ -57,6 +57,17 @@ spec:
           value: {{ $element.Method | quote }}
         - name: Filter__IgnoreEndpoints__{{$index}}__Service
           value: {{ $element.Service | quote }}
-        {{- end }} 
-        {{- include "common.tplvalues.render" (dict "value" .Values.collectorWorker.env "context" $) | nindent 8 }}
-
+        {{- end }}
+        - name: "Sampling__Enable"
+          value: {{ .Values.collectorWorker.env.Sampling__Enable | quote }}
+        - name: "ExtendedObservability__Enable"
+          value: {{ .Values.collectorWorker.env.ExtendedObservability__Enable | quote }}
+        - name: "TraceTempStorage__TraceForJaegerExpirationInMinutes"
+          value: {{ .Values.collectorWorker.env.TraceTempStorage__TraceForJaegerExpirationInMinutes | quote }}
+        - name: BlockedTrace__TraceSpansLimit
+          value: {{ .Values.collectorWorker.env.BlockedTrace__TraceSpansLimit | quote }}
+        - name: ThresholdOptions__RecentActivityUpdateThresholdSeconds
+          value: {{ .Values.collectorWorker.env.ThresholdOptions__RecentActivityUpdateThresholdSeconds | quote }}
+        {{- if .Values.collectorWorker.extraEnvVars }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.collectorWorker.extraEnvVars "context" $) | nindent 8 }}
+        {{- end }}

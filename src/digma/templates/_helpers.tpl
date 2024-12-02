@@ -71,7 +71,7 @@ Get the otel collector configuration configmap.
 {{- if .Values.otelCollector.existingConfigmap -}}
     {{- include "common.tplvalues.render" (dict "value" .Values.otelCollector.existingConfigmap "context" .) -}}
 {{- else }}
-    {{- include "otel-collector" . -}}
+    {{- include "digma.otel-collector" . -}}
 {{- end -}}
 {{- end -}}
 
@@ -316,7 +316,7 @@ Return true if observability enabled
 - name: OtlpExportMetrics
   value: {{ quote .Values.observability.otlp.exportMetrics }}
 - name: OtlpExportLogs
-  value: {{ quote .Values.observability.otlp.exportLogs }}
+  value: "false"
   {{- end -}}
 {{- end -}}
 

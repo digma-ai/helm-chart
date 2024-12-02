@@ -52,4 +52,12 @@ spec:
           value: '2'
         - name: Kafka__AllMeasurementsCG__Workers
           value: '2'
-        {{- include "common.tplvalues.render" (dict "value" .Values.measurementAnalysis.env "context" $) | nindent 8 }}
+        - name: ThresholdOptions__UpsertEndpointThresholdSeconds
+          value: {{ .Values.measurementAnalysis.env.ThresholdOptions__UpsertEndpointThresholdSeconds | quote }}
+        - name: ThresholdOptions__UpsertSpansThresholdSeconds
+          value: {{ .Values.measurementAnalysis.env.ThresholdOptions__UpsertSpansThresholdSeconds | quote }}
+        - name: ThresholdOptions__UpsertSpanFlowMetadataThresholdSeconds
+          value: {{ .Values.measurementAnalysis.env.ThresholdOptions__UpsertSpanFlowMetadataThresholdSeconds | quote }}
+        {{- if .Values.measurementAnalysis.extraEnvVars }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.measurementAnalysis.extraEnvVars "context" $) | nindent 8 }}
+        {{- end }}

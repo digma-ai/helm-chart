@@ -1,11 +1,12 @@
-## Digma observability
-## @param useLocal [default: true]
-## @param siteName [default: undefined]
-## @param environmentName [default: digma], Environments represent different deployment stages or scopes.
-## @param otlp.remoteEndpoint Please note this parameter, cannot be set while useLocal is true
-## @param otlp.samplerProbability [default: 0.1]
-## @param otlp.exportTraces [default: true]
-## @param otlp.exportMetrics [default: true]
+## @section observability parameters
+## Digma observability parameters
+## @param observability.useLocal [default: true]
+## @param observability.siteName [default: undefined]
+## @param observability.environmentName [default: digma], Environments represent different deployment stages or scopes.
+## @param observability.otlp.remoteEndpoint Please note this parameter, cannot be set while useLocal is true
+## @param observability.otlp.samplerProbability [default: 0.1]
+## @param observability.otlp.exportTraces [default: true]
+## @param observability.otlp.exportMetrics [default: true]
 ##
 observability:
   useLocal: true
@@ -16,9 +17,9 @@ observability:
     samplerProbability: 0.1
     exportTraces: true
     exportMetrics: true
-    exportLogs: false
 
-## digma globals
+## @section Digma globals
+## Global Digma parameters
 ## @param digma.deployment.size [default: medium], replicas based on a given preset
 ## @param digma.accessToken [default: empty] Unique key you’ll need to provide any IDE that connects to this Digma instance, you can choose any token you'd like
 ## @param digma.licenseKey, license key provided by Digma
@@ -44,7 +45,9 @@ global:
 
 ## @section Common parameters
 ##
-
+## @param kubeVersion Override Kubernetes version
+##
+kubeVersion: ""
 
 ## @param commonLabels Labels to add to all deployed objects
 ##
@@ -101,18 +104,19 @@ collectorWorker:
   ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
   ##
   tolerations: []
+  ## @param collectorWorker.extraEnvVars Array with extra environment variables to add to collectorWorker
+  ## e.g:
+  ## extraEnvVars:
+  ##   - name: FOO
+  ##     value: "bar"
+  ##
+  extraEnvVars: []
   env:
-  - name: "Sampling__Enable"
-    value: "true"
-  - name: "ExtendedObservability__Enable"
-    value: "true"
-  - name: "TraceTempStorage__TraceForJaegerExpirationInMinutes"
-    value: "10"
-  - name: BlockedTrace__TraceSpansLimit
-    value: "3000"
-  - name: ThresholdOptions__RecentActivityUpdateThresholdSeconds
-    value: "5"
-
+    Sampling__Enable: true
+    ExtendedObservability__Enable: true
+    TraceTempStorage__TraceForJaegerExpirationInMinutes: 10
+    BlockedTrace__TraceSpansLimit: 3000
+    ThresholdOptions__RecentActivityUpdateThresholdSeconds: 5
   app:
     ignoreEndpoints:
       - Route: "/health"
@@ -149,10 +153,10 @@ otelCollector:
   samplingPercentage: 100
   ## @param existingConfigmap The name of an existing ConfigMap with your custom configuration
   ##
-  existingConfigmap: "digma-prometheus-service"
+  existingConfigmap: ""
   ## @param existingConfigmapKey The name of the key with the config file
   ##
-  existingConfigmapKey: "prometheus.yaml"
+  existingConfigmapKey: ""
   replicas: 1
   resources:
     requests:
@@ -363,67 +367,6 @@ collectorApi:
   ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
   ##
   tolerations: []
-   
-  ## Configure the ingress resource that allows you to access the
-  ## Service. Set up the URL
-  ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
-  ##
-  ingress:
-    ## Enable ingress controller resource
-    ##
-    enabled: false
-    ## Ingress Path type
-    ##
-    pathType: ImplementationSpecific
-    ## Override API Version (automatically detected if not set)
-    ##
-    apiVersion: ""
-    ## Default host for the ingress resource
-    ##
-    hostname: ""
-    ## IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
-    ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
-    ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
-    ##
-    ingressClassName: "alb"
-    ## The Path to service. You may need to set this to '/*' in order to use this with ALB ingress controllers
-    ##
-    path: /
-    ## Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
-    ## For a full list of possible ingress annotations, please see
-    ## ref: https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/nginx-configuration/annotations.md
-    ## Use this parameter to set the required annotations for cert-manager, see
-    ## ref: https://cert-manager.io/docs/usage/ingress/#supported-annotations
-    ##
-    ## e.g:
-    ## annotations:
-    ##   kubernetes.io/ingress.class: nginx
-    ##   cert-manager.io/cluster-issuer: cluster-issuer-name
-    ##
-    annotations: {}
-    ## Additional arbitrary path/backend objects
-    ## For example: The ALB ingress controller requires a special rule for handling SSL redirection.
-    ## extraPaths:
-    ## - path: /*
-    ##   backend:
-    ##     serviceName: ssl-redirect
-    ##     servicePort: use-annotation
-    ##
-    extraPaths: []
-    ## Additional rules to be covered with this ingress record
-    ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-rules
-    ## e.g:
-    ## extraRules:
-    ## - host: example.local
-    ##     http:
-    ##       path: /
-    ##       backend:
-    ##         service:
-    ##           name: example-svc
-    ##           port:
-    ##             name: http
-    ##
-    extraRules: []
 analyticsApi:
   image:
     registry: docker.io
@@ -585,13 +528,17 @@ measurementAnalysis:
   ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
   ##
   tolerations: []
+  ## @param measurementAnalysis.extraEnvVars Array with extra environment variables to add to measurementAnalysis
+  ## e.g:
+  ## extraEnvVars:
+  ##   - name: FOO
+  ##     value: "bar"
+  ##
+  extraEnvVars: []
   env:
-  - name: ThresholdOptions__UpsertEndpointThresholdSeconds
-    value: "5"
-  - name: ThresholdOptions__UpsertSpansThresholdSeconds
-    value: "5"
-  - name: ThresholdOptions__UpsertSpanFlowMetadataThresholdSeconds
-    value: "5"
+    ThresholdOptions__UpsertEndpointThresholdSeconds: 5
+    ThresholdOptions__UpsertSpansThresholdSeconds: 5
+    ThresholdOptions__UpsertSpanFlowMetadataThresholdSeconds: 5
 scheduler:
   image:
     registry: docker.io
@@ -1316,7 +1263,7 @@ grafana:
 ## ref: https://github.com/bitnami/charts/blob/main/bitnami/prometheus/values.yaml
 prometheus:
   enabled: false
-  fullnameOverride: "digma-prometheus"
+  fullnameOverride: "digma-prometheus" #todo shay
   alertmanager:
     enabled: false
   server:
@@ -1393,7 +1340,7 @@ kafka:
       controller: 9093
 
 debug:
-  enabled: false
+  enabled: true
   pullSecrets: []
   kafkaUi:
     image:
@@ -1430,7 +1377,7 @@ debug:
       ##
       pullPolicy: IfNotPresent
     port: 8082
-    env:
+    env: #todo shay
     - name: PGADMIN_DEFAULT_EMAIL
       value: "admin@admin.com"
     - name: PGADMIN_DEFAULT_PASSWORD
