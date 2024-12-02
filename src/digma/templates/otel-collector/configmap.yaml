@@ -1,3 +1,4 @@
+{{- if not .Values.otelCollector.existingConfigmap }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -37,3 +38,4 @@ data: # config.yaml:
           receivers: [otlp]
           processors: [batch, probabilistic_sampler]
           exporters: [otlphttp, logging]
+{{- end }}

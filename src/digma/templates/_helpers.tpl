@@ -65,6 +65,28 @@ Return the proper otel collector fullname
 {{- end -}}
 
 {{/*
+Get the otel collector configuration configmap.
+*/}}
+{{- define "otel-collector.configmapName" -}}
+{{- if .Values.otelCollector.existingConfigmap -}}
+    {{- include "common.tplvalues.render" (dict "value" .Values.otelCollector.existingConfigmap "context" .) -}}
+{{- else }}
+    {{- include "otel-collector" . -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Get the otel collector configuration configmap key.
+*/}}
+{{- define "otel-collector.configmapKey" -}}
+{{- if .Values.otelCollector.existingConfigmapKey -}}
+    {{- include "common.tplvalues.render" (dict "value" .Values.otelCollector.existingConfigmapKey "context" .) -}}
+{{- else }}
+    {{- printf "config.yaml" -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Return the proper otel collector df (dogfooding) fullname
 */}}
 {{- define "digma.otel-collector-df" -}}

@@ -145,7 +145,14 @@ otelCollector:
     ##   - myRegistryKeySecretName
     ##
     pullSecrets: []
+  ## @param samplingPercentage telemetry data that should be sampled and sent to the backend
   samplingPercentage: 100
+  ## @param existingConfigmap The name of an existing ConfigMap with your custom configuration
+  ##
+  existingConfigmap: "digma-prometheus-service"
+  ## @param existingConfigmapKey The name of the key with the config file
+  ##
+  existingConfigmapKey: "prometheus.yaml"
   replicas: 1
   resources:
     requests:
