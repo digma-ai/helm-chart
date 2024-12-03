@@ -201,7 +201,7 @@ otelCollector:
     annotations: {}
     ## @param otelCollector.service.ports.health health check service port
     ## @param otelCollector.service.ports.grpc otelCollector gRPC port
-    ## @param otelCollector.service.ports.http otelCollector HTTP port
+    ## @param otelCollector.service.ports.http otelCollector HTTP port listen to path: /v1/traces
     ##
     ports:
       health: 13133
