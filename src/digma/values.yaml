@@ -1,5 +1,17 @@
-## @section observability parameters
-## Digma observability parameters
+## @section Digma globals
+## Global Digma parameters
+## @param digma.deployment.size [default: medium], replicas based on a given preset
+## @param digma.accessToken [default: empty] Unique key you’ll need to provide any IDE that connects to this Digma instance, you can choose any token you'd like
+## @param digma.licenseKey license key provided by Digma
+##
+digma:
+  deployment:
+    #replicas based on a given preset
+    size: medium
+  accessToken: 
+  licenseKey:
+  
+## @section Observability parameters
 ## @param observability.useLocal [default: true]
 ## @param observability.siteName [default: undefined]
 ## @param observability.environmentName [default: digma], Environments represent different deployment stages or scopes.
@@ -17,19 +29,6 @@ observability:
     samplerProbability: 0.1
     exportTraces: true
     exportMetrics: true
-
-## @section Digma globals
-## Global Digma parameters
-## @param digma.deployment.size [default: medium], replicas based on a given preset
-## @param digma.accessToken [default: empty] Unique key you’ll need to provide any IDE that connects to this Digma instance, you can choose any token you'd like
-## @param digma.licenseKey, license key provided by Digma
-##
-digma:
-  deployment:
-    #replicas based on a given preset
-    size: medium
-  accessToken: 
-  licenseKey:
 
 ## @section Global parameters
 ## Global Docker image parameters
@@ -56,8 +55,13 @@ commonLabels: {}
 ##
 commonAnnotations: {}
 
-
+## @section CollectorWorker parameters
+##
 collectorWorker:
+  ## @param collectorWorker.image.registry [default: docker.io] collectorWorker image registry
+  ## @param collectorWorker.image.repository [default: digmatic/digma-collector-worker] collectorWorker image repository
+  ## @param collectorWorker.image.pullPolicy collectorWorker image pull policy
+  ## @param collectorWorker.image.pullSecrets collectorWorker image pull secrets
   image:
     registry: docker.io
     repository: digmatic/digma-collector-worker
@@ -74,8 +78,11 @@ collectorWorker:
     ##   - myRegistryKeySecretName
     ##
     pullSecrets: []
-  ## Return replicas based on a given preset.
+  ## @param collectorWorker.replicas [default: replicas based on a given preset(.Values.digma.deployment.size)] Number of collectorWorker replicas to deploy
+  ##
   replicas: "{{ index .Values.presets .Values.digma.deployment.size \"collectorWorker\" \"replicas\" }}"
+  ## @skip collectorWorker.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
+  ##
   resources: 
     requests: 
       memory: 300Mi
@@ -83,24 +90,25 @@ collectorWorker:
     limits: 
       memory: 600Mi
       cpu: 600m
-  ## Extra labels for pods
+  ## @param collectorWorker.podLabels Extra labels for collectorWorker pods
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
   ##
   podLabels: {}
-  ## Annotations for pods
+  ## @param collectorWorker.podAnnotations Annotations for collectorWorker pods
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
   ##
   podAnnotations: {}
 
-  ## Affinity for pod assignment
-  ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ## @param collectorWorker.affinity Affinity for collectorWorker pods assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
   ##
   affinity: {}
-  ## Node labels for pods assignment
+  ## @param collectorWorker.nodeSelector Node labels for collectorWorker pods assignment
   ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
   ##
   nodeSelector: {}
-  ## Tolerations for pods assignment
+  ## @param collectorWorker.tolerations Tolerations for collectorWorker pods assignment
   ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
   ##
   tolerations: []
@@ -111,12 +119,19 @@ collectorWorker:
   ##     value: "bar"
   ##
   extraEnvVars: []
+  ## @param collectorWorker.env.Sampling__Enable [default: true] Sampling Enable
+  ## @param collectorWorker.env.ExtendedObservability__Enable [default: true]ExtendedObservability__Enable
+  ## @param collectorWorker.env.TraceTempStorage__TraceForJaegerExpirationInMinutes [default: 10] TraceTempStorage__TraceForJaegerExpirationInMinutes
+  ## @param collectorWorker.env.BlockedTrace__TraceSpansLimit [default: 3000] BlockedTrace__TraceSpansLimit
+  ## @param collectorWorker.env.ThresholdOptions__RecentActivityUpdateThresholdSeconds [default: 5] ThresholdOptions__RecentActivityUpdateThresholdSeconds
   env:
     Sampling__Enable: true
     ExtendedObservability__Enable: true
     TraceTempStorage__TraceForJaegerExpirationInMinutes: 10
     BlockedTrace__TraceSpansLimit: 3000
     ThresholdOptions__RecentActivityUpdateThresholdSeconds: 5
+  ## @skip collectorWorker.app
+  ##
   app:
     ignoreEndpoints:
       - Route: "/health"
@@ -131,7 +146,22 @@ collectorWorker:
         RouteRegex: ""
         Method: "GET"
         Service: "*"
+## @section otelCollector parameters
+##
 otelCollector:
+  ## @param otelCollector.samplingPercentage telemetry data that should be sampled and sent to the backend
+  samplingPercentage: 100
+  ## @param otelCollector.existingConfigmap The name of an existing ConfigMap with your custom configuration
+  ##
+  existingConfigmap: ""
+  ## @param otelCollector.existingConfigmapKey The name of the key with the config file
+  ##
+  existingConfigmapKey: ""
+  ## @param otelCollector.image.registry [default: docker.io] otelCollector image registry
+  ## @param otelCollector.image.repository [default: otel/opentelemetry-collector-contrib] otelCollector image repository
+  ## @param otelCollector.image.tag [default: 0.103.0] otelCollector image tag
+  ## @param otelCollector.image.pullPolicy otelCollector image pull policy
+  ## @param otelCollector.image.pullSecrets otelCollector image pull secrets
   image:
     registry: docker.io
     repository: otel/opentelemetry-collector-contrib
@@ -149,15 +179,11 @@ otelCollector:
     ##   - myRegistryKeySecretName
     ##
     pullSecrets: []
-  ## @param samplingPercentage telemetry data that should be sampled and sent to the backend
-  samplingPercentage: 100
-  ## @param existingConfigmap The name of an existing ConfigMap with your custom configuration
+  ## @param otelCollector.replicas Number of otelCollector replicas to deploy
   ##
-  existingConfigmap: ""
-  ## @param existingConfigmapKey The name of the key with the config file
-  ##
-  existingConfigmapKey: ""
   replicas: 1
+  ## @skip otelCollector.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
+  ##
   resources:
     requests:
       cpu: 100m
@@ -165,62 +191,64 @@ otelCollector:
     limits:
       cpu: 200m
       memory: 300Mi
+  ## otelCollector service parameters
+  ##
   service:
-    ## @param service type (`ClusterIP`, `NodePort` or `LoadBalancer`)
+    ## @param otelCollector.service.type otelCollector service type
     ##
     type: ClusterIP
-    ## @param Annotations for service
+    ## @param otelCollector.service.annotations Additional custom annotations for otelCollector service
     ##
     annotations: {}
+    ## @param otelCollector.service.ports.health health check service port
+    ## @param otelCollector.service.ports.grpc otelCollector gRPC port
+    ## @param otelCollector.service.ports.http otelCollector HTTP port
+    ##
     ports:
       health: 13133
-      ## should set http or grpc not both of them
       grpc: 4317
       http: 4318
-  ## Extra labels for pods
+  ## @param otelCollector.podLabels Extra labels for otelCollector pods
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
   ##
   podLabels: {}
-  ##  Annotations for pods
-  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+  ## @param otelCollector.podAnnotations Extra labels for otelCollector pods
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
   ##
   podAnnotations: {}
-
-  ##  Node labels for pods assignment
+  ## @param otelCollector.nodeSelector Node labels for otelCollector pods assignment
   ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
   ##
   nodeSelector: {}
-  ##  Tolerations for pods assignment
+  ## @param otelCollector.tolerations Tolerations for otelCollector pods assignment
   ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
   ##
   tolerations: []
-  ## Configure the ingress resource that allows you to access the
-  ## Service. Set up the URL
+  ## otelCollector gRPC ingress parameters
   ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
-  ##
   grpc:
     ingress:
-      ##  Enable ingress controller resource
+      ## @param otelCollector.grpc.ingress.enabled Enable ingress record generation for otelCollector
       ##
       enabled: false
-      ## Ingress Path type
+      ## @param otelCollector.grpc.ingress.pathType Ingress path type
       ##
       pathType: ImplementationSpecific
-      ##  Override API Version (automatically detected if not set)
+      ## @param otelCollector.grpc.ingress.apiVersion Force Ingress API version (automatically detected if not set)
       ##
       apiVersion: ""
-      ##  Default host for the ingress resource
+      ## @param otelCollector.grpc.ingress.hostname Default host for the ingress record
       ##
       hostname: 
-      ## IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
+      ## @param otelCollector.grpc.ingress.ingressClassName IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
       ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
       ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
       ##
       ingressClassName:
-      ## @param ingress.path The Path to Spark. You may need to set this to '/*' in order to use this with ALB ingress controllers.
+      ## @param otelCollector.grpc.ingress.path The Path to otelCollector. You may need to set this to '/*' in order to use this with ALB ingress controllers.
       ##
       path: /
-      ## @param ingress.annotations Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
+      ## @param otelCollector.grpc.ingress.annotations Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
       ## For a full list of possible ingress annotations, please see
       ## ref: https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/nginx-configuration/annotations.md
       ## Use this parameter to set the required annotations for cert-manager, see
@@ -232,7 +260,7 @@ otelCollector:
       ##   cert-manager.io/cluster-issuer: cluster-issuer-name
       ##
       annotations:
-      ## Additional arbitrary path/backend objects
+      ## @param otelCollector.grpc.ingress.extraPaths Any additional paths that may need to be added to the ingress under the main host
       ## For example: The ALB ingress controller requires a special rule for handling SSL redirection.
       ## extraPaths:
       ## - path: /*
@@ -241,7 +269,7 @@ otelCollector:
       ##     servicePort: use-annotation
       ##
       extraPaths: []
-      ## Additional rules to be covered with this ingress record
+      ## @param otelCollector.grpc.ingress.extraRules Additional rules to be covered with this ingress record
       ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-rules
       ## e.g:
       ## extraRules:
@@ -255,29 +283,31 @@ otelCollector:
       ##             name: http
       ##
       extraRules: []
+  ## otelCollector HTTP ingress parameters
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
   http:
     ingress:
-      ##  Enable ingress controller resource
+      ## @param otelCollector.http.ingress.enabled Enable ingress record generation for otelCollector
       ##
       enabled: false
       ## Ingress Path type
       ##
       pathType: ImplementationSpecific
-      ##  Override API Version (automatically detected if not set)
+      ## @param otelCollector.http.ingress.apiVersion Force Ingress API version (automatically detected if not set)
       ##
       apiVersion: ""
-      ##  Default host for the ingress resource
+      ## @param otelCollector.http.ingress.hostname Default host for the ingress record
       ##
       hostname:
-      ## IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
+      ## @param otelCollector.http.ingress.ingressClassName IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
       ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
       ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
       ##
       ingressClassName:
-      ## @param ingress.path The Path to Spark. You may need to set this to '/*' in order to use this with ALB ingress controllers.
+      ## @param otelCollector.http.ingress.path The Path to otelCollector. You may need to set this to '/*' in order to use this with ALB ingress controllers.
       ##
       path: /
-      ## @param ingress.annotations Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
+      ## @param otelCollector.http.ingress.annotations Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
       ## For a full list of possible ingress annotations, please see
       ## ref: https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/nginx-configuration/annotations.md
       ## Use this parameter to set the required annotations for cert-manager, see
@@ -289,7 +319,7 @@ otelCollector:
       ##   cert-manager.io/cluster-issuer: cluster-issuer-name
       ##
       annotations: {}
-      ## Additional arbitrary path/backend objects
+      ## @param otelCollector.http.ingress.extraPaths Any additional paths that may need to be added to the ingress under the main host
       ## For example: The ALB ingress controller requires a special rule for handling SSL redirection.
       ## extraPaths:
       ## - path: /*
@@ -298,7 +328,7 @@ otelCollector:
       ##     servicePort: use-annotation
       ##
       extraPaths: []
-      ## Additional rules to be covered with this ingress record
+      ## @param otelCollector.http.ingress.extraRules Additional rules to be covered with this ingress record
       ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-rules
       ## e.g:
       ## extraRules:
@@ -313,6 +343,10 @@ otelCollector:
       ##
       extraRules: []
 collectorApi:
+  ## @param collectorApi.image.registry [default: REGISTRY_NAME] collectorApi image registry
+  ## @param collectorApi.image.repository [default: REPOSITORY_NAME/prometheus] collectorApi image repository
+  ## @param collectorApi.image.pullPolicy collectorApi image pull policy
+  ## @param collectorApi.image.pullSecrets collectorApi image pull secrets
   image:
     registry: docker.io
     repository: digmatic/digma-collector
@@ -329,8 +363,12 @@ collectorApi:
     ##   - myRegistryKeySecretName
     ##
     pullSecrets: []
+  ## @param collectorApi.replicas Number of collectorApi replicas to deploy
+  ##
   replicas: 1
-  resources: 
+  ## @skip collectorApi.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
+  ##
+  resources:
     requests: 
       memory: 100Mi
       cpu: 200m
@@ -368,6 +406,10 @@ collectorApi:
   ##
   tolerations: []
 analyticsApi:
+  ## @param analyticsApi.image.registry [default: docker.io] analyticsApi image registry
+  ## @param analyticsApi.image.repository [default: digmatic/digma-analytics] analyticsApi image repository
+  ## @param analyticsApi.image.pullPolicy analyticsApi image pull policy
+  ## @param analyticsApi.image.pullSecrets analyticsApi image pull secrets
   image:
     registry: docker.io
     repository: digmatic/digma-analytics
@@ -385,7 +427,11 @@ analyticsApi:
     ##
     pullSecrets: []
   secured: false # must be false if ingress.enabled=true
+  ## @param analyticsApi.replicas Number of analyticsApi replicas to deploy
+  ##
   replicas: 1
+  ## @skip analyticsApi.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
+  ##
   resources: 
     requests: 
       memory: 300Mi
@@ -420,32 +466,30 @@ analyticsApi:
   ##
   tolerations: []
 
-  ## Configure the ingress resource that allows you to access the
-  ## Service. Set up the URL
+  ## analyticsApi ingress parameters
   ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
-  ##
   ingress:
-    ## Enable ingress controller resource
+    ## @param analyticsApi.ingress.enabled Enable ingress record generation for otelCollector
     ##
     enabled: false
     ## Ingress Path type
     ##
     pathType: ImplementationSpecific
-    ## Override API Version (automatically detected if not set)
+    ## @param analyticsApi.ingress.apiVersion Force Ingress API version (automatically detected if not set)
     ##
     apiVersion: ""
-    ## Default host for the ingress resource
+    ## @param analyticsApi.ingress.hostname Default host for the ingress record
     ##
     hostname:
-    ## IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
+    ## @param analyticsApi.ingress.ingressClassName IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
     ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
     ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
     ##
     ingressClassName: ""
-    ## The Path to service. You may need to set this to '/*' in order to use this with ALB ingress controllers
+    ## @param analyticsApi.ingress.path The Path to analyticsApi. You may need to set this to '/*' in order to use this with ALB ingress controllers.
     ##
     path: /
-    ## Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
+    ## @param analyticsApi.ingress.annotations Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
     ## For a full list of possible ingress annotations, please see
     ## ref: https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/nginx-configuration/annotations.md
     ## Use this parameter to set the required annotations for cert-manager, see
@@ -457,7 +501,7 @@ analyticsApi:
     ##   cert-manager.io/cluster-issuer: cluster-issuer-name
     ##
     annotations:
-    ## Additional arbitrary path/backend objects
+    ## @param analyticsApi.ingress.extraPaths Any additional paths that may need to be added to the ingress under the main host
     ## For example: The ALB ingress controller requires a special rule for handling SSL redirection.
     ## extraPaths:
     ## - path: /*
@@ -466,7 +510,7 @@ analyticsApi:
     ##     servicePort: use-annotation
     ##
     extraPaths: []
-    ## Additional rules to be covered with this ingress record
+    ## @param analyticsApi.ingress.extraRules Additional rules to be covered with this ingress record
     ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-rules
     ## e.g:
     ## extraRules:
@@ -481,6 +525,10 @@ analyticsApi:
     ##
     extraRules: []
 measurementAnalysis:
+  ## @param measurementAnalysis.image.registry [default: docker.io] measurementAnalysis image registry
+  ## @param measurementAnalysis.image.repository [default: digmatic/digma-measurement-analysis] measurementAnalysis image repository
+  ## @param measurementAnalysis.image.pullPolicy measurementAnalysis image pull policy
+  ## @param measurementAnalysis.image.pullSecrets measurementAnalysis image pull secrets
   image:
     registry: docker.io
     repository: digmatic/digma-measurement-analysis
@@ -498,8 +546,11 @@ measurementAnalysis:
     ##
     pullSecrets: []
  
-  ## Return replicas based on a given preset.
+  ## @param measurementAnalysis.replicas [default: replicas based on a given preset(.Values.digma.deployment.size)] Number of analyticsApi replicas to deploy
+  ##
   replicas: "{{ index .Values.presets .Values.digma.deployment.size \"measurementAnalysis\" \"replicas\" }}"
+  ## @skip measurementAnalysis.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
+  ##
   resources: 
     requests: 
       memory: 100Mi
@@ -540,6 +591,10 @@ measurementAnalysis:
     ThresholdOptions__UpsertSpansThresholdSeconds: 5
     ThresholdOptions__UpsertSpanFlowMetadataThresholdSeconds: 5
 scheduler:
+  ## @param scheduler.image.registry [default: docker.io] scheduler image registry
+  ## @param scheduler.image.repository [default: digmatic/digma-scheduler] scheduler image repository
+  ## @param scheduler.image.pullPolicy scheduler image pull policy
+  ## @param scheduler.image.pullSecrets scheduler image pull secrets
   image:
     registry: docker.io
     repository: digmatic/digma-scheduler
@@ -556,8 +611,11 @@ scheduler:
     ##   - myRegistryKeySecretName
     ##
     pullSecrets: []
+  ## @param scheduler.replicas Number of scheduler replicas to deploy
+  ##
   replicas: 1
-
+  ## @skip scheduler.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
+  ##
   resources: 
     requests: 
       memory: 300Mi
@@ -599,6 +657,10 @@ scheduler:
   tolerations: []
 pipelineWorker:
   image:
+    ## @param pipelineWorker.image.registry [default: docker.io] pipelineWorker image registry
+    ## @param pipelineWorker.image.repository [default: digmatic/digma-pipeline-worker] pipelineWorker image repository
+    ## @param pipelineWorker.image.pullPolicy pipelineWorker image pull policy
+    ## @param pipelineWorker.image.pullSecrets pipelineWorker image pull secrets
     registry: docker.io
     repository: digmatic/digma-pipeline-worker
     ## Specify a imagePullPolicy
@@ -614,8 +676,11 @@ pipelineWorker:
     ##   - myRegistryKeySecretName
     ##
     pullSecrets: []
-  ## Return replicas based on a given preset.
+  ## @param pipelineWorker.replicas [default: replicas based on a given preset(.Values.digma.deployment.size)] Number of pipelineWorker replicas to deploy
+  ##
   replicas: "{{ index .Values.presets .Values.digma.deployment.size \"pipelineWorker\" \"replicas\" }}"
+  ## @skip pipelineWorker.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
+  ##
   resources: 
     requests: 
       memory: 100Mi
@@ -645,6 +710,11 @@ pipelineWorker:
   ##
   tolerations: []
 ui:
+  ## @param ui.image.registry [default: docker.io] ui image registry
+  ## @param ui.image.repository [default: digmaai/digma-ui] ui image repository
+  ## @param ui.image.tag [default: 2.1.4] ui image tag
+  ## @param ui.image.pullPolicy ui image pull policy
+  ## @param ui.image.pullSecrets ui image pull secrets
   image:
     registry: docker.io
     repository: digmaai/digma-ui
@@ -662,14 +732,18 @@ ui:
     ##   - myRegistryKeySecretName
     ##
     pullSecrets: []
+  ## @param ui.replicas Number of ui replicas to deploy
+  ##
   replicas: 1
+  ## @skip ui.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
+  ##
   resources: 
-  requests: 
-    memory: 100Mi
-    cpu: 100m
-  limits: 
-    memory: 200Mi
-    cpu: 200m
+    requests: 
+      memory: 100Mi
+      cpu: 100m
+    limits: 
+      memory: 200Mi
+      cpu: 200m
     
   service:
     ## Kubernetes service type (`ClusterIP`, `NodePort` or `LoadBalancer`)
@@ -698,10 +772,8 @@ ui:
   ##
   tolerations: []
 
-  ## Configure the ingress resource that allows you to access the
-  ## Service. Set up the URL
+  ## ui ingress parameters
   ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
-  ##
   ingress:
     ## Enable ingress controller resource
     ##
@@ -709,21 +781,21 @@ ui:
     ## Ingress Path type
     ##
     pathType: ImplementationSpecific
-    ## Override API Version (automatically detected if not set)
+    ## @param ui.ingress.apiVersion Force Ingress API version (automatically detected if not set)
     ##
     apiVersion: ""
-    ## Default host for the ingress resource
+    ## @param ui.ingress.hostname Default host for the ingress record
     ##
     hostname:
-    ## IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
+    ## @param ui.ingress.ingressClassName IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
     ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
     ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
     ##
     ingressClassName: "alb"
-    ## The Path to service. You may need to set this to '/*' in order to use this with ALB ingress controllers
+    ## @param ui.ingress.path The Path to ui. You may need to set this to '/*' in order to use this with ALB ingress controllers.
     ##
     path: /
-    ## Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
+    ## @param ui.ingress.annotations Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
     ## For a full list of possible ingress annotations, please see
     ## ref: https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/nginx-configuration/annotations.md
     ## Use this parameter to set the required annotations for cert-manager, see
@@ -735,7 +807,7 @@ ui:
     ##   cert-manager.io/cluster-issuer: cluster-issuer-name
     ##
     annotations:
-    ## Additional arbitrary path/backend objects
+    ## @param ui.ingress.extraPaths Any additional paths that may need to be added to the ingress under the main host
     ## For example: The ALB ingress controller requires a special rule for handling SSL redirection.
     ## extraPaths:
     ## - path: /*
@@ -744,7 +816,7 @@ ui:
     ##     servicePort: use-annotation
     ##
     extraPaths: []
-    ## Additional rules to be covered with this ingress record
+    ## @param ui.ingress.extraRules Additional rules to be covered with this ingress record
     ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-rules
     ## e.g:
     ## extraRules:
@@ -760,6 +832,11 @@ ui:
     extraRules: []
 
 metricsExporter:
+  ## @param metricsExporter.image.registry [default: docker.io] metricsExporter image registry
+  ## @param metricsExporter.image.repository [default: digmatic/k8s-metrics-exporter] metricsExporter image repository
+  ## @param metricsExporter.image.tag ui image tag
+  ## @param metricsExporter.image.pullPolicy metricsExporter image pull policy
+  ## @param metricsExporter.image.pullSecrets metricsExporter image pull secrets
   image:
     registry: docker.io
     repository: digmatic/k8s-metrics-exporter
@@ -777,7 +854,11 @@ metricsExporter:
     ##   - myRegistryKeySecretName
     ##
     pullSecrets: []
+  ## @param metricsExporter.replicas Number of metricsExporter replicas to deploy
+  ##
   replicas: 1
+  ## @skip metricsExporter.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
+  ##
   resources: 
     requests: 
       memory: 512Mi
@@ -813,6 +894,11 @@ metricsExporter:
   tolerations: []
 otelCollectorDf:
   fullnameOverride: "digma-otel-collector-df" # because we need to use this name other value in file
+  ## @param otelCollectorDf.image.registry [default: docker.io] otelCollectorDf image registry
+  ## @param otelCollectorDf.image.repository [default: otel/opentelemetry-collector-contrib] otelCollectorDf image repository
+  ## @param otelCollectorDf.image.tag [default:  0.103.0] otelCollectorDf image tag
+  ## @param otelCollectorDf.image.pullPolicy otelCollectorDf image pull policy
+  ## @param otelCollectorDf.image.pullSecrets otelCollectorDf image pull secrets
   image:
     registry: docker.io
     repository: otel/opentelemetry-collector-contrib
@@ -830,7 +916,11 @@ otelCollectorDf:
     ##   - myRegistryKeySecretName
     ##
     pullSecrets: []
+  ## @param otelCollectorDf.replicas Number of otelCollectorDf replicas to deploy
+  ##
   replicas: 1
+  ## @skip otelCollectorDf.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
+  ##
   resources:
     requests:
       cpu: 100m
@@ -862,7 +952,9 @@ otelCollectorDf:
   ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
   ##
   tolerations: []
-
+## @skip influxdb
+## ref: https://github.com/bitnami/charts/blob/main/bitnami/influxdb/values.yaml
+##
 influxdb:
   resources: 
     requests: 
@@ -909,7 +1001,9 @@ influxdb:
   ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
   ##
   tolerations: []
+## @skip postgresql
 ## ref: https://github.com/bitnami/charts/blob/main/bitnami/postgresql/values.yaml
+##
 postgresql:
   enabled: true
   auth:
@@ -966,7 +1060,9 @@ postgresql:
     ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
     ##
     tolerations: []
+## @skip redis
 ## ref: https://github.com/bitnami/charts/blob/main/bitnami/redis/values.yaml
+##
 redis:
   enabled: true
   auth:
@@ -1014,8 +1110,15 @@ redis:
     ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
     ##
     tolerations: []
+## @skip jaeger
 ## ref: https://github.com/bitnami/charts/blob/main/bitnami/jaeger/values.yaml
+##
 jaeger:
+  ## @param jaeger.image.registry [default: docker.io] jaeger image registry
+  ## @param jaeger.image.repository [default: jaegertracing/all-in-one] jaeger image repository
+  ## @param jaeger.image.tag [default:  1.61.0] jaeger image tag
+  ## @param jaeger.image.pullPolicy metricsExporter jaeger pull policy
+  ## @param jaeger.image.pullSecrets metricsExporter jaeger pull secrets
   image:
     registry: docker.io
     repository: jaegertracing/all-in-one
@@ -1033,7 +1136,11 @@ jaeger:
     ##   - myRegistryKeySecretName
     ##
     pullSecrets: []
+  ## @param jaeger.replicas Number of jaeger replicas to deploy
+  ##
   replicas: 1
+  ## @skip jaeger.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
+  ##
   resources: 
     requests: 
       memory: 512Mi
@@ -1071,10 +1178,8 @@ jaeger:
   ##
   tolerations: []
 
-  ## Configure the ingress resource that allows you to access the
-  ## Service. Set up the URL
+  ## jaeger ingress parameters
   ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
-  ##
   ingress:
     ## Enable ingress controller resource
     ##
@@ -1082,21 +1187,21 @@ jaeger:
     ## Ingress Path type
     ##
     pathType: ImplementationSpecific
-    ## Override API Version (automatically detected if not set)
+    ## @param jaeger.ingress.apiVersion Force Ingress API version (automatically detected if not set)
     ##
     apiVersion: ""
-    ## Default host for the ingress resource
+    ## @param jaeger.ingress.hostname Default host for the ingress record
     ##
     hostname: 
-    ## IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
+    ## @param jaeger.ingress.ingressClassName IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
     ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
     ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
     ##
     ingressClassName: ""
-    ## The Path to service. You may need to set this to '/*' in order to use this with ALB ingress controllers
+    ## @param jaeger.ingress.path The Path to jaeger. You may need to set this to '/*' in order to use this with ALB ingress controllers.
     ##
     path: /
-    ## Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
+    ## @param jaeger.ingress.annotations Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
     ## For a full list of possible ingress annotations, please see
     ## ref: https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/nginx-configuration/annotations.md
     ## Use this parameter to set the required annotations for cert-manager, see
@@ -1108,7 +1213,7 @@ jaeger:
     ##   cert-manager.io/cluster-issuer: cluster-issuer-name
     ##
     annotations:
-    ## Additional arbitrary path/backend objects
+    ## @param jaeger.ingress.extraPaths Any additional paths that may need to be added to the ingress under the main host
     ## For example: The ALB ingress controller requires a special rule for handling SSL redirection.
     ## extraPaths:
     ## - path: /*
@@ -1117,7 +1222,7 @@ jaeger:
     ##     servicePort: use-annotation
     ##
     extraPaths: []
-    ## Additional rules to be covered with this ingress record
+    ## @param jaeger.ingress.extraRules Additional rules to be covered with this ingress record
     ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-rules
     ## e.g:
     ## extraRules:
@@ -1132,8 +1237,9 @@ jaeger:
     ##
     extraRules: []
   args: []
-
+## @skip elasticsearch
 ## ref: https://github.com/bitnami/charts/blob/main/bitnami/elasticsearch/values.yaml
+##
 elasticsearch:
   ## @param elasticsearch.enabled Whether to deploy a elasticsearch server to use as Mastodon's search engine
   ## To use an external server set this to false and configure the externalElasticsearch parameters
@@ -1219,7 +1325,9 @@ elasticsearch:
   service:
     ports:
       restAPI: 9200
+## @skip grafana
 ## ref: https://github.com/bitnami/charts/blob/main/bitnami/grafana/values.yaml
+##
 grafana:
   admin:
     user: admin
@@ -1260,7 +1368,9 @@ grafana:
     ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
     ##
     tolerations: []
+## @skip prometheus
 ## ref: https://github.com/bitnami/charts/blob/main/bitnami/prometheus/values.yaml
+##
 prometheus:
   enabled: false
   fullnameOverride: "digma-prometheus" #todo shay
@@ -1303,8 +1413,9 @@ prometheus:
     accessModes:
     - ReadWriteOnce
     size: 20Gi
-
+## @skip kafka
 ## ref: https://github.com/bitnami/charts/blob/main/bitnami/kafka/values.yaml
+##
 kafka:
   kraft:
     clusterId: h4U35I9QRnGhbgsEQAlXAw
@@ -1338,7 +1449,8 @@ kafka:
     ports:
       client: 9092
       controller: 9093
-
+## @skip debug
+##
 debug:
   enabled: true
   pullSecrets: []
@@ -1382,7 +1494,8 @@ debug:
       value: "admin@admin.com"
     - name: PGADMIN_DEFAULT_PASSWORD
       value: "admin"
-
+## @skip presets
+##
 presets:
   small:
     collectorWorker:
