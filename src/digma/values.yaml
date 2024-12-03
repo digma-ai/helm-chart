@@ -1,5 +1,4 @@
-## @section Digma globals
-## Global Digma parameters
+## @section Global Digma parameters
 ## @param digma.deployment.size [default: medium], replicas based on a given preset
 ## @param digma.accessToken [default: empty] Unique key you’ll need to provide any IDE that connects to this Digma instance, you can choose any token you'd like
 ## @param digma.licenseKey license key provided by Digma
@@ -10,7 +9,7 @@ digma:
     size: medium
   accessToken: 
   licenseKey:
-  
+
 ## @section Observability parameters
 ## @param observability.useLocal [default: true]
 ## @param observability.siteName [default: undefined]
@@ -43,7 +42,7 @@ global:
   imagePullSecrets: []
 
 ## @section Common parameters
-##
+
 ## @param kubeVersion Override Kubernetes version
 ##
 kubeVersion: ""
