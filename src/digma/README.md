@@ -1,18 +1,27 @@
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="../../.github/images/digma-helm-dark.png">
-    <source media="(prefers-color-scheme: light)" srcset="../../.github/images/digma-helm-light.png">
-    <img width="446" height="200" src="../../.github/images/digma-helm-light.png" alt="digma+helm logos">
-  </picture>
-</p>
-# digma
+# Digma
 
 ![Version: 1.0.254](https://img.shields.io/badge/Version-1.0.254-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.165](https://img.shields.io/badge/AppVersion-0.3.165-informational?style=flat-square)
 
-A Helm chart containing Digma's services and dbs
+A Helm chart containing Digma's services
 
 **Homepage:** <https://github.com/digma-ai/digma>
 
+## TL;DR
+
+```console
+helm install
+```
+## Introduction
+xxx
+
+## Prerequisites
+xxx
+## Installing the Chart
+
+To install the chart with the release name `my-release`:
+```console
+helm install my-release
+```
 ## Requirements
 
 | Repository | Name | Version |
@@ -26,7 +35,7 @@ A Helm chart containing Digma's services and dbs
 | oci://registry-1.docker.io/bitnamicharts | prometheus | 1.3.28 |
 | oci://registry-1.docker.io/bitnamicharts | redis | 20.3.0 |
 
-# Some Long Description
+# Deploying the Digma
 
 This is a sample README with custom overrides.
 Check the template in [README.md.gotmpl](README.md.gotmpl).

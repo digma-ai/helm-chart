@@ -1,10 +1,3 @@
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="../../.github/images/digma-helm-dark.png">
-    <source media="(prefers-color-scheme: light)" srcset="../../.github/images/digma-helm-light.png">
-    <img width="446" height="200" src="../../.github/images/digma-helm-light.png" alt="digma+helm logos">
-  </picture>
-</p>
 {{ template "chart.header" . }}
 
 {{ template "chart.deprecationWarning" . }}
@@ -19,12 +12,22 @@
 
 {{ template "chart.sourcesSection" . }}
 
+## TL;DR
+
+```console
+helm install
+```
+## Introduction
+xxx
+
+## Prerequisites
+xxx
+## Installing the Chart
+
+To install the chart with the release name `my-release`:
+```console
+helm install my-release 
+```
 {{ template "chart.requirementsSection" . }}
-
-# Some Long Description
-
-This is a sample README with custom overrides.
-Check the template in [README.md.gotmpl](README.md.gotmpl).
-
 
 {{ template "chart.valuesSection" . }}
