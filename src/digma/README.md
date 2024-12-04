@@ -1,4 +1,4 @@
-# Digma
+# digma
 
 ![Version: 1.0.254](https://img.shields.io/badge/Version-1.0.254-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.165](https://img.shields.io/badge/AppVersion-0.3.165-informational?style=flat-square)
 
@@ -9,7 +9,10 @@ A Helm chart containing Digma's services
 ## TL;DR
 
 ```console
-helm install
+helm repo add digma https://digma-ai.github.io/helm-chart/
+helm repo update
+helm install digma digma/digma --namespace digma --create-namespace
+
 ```
 ## Introduction
 xxx
@@ -22,7 +25,6 @@ To install the chart with the release name `my-release`:
 ```console
 helm install my-release
 ```
-
 ## Values
 
 ### Global Digma parameters
