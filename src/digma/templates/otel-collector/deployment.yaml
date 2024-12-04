@@ -27,6 +27,9 @@ spec:
         {{- end }}
     spec:
       {{- include "common.images.pullSecrets" ( dict "images" (list .Values.otelCollector.image) "global" .Values.global) | nindent 6 }}
+      {{- if .Values.otelCollector.affinity }}
+      affinity: {{- include "common.tplvalues.render" ( dict "value" .Values.otelCollector.affinity "context" $) | nindent 8 }}
+      {{- end }}        
       {{- if .Values.otelCollector.nodeSelector }}
       nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.otelCollector.nodeSelector "context" .) | nindent 8 }}
       {{- end }}

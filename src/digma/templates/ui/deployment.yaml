@@ -27,6 +27,9 @@ spec:
         {{- end }}
     spec:
       {{- include "common.images.pullSecrets" ( dict "images" (list .Values.ui.image) "global" .Values.global) | nindent 6 }}
+      {{- if .Values.ui.affinity }}
+      affinity: {{- include "common.tplvalues.render" ( dict "value" .Values.ui.affinity "context" $) | nindent 8 }}
+      {{- end }}       
       {{- if .Values.ui.nodeSelector }}
       nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.ui.nodeSelector "context" .) | nindent 8 }}
       {{- end }}
