@@ -22,23 +22,6 @@ To install the chart with the release name `my-release`:
 ```console
 helm install my-release
 ```
-## Requirements
-
-| Repository | Name | Version |
-|------------|------|---------|
-| oci://registry-1.docker.io/bitnamicharts | common | 2.x.x |
-| oci://registry-1.docker.io/bitnamicharts | elasticsearch | 21.3.17 |
-| oci://registry-1.docker.io/bitnamicharts | grafana | 11.3.26 |
-| oci://registry-1.docker.io/bitnamicharts | influxdb | 6.3.22 |
-| oci://registry-1.docker.io/bitnamicharts | kafka | 31.0.0 |
-| oci://registry-1.docker.io/bitnamicharts | postgresql | 16.2.1 |
-| oci://registry-1.docker.io/bitnamicharts | prometheus | 1.3.28 |
-| oci://registry-1.docker.io/bitnamicharts | redis | 20.3.0 |
-
-# Deploying the Digma
-
-This is a sample README with custom overrides.
-Check the template in [README.md.gotmpl](README.md.gotmpl).
 
 ## Values
 
@@ -377,3 +360,15 @@ Check the template in [README.md.gotmpl](README.md.gotmpl).
 | kafka.controller.nodeSelector | object | `{}` | Node labels for pods assignment |
 | kafka.controller.tolerations | list | `[]` | Tolerations for pods assignment |
 | kafka.controller.affinity | object | `{}` | Affinity for pods assignment |
+## Requirements
+
+| Repository | Name | Version |
+|------------|------|---------|
+| oci://registry-1.docker.io/bitnamicharts | common | 2.x.x |
+| oci://registry-1.docker.io/bitnamicharts | elasticsearch | 21.3.17 |
+| oci://registry-1.docker.io/bitnamicharts | grafana | 11.3.26 |
+| oci://registry-1.docker.io/bitnamicharts | influxdb | 6.3.22 |
+| oci://registry-1.docker.io/bitnamicharts | kafka | 31.0.0 |
+| oci://registry-1.docker.io/bitnamicharts | postgresql | 16.2.1 |
+| oci://registry-1.docker.io/bitnamicharts | prometheus | 1.3.28 |
+| oci://registry-1.docker.io/bitnamicharts | redis | 20.3.0 |
