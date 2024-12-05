@@ -54,11 +54,6 @@ spec:
             cp -r /tmp/digma-ui/dist/* /app &&
             rm -rf /tmp/digma-ui &&
             rm /tmp/digma-ui.zip
-        securityContext:
-          runAsUser: 1001
-          runAsGroup: 1001
-          runAsNonRoot: true
-          privileged: false
         volumeMounts:
           - name: app-volume
             mountPath: /app
