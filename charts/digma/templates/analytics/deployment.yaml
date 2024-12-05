@@ -42,7 +42,8 @@ spec:
         imagePullPolicy: {{ .Values.analyticsApi.image.pullPolicy }}
         resources: {{- toYaml .Values.analyticsApi.resources | nindent 12 }}
         ports:
-        - containerPort: {{ .Values.analyticsApi.service.ports.http }}
+        - name: http
+          containerPort: {{ .Values.analyticsApi.service.ports.http }}
         env:
         {{- include "env.digma.app.common" . | nindent  8 }}
         {{- include "env.redis" . | nindent  8 }}
@@ -58,4 +59,10 @@ spec:
         {{- if .Values.digma.accessToken }}
         - name: AccessToken
           value: {{ .Values.digma.accessToken | quote }}
+        {{- end }}
+        {{- if .Values.analyticsApi.livenessProbe.enabled }}
+        livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.analyticsApi.livenessProbe "enabled") "context" $) | nindent 10 }}
+          httpGet:
+            path: /healthz
+            port: http
         {{- end }}

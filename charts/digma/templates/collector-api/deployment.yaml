@@ -42,9 +42,12 @@ spec:
         imagePullPolicy: {{ .Values.collectorApi.image.pullPolicy }}
         resources: {{- toYaml .Values.collectorApi.resources | nindent 12 }}
         ports:
-        - containerPort: {{ .Values.collectorApi.service.ports.internal }}
-        - containerPort: {{ .Values.collectorApi.service.ports.http }}
-        - containerPort: {{ .Values.collectorApi.service.ports.grpc }}
+        - name: internal
+          containerPort: {{ .Values.collectorApi.service.ports.internal }}
+        - name: http
+          containerPort: {{ .Values.collectorApi.service.ports.http }}
+        - name: grpc
+          containerPort: {{ .Values.collectorApi.service.ports.grpc }}
         env:
         {{- include "env.digma.app.common" . | nindent  8 }}
         {{- include "env.postgres" . | nindent  8 }}

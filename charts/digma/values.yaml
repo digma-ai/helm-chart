@@ -421,6 +421,26 @@ collectorApi:
   # -- Affinity for pods assignment
   # @section -- CollectorApi parameters
   affinity: {}    
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  livenessProbe:
+    # -- Enable livenessProbe
+    # @section -- CollectorApi parameters
+    enabled: true
+    # -- Initial delay seconds for livenessProbe
+    # @section -- CollectorApi parameters
+    initialDelaySeconds: 120
+    # -- Period seconds for livenessProbe
+    # @section -- CollectorApi parameters
+    periodSeconds: 10
+    # -- Timeout seconds for livenessProbe
+    # @section -- CollectorApi parameters
+    timeoutSeconds: 5
+    # -- Failure threshold for livenessProbe
+    # @section -- CollectorApi parameters
+    failureThreshold: 3
+    # -- Success threshold for livenessProbe
+    # @section -- CollectorApi parameters
+    successThreshold: 1
 analyticsApi:
   # -- Indicates whether the analytics API uses a secured HTTPS connection. Set to false if ingress is enabled
   # @section -- AnalyticsApi parameters
@@ -541,6 +561,26 @@ analyticsApi:
     # --  Additional rules to be covered with this ingress record
     # @section -- AnalyticsApi parameters
     extraRules: []
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  livenessProbe:
+    # -- Enable livenessProbe
+    # @section -- AnalyticsApi parameters
+    enabled: true
+    # -- Initial delay seconds for livenessProbe
+    # @section -- AnalyticsApi parameters
+    initialDelaySeconds: 120
+    # -- Period seconds for livenessProbe
+    # @section -- AnalyticsApi parameters
+    periodSeconds: 10
+    # -- Timeout seconds for livenessProbe
+    # @section -- AnalyticsApi parameters
+    timeoutSeconds: 5
+    # -- Failure threshold for livenessProbe
+    # @section -- AnalyticsApi parameters
+    failureThreshold: 3
+    # -- Success threshold for livenessProbe
+    # @section -- AnalyticsApi parameters
+    successThreshold: 1
 measurementAnalysis:
   env:
     ThresholdOptions__UpsertEndpointThresholdSeconds: 5
