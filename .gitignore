@@ -1,1 +1,3 @@
-*-values.yaml
+# editor and IDE paraphernalia
+.idea
+.vscode

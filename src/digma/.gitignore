@@ -36,9 +36,5 @@ templates/_*
 # Ignore debugging files
 debug.log
 
-# Ignore Terraform state files (if using Terraform alongside Helm)
-*.tfstate
-*.tfstate.backup
-
 # Ignore other build-related files
 build/
