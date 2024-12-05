@@ -1,0 +1,78 @@
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ include "digma.nginx" . }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: nginx
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.nginx.podLabels .Values.commonLabels ) "context" . ) }}
+  replicas: {{ include "replicas.value" (dict "value" .Values.nginx.replicas "context" .) }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 6 }}
+      app.kubernetes.io/component: nginx
+  template:
+    metadata:
+      labels: 
+        {{- include "common.labels.standard" ( dict "customLabels" $podLabels "context" $ ) | nindent 8 }}
+        app.kubernetes.io/component: nginx
+      annotations:
+        {{- if .Values.commonAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.nginx.podAnnotations }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.nginx.podAnnotations "context" .) | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- include "common.images.pullSecrets" ( dict "images" (list .Values.nginx.image) "global" .Values.global) | nindent 6 }}
+      {{- if .Values.nginx.affinity }}
+      affinity: {{- include "common.tplvalues.render" ( dict "value" .Values.nginx.affinity "context" $) | nindent 8 }}
+      {{- end }}       
+      {{- if .Values.nginx.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.nginx.nodeSelector "context" .) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.nginx.tolerations }}
+      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.nginx.tolerations "context" .) | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: conf-volume
+          configMap:
+            name: {{ include "digma.nginx" . }}
+        - name: app-volume
+          emptyDir: {}
+      initContainers:
+      - name: copy-nginx-config
+        image: busybox:latest #bitnami/nginx:latest
+        command:
+          - /bin/sh
+          - -c
+          - |
+            wget -O /tmp/digma-ui.zip "https://github.com/digma-ai/digma-ui/releases/download/v3.0.1/dist-web-v3.0.1.zip" &&
+            unzip -o /tmp/digma-ui.zip -d /tmp/digma-ui &&
+            cp -r /tmp/digma-ui/dist/* /app &&
+            rm -rf /tmp/digma-ui &&
+            rm /tmp/digma-ui.zip
+        securityContext:
+          runAsUser: 1001
+          runAsGroup: 1001
+          runAsNonRoot: true
+          privileged: false
+        volumeMounts:
+          - name: app-volume
+            mountPath: /app
+      containers:
+      - name: nginx
+        image: {{ include "common.images.image" (dict "imageRoot" .Values.nginx.image "global" .Values.global "chart" .Chart) }}
+        imagePullPolicy: {{ .Values.nginx.image.pullPolicy }}
+        resources: {{- toYaml .Values.nginx.resources | nindent 12 }}
+        ports:
+        - containerPort: {{ .Values.ui.service.ports.http }}
+        - containerPort: {{ .Values.jaeger.service.ports.http_ui }}
+        volumeMounts:
+          - name: conf-volume
+            mountPath: /etc/nginx/nginx.conf
+            subPath: nginx.conf
+          - name: app-volume
+            mountPath: /app
