@@ -713,7 +713,7 @@ ui:
   image:
     registry: docker.io
     repository: digmaai/digma-ui
-    tag: 2.1.4
+    tag: 3.0.1
     # -- image pull policy
     # @section -- UI parameters
     pullPolicy: IfNotPresent
