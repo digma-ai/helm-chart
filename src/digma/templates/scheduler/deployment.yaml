@@ -50,6 +50,34 @@ spec:
         {{- include "env.postgres" . | nindent  8 }}
         {{- include "env.kafka" . | nindent  8 }}
         {{- include "env.elasticsearch" . | nindent  8 }}
-
-
-
+        {{- if .Values.digma.report.enabled }}
+          {{- if .Values.digma.report.emailGateway.url }}
+        - name: "EmailGateway__Url"
+          value: {{ .Values.digma.report.emailGateway.url | quote}}
+          {{- end }}
+          {{- if .Values.digma.report.emailGateway.apiKey }}
+        - name: "EmailGateway__ApiKey"
+          value: {{ .Values.digma.report.emailGateway.apiKey | quote}}
+          {{- end }}
+          {{- if .Values.digma.report.recipients.to }}
+        - name: "EmailReport__Recipients__To"
+          value: {{ .Values.digma.report.recipients.to | quote}}
+          {{- end }}      
+          {{- if .Values.digma.report.recipients.cc }}
+        - name: "EmailReport__Recipients__Cc"
+          value: {{ .Values.digma.report.recipients.cc | quote}}
+          {{- end }} 
+          {{- if .Values.digma.report.recipients.bcc }}
+        - name: "EmailReport__Recipients__Bcc"
+          value: {{ .Values.digma.report.recipients.bcc | quote}}
+          {{- end }}
+          {{- if .Values.digma.report.scheduledTimeUtc }}
+        - name: "EmailReport__ScheduledTime"
+          value: {{ .Values.digma.report.scheduledTimeUtc | quote}}
+          {{- end }}
+          {{- $uiServiceBaseUrl := include "digma.report.uiServiceBaseUrl" . }}
+          {{- if ne $uiServiceBaseUrl "" }}
+        - name: "EmailReport__UIServiceBaseUrl"
+          value: {{ $uiServiceBaseUrl | quote}}
+          {{- end }}
+        {{- end }} 

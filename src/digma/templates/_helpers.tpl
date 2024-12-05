@@ -58,6 +58,19 @@ Return the proper ui fullname
 {{- end -}}
 
 {{/*
+Return the proper ui service external url
+*/}}
+{{- define "digma.report.uiServiceBaseUrl" -}}
+{{- if not (empty (default "" .Values.digma.report.uiExternalBaseUrl)) -}}
+{{.Values.digma.report.uiExternalBaseUrl}}
+{{- else }}
+{{- if and .Values.ui.ingress.enabled (and .Values.ui.ingress.hostname (ne .Values.ui.ingress.hostname "")) }}
+{{- printf "https://%s" .Values.ui.ingress.hostname -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Return the proper otel collector fullname
 */}}
 {{- define "digma.otel-collector" -}}
@@ -97,7 +110,7 @@ Return the proper otel collector df (dogfooding) fullname
 Return the proper otel collector df scraper url
 */}}
 {{- define "digma.otel-collector-df-prometheus-scraper-url" -}}
-{{ printf "%s:%v" (include "digma.otel-collector-df" .) .Values.otelCollectorDf.service.ports.prometheus_scraper }}
+{{- printf "%s:%v" (include "digma.otel-collector-df" .) .Values.otelCollectorDf.service.ports.prometheus_scraper -}}
 {{- end -}}
 
 {{/*

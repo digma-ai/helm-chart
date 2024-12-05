@@ -9,6 +9,35 @@ digma:
   # -- replicas based on a given preset
   # @section -- Global Digma parameters
   licenseKey:
+  ## daily issues report parameters
+  ## 
+  report:
+    # -- daily issues report enabled
+    # @section -- Global Digma parameters
+    enabled: false
+    # -- scheduled time of the report, HH:mm:ss (24-hour format)
+    # @section -- Global Digma parameters
+    scheduledTimeUtc:
+    # -- UI external service URL (automatically detected if not set)
+    # @section -- Global Digma parameters
+    uiExternalBaseUrl:
+    recipients:
+      # -- email recipients, list of recipients separated by semicolons (;)
+      # @section -- Global Digma parameters
+      to:
+      # -- report email additional recipients, list of recipients separated by semicolons (;)
+      # @section -- Global Digma parameters
+      cc:
+      # -- hidden from other recipients, list of recipients separated by semicolons (;)
+      # @section -- Global Digma parameters
+      bcc:
+    emailGateway:
+      # -- Email gateway email api key
+      # @section -- Global Digma parameters
+      apiKey:
+      # -- Email gateway URL
+      # @section -- Global Digma parameters
+      url:
 observability:
   # -- Use local observability, Deploys Prometheus and Grafana 
   # @section -- Observability parameters
@@ -32,8 +61,6 @@ observability:
     # -- Export metrics
     # @section -- Observability parameters
     exportMetrics: true
-
-
 ## Global Docker image parameters
 ## Please, note that this will override the image parameters
 ##
@@ -802,11 +829,6 @@ ui:
     extraRules: []
 
 metricsExporter:
-  ## @param metricsExporter.image.registry [default: docker.io] metricsExporter image registry
-  ## @param metricsExporter.image.repository [default: digmatic/k8s-metrics-exporter] metricsExporter image repository
-  ## @param metricsExporter.image.tag ui image tag
-  ## @param metricsExporter.image.pullPolicy metricsExporter image pull policy
-  ## @param metricsExporter.image.pullSecrets metricsExporter image pull secrets
   image:
     registry: docker.io
     repository: digmatic/k8s-metrics-exporter
@@ -1238,33 +1260,15 @@ jaeger:
 ## ref: https://github.com/bitnami/charts/blob/main/bitnami/elasticsearch/values.yaml
 ##
 elasticsearch:
-  ## @param elasticsearch.enabled Whether to deploy a elasticsearch server to use as Mastodon's search engine
-  ## To use an external server set this to false and configure the externalElasticsearch parameters
-  ##
   enabled: true
-  ## @param elasticsearch.sysctlImage.enabled Enable kernel settings modifier image for Elasticsearch
-  ##
   sysctlImage:
     enabled: true
-  ## @param elasticsearch.security.enabled Enable security settings for Elasticsearch
-  ## @param elasticsearch.security.existingSecret Name of an existing secret containing the elasticsearch credentials
-  ## @param elasticsearch.security.tls.restEncryption Enable TLS encryption for REST API
-  ##
   security:
     enabled: false
     existingSecret: ""
     tls:
       restEncryption: false
   ## Elasticsearch master-eligible node parameters
-  ## @param elasticsearch.master.replicaCount Desired number of Elasticsearch master-eligible nodes
-  ## @skip elasticsearch.master.masterOnly
-  ## @skip elasticsearch.master.replicaCount
-  ## @skip elasticsearch.master.terminationGracePeriodSeconds
-  ## @skip elasticsearch.master.podSecurityContext
-  ## @skip elasticsearch.master.persistence
-  ## @skip elasticsearch.master.resources
-  ## @skip elasticsearch.master.extraEnvVars
-  ##
   master:
     masterOnly: false
     replicaCount: 1
@@ -1308,34 +1312,17 @@ elasticsearch:
     # -- Affinity for pods assignment
     # @section -- Elasticsearch parameters
     affinity: {}    
-  ## Elasticsearch coordinating-only node parameters
-  ## @param elasticsearch.coordinating.replicaCount Desired number of Elasticsearch coordinating-only nodes
-  ##
   coordinating:
     replicaCount: 0
-  ## Elasticsearch data node parameters
-  ## @param elasticsearch.data.replicaCount Desired number of Elasticsearch data nodes
-  ##
   data:
     replicaCount: 0
-  ## Elasticsearch ingest node parameters
-  ## @param elasticsearch.ingest.replicaCount Desired number of Elasticsearch ingest nodes
-  ##
   ingest:
     replicaCount: 0
-  ## @param elasticsearch.service.ports.restAPI Elasticsearch REST API port
-  ##
   service:
     ports:
       restAPI: 9200
 ## grafana
 ## ref: https://github.com/bitnami/charts/blob/main/bitnami/grafana/values.yaml
-## @skip grafana.admin
-## @skip grafana.dashboardsProvider
-## @skip grafana.dashboardsConfigMaps
-## @skip grafana.datasources
-## @skip grafana.grafana.resources
-## @skip grafana.grafana.resources
 ##
 grafana:
   admin:
@@ -1383,14 +1370,6 @@ grafana:
     affinity: {}       
 ## prometheus
 ## ref: https://github.com/bitnami/charts/blob/main/bitnami/prometheus/values.yaml
-## @skip prometheus.enabled
-## @skip prometheus.fullnameOverride
-## @skip prometheus.alertmanager
-## @skip prometheus.server.existingConfigmap
-## @skip prometheus.server.existingConfigmapKey
-## @skip prometheus.server.service
-## @skip prometheus.server.resources
-## @skip prometheus.persistence
 ##
 prometheus:
   enabled: false
@@ -1439,12 +1418,6 @@ prometheus:
     size: 20Gi
 ## kafka
 ## ref: https://github.com/bitnami/charts/blob/main/bitnami/kafka/values.yaml
-## @skip kafka.kraft
-## @skip kafka.controller.resources
-## @skip kafka.controller.persistence
-## @skip kafka.listeners
-## @skip kafka.extraConfig
-## @skip kafka.service
 ##
 kafka:
   kraft:

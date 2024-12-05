@@ -34,6 +34,14 @@ helm install my-release
 | digma.deployment.size | string | `"medium"` | replicas based on a given preset |
 | digma.accessToken | string | `nil` | replicas based on a given preset |
 | digma.licenseKey | string | `nil` | replicas based on a given preset |
+| digma.report.enabled | bool | `false` | daily issues report enabled |
+| digma.report.scheduledTimeUtc | string | `nil` | scheduled time of the report, HH:mm:ss (24-hour format) |
+| digma.report.uiExternalBaseUrl | string | `nil` | UI external service URL (automatically detected if not set) |
+| digma.report.recipients.to | string | `nil` | email recipients, list of recipients separated by semicolons (;) |
+| digma.report.recipients.cc | string | `nil` | report email additional recipients, list of recipients separated by semicolons (;) |
+| digma.report.recipients.bcc | string | `nil` | hidden from other recipients, list of recipients separated by semicolons (;) |
+| digma.report.emailGateway.apiKey | string | `nil` | Email gateway email api key |
+| digma.report.emailGateway.url | string | `nil` | Email gateway URL |
 
 ### Observability parameters
 
