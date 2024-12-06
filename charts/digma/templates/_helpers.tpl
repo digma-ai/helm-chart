@@ -15,6 +15,17 @@ Return the proper analytics api fullname
 {{- end -}}
 
 {{/*
+Return http or https depending on the secured property value
+*/}}
+{{- define "digma.analytics-api.protocol" -}}
+{{- if .Values.analyticsApi.secured -}}
+https
+{{- else -}}
+http
+{{- end -}}
+{{- end -}}
+
+{{/*
 Return the proper collector api fullname
 */}}
 {{- define "digma.collector-api" -}}
@@ -195,11 +206,32 @@ Return the proper jaeger fullname
 {{- end -}}
 
 {{/*
+Return the proper jaeger-ui fullname
+*/}}
+{{- define "digma.jaeger.ui" -}}
+  {{- printf "%s-jaeger-ui" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+{{- end -}}
+
+{{/*
+Return the proper jaeger-collector fullname
+*/}}
+{{- define "digma.jaeger.collector" -}}
+  {{- printf "%s-jaeger-collector" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+{{- end -}}
+
+{{/*
+Return the proper nginx fullname
+*/}}
+{{- define "digma.nginx" -}}
+  {{- printf "%s-nginx" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+{{- end -}}
+
+{{/*
 Return jaeger connectivity env
 */}}
 {{- define "env.jaeger" -}}
 - name: Jaeger__OtlpUrl
-  value: {{ printf "http://%s:%v" (include "digma.jaeger" .) .Values.jaeger.service.ports.grpc_internal }}
+  value: {{ printf "http://%s:%v" (include "digma.jaeger.collector" .) .Values.jaeger.service.ports.grpc_internal }}
 {{- end -}}
 
 {{/*

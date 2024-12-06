@@ -25,7 +25,7 @@ spec:
             {{- if eq "true" (include "common.ingress.supportsPathType" .) }}
             pathType: {{ .Values.jaeger.ingress.pathType }}
             {{- end }}
-            backend: {{- include "common.ingress.backend" (dict "serviceName" (include "digma.jaeger" $) "servicePort" "http-ui" "context" $)  | nindent 14 }}
+            backend: {{- include "common.ingress.backend" (dict "serviceName" (include "digma.jaeger.ui" $) "servicePort" "http-ui" "context" $)  | nindent 14 }}
     {{- end }}
     {{- if .Values.jaeger.ingress.extraRules }}
     {{- include "common.tplvalues.render" (dict "value" .Values.jaeger.ingress.extraRules "context" $) | nindent 4 }}

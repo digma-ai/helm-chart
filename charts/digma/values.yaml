@@ -749,11 +749,12 @@ pipelineWorker:
   # -- Affinity for pods assignment
   # @section -- PipelineWorker parameters
   affinity: {}
-ui:
+
+nginx:
   image:
     registry: docker.io
-    repository: digmaai/digma-ui
-    tag: 3.0.1
+    repository: nginx
+    tag: 1.27.3
     # -- image pull policy
     # @section -- UI parameters
     pullPolicy: IfNotPresent
@@ -777,17 +778,6 @@ ui:
     limits: 
       memory: 200Mi
       cpu: 200m
-  service:
-    # -- service type
-    # @section -- UI parameters
-    type: ClusterIP
-    # -- Additional custom annotations for service
-    # @section -- UI parameters
-    annotations: {}
-    ports:
-      # -- HTTP service port
-      # @section -- UI parameters
-      http: 80
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
   # -- Extra labels for pods
   # @section -- UI parameters
@@ -809,6 +799,19 @@ ui:
   # -- Affinity for pods assignment
   # @section -- UI parameters
   affinity: {}
+
+ui:
+  service:
+    # -- service type
+    # @section -- UI parameters
+    type: ClusterIP
+    # -- Additional custom annotations for service
+    # @section -- UI parameters
+    annotations: {}
+    ports:
+      # -- HTTP service port
+      # @section -- UI parameters
+      http: 80
   ## ui ingress parameters
   ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
   ingress:
