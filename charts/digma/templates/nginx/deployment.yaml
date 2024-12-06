@@ -49,10 +49,8 @@ spec:
           - /bin/sh
           - -c
           - |
-            wget -O /tmp/digma-ui.zip "https://github.com/digma-ai/digma-ui/releases/download/v3.0.1/dist-web-v3.0.1.zip" &&
-            unzip -o /tmp/digma-ui.zip -d /tmp/digma-ui &&
-            cp -r /tmp/digma-ui/dist/* /app &&
-            rm -rf /tmp/digma-ui &&
+            wget -O /tmp/digma-ui.zip "https://github.com/digma-ai/digma-ui/releases/download/v4.0.0/dist-web-v4.0.0.zip" &&
+            unzip -o /tmp/digma-ui.zip -d /app &&
             rm /tmp/digma-ui.zip
         volumeMounts:
           - name: app-volume
