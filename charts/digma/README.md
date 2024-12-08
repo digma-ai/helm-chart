@@ -18,7 +18,10 @@ helm install digma digma/digma --namespace digma --create-namespace
 xxx
 
 ## Prerequisites
-xxx
+
+- Kubernetes 1.23+
+- Helm 3.8.0+
+
 ## Installing the Chart
 
 To install the chart with the release name `my-release`:
