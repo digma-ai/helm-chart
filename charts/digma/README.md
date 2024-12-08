@@ -1,6 +1,6 @@
 # digma
 
-![Version: 1.0.254](https://img.shields.io/badge/Version-1.0.254-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.165](https://img.shields.io/badge/AppVersion-0.3.165-informational?style=flat-square)
+![Version: 1.0.254](https://img.shields.io/badge/Version-1.0.254-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.166-alpha.3](https://img.shields.io/badge/AppVersion-0.3.166--alpha.3-informational?style=flat-square)
 
 A Helm chart containing Digma's services
 
@@ -142,6 +142,12 @@ helm install my-release
 | collectorApi.nodeSelector | object | `{}` | Node labels for pods assignment |
 | collectorApi.tolerations | list | `[]` | Tolerations for pods assignment |
 | collectorApi.affinity | object | `{}` | Affinity for pods assignment |
+| collectorApi.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
+| collectorApi.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
+| collectorApi.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
+| collectorApi.livenessProbe.timeoutSeconds | int | `5` | Timeout seconds for livenessProbe |
+| collectorApi.livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
+| collectorApi.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
 
 ### AnalyticsApi parameters
 
@@ -168,6 +174,18 @@ helm install my-release
 | analyticsApi.ingress.annotations | string | `nil` | Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations. |
 | analyticsApi.ingress.extraPaths | list | `[]` | Any additional paths that may need to be added to the ingress under the main host |
 | analyticsApi.ingress.extraRules | list | `[]` | Additional rules to be covered with this ingress record |
+| analyticsApi.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
+| analyticsApi.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
+| analyticsApi.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
+| analyticsApi.livenessProbe.timeoutSeconds | int | `5` | Timeout seconds for livenessProbe |
+| analyticsApi.livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
+| analyticsApi.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
+| analyticsApi.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
+| analyticsApi.readinessProbe.initialDelaySeconds | int | `10` | Initial delay seconds for readinessProbe |
+| analyticsApi.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
+| analyticsApi.readinessProbe.timeoutSeconds | int | `5` | Timeout seconds for readinessProbe |
+| analyticsApi.readinessProbe.failureThreshold | int | `12` | Failure threshold for readinessProbe |
+| analyticsApi.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 
 ### MeasurementAnalysis parameters
 
@@ -216,17 +234,17 @@ helm install my-release
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| ui.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
-| ui.image.pullSecrets | list | `[]` | image pull secrets |
-| ui.replicas | int | `1` | Number of replicas to deploy |
+| nginx.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
+| nginx.image.pullSecrets | list | `[]` | image pull secrets |
+| nginx.replicas | int | `1` | Number of replicas to deploy |
+| nginx.podLabels | object | `{}` | Extra labels for pods |
+| nginx.podAnnotations | object | `{}` | Extra annotations for pods |
+| nginx.nodeSelector | object | `{}` | Node labels for pods assignment |
+| nginx.tolerations | list | `[]` | Tolerations for pods assignment |
+| nginx.affinity | object | `{}` | Affinity for pods assignment |
 | ui.service.type | string | `"ClusterIP"` | service type |
 | ui.service.annotations | object | `{}` | Additional custom annotations for service |
 | ui.service.ports.http | int | `80` | HTTP service port |
-| ui.podLabels | object | `{}` | Extra labels for pods |
-| ui.podAnnotations | object | `{}` | Extra annotations for pods |
-| ui.nodeSelector | object | `{}` | Node labels for pods assignment |
-| ui.tolerations | list | `[]` | Tolerations for pods assignment |
-| ui.affinity | object | `{}` | Affinity for pods assignment |
 | ui.ingress.enabled | bool | `false` | Enable ingress |
 | ui.ingress.pathType | string | `"ImplementationSpecific"` | Ingress path type |
 | ui.ingress.apiVersion | string | `""` | Force Ingress API version (automatically detected if not set) |
