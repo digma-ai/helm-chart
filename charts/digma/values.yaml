@@ -499,7 +499,7 @@ analyticsApi:
   # @section -- AnalyticsApi parameters
   tolerations: []
   ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
-  ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
+  ## NOTE1: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
   # -- Affinity for pods assignment
   # @section -- AnalyticsApi parameters
   affinity: {}    
