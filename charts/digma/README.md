@@ -143,7 +143,7 @@ helm install my-release
 | collectorApi.service.annotations | object | `{}` | Additional custom annotations for service |
 | collectorApi.service.ports.internal | int | `5048` | internal service port |
 | collectorApi.service.ports.grpc | int | `5050` | gRPC service port |
-| collectorApi.service.ports.http | int | `5049` | HTTP port listen to path: /v1/traces health check at /healthz |
+| collectorApi.service.ports.http | int | `5049` | HTTP port listen to path: /v1/traces, health check at /healthz |
 | collectorApi.podLabels | object | `{}` | Extra labels for pods |
 | collectorApi.podAnnotations | object | `{}` | Extra annotations for pods |
 | collectorApi.nodeSelector | object | `{}` | Node labels for pods assignment |

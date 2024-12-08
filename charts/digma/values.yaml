@@ -421,8 +421,7 @@ collectorApi:
       # -- gRPC service port
       # @section -- CollectorApi parameters
       grpc: 5050
-      # -- HTTP port listen to path: /v1/traces
-      # health check at /healthz
+      # -- HTTP port listen to path: /v1/traces, health check at /healthz
       # @section -- CollectorApi parameters
       http: 5049
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
