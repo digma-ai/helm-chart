@@ -1,0 +1,53 @@
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: api-stag01-certificate
+  namespace: digma
+spec:
+  domains:
+    - api.stag01.digma.systems
+
+---
+      
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: jaeger-stag01-certificate
+  namespace: digma
+spec:
+  domains:
+    - jaeger.stag01.digma.systems
+      
+---
+
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: collector-grpc-stag01-certificate
+  namespace: digma
+spec:
+  domains:
+    - collector-grpc.stag01.digma.systems
+      
+---
+
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: collector-http-stag01-certificate
+  namespace: digma
+spec:
+  domains:
+    - collector-http.stag01.digma.systems
+      
+---
+
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: ui-stag01-certificate
+  namespace: digma
+spec:
+  domains:
+    - ui.stag01.digma.systems
+      
