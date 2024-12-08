@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Run helm-docs
+./scripts/generate-docs.sh
+
+# Add updated README.md files to the commit
+git add **/README.md
