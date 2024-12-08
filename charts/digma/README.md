@@ -15,7 +15,8 @@ helm install digma digma/digma --namespace digma --create-namespace
 
 ```
 ## Introduction
-xxx
+
+This chart bootstraps a [Digma](https://digma.ai) deployment on a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
 
 ## Prerequisites
 
