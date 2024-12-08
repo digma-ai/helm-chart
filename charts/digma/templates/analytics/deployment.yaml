@@ -65,11 +65,12 @@ spec:
           httpGet:
             path: /healthz
             port: http
+            scheme: {{ include "digma.analytics-api.protocol" . | upper}}
         {{- end }}
         {{- if .Values.analyticsApi.readinessProbe.enabled }}
         readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.analyticsApi.readinessProbe "enabled") "context" $) | nindent 10 }}
           httpGet:
             path: /readiness
             port: http
-            scheme: http
+            scheme: {{ include "digma.analytics-api.protocol" . | upper}}
         {{- end }}

@@ -587,7 +587,7 @@ analyticsApi:
     enabled: true
     # -- Initial delay seconds for readinessProbe
     # @section -- AnalyticsApi parameters
-    initialDelaySeconds: 5
+    initialDelaySeconds: 10
     # -- Period seconds for readinessProbe
     # @section -- AnalyticsApi parameters
     periodSeconds: 10
@@ -596,7 +596,7 @@ analyticsApi:
     timeoutSeconds: 5
     # -- Failure threshold for readinessProbe
     # @section -- AnalyticsApi parameters
-    failureThreshold: 5
+    failureThreshold: 12
     # -- Success threshold for readinessProbe
     # @section -- AnalyticsApi parameters
     successThreshold: 1
