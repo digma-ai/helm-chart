@@ -42,7 +42,8 @@ spec:
         imagePullPolicy: {{ .Values.scheduler.image.pullPolicy }}
         resources: {{- toYaml .Values.scheduler.resources | nindent 12 }}
         ports:
-        - containerPort: {{ .Values.scheduler.service.ports.internal }}
+        - name: http
+          containerPort: {{ .Values.scheduler.service.ports.http }}
         env:
         {{- include "env.digma.app.common" . | nindent  8 }}
         {{- include "env.redis" . | nindent  8 }}
@@ -81,3 +82,10 @@ spec:
           value: {{ $uiServiceBaseUrl | quote}}
           {{- end }}
         {{- end }} 
+        {{- if .Values.scheduler.livenessProbe.enabled }}
+        livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.scheduler.livenessProbe "enabled") "context" $) | nindent 10 }}
+          httpGet:
+            path: /healthz
+            port: http
+            scheme: HTTP
+        {{- end }}

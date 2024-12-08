@@ -1,7 +1,7 @@
 annotations:
   category: Infrastructure
 apiVersion: v2
-appVersion: 0.3.166-alpha.3
+appVersion: 0.3.166-health-alpha.2
 dependencies:
 - name: kafka
   repository: oci://registry-1.docker.io/bitnamicharts

@@ -54,3 +54,10 @@ spec:
         {{- include "env.redis" . | nindent  8 }}
         {{- include "env.kafka" . | nindent  8 }}
         {{- include "env.jaeger" . | nindent  8 }}
+        {{- if .Values.collectorApi.livenessProbe.enabled }}
+        livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.collectorApi.livenessProbe "enabled") "context" $) | nindent 10 }}
+          httpGet:
+            path: /healthz
+            port: http
+            scheme: HTTP
+        {{- end }}

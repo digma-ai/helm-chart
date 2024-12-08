@@ -41,6 +41,9 @@ spec:
         image: {{ include "common.images.image" (dict "imageRoot" .Values.measurementAnalysis.image "global" .Values.global "chart" .Chart) }}
         imagePullPolicy: {{ .Values.measurementAnalysis.image.pullPolicy }}
         resources: {{- toYaml .Values.measurementAnalysis.resources | nindent 12 }}
+        ports:
+        - name: http
+          containerPort: {{ .Values.measurementAnalysis.service.ports.http }}
         env:
         {{- include "env.digma.app.common" . | nindent  8 }}
         {{- include "env.redis" . | nindent  8 }}
@@ -60,4 +63,11 @@ spec:
           value: {{ .Values.measurementAnalysis.env.ThresholdOptions__UpsertSpanFlowMetadataThresholdSeconds | quote }}
         {{- if .Values.measurementAnalysis.extraEnvVars }}
         {{- include "common.tplvalues.render" (dict "value" .Values.measurementAnalysis.extraEnvVars "context" $) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.measurementAnalysis.livenessProbe.enabled }}
+        livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.measurementAnalysis.livenessProbe "enabled") "context" $) | nindent 10 }}
+          httpGet:
+            path: /healthz
+            port: http
+            scheme: HTTP
         {{- end }}
