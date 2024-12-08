@@ -581,6 +581,25 @@ analyticsApi:
     # -- Success threshold for livenessProbe
     # @section -- AnalyticsApi parameters
     successThreshold: 1
+  readinessProbe:
+    # -- Enable readinessProbe
+    # @section -- AnalyticsApi parameters
+    enabled: true
+    # -- Initial delay seconds for readinessProbe
+    # @section -- AnalyticsApi parameters
+    initialDelaySeconds: 5
+    # -- Period seconds for readinessProbe
+    # @section -- AnalyticsApi parameters
+    periodSeconds: 10
+    # -- Timeout seconds for readinessProbe
+    # @section -- AnalyticsApi parameters
+    timeoutSeconds: 5
+    # -- Failure threshold for readinessProbe
+    # @section -- AnalyticsApi parameters
+    failureThreshold: 5
+    # -- Success threshold for readinessProbe
+    # @section -- AnalyticsApi parameters
+    successThreshold: 1
 measurementAnalysis:
   env:
     ThresholdOptions__UpsertEndpointThresholdSeconds: 5
