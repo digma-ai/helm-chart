@@ -118,7 +118,7 @@ collectorWorker:
       cpu: 600m
   service:
     ports:
-      # -- HTTP service port
+      # -- HTTP service port, health check at /healthz
       # @section -- CollectorWorker parameters
       http: 5052
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
@@ -422,6 +422,7 @@ collectorApi:
       # @section -- CollectorApi parameters
       grpc: 5050
       # -- HTTP port listen to path: /v1/traces
+      # health check at /healthz
       # @section -- CollectorApi parameters
       http: 5049
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
@@ -503,7 +504,7 @@ analyticsApi:
     # @section -- AnalyticsApi parameters
     annotations: {}
     ports:
-      # -- HTTP service port
+      # -- HTTP service port, health check at /healthz
       # @section -- AnalyticsApi parameters
       http: 5051
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
@@ -657,7 +658,7 @@ measurementAnalysis:
       cpu: 800m
   service:
     ports:
-      # -- HTTP service port
+      # -- HTTP service port, health check at /healthz
       # @section -- MeasurementAnalysis parameters
       http: 5054
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
@@ -737,7 +738,7 @@ scheduler:
       cpu: 500m
   service:
     ports:
-      # -- HTTP service port
+      # -- HTTP service port, health check at /healthz
       # @section -- Scheduler parameters
       http: 5053
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
@@ -810,7 +811,7 @@ pipelineWorker:
       cpu: 500m
   service:
     ports:
-      # -- HTTP service port
+      # -- HTTP service port, health check at /healthz
       # @section -- PipelineWorker parameters
       http: 5055
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/

@@ -76,7 +76,7 @@ helm install my-release
 | collectorWorker.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
 | collectorWorker.image.pullSecrets | list | `[]` | image pull secrets |
 | collectorWorker.replicas | string | `"{{ index .Values.presets .Values.digma.deployment.size \"collectorWorker\" \"replicas\" }}"` | replicas based on a given preset(.Values.digma.deployment.size) Number of replicas to deploy |
-| collectorWorker.service.ports.http | int | `5052` | HTTP service port |
+| collectorWorker.service.ports.http | int | `5052` | HTTP service port, health check at /healthz |
 | collectorWorker.podLabels | object | `{}` | Extra labels for pods |
 | collectorWorker.podAnnotations | object | `{}` | Extra annotations for pods |
 | collectorWorker.nodeSelector | object | `{}` | Node labels for pods assignment |
@@ -143,7 +143,7 @@ helm install my-release
 | collectorApi.service.annotations | object | `{}` | Additional custom annotations for service |
 | collectorApi.service.ports.internal | int | `5048` | internal service port |
 | collectorApi.service.ports.grpc | int | `5050` | gRPC service port |
-| collectorApi.service.ports.http | int | `5049` | HTTP port listen to path: /v1/traces |
+| collectorApi.service.ports.http | int | `5049` | HTTP port listen to path: /v1/traces health check at /healthz |
 | collectorApi.podLabels | object | `{}` | Extra labels for pods |
 | collectorApi.podAnnotations | object | `{}` | Extra annotations for pods |
 | collectorApi.nodeSelector | object | `{}` | Node labels for pods assignment |
@@ -166,7 +166,7 @@ helm install my-release
 | analyticsApi.replicas | int | `1` | Number of replicas to deploy |
 | analyticsApi.service.type | string | `"ClusterIP"` | service type |
 | analyticsApi.service.annotations | object | `{}` | Additional custom annotations for service |
-| analyticsApi.service.ports.http | int | `5051` | HTTP service port |
+| analyticsApi.service.ports.http | int | `5051` | HTTP service port, health check at /healthz |
 | analyticsApi.podLabels | object | `{}` | Extra labels for pods |
 | analyticsApi.podAnnotations | object | `{}` | Extra annotations for pods |
 | analyticsApi.nodeSelector | object | `{}` | Node labels for pods assignment |
@@ -195,7 +195,7 @@ helm install my-release
 | measurementAnalysis.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
 | measurementAnalysis.image.pullSecrets | list | `[]` | image pull secrets |
 | measurementAnalysis.replicas | string | `"{{ index .Values.presets .Values.digma.deployment.size \"measurementAnalysis\" \"replicas\" }}"` | replicas based on a given preset(.Values.digma.deployment.size) Number of replicas to deploy |
-| measurementAnalysis.service.ports.http | int | `5054` | HTTP service port |
+| measurementAnalysis.service.ports.http | int | `5054` | HTTP service port, health check at /healthz |
 | measurementAnalysis.podLabels | object | `{}` | Extra labels for pods |
 | measurementAnalysis.podAnnotations | object | `{}` | Extra annotations for pods |
 | measurementAnalysis.nodeSelector | object | `{}` | Node labels for pods assignment |
@@ -216,7 +216,7 @@ helm install my-release
 | scheduler.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
 | scheduler.image.pullSecrets | list | `[]` | image pull secrets |
 | scheduler.replicas | int | `1` | Number of replicas to deploy |
-| scheduler.service.ports.http | int | `5053` | HTTP service port |
+| scheduler.service.ports.http | int | `5053` | HTTP service port, health check at /healthz |
 | scheduler.podLabels | object | `{}` | Extra labels for pods |
 | scheduler.podAnnotations | object | `{}` | Extra annotations for pods |
 | scheduler.nodeSelector | object | `{}` | Node labels for pods assignment |
@@ -236,7 +236,7 @@ helm install my-release
 | pipelineWorker.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
 | pipelineWorker.image.pullSecrets | list | `[]` | image pull secrets |
 | pipelineWorker.replicas | string | `"{{ index .Values.presets .Values.digma.deployment.size \"pipelineWorker\" \"replicas\" }}"` | replicas based on a given preset(.Values.digma.deployment.size) Number of replicas to deploy |
-| pipelineWorker.service.ports.http | int | `5055` | HTTP service port |
+| pipelineWorker.service.ports.http | int | `5055` | HTTP service port, health check at /healthz |
 | pipelineWorker.podLabels | object | `{}` | Extra labels for pods |
 | pipelineWorker.podAnnotations | object | `{}` | Extra annotations for pods |
 | pipelineWorker.nodeSelector | object | `{}` | Node labels for pods assignment |
