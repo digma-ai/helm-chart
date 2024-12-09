@@ -1,6 +1,6 @@
 # digma
 
-![Version: 1.0.254](https://img.shields.io/badge/Version-1.0.254-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.166-alpha.3](https://img.shields.io/badge/AppVersion-0.3.166--alpha.3-informational?style=flat-square)
+![Version: 1.0.254](https://img.shields.io/badge/Version-1.0.254-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.166-health-alpha.2](https://img.shields.io/badge/AppVersion-0.3.166--health--alpha.2-informational?style=flat-square)
 
 A Helm chart containing Digma's services
 
@@ -15,10 +15,14 @@ helm install digma digma/digma --namespace digma --create-namespace
 
 ```
 ## Introduction
-xxx
+
+This chart bootstraps a [Digma](https://digma.ai) deployment on a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
 
 ## Prerequisites
-xxx
+
+- Kubernetes 1.23+
+- Helm 3.8.0+
+
 ## Installing the Chart
 
 To install the chart with the release name `my-release`:
@@ -31,9 +35,9 @@ helm install my-release
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| digma.deployment.size | string | `"medium"` | replicas based on a given preset |
-| digma.accessToken | string | `nil` | replicas based on a given preset |
-| digma.licenseKey | string | `nil` | replicas based on a given preset |
+| digma.deployment.size | string | `"medium"` | adjusts the deployment to efficiently handle different scales of workload, and can be either small, medium, or large. |
+| digma.accessToken | string | `nil` | access token for plugin authentication, and set the same one in the IDE plugin settings. |
+| digma.licenseKey | string | `nil` | a digma license to use,If you've signed up for a free Digma account you should have received a Digma license to use. You can use this link [https://digma.ai/sign-up/] to sign up |
 | digma.report.enabled | bool | `false` | daily issues report enabled |
 | digma.report.scheduledTimeUtc | string | `nil` | scheduled time of the report, HH:mm:ss (24-hour format) |
 | digma.report.uiExternalBaseUrl | string | `nil` | UI external service URL (automatically detected if not set) |
@@ -76,12 +80,19 @@ helm install my-release
 | collectorWorker.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
 | collectorWorker.image.pullSecrets | list | `[]` | image pull secrets |
 | collectorWorker.replicas | string | `"{{ index .Values.presets .Values.digma.deployment.size \"collectorWorker\" \"replicas\" }}"` | replicas based on a given preset(.Values.digma.deployment.size) Number of replicas to deploy |
+| collectorWorker.service.ports.http | int | `5052` | HTTP service port, health check at /healthz |
 | collectorWorker.podLabels | object | `{}` | Extra labels for pods |
 | collectorWorker.podAnnotations | object | `{}` | Extra annotations for pods |
 | collectorWorker.nodeSelector | object | `{}` | Node labels for pods assignment |
 | collectorWorker.tolerations | list | `[]` | Tolerations for pods assignment |
 | collectorWorker.affinity | object | `{}` | Affinity for pods assignment |
 | collectorWorker.extraEnvVars | list | `[]` | Array with extra environment variables to add |
+| collectorWorker.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
+| collectorWorker.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
+| collectorWorker.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
+| collectorWorker.livenessProbe.timeoutSeconds | int | `5` | Timeout seconds for livenessProbe |
+| collectorWorker.livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
+| collectorWorker.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
 
 ### Otel Collector parameters
 
@@ -136,7 +147,7 @@ helm install my-release
 | collectorApi.service.annotations | object | `{}` | Additional custom annotations for service |
 | collectorApi.service.ports.internal | int | `5048` | internal service port |
 | collectorApi.service.ports.grpc | int | `5050` | gRPC service port |
-| collectorApi.service.ports.http | int | `5049` | HTTP port listen to path: /v1/traces |
+| collectorApi.service.ports.http | int | `5049` | HTTP port listen to path: /v1/traces, health check at /healthz |
 | collectorApi.podLabels | object | `{}` | Extra labels for pods |
 | collectorApi.podAnnotations | object | `{}` | Extra annotations for pods |
 | collectorApi.nodeSelector | object | `{}` | Node labels for pods assignment |
@@ -159,7 +170,7 @@ helm install my-release
 | analyticsApi.replicas | int | `1` | Number of replicas to deploy |
 | analyticsApi.service.type | string | `"ClusterIP"` | service type |
 | analyticsApi.service.annotations | object | `{}` | Additional custom annotations for service |
-| analyticsApi.service.ports.http | int | `5051` | HTTP service port |
+| analyticsApi.service.ports.http | int | `5051` | HTTP service port, health check at /healthz |
 | analyticsApi.podLabels | object | `{}` | Extra labels for pods |
 | analyticsApi.podAnnotations | object | `{}` | Extra annotations for pods |
 | analyticsApi.nodeSelector | object | `{}` | Node labels for pods assignment |
@@ -180,12 +191,6 @@ helm install my-release
 | analyticsApi.livenessProbe.timeoutSeconds | int | `5` | Timeout seconds for livenessProbe |
 | analyticsApi.livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
 | analyticsApi.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
-| analyticsApi.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
-| analyticsApi.readinessProbe.initialDelaySeconds | int | `10` | Initial delay seconds for readinessProbe |
-| analyticsApi.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
-| analyticsApi.readinessProbe.timeoutSeconds | int | `5` | Timeout seconds for readinessProbe |
-| analyticsApi.readinessProbe.failureThreshold | int | `12` | Failure threshold for readinessProbe |
-| analyticsApi.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 
 ### MeasurementAnalysis parameters
 
@@ -194,12 +199,19 @@ helm install my-release
 | measurementAnalysis.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
 | measurementAnalysis.image.pullSecrets | list | `[]` | image pull secrets |
 | measurementAnalysis.replicas | string | `"{{ index .Values.presets .Values.digma.deployment.size \"measurementAnalysis\" \"replicas\" }}"` | replicas based on a given preset(.Values.digma.deployment.size) Number of replicas to deploy |
+| measurementAnalysis.service.ports.http | int | `5054` | HTTP service port, health check at /healthz |
 | measurementAnalysis.podLabels | object | `{}` | Extra labels for pods |
 | measurementAnalysis.podAnnotations | object | `{}` | Extra annotations for pods |
 | measurementAnalysis.nodeSelector | object | `{}` | Node labels for pods assignment |
 | measurementAnalysis.tolerations | list | `[]` | Tolerations for pods assignment |
 | measurementAnalysis.affinity | object | `{}` | Affinity for pods assignment |
 | measurementAnalysis.extraEnvVars | list | `[]` | Array with extra environment variables to add |
+| measurementAnalysis.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
+| measurementAnalysis.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
+| measurementAnalysis.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
+| measurementAnalysis.livenessProbe.timeoutSeconds | int | `5` | Timeout seconds for livenessProbe |
+| measurementAnalysis.livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
+| measurementAnalysis.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
 
 ### Scheduler parameters
 
@@ -208,14 +220,18 @@ helm install my-release
 | scheduler.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
 | scheduler.image.pullSecrets | list | `[]` | image pull secrets |
 | scheduler.replicas | int | `1` | Number of replicas to deploy |
-| scheduler.service.type | string | `"ClusterIP"` | service type |
-| scheduler.service.annotations | object | `{}` | Additional custom annotations for service |
-| scheduler.service.ports.internal | int | `3053` | Internal HTTP service port |
+| scheduler.service.ports.http | int | `5053` | HTTP service port, health check at /healthz |
 | scheduler.podLabels | object | `{}` | Extra labels for pods |
 | scheduler.podAnnotations | object | `{}` | Extra annotations for pods |
 | scheduler.nodeSelector | object | `{}` | Node labels for pods assignment |
 | scheduler.tolerations | list | `[]` | Tolerations for pods assignment |
 | scheduler.affinity | object | `{}` | Affinity for pods assignment |
+| scheduler.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
+| scheduler.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
+| scheduler.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
+| scheduler.livenessProbe.timeoutSeconds | int | `5` | Timeout seconds for livenessProbe |
+| scheduler.livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
+| scheduler.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
 
 ### PipelineWorker parameters
 
@@ -224,11 +240,18 @@ helm install my-release
 | pipelineWorker.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
 | pipelineWorker.image.pullSecrets | list | `[]` | image pull secrets |
 | pipelineWorker.replicas | string | `"{{ index .Values.presets .Values.digma.deployment.size \"pipelineWorker\" \"replicas\" }}"` | replicas based on a given preset(.Values.digma.deployment.size) Number of replicas to deploy |
+| pipelineWorker.service.ports.http | int | `5055` | HTTP service port, health check at /healthz |
 | pipelineWorker.podLabels | object | `{}` | Extra labels for pods |
 | pipelineWorker.podAnnotations | object | `{}` | Extra annotations for pods |
 | pipelineWorker.nodeSelector | object | `{}` | Node labels for pods assignment |
 | pipelineWorker.tolerations | list | `[]` | Tolerations for pods assignment |
 | pipelineWorker.affinity | object | `{}` | Affinity for pods assignment |
+| pipelineWorker.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
+| pipelineWorker.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
+| pipelineWorker.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
+| pipelineWorker.livenessProbe.timeoutSeconds | int | `5` | Timeout seconds for livenessProbe |
+| pipelineWorker.livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
+| pipelineWorker.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
 
 ### UI parameters
 

@@ -41,6 +41,9 @@ spec:
         image: {{ include "common.images.image" (dict "imageRoot" .Values.pipelineWorker.image "global" .Values.global "chart" .Chart) }}
         imagePullPolicy: {{ .Values.pipelineWorker.image.pullPolicy }}
         resources: {{- toYaml .Values.pipelineWorker.resources | nindent 12 }}
+        ports:
+        - name: http
+          containerPort: {{ .Values.pipelineWorker.service.ports.http }}        
         env:
         {{- include "env.digma.app.common" . | nindent  8 }}
         {{- include "env.redis" . | nindent  8 }}
@@ -48,3 +51,10 @@ spec:
         {{- include "env.postgres" . | nindent  8 }}
         {{- include "env.kafka" . | nindent  8 }}
         {{- include "env.jaeger" . | nindent 8 }}
+        {{- if .Values.pipelineWorker.livenessProbe.enabled }}
+        livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.pipelineWorker.livenessProbe "enabled") "context" $) | nindent 10 }}
+          httpGet:
+            path: /healthz
+            port: http
+            scheme: HTTP
+        {{- end }}

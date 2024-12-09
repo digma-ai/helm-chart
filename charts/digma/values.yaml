@@ -1,12 +1,12 @@
 digma:
   deployment:
-    # -- replicas based on a given preset
+    # -- adjusts the deployment to efficiently handle different scales of workload, and can be either small, medium, or large.
     # @section -- Global Digma parameters
     size: medium
-  # -- replicas based on a given preset
+  # -- access token for plugin authentication, and set the same one in the IDE plugin settings.
   # @section -- Global Digma parameters
   accessToken: 
-  # -- replicas based on a given preset
+  # -- a digma license to use,If you've signed up for a free Digma account you should have received a Digma license to use. You can use this link [https://digma.ai/sign-up/] to sign up
   # @section -- Global Digma parameters
   licenseKey:
   ## daily issues report parameters
@@ -116,6 +116,11 @@ collectorWorker:
     limits: 
       memory: 600Mi
       cpu: 600m
+  service:
+    ports:
+      # -- HTTP service port, health check at /healthz
+      # @section -- CollectorWorker parameters
+      http: 5052
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
   # -- Extra labels for pods
   # @section -- CollectorWorker parameters
@@ -158,7 +163,26 @@ collectorWorker:
         RouteRegex: ""
         Method: "GET"
         Service: "*"
-
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  livenessProbe:
+    # -- Enable livenessProbe
+    # @section -- CollectorWorker parameters
+    enabled: true
+    # -- Initial delay seconds for livenessProbe
+    # @section -- CollectorWorker parameters
+    initialDelaySeconds: 120
+    # -- Period seconds for livenessProbe
+    # @section -- CollectorWorker parameters
+    periodSeconds: 10
+    # -- Timeout seconds for livenessProbe
+    # @section -- CollectorWorker parameters
+    timeoutSeconds: 5
+    # -- Failure threshold for livenessProbe
+    # @section -- CollectorWorker parameters
+    failureThreshold: 3
+    # -- Success threshold for livenessProbe
+    # @section -- CollectorWorker parameters
+    successThreshold: 1
 otelCollector:
   # --telemetry data that should be sampled and sent to the backend
   # @section -- Otel Collector parameters
@@ -397,7 +421,7 @@ collectorApi:
       # -- gRPC service port
       # @section -- CollectorApi parameters
       grpc: 5050
-      # -- HTTP port listen to path: /v1/traces
+      # -- HTTP port listen to path: /v1/traces, health check at /healthz
       # @section -- CollectorApi parameters
       http: 5049
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
@@ -479,7 +503,7 @@ analyticsApi:
     # @section -- AnalyticsApi parameters
     annotations: {}
     ports:
-      # -- HTTP service port
+      # -- HTTP service port, health check at /healthz
       # @section -- AnalyticsApi parameters
       http: 5051
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
@@ -581,25 +605,25 @@ analyticsApi:
     # -- Success threshold for livenessProbe
     # @section -- AnalyticsApi parameters
     successThreshold: 1
-  readinessProbe:
-    # -- Enable readinessProbe
-    # @section -- AnalyticsApi parameters
-    enabled: true
-    # -- Initial delay seconds for readinessProbe
-    # @section -- AnalyticsApi parameters
-    initialDelaySeconds: 10
-    # -- Period seconds for readinessProbe
-    # @section -- AnalyticsApi parameters
-    periodSeconds: 10
-    # -- Timeout seconds for readinessProbe
-    # @section -- AnalyticsApi parameters
-    timeoutSeconds: 5
-    # -- Failure threshold for readinessProbe
-    # @section -- AnalyticsApi parameters
-    failureThreshold: 12
-    # -- Success threshold for readinessProbe
-    # @section -- AnalyticsApi parameters
-    successThreshold: 1
+  # readinessProbe:
+  #   # -- Enable readinessProbe
+  #   # @section -- AnalyticsApi parameters
+  #   enabled: true
+  #   # -- Initial delay seconds for readinessProbe
+  #   # @section -- AnalyticsApi parameters
+  #   initialDelaySeconds: 10
+  #   # -- Period seconds for readinessProbe
+  #   # @section -- AnalyticsApi parameters
+  #   periodSeconds: 10
+  #   # -- Timeout seconds for readinessProbe
+  #   # @section -- AnalyticsApi parameters
+  #   timeoutSeconds: 5
+  #   # -- Failure threshold for readinessProbe
+  #   # @section -- AnalyticsApi parameters
+  #   failureThreshold: 12
+  #   # -- Success threshold for readinessProbe
+  #   # @section -- AnalyticsApi parameters
+  #   successThreshold: 1
 measurementAnalysis:
   env:
     ThresholdOptions__UpsertEndpointThresholdSeconds: 5
@@ -621,7 +645,6 @@ measurementAnalysis:
     # -- image pull secrets
     # @section -- MeasurementAnalysis parameters
     pullSecrets: []
- 
   # -- replicas based on a given preset(.Values.digma.deployment.size) Number of replicas to deploy
   # @section -- MeasurementAnalysis parameters
   replicas: "{{ index .Values.presets .Values.digma.deployment.size \"measurementAnalysis\" \"replicas\" }}"
@@ -632,6 +655,11 @@ measurementAnalysis:
     limits: 
       memory: 800Mi
       cpu: 800m
+  service:
+    ports:
+      # -- HTTP service port, health check at /healthz
+      # @section -- MeasurementAnalysis parameters
+      http: 5054
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
   # -- Extra labels for pods
   # @section -- MeasurementAnalysis parameters
@@ -653,7 +681,6 @@ measurementAnalysis:
   # -- Affinity for pods assignment
   # @section -- MeasurementAnalysis parameters
   affinity: {}    
-
   ## e.g:
   ## extraEnvVars:
   ##   - name: FOO
@@ -661,6 +688,26 @@ measurementAnalysis:
   # -- Array with extra environment variables to add
   # @section -- MeasurementAnalysis parameters
   extraEnvVars: []
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  livenessProbe:
+    # -- Enable livenessProbe
+    # @section -- MeasurementAnalysis parameters
+    enabled: true
+    # -- Initial delay seconds for livenessProbe
+    # @section -- MeasurementAnalysis parameters
+    initialDelaySeconds: 120
+    # -- Period seconds for livenessProbe
+    # @section -- MeasurementAnalysis parameters
+    periodSeconds: 10
+    # -- Timeout seconds for livenessProbe
+    # @section -- MeasurementAnalysis parameters
+    timeoutSeconds: 5
+    # -- Failure threshold for livenessProbe
+    # @section -- MeasurementAnalysis parameters
+    failureThreshold: 3
+    # -- Success threshold for livenessProbe
+    # @section -- MeasurementAnalysis parameters
+    successThreshold: 1
 scheduler:
   image:
     registry: docker.io
@@ -689,16 +736,10 @@ scheduler:
       memory: 600Mi
       cpu: 500m
   service:
-    # -- service type
-    # @section -- Scheduler parameters
-    type: ClusterIP
-    # -- Additional custom annotations for service
-    # @section -- Scheduler parameters
-    annotations: {}
     ports:
-      # -- Internal HTTP service port
+      # -- HTTP service port, health check at /healthz
       # @section -- Scheduler parameters
-      internal: 3053
+      http: 5053
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
   # -- Extra labels for pods
   # @section -- Scheduler parameters
@@ -720,6 +761,26 @@ scheduler:
   # -- Affinity for pods assignment
   # @section -- Scheduler parameters
   affinity: {}
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  livenessProbe:
+    # -- Enable livenessProbe
+    # @section -- Scheduler parameters
+    enabled: true
+    # -- Initial delay seconds for livenessProbe
+    # @section -- Scheduler parameters
+    initialDelaySeconds: 120
+    # -- Period seconds for livenessProbe
+    # @section -- Scheduler parameters
+    periodSeconds: 10
+    # -- Timeout seconds for livenessProbe
+    # @section -- Scheduler parameters
+    timeoutSeconds: 5
+    # -- Failure threshold for livenessProbe
+    # @section -- Scheduler parameters
+    failureThreshold: 3
+    # -- Success threshold for livenessProbe
+    # @section -- Scheduler parameters
+    successThreshold: 1 
 pipelineWorker:
   image:
     registry: docker.io
@@ -747,6 +808,11 @@ pipelineWorker:
     limits: 
       memory: 400Mi
       cpu: 500m
+  service:
+    ports:
+      # -- HTTP service port, health check at /healthz
+      # @section -- PipelineWorker parameters
+      http: 5055
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
   # -- Extra labels for pods
   # @section -- PipelineWorker parameters
@@ -768,7 +834,26 @@ pipelineWorker:
   # -- Affinity for pods assignment
   # @section -- PipelineWorker parameters
   affinity: {}
-
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  livenessProbe:
+    # -- Enable livenessProbe
+    # @section -- PipelineWorker parameters
+    enabled: true
+    # -- Initial delay seconds for livenessProbe
+    # @section -- PipelineWorker parameters
+    initialDelaySeconds: 120
+    # -- Period seconds for livenessProbe
+    # @section -- PipelineWorker parameters
+    periodSeconds: 10
+    # -- Timeout seconds for livenessProbe
+    # @section -- PipelineWorker parameters
+    timeoutSeconds: 5
+    # -- Failure threshold for livenessProbe
+    # @section -- PipelineWorker parameters
+    failureThreshold: 3
+    # -- Success threshold for livenessProbe
+    # @section -- PipelineWorker parameters
+    successThreshold: 1
 nginx:
   image:
     registry: docker.io
