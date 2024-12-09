@@ -37,7 +37,7 @@ helm install my-release
 |-----|------|---------|-------------|
 | digma.deployment.size | string | `"medium"` | adjusts the deployment to efficiently handle different scales of workload, and can be either small, medium, or large. |
 | digma.accessToken | string | `nil` | access token for plugin authentication, and set the same one in the IDE plugin settings. |
-| digma.licenseKey | string | `nil` | a digma license to use,If you've signed up for a free Digma account you should have received a Digma license to use. You can use this link [https://digma.ai/sign-up/] to sign up |
+| digma.licenseKey | string | `nil` | a digma license to use,If you've signed up for a free Digma account you should have received a Digma license to use. You can use this [link](https://digma.ai/sign-up/) to sign up |
 | digma.report.enabled | bool | `false` | daily issues report enabled |
 | digma.report.scheduledTimeUtc | string | `nil` | scheduled time of the report, HH:mm:ss (24-hour format) |
 | digma.report.uiExternalBaseUrl | string | `nil` | UI external service URL (automatically detected if not set) |
