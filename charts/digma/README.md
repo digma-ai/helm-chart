@@ -1,17 +1,10 @@
 # digma
 
-
-
-
-![Version: 1.0.254](https://img.shields.io/badge/Version-1.0.254-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.166-health-alpha.2](https://img.shields.io/badge/AppVersion-0.3.166--health--alpha.2-informational?style=flat-square) 
+![Version: 1.0.254](https://img.shields.io/badge/Version-1.0.254-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.166-health-alpha.2](https://img.shields.io/badge/AppVersion-0.3.166--health--alpha.2-informational?style=flat-square)
 
 A Helm chart containing Digma's services
 
 **Homepage:** <https://github.com/digma-ai/digma>
-
-
-
-
 
 ## TL;DR
 
@@ -25,7 +18,6 @@ helm install digma digma/digma --namespace digma --create-namespace
 
 This chart bootstraps a [Digma](https://digma.ai) deployment on a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
 
-
 ## Prerequisites
 
 - Kubernetes 1.23+
@@ -35,7 +27,7 @@ This chart bootstraps a [Digma](https://digma.ai) deployment on a [Kubernetes](h
 
 To install the chart with the release name `my-release`:
 ```console
-helm install my-release 
+helm install my-release
 ```
 ## Values
 
