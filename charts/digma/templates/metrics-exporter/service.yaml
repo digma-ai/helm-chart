@@ -15,6 +15,7 @@ spec:
     - name: http
       protocol: TCP
       port: {{ .Values.metricsExporter.service.ports.http }}
+      targetPort: http
   {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.metricsExporter.podLabels .Values.commonLabels ) "context" . ) }}
   selector: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 4 }}
     app.kubernetes.io/component: k8s-metrics-exporter

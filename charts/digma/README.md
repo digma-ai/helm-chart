@@ -301,6 +301,18 @@ helm install my-release
 | nginx.nodeSelector | object | `{}` | Node labels for pods assignment |
 | nginx.tolerations | list | `[]` | Tolerations for pods assignment |
 | nginx.affinity | object | `{}` | Affinity for pods assignment |
+| nginx.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
+| nginx.livenessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for livenessProbe |
+| nginx.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
+| nginx.livenessProbe.timeoutSeconds | int | `5` | Timeout seconds for livenessProbe |
+| nginx.livenessProbe.failureThreshold | int | `6` | Failure threshold for livenessProbe |
+| nginx.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
+| nginx.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
+| nginx.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
+| nginx.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
+| nginx.readinessProbe.timeoutSeconds | int | `5` | Timeout seconds for readinessProbe |
+| nginx.readinessProbe.failureThreshold | int | `6` | Failure threshold for readinessProbe |
+| nginx.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 | ui.service.type | string | `"ClusterIP"` | service type |
 | ui.service.annotations | object | `{}` | Additional custom annotations for service |
 | ui.service.ports.http | int | `80` | HTTP service port |
@@ -329,6 +341,18 @@ helm install my-release
 | metricsExporter.tolerations | list | `[]` | Tolerations for pods assignment |
 | metricsExporter.affinity | object | `{}` | Affinity for pods assignment |
 | metricsExporter.serviceAccount | object | `{"annotations":{}}` | Annotations to add to the ServiceAccount Metadata |
+| metricsExporter.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
+| metricsExporter.livenessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for livenessProbe |
+| metricsExporter.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
+| metricsExporter.livenessProbe.timeoutSeconds | int | `5` | Timeout seconds for livenessProbe |
+| metricsExporter.livenessProbe.failureThreshold | int | `6` | Failure threshold for livenessProbe |
+| metricsExporter.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
+| metricsExporter.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
+| metricsExporter.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
+| metricsExporter.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
+| metricsExporter.readinessProbe.timeoutSeconds | int | `5` | Timeout seconds for readinessProbe |
+| metricsExporter.readinessProbe.failureThreshold | int | `6` | Failure threshold for readinessProbe |
+| metricsExporter.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 
 ### Otel CollectorDF parameters
 

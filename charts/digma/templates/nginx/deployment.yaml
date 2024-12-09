@@ -61,11 +61,27 @@ spec:
         imagePullPolicy: {{ .Values.nginx.image.pullPolicy }}
         resources: {{- toYaml .Values.nginx.resources | nindent 12 }}
         ports:
-        - containerPort: {{ .Values.ui.service.ports.http }}
-        - containerPort: {{ .Values.jaeger.service.ports.http_ui }}
+        - name: ui
+          containerPort: {{ .Values.ui.service.ports.http }}
+        - name: jaeger
+          containerPort: {{ .Values.jaeger.service.ports.http_ui }}
         volumeMounts:
           - name: conf-volume
             mountPath: /etc/nginx/nginx.conf
             subPath: nginx.conf
           - name: app-volume
             mountPath: /app
+        {{- if .Values.nginx.livenessProbe.enabled }}
+        livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.nginx.livenessProbe "enabled") "context" $) | nindent 10 }}
+          httpGet:
+            path: /health
+            port: ui
+            scheme: HTTP
+        {{- end }}
+        {{- if .Values.nginx.readinessProbe.enabled }}
+        readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.nginx.readinessProbe "enabled") "context" $) | nindent 10 }}
+          httpGet:
+            path: /health
+            port: ui
+            scheme: HTTP
+        {{- end }}

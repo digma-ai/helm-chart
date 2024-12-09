@@ -998,7 +998,45 @@ nginx:
   # -- Affinity for pods assignment
   # @section -- UI parameters
   affinity: {}
-
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  livenessProbe:
+    # -- Enable livenessProbe
+    # @section -- UI parameters
+    enabled: true
+    # -- Initial delay seconds for livenessProbe
+    # @section -- UI parameters
+    initialDelaySeconds: 20
+    # -- Period seconds for livenessProbe
+    # @section -- UI parameters
+    periodSeconds: 10
+    # -- Timeout seconds for livenessProbe
+    # @section -- UI parameters
+    timeoutSeconds: 5
+    # -- Failure threshold for livenessProbe
+    # @section -- UI parameters
+    failureThreshold: 6
+    # -- Success threshold for livenessProbe
+    # @section -- UI parameters
+    successThreshold: 1
+  readinessProbe:
+    # -- Enable readinessProbe
+    # @section -- UI parameters
+    enabled: true
+    # -- Initial delay seconds for readinessProbe
+    # @section -- UI parameters
+    initialDelaySeconds: 20
+    # -- Period seconds for readinessProbe
+    # @section -- UI parameters
+    periodSeconds: 10
+    # -- Timeout seconds for readinessProbe
+    # @section -- UI parameters
+    timeoutSeconds: 5
+    # -- Failure threshold for readinessProbe
+    # @section -- UI parameters
+    failureThreshold: 6
+    # -- Success threshold for readinessProbe
+    # @section -- UI parameters
+    successThreshold: 1 
 ui:
   service:
     # -- service type
@@ -1131,7 +1169,45 @@ metricsExporter:
   # @section -- MetricsExporter parameters
   serviceAccount:
     annotations: {}
-
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  livenessProbe:
+    # -- Enable livenessProbe
+    # @section -- MetricsExporter parameters
+    enabled: true
+    # -- Initial delay seconds for livenessProbe
+    # @section -- MetricsExporter parameters
+    initialDelaySeconds: 20
+    # -- Period seconds for livenessProbe
+    # @section -- MetricsExporter parameters
+    periodSeconds: 10
+    # -- Timeout seconds for livenessProbe
+    # @section -- MetricsExporter parameters
+    timeoutSeconds: 5
+    # -- Failure threshold for livenessProbe
+    # @section -- MetricsExporter parameters
+    failureThreshold: 6
+    # -- Success threshold for livenessProbe
+    # @section -- MetricsExporter parameters
+    successThreshold: 1
+  readinessProbe:
+    # -- Enable readinessProbe
+    # @section -- MetricsExporter parameters
+    enabled: true
+    # -- Initial delay seconds for readinessProbe
+    # @section -- MetricsExporter parameters
+    initialDelaySeconds: 20
+    # -- Period seconds for readinessProbe
+    # @section -- MetricsExporter parameters
+    periodSeconds: 10
+    # -- Timeout seconds for readinessProbe
+    # @section -- MetricsExporter parameters
+    timeoutSeconds: 5
+    # -- Failure threshold for readinessProbe
+    # @section -- MetricsExporter parameters
+    failureThreshold: 6
+    # -- Success threshold for readinessProbe
+    # @section -- MetricsExporter parameters
+    successThreshold: 1  
 otelCollectorDf:
   fullnameOverride: "digma-otel-collector-df" # because we need to use this name other value in file
   image:
