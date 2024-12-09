@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-influxdb-stateful-set
+  labels:
+    app: influxdb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: influxdb
+  serviceName: {{ tpl .Values.influx.host . }}
+  template:
+    metadata:
+      labels:
+        app: influxdb
+        {{- range $key, $value := .Values.influx.labels }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+      annotations:
+        {{- range $key, $value := .Values.influx.annotations }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+    spec:
+      terminationGracePeriodSeconds: 5
+      {{- include "imagePullSecrets" . | nindent  6 }}
+      {{- include "tolerations" . | nindent  6 }}
+      {{- include "nodeSelector" . | nindent  6 }}
+      containers:
+      - name: influxdb
+        image: influxdb:{{ .Values.influx.imageTag }}
+        imagePullPolicy: Always
+        args:
+          {{- range .Values.influx.args }}
+          - {{ . }}
+          {{- end }}
+        resources:
+          requests:
+            memory: {{ .Values.influx.resources.requests.memory }}
+            cpu: {{ .Values.influx.resources.requests.cpu }}
+          limits:
+            memory: {{ .Values.influx.resources.limits.memory }}
+            cpu: {{ .Values.influx.resources.limits.cpu }}
+        ports:
+          - containerPort: 8086
+        env:
+        - name: DOCKER_INFLUXDB_INIT_MODE
+          value: "setup"
+        - name: DOCKER_INFLUXDB_INIT_USERNAME
+          value: "admin"
+        - name: DOCKER_INFLUXDB_INIT_PASSWORD
+          value: "12345678"
+        - name: DOCKER_INFLUXDB_INIT_ORG
+          value: "digma"
+        - name: DOCKER_INFLUXDB_INIT_BUCKET
+          value: "errors"
+        - name: DOCKER_INFLUXDB_INIT_RETENTION
+          value: "4w"
+        - name: DOCKER_INFLUXDB_INIT_ADMIN_TOKEN
+          value: "dc61908e-05bc-411a-9fe2-e3356b8dc7c0"
+        - name: INFLUXD_QUERY_CONCURRENCY
+          value: {{ quote .Values.influx.config.queryConcurrency }}
+        - name: INFLUXD_QUERY_QUEUE_SIZE
+          value: {{ quote .Values.influx.config.queryQueueSize }}
+        volumeMounts:
+        - name: influxdb-data
+          mountPath: /var/lib/influxdb2
+        - name: influxdb-data
+          mountPath: /etc/influxdb2
+  volumeClaimTemplates:
+    - metadata:
+        name: influxdb-data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 50Gi
+  # persistentVolumeClaimRetentionPolicy:
+  #   whenDeleted: Retain

@@ -1,0 +1,1946 @@
+digma:
+  deployment:
+    # -- adjusts the deployment to efficiently handle different scales of workload, and can be either small, medium, or large.
+    # @section -- Global Digma parameters
+    size: medium
+  # -- access token for plugin authentication, and set the same one in the IDE plugin settings.
+  # @section -- Global Digma parameters
+  accessToken: 
+  # -- a digma license to use,If you've signed up for a free Digma account you should have received a Digma license to use. You can use this [link](https://digma.ai/sign-up/) to sign up
+  # @section -- Global Digma parameters
+  licenseKey:
+  ## daily issues report parameters
+  ## 
+  report:
+    # -- daily issues report enabled
+    # @section -- Global Digma parameters
+    enabled: false
+    # -- scheduled time of the report, HH:mm:ss (24-hour format)
+    # @section -- Global Digma parameters
+    scheduledTimeUtc:
+    # -- UI external service URL (automatically detected if not set)
+    # @section -- Global Digma parameters
+    uiExternalBaseUrl:
+    recipients:
+      # -- email recipients, list of recipients separated by semicolons (;)
+      # @section -- Global Digma parameters
+      to:
+      # -- report email additional recipients, list of recipients separated by semicolons (;)
+      # @section -- Global Digma parameters
+      cc:
+      # -- hidden from other recipients, list of recipients separated by semicolons (;)
+      # @section -- Global Digma parameters
+      bcc:
+    emailGateway:
+      # -- Email gateway email api key
+      # @section -- Global Digma parameters
+      apiKey:
+      # -- Email gateway URL
+      # @section -- Global Digma parameters
+      url:
+observability:
+  # -- Use local observability, Deploys Prometheus and Grafana 
+  # @section -- Observability parameters
+  useLocal: true
+  # -- siteName
+  # @section -- Observability parameters
+  siteName: undefined
+  # -- Environments represent different deployment stages or scopes
+  # @section -- Observability parameters
+  environmentName: digma
+  otlp:
+    # -- Please note this parameter, cannot be set while useLocal is true
+    # @section -- Observability parameters
+    remoteEndpoint:
+    # -- Control the fraction of traces that are sampled
+    # @section -- Observability parameters
+    samplerProbability: 0.1
+    # -- Export traces
+    # @section -- Observability parameters
+    exportTraces: true
+    # -- Export metrics
+    # @section -- Observability parameters
+    exportMetrics: true
+## Global Docker image parameters
+## Please, note that this will override the image parameters
+##
+global:
+  ## E.g.
+  ## imagePullSecrets:
+  ##   - myRegistryKeySecretName
+  # -- Global Docker registry secret names as an array
+  # @section -- Global Docker image parameters
+  imagePullSecrets: []
+
+# -- kubeVersion Override Kubernetes version
+# @section -- Common parameters
+kubeVersion: ""
+# -- commonLabels Labels to add to all deployed objects
+# @section -- Common parameters
+commonLabels: {}
+# -- commonAnnotations Annotations to add to all deployed objects
+# @section -- Common parameters
+commonAnnotations: {}
+
+
+collectorWorker:
+  env:
+    Sampling__Enable: true
+    ExtendedObservability__Enable: true
+    TraceTempStorage__TraceForJaegerExpirationInMinutes: 10
+    BlockedTrace__TraceSpansLimit: 3000
+    ThresholdOptions__RecentActivityUpdateThresholdSeconds: 5
+  image:
+    registry: docker.io
+    repository: digmatic/digma-collector-worker
+    # -- image pull policy
+    # @section -- CollectorWorker parameters
+    pullPolicy: IfNotPresent
+    ## Optionally specify an array of imagePullSecrets.
+    ## Secrets must be manually created in the namespace.
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+    ## e.g:
+    ## pullSecrets:
+    ##   - myRegistryKeySecretName
+    ##
+    # -- image pull secrets
+    # @section -- CollectorWorker parameters
+    pullSecrets: []
+  # -- replicas based on a given preset(.Values.digma.deployment.size) Number of replicas to deploy
+  # @section -- CollectorWorker parameters
+  replicas: "{{ index .Values.presets .Values.digma.deployment.size \"collectorWorker\" \"replicas\" }}"
+  resources: 
+    requests: 
+      memory: 300Mi
+      cpu: 300m
+    limits: 
+      memory: 600Mi
+      cpu: 600m
+  service:
+    ports:
+      # -- HTTP service port, health check at /healthz
+      # @section -- CollectorWorker parameters
+      http: 5052
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  # -- Extra labels for pods
+  # @section -- CollectorWorker parameters
+  podLabels: {}
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  # -- Extra annotations for pods
+  # @section -- CollectorWorker parameters
+  podAnnotations: {}
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  # -- Node labels for pods assignment
+  # @section -- CollectorWorker parameters
+  nodeSelector: {}
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  # -- Tolerations for pods assignment
+  # @section -- CollectorWorker parameters
+  tolerations: []
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
+  # -- Affinity for pods assignment
+  # @section -- CollectorWorker parameters
+  affinity: {}
+  ## e.g:
+  ## extraEnvVars:
+  ##   - name: FOO
+  ##     value: "bar"
+  # -- Array with extra environment variables to add
+  # @section -- CollectorWorker parameters
+  extraEnvVars: []
+  app:
+    ignoreEndpoints:
+      - Route: "/health"
+        RouteRegex: ""
+        Method: "GET"
+        Service: "*"
+      - Route: "/healthcheck"
+        RouteRegex: ""
+        Method: "GET"
+        Service: "*"
+      - Route: "/metrics"
+        RouteRegex: ""
+        Method: "GET"
+        Service: "*"
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  livenessProbe:
+    # -- Enable livenessProbe
+    # @section -- CollectorWorker parameters
+    enabled: true
+    # -- Initial delay seconds for livenessProbe
+    # @section -- CollectorWorker parameters
+    initialDelaySeconds: 120
+    # -- Period seconds for livenessProbe
+    # @section -- CollectorWorker parameters
+    periodSeconds: 10
+    # -- Timeout seconds for livenessProbe
+    # @section -- CollectorWorker parameters
+    timeoutSeconds: 10
+    # -- Failure threshold for livenessProbe
+    # @section -- CollectorWorker parameters
+    failureThreshold: 3
+    # -- Success threshold for livenessProbe
+    # @section -- CollectorWorker parameters
+    successThreshold: 1
+  readinessProbe:
+    # -- Enable readinessProbe
+    # @section -- CollectorWorker parameters
+    enabled: true
+    # -- Initial delay seconds for readinessProbe
+    # @section -- CollectorWorker parameters
+    initialDelaySeconds: 10
+    # -- Period seconds for readinessProbe
+    # @section -- CollectorWorker parameters
+    periodSeconds: 10
+    # -- Timeout seconds for readinessProbe
+    # @section -- CollectorWorker parameters
+    timeoutSeconds: 10
+    # -- Failure threshold for readinessProbe
+    # @section -- CollectorWorker parameters
+    failureThreshold: 12
+    # -- Success threshold for readinessProbe
+    # @section -- CollectorWorker parameters
+    successThreshold: 1
+otelCollector:
+  # --telemetry data that should be sampled and sent to the backend
+  # @section -- Otel Collector parameters
+  samplingPercentage: 100
+  # -- The name of an existing ConfigMap with your custom configuration
+  # @section -- Otel Collector parameters
+  existingConfigmap: ""
+  # -- The name of the key with the config file
+  # @section -- Otel Collector parameters
+  existingConfigmapKey: ""
+  image:
+    # -- image registry
+    # @section -- Otel Collector parameters
+    registry: docker.io
+    # -- image repository
+    # @section -- Otel Collector parameters
+    repository: otel/opentelemetry-collector-contrib
+    # -- image tag
+    # @section -- Otel Collector parameters
+    tag: 0.103.0
+    # -- image pull policy
+    # @section -- Otel Collector parameters
+    pullPolicy: IfNotPresent
+    ## Optionally specify an array of imagePullSecrets.
+    ## Secrets must be manually created in the namespace.
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+    ## e.g:
+    ## pullSecrets:
+    ##   - myRegistryKeySecretName
+    ##
+    # -- image pull secrets
+    # @section -- Otel Collector parameters
+    pullSecrets: []
+  # -- Number of replicas to deploy
+  # @section -- Otel Collector parameters
+  replicas: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 100Mi
+    limits:
+      cpu: 200m
+      memory: 300Mi
+  service:
+    # -- service type
+    # @section -- Otel Collector parameters
+    type: ClusterIP
+    # -- Additional custom annotations for service
+    # @section -- Otel Collector parameters
+    annotations: {}
+    ports:
+      # -- health check service port
+      # @section -- Otel Collector parameters
+      health: 13133
+      # -- gRPC port
+      # @section -- Otel Collector parameters
+      grpc: 4317
+      # -- HTTP port listen to path: /v1/traces
+      # @section -- Otel Collector parameters
+      http: 4318
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  # -- Extra labels for pods
+  # @section -- Otel Collector parameters
+  podLabels: {}
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  # -- Extra annotations for pods
+  # @section -- Otel Collector parameters
+  podAnnotations: {}
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  # -- Node labels for pods assignment
+  # @section -- Otel Collector parameters
+  nodeSelector: {}
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  # -- Tolerations for pods assignment
+  # @section -- Otel Collector parameters
+  tolerations: []
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
+  # -- Affinity for pods assignment
+  # @section -- Otel Collector parameters
+  affinity: {}
+  grpc:
+    ingress:
+      # -- Enable ingress
+      # @section -- Otel Collector parameters
+      enabled: false
+      # --  Ingress path type
+      # @section -- Otel Collector parameters
+      pathType: ImplementationSpecific
+      # --  Force Ingress API version (automatically detected if not set)
+      # @section -- Otel Collector parameters
+      apiVersion: ""
+      # --  Default host for the ingress record
+      # @section -- Otel Collector parameters
+      hostname: 
+      ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
+      ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
+      # --  IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
+      # @section -- Otel Collector parameters
+      ingressClassName:
+      # --  The Path to otelCollector. You may need to set this to '/*' in order to use this with ALB ingress controllers.
+      # @section -- Otel Collector parameters
+      path: /
+      ## For a full list of possible ingress annotations, please see
+      ## ref: https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/nginx-configuration/annotations.md
+      ## Use this parameter to set the required annotations for cert-manager, see
+      ## ref: https://cert-manager.io/docs/usage/ingress/#supported-annotations
+      ##
+      ## e.g:
+      ## annotations:
+      ##   kubernetes.io/ingress.class: nginx
+      ##   cert-manager.io/cluster-issuer: cluster-issuer-name
+      # --  Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
+      # @section -- Otel Collector parameters
+      annotations:
+      ## For example: The ALB ingress controller requires a special rule for handling SSL redirection.
+      ## extraPaths:
+      ## - path: /*
+      ##   backend:
+      ##     serviceName: ssl-redirect
+      ##     servicePort: use-annotation
+      # --  Any additional paths that may need to be added to the ingress under the main host
+      # @section -- Otel Collector parameters
+      extraPaths: []
+      ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-rules
+      ## e.g:
+      ## extraRules:
+      ## - host: example.local
+      ##     http:
+      ##       path: /
+      ##       backend:
+      ##         service:
+      ##           name: example-svc
+      ##           port:
+      ##             name: http
+      # --  Additional rules to be covered with this ingress record
+      # @section -- Otel Collector parameters
+      extraRules: []
+  ## otelCollector HTTP ingress parameters
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
+  http:
+    ingress:
+      # -- Enable ingress
+      # @section -- Otel Collector parameters
+      enabled: false
+      # --  Ingress path type
+      # @section -- Otel Collector parameters
+      pathType: ImplementationSpecific
+      # --  Force Ingress API version (automatically detected if not set)
+      # @section -- Otel Collector parameters
+      apiVersion: ""
+      # --  Default host for the ingress record
+      # @section -- Otel Collector parameters
+      hostname: 
+      ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
+      ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
+      # --  IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
+      # @section -- Otel Collector parameters
+      ingressClassName:
+      # --  The Path to otelCollector. You may need to set this to '/*' in order to use this with ALB ingress controllers.
+      # @section -- Otel Collector parameters
+      path: /
+      ## For a full list of possible ingress annotations, please see
+      ## ref: https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/nginx-configuration/annotations.md
+      ## Use this parameter to set the required annotations for cert-manager, see
+      ## ref: https://cert-manager.io/docs/usage/ingress/#supported-annotations
+      ##
+      ## e.g:
+      ## annotations:
+      ##   kubernetes.io/ingress.class: nginx
+      ##   cert-manager.io/cluster-issuer: cluster-issuer-name
+      # --  Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
+      # @section -- Otel Collector parameters
+      annotations:
+      ## For example: The ALB ingress controller requires a special rule for handling SSL redirection.
+      ## extraPaths:
+      ## - path: /*
+      ##   backend:
+      ##     serviceName: ssl-redirect
+      ##     servicePort: use-annotation
+      # --  Any additional paths that may need to be added to the ingress under the main host
+      # @section -- Otel Collector parameters
+      extraPaths: []
+      ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-rules
+      ## e.g:
+      ## extraRules:
+      ## - host: example.local
+      ##     http:
+      ##       path: /
+      ##       backend:
+      ##         service:
+      ##           name: example-svc
+      ##           port:
+      ##             name: http
+      # --  Additional rules to be covered with this ingress record
+      # @section -- Otel Collector parameters
+      extraRules: []
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  livenessProbe:
+    # -- Enable livenessProbe
+    # @section -- Otel Collector parameters
+    enabled: true
+    # -- Initial delay seconds for livenessProbe
+    # @section -- Otel Collector parameters
+    initialDelaySeconds: 20
+    # -- Period seconds for livenessProbe
+    # @section -- Otel Collector parameters
+    periodSeconds: 10
+    # -- Timeout seconds for livenessProbe
+    # @section -- Otel Collector parameters
+    timeoutSeconds: 5
+    # -- Failure threshold for livenessProbe
+    # @section -- Otel Collector parameters
+    failureThreshold: 6
+    # -- Success threshold for livenessProbe
+    # @section -- Otel Collector parameters
+    successThreshold: 1
+  readinessProbe:
+    # -- Enable readinessProbe
+    # @section -- Otel Collector parameters
+    enabled: true
+    # -- Initial delay seconds for readinessProbe
+    # @section -- Otel Collector parameters
+    initialDelaySeconds: 20
+    # -- Period seconds for readinessProbe
+    # @section -- Otel Collector parameters
+    periodSeconds: 10
+    # -- Timeout seconds for readinessProbe
+    # @section -- Otel Collector parameters
+    timeoutSeconds: 5
+    # -- Failure threshold for readinessProbe
+    # @section -- Otel Collector parameters
+    failureThreshold: 6
+    # -- Success threshold for readinessProbe
+    # @section -- Otel Collector parameters
+    successThreshold: 1 
+collectorApi:
+  image:
+    registry: docker.io
+    repository: digmatic/digma-collector
+    # -- image pull policy
+    # @section -- CollectorApi parameters
+    pullPolicy: IfNotPresent
+    ## Optionally specify an array of imagePullSecrets.
+    ## Secrets must be manually created in the namespace.
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+    ## e.g:
+    ## pullSecrets:
+    ##   - myRegistryKeySecretName
+    ##
+    # -- image pull secrets
+    # @section -- CollectorApi parameters
+    pullSecrets: []
+  # -- Number of replicas to deploy
+  # @section -- CollectorApi parameters
+  replicas: 1
+  resources:
+    requests: 
+      memory: 100Mi
+      cpu: 200m
+    limits: 
+      memory: 600Mi
+      cpu: 800m
+  service:
+    # -- service type
+    # @section -- CollectorApi parameters
+    type: ClusterIP
+    # -- Additional custom annotations for service
+    # @section -- CollectorApi parameters
+    annotations: {}
+    ports:
+      # -- internal service port
+      # @section -- CollectorApi parameters
+      internal: 5048
+      # -- gRPC service port
+      # @section -- CollectorApi parameters
+      grpc: 5050
+      # -- HTTP port listen to path: /v1/traces, health check at /healthz
+      # @section -- CollectorApi parameters
+      http: 5049
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  # -- Extra labels for pods
+  # @section -- CollectorApi parameters
+  podLabels: {}
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  # -- Extra annotations for pods
+  # @section -- CollectorApi parameters
+  podAnnotations: {}
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  # -- Node labels for pods assignment
+  # @section -- CollectorApi parameters
+  nodeSelector: {}
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  # -- Tolerations for pods assignment
+  # @section -- CollectorApi parameters
+  tolerations: []
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
+  # -- Affinity for pods assignment
+  # @section -- CollectorApi parameters
+  affinity: {}    
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  livenessProbe:
+    # -- Enable livenessProbe
+    # @section -- CollectorApi parameters
+    enabled: true
+    # -- Initial delay seconds for livenessProbe
+    # @section -- CollectorApi parameters
+    initialDelaySeconds: 120
+    # -- Period seconds for livenessProbe
+    # @section -- CollectorApi parameters
+    periodSeconds: 10
+    # -- Timeout seconds for livenessProbe
+    # @section -- CollectorApi parameters
+    timeoutSeconds: 10
+    # -- Failure threshold for livenessProbe
+    # @section -- CollectorApi parameters
+    failureThreshold: 3
+    # -- Success threshold for livenessProbe
+    # @section -- CollectorApi parameters
+    successThreshold: 1
+  readinessProbe:
+    # -- Enable readinessProbe
+    # @section -- CollectorApi parameters
+    enabled: true
+    # -- Initial delay seconds for readinessProbe
+    # @section -- CollectorApi parameters
+    initialDelaySeconds: 10
+    # -- Period seconds for readinessProbe
+    # @section -- CollectorApi parameters
+    periodSeconds: 10
+    # -- Timeout seconds for readinessProbe
+    # @section -- CollectorApi parameters
+    timeoutSeconds: 10
+    # -- Failure threshold for readinessProbe
+    # @section -- CollectorApi parameters
+    failureThreshold: 12
+    # -- Success threshold for readinessProbe
+    # @section -- CollectorApi parameters
+    successThreshold: 1    
+analyticsApi:
+  # -- Indicates whether the analytics API uses a secured HTTPS connection. Set to false if ingress is enabled
+  # @section -- AnalyticsApi parameters
+  secured: true
+  image:
+    registry: docker.io
+    repository: digmatic/digma-analytics
+    # -- image pull policy
+    # @section -- AnalyticsApi parameters
+    pullPolicy: IfNotPresent
+    ## Optionally specify an array of imagePullSecrets.
+    ## Secrets must be manually created in the namespace.
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+    ## e.g:
+    ## pullSecrets:
+    ##   - myRegistryKeySecretName
+    ##
+    # -- image pull secrets
+    # @section -- AnalyticsApi parameters
+    pullSecrets: []
+  # -- Number of replicas to deploy
+  # @section -- AnalyticsApi parameters
+  replicas: 1
+  resources: 
+    requests: 
+      memory: 300Mi
+      cpu: 100m
+    limits: 
+      memory: 800Mi
+      cpu: 800m
+  service:
+    # -- service type
+    # @section -- AnalyticsApi parameters
+    type: ClusterIP
+    # -- Additional custom annotations for service
+    # @section -- AnalyticsApi parameters
+    annotations: {}
+    ports:
+      # -- HTTP service port, health check at /healthz
+      # @section -- AnalyticsApi parameters
+      http: 5051
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  # -- Extra labels for pods
+  # @section -- AnalyticsApi parameters
+  podLabels: {}
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  # -- Extra annotations for pods
+  # @section -- AnalyticsApi parameters
+  podAnnotations: {}
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  # -- Node labels for pods assignment
+  # @section -- AnalyticsApi parameters
+  nodeSelector: {}
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  # -- Tolerations for pods assignment
+  # @section -- AnalyticsApi parameters
+  tolerations: []
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
+  # -- Affinity for pods assignment
+  # @section -- AnalyticsApi parameters
+  affinity: {}    
+  ## analyticsApi ingress parameters
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
+  ingress:
+    # -- Enable ingress
+    # @section -- AnalyticsApi parameters
+    enabled: false
+    # --  Ingress path type
+    # @section -- AnalyticsApi parameters
+    pathType: ImplementationSpecific
+    # --  Force Ingress API version (automatically detected if not set)
+    # @section -- AnalyticsApi parameters
+    apiVersion: ""
+    # --  Default host for the ingress record
+    # @section -- AnalyticsApi parameters
+    hostname: 
+    ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
+    ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
+    # --  IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
+    # @section -- AnalyticsApi parameters
+    ingressClassName:
+    # --  The Path to AnalyticsApi. You may need to set this to '/*' in order to use this with ALB ingress controllers.
+    # @section -- AnalyticsApi parameters
+    path: /
+    ## For a full list of possible ingress annotations, please see
+    ## ref: https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/nginx-configuration/annotations.md
+    ## Use this parameter to set the required annotations for cert-manager, see
+    ## ref: https://cert-manager.io/docs/usage/ingress/#supported-annotations
+    ##
+    ## e.g:
+    ## annotations:
+    ##   kubernetes.io/ingress.class: nginx
+    ##   cert-manager.io/cluster-issuer: cluster-issuer-name
+    # --  Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
+    # @section -- AnalyticsApi parameters
+    annotations:
+    ## For example: The ALB ingress controller requires a special rule for handling SSL redirection.
+    ## extraPaths:
+    ## - path: /*
+    ##   backend:
+    ##     serviceName: ssl-redirect
+    ##     servicePort: use-annotation
+    # --  Any additional paths that may need to be added to the ingress under the main host
+    # @section -- AnalyticsApi parameters
+    extraPaths: []
+    ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-rules
+    ## e.g:
+    ## extraRules:
+    ## - host: example.local
+    ##     http:
+    ##       path: /
+    ##       backend:
+    ##         service:
+    ##           name: example-svc
+    ##           port:
+    ##             name: http
+    # --  Additional rules to be covered with this ingress record
+    # @section -- AnalyticsApi parameters
+    extraRules: []
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  livenessProbe:
+    # -- Enable livenessProbe
+    # @section -- AnalyticsApi parameters
+    enabled: true
+    # -- Initial delay seconds for livenessProbe
+    # @section -- AnalyticsApi parameters
+    initialDelaySeconds: 120
+    # -- Period seconds for livenessProbe
+    # @section -- AnalyticsApi parameters
+    periodSeconds: 10
+    # -- Timeout seconds for livenessProbe
+    # @section -- AnalyticsApi parameters
+    timeoutSeconds: 10
+    # -- Failure threshold for livenessProbe
+    # @section -- AnalyticsApi parameters
+    failureThreshold: 3
+    # -- Success threshold for livenessProbe
+    # @section -- AnalyticsApi parameters
+    successThreshold: 1
+  readinessProbe:
+    # -- Enable readinessProbe
+    # @section -- AnalyticsApi parameters
+    enabled: true
+    # -- Initial delay seconds for readinessProbe
+    # @section -- AnalyticsApi parameters
+    initialDelaySeconds: 10
+    # -- Period seconds for readinessProbe
+    # @section -- AnalyticsApi parameters
+    periodSeconds: 10
+    # -- Timeout seconds for readinessProbe
+    # @section -- AnalyticsApi parameters
+    timeoutSeconds: 10
+    # -- Failure threshold for readinessProbe
+    # @section -- AnalyticsApi parameters
+    failureThreshold: 12
+    # -- Success threshold for readinessProbe
+    # @section -- AnalyticsApi parameters
+    successThreshold: 1
+measurementAnalysis:
+  env:
+    ThresholdOptions__UpsertEndpointThresholdSeconds: 5
+    ThresholdOptions__UpsertSpansThresholdSeconds: 5
+    ThresholdOptions__UpsertSpanFlowMetadataThresholdSeconds: 5
+  image:
+    registry: docker.io
+    repository: digmatic/digma-measurement-analysis
+    # -- image pull policy
+    # @section -- MeasurementAnalysis parameters
+    pullPolicy: IfNotPresent
+    ## Optionally specify an array of imagePullSecrets.
+    ## Secrets must be manually created in the namespace.
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+    ## e.g:
+    ## pullSecrets:
+    ##   - myRegistryKeySecretName
+    ##
+    # -- image pull secrets
+    # @section -- MeasurementAnalysis parameters
+    pullSecrets: []
+  # -- replicas based on a given preset(.Values.digma.deployment.size) Number of replicas to deploy
+  # @section -- MeasurementAnalysis parameters
+  replicas: "{{ index .Values.presets .Values.digma.deployment.size \"measurementAnalysis\" \"replicas\" }}"
+  resources: 
+    requests: 
+      memory: 100Mi
+      cpu: 200m
+    limits: 
+      memory: 800Mi
+      cpu: 800m
+  service:
+    ports:
+      # -- HTTP service port, health check at /healthz
+      # @section -- MeasurementAnalysis parameters
+      http: 5054
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  # -- Extra labels for pods
+  # @section -- MeasurementAnalysis parameters
+  podLabels: {}
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  # -- Extra annotations for pods
+  # @section -- MeasurementAnalysis parameters
+  podAnnotations: {}
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  # -- Node labels for pods assignment
+  # @section -- MeasurementAnalysis parameters
+  nodeSelector: {}
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  # -- Tolerations for pods assignment
+  # @section -- MeasurementAnalysis parameters
+  tolerations: []
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
+  # -- Affinity for pods assignment
+  # @section -- MeasurementAnalysis parameters
+  affinity: {}    
+  ## e.g:
+  ## extraEnvVars:
+  ##   - name: FOO
+  ##     value: "bar"
+  # -- Array with extra environment variables to add
+  # @section -- MeasurementAnalysis parameters
+  extraEnvVars: []
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  livenessProbe:
+    # -- Enable livenessProbe
+    # @section -- MeasurementAnalysis parameters
+    enabled: true
+    # -- Initial delay seconds for livenessProbe
+    # @section -- MeasurementAnalysis parameters
+    initialDelaySeconds: 120
+    # -- Period seconds for livenessProbe
+    # @section -- MeasurementAnalysis parameters
+    periodSeconds: 10
+    # -- Timeout seconds for livenessProbe
+    # @section -- MeasurementAnalysis parameters
+    timeoutSeconds: 10
+    # -- Failure threshold for livenessProbe
+    # @section -- MeasurementAnalysis parameters
+    failureThreshold: 3
+    # -- Success threshold for livenessProbe
+    # @section -- MeasurementAnalysis parameters
+    successThreshold: 1
+  readinessProbe:
+    # -- Enable readinessProbe
+    # @section -- MeasurementAnalysis parameters
+    enabled: true
+    # -- Initial delay seconds for readinessProbe
+    # @section -- MeasurementAnalysis parameters
+    initialDelaySeconds: 10
+    # -- Period seconds for readinessProbe
+    # @section -- MeasurementAnalysis parameters
+    periodSeconds: 10
+    # -- Timeout seconds for readinessProbe
+    # @section -- MeasurementAnalysis parameters
+    timeoutSeconds: 10
+    # -- Failure threshold for readinessProbe
+    # @section -- MeasurementAnalysis parameters
+    failureThreshold: 12
+    # -- Success threshold for readinessProbe
+    # @section -- MeasurementAnalysis parameters
+    successThreshold: 1      
+scheduler:
+  image:
+    registry: docker.io
+    repository: digmatic/digma-scheduler
+    # -- image pull policy
+    # @section -- Scheduler parameters
+    pullPolicy: IfNotPresent
+    ## Optionally specify an array of imagePullSecrets.
+    ## Secrets must be manually created in the namespace.
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+    ## e.g:
+    ## pullSecrets:
+    ##   - myRegistryKeySecretName
+    ##
+    # -- image pull secrets
+    # @section -- Scheduler parameters
+    pullSecrets: []
+  # -- Number of replicas to deploy
+  # @section -- Scheduler parameters
+  replicas: 1
+  resources: 
+    requests: 
+      memory: 300Mi
+      cpu: 200m
+    limits: 
+      memory: 600Mi
+      cpu: 500m
+  service:
+    ports:
+      # -- HTTP service port, health check at /healthz
+      # @section -- Scheduler parameters
+      http: 5053
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  # -- Extra labels for pods
+  # @section -- Scheduler parameters
+  podLabels: {}
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  # -- Extra annotations for pods
+  # @section -- Scheduler parameters
+  podAnnotations: {}
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  # -- Node labels for pods assignment
+  # @section -- Scheduler parameters
+  nodeSelector: {}
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  # -- Tolerations for pods assignment
+  # @section -- Scheduler parameters
+  tolerations: []
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
+  # -- Affinity for pods assignment
+  # @section -- Scheduler parameters
+  affinity: {}
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  livenessProbe:
+    # -- Enable livenessProbe
+    # @section -- Scheduler parameters
+    enabled: true
+    # -- Initial delay seconds for livenessProbe
+    # @section -- Scheduler parameters
+    initialDelaySeconds: 120
+    # -- Period seconds for livenessProbe
+    # @section -- Scheduler parameters
+    periodSeconds: 10
+    # -- Timeout seconds for livenessProbe
+    # @section -- Scheduler parameters
+    timeoutSeconds: 5
+    # -- Failure threshold for livenessProbe
+    # @section -- Scheduler parameters
+    failureThreshold: 3
+    # -- Success threshold for livenessProbe
+    # @section -- Scheduler parameters
+    successThreshold: 1
+  readinessProbe:
+    # -- Enable readinessProbe
+    # @section -- Scheduler parameters
+    enabled: true
+    # -- Initial delay seconds for readinessProbe
+    # @section -- Scheduler parameters
+    initialDelaySeconds: 10
+    # -- Period seconds for readinessProbe
+    # @section -- Scheduler parameters
+    periodSeconds: 10
+    # -- Timeout seconds for readinessProbe
+    # @section -- Scheduler parameters
+    timeoutSeconds: 10
+    # -- Failure threshold for readinessProbe
+    # @section -- Scheduler parameters
+    failureThreshold: 12
+    # -- Success threshold for readinessProbe
+    # @section -- Scheduler parameters
+    successThreshold: 1     
+pipelineWorker:
+  image:
+    registry: docker.io
+    repository: digmatic/digma-pipeline-worker
+    # -- image pull policy
+    # @section -- PipelineWorker parameters
+    pullPolicy: IfNotPresent
+    ## Optionally specify an array of imagePullSecrets.
+    ## Secrets must be manually created in the namespace.
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+    ## e.g:
+    ## pullSecrets:
+    ##   - myRegistryKeySecretName
+    ##
+    # -- image pull secrets
+    # @section -- PipelineWorker parameters
+    pullSecrets: []
+  # -- replicas based on a given preset(.Values.digma.deployment.size) Number of replicas to deploy
+  # @section -- PipelineWorker parameters
+  replicas: "{{ index .Values.presets .Values.digma.deployment.size \"pipelineWorker\" \"replicas\" }}"
+  resources: 
+    requests: 
+      memory: 100Mi
+      cpu: 50m
+    limits: 
+      memory: 400Mi
+      cpu: 500m
+  service:
+    ports:
+      # -- HTTP service port, health check at /healthz
+      # @section -- PipelineWorker parameters
+      http: 5055
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  # -- Extra labels for pods
+  # @section -- PipelineWorker parameters
+  podLabels: {}
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  # -- Extra annotations for pods
+  # @section -- PipelineWorker parameters
+  podAnnotations: {}
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  # -- Node labels for pods assignment
+  # @section -- PipelineWorker parameters
+  nodeSelector: {}
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  # -- Tolerations for pods assignment
+  # @section -- PipelineWorker parameters
+  tolerations: []
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
+  # -- Affinity for pods assignment
+  # @section -- PipelineWorker parameters
+  affinity: {}
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  livenessProbe:
+    # -- Enable livenessProbe
+    # @section -- PipelineWorker parameters
+    enabled: true
+    # -- Initial delay seconds for livenessProbe
+    # @section -- PipelineWorker parameters
+    initialDelaySeconds: 120
+    # -- Period seconds for livenessProbe
+    # @section -- PipelineWorker parameters
+    periodSeconds: 10
+    # -- Timeout seconds for livenessProbe
+    # @section -- PipelineWorker parameters
+    timeoutSeconds: 10
+    # -- Failure threshold for livenessProbe
+    # @section -- PipelineWorker parameters
+    failureThreshold: 3
+    # -- Success threshold for livenessProbe
+    # @section -- PipelineWorker parameters
+    successThreshold: 1
+  readinessProbe:
+    # -- Enable readinessProbe
+    # @section -- PipelineWorker parameters
+    enabled: true
+    # -- Initial delay seconds for readinessProbe
+    # @section -- PipelineWorker parameters
+    initialDelaySeconds: 10
+    # -- Period seconds for readinessProbe
+    # @section -- PipelineWorker parameters
+    periodSeconds: 10
+    # -- Timeout seconds for readinessProbe
+    # @section -- PipelineWorker parameters
+    timeoutSeconds: 10
+    # -- Failure threshold for readinessProbe
+    # @section -- PipelineWorker parameters
+    failureThreshold: 12
+    # -- Success threshold for readinessProbe
+    # @section -- PipelineWorker parameters
+    successThreshold: 1     
+nginx:
+  image:
+    registry: docker.io
+    repository: nginx
+    tag: 1.27.3
+    # -- image pull policy
+    # @section -- UI parameters
+    pullPolicy: IfNotPresent
+    ## Optionally specify an array of imagePullSecrets.
+    ## Secrets must be manually created in the namespace.
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+    ## e.g:
+    ## pullSecrets:
+    ##   - myRegistryKeySecretName
+    ##
+    # -- image pull secrets
+    # @section -- UI parameters
+    pullSecrets: []
+  # -- Number of replicas to deploy
+  # @section -- UI parameters
+  replicas: 1
+  resources: 
+    requests: 
+      memory: 100Mi
+      cpu: 100m
+    limits: 
+      memory: 200Mi
+      cpu: 200m
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  # -- Extra labels for pods
+  # @section -- UI parameters
+  podLabels: {}
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  # -- Extra annotations for pods
+  # @section -- UI parameters
+  podAnnotations: {}
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  # -- Node labels for pods assignment
+  # @section -- UI parameters
+  nodeSelector: {}
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  # -- Tolerations for pods assignment
+  # @section -- UI parameters
+  tolerations: []
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
+  # -- Affinity for pods assignment
+  # @section -- UI parameters
+  affinity: {}
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  livenessProbe:
+    # -- Enable livenessProbe
+    # @section -- UI parameters
+    enabled: true
+    # -- Initial delay seconds for livenessProbe
+    # @section -- UI parameters
+    initialDelaySeconds: 20
+    # -- Period seconds for livenessProbe
+    # @section -- UI parameters
+    periodSeconds: 10
+    # -- Timeout seconds for livenessProbe
+    # @section -- UI parameters
+    timeoutSeconds: 5
+    # -- Failure threshold for livenessProbe
+    # @section -- UI parameters
+    failureThreshold: 6
+    # -- Success threshold for livenessProbe
+    # @section -- UI parameters
+    successThreshold: 1
+  readinessProbe:
+    # -- Enable readinessProbe
+    # @section -- UI parameters
+    enabled: true
+    # -- Initial delay seconds for readinessProbe
+    # @section -- UI parameters
+    initialDelaySeconds: 20
+    # -- Period seconds for readinessProbe
+    # @section -- UI parameters
+    periodSeconds: 10
+    # -- Timeout seconds for readinessProbe
+    # @section -- UI parameters
+    timeoutSeconds: 5
+    # -- Failure threshold for readinessProbe
+    # @section -- UI parameters
+    failureThreshold: 6
+    # -- Success threshold for readinessProbe
+    # @section -- UI parameters
+    successThreshold: 1 
+ui:
+  service:
+    # -- service type
+    # @section -- UI parameters
+    type: ClusterIP
+    # -- Additional custom annotations for service
+    # @section -- UI parameters
+    annotations: {}
+    ports:
+      # -- HTTP service port
+      # @section -- UI parameters
+      http: 80
+  ## ui ingress parameters
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
+  ingress:
+    # -- Enable ingress
+    # @section -- UI parameters
+    enabled: false
+    # --  Ingress path type
+    # @section -- UI parameters
+    pathType: ImplementationSpecific
+    # --  Force Ingress API version (automatically detected if not set)
+    # @section -- UI parameters
+    apiVersion: ""
+    # --  Default host for the ingress record
+    # @section -- UI parameters
+    hostname: 
+    ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
+    ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
+    # --  IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
+    # @section -- UI parameters
+    ingressClassName:
+    # --  The Path to UI. You may need to set this to '/*' in order to use this with ALB ingress controllers.
+    # @section -- UI parameters
+    path: /
+    ## For a full list of possible ingress annotations, please see
+    ## ref: https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/nginx-configuration/annotations.md
+    ## Use this parameter to set the required annotations for cert-manager, see
+    ## ref: https://cert-manager.io/docs/usage/ingress/#supported-annotations
+    ##
+    ## e.g:
+    ## annotations:
+    ##   kubernetes.io/ingress.class: nginx
+    ##   cert-manager.io/cluster-issuer: cluster-issuer-name
+    # --  Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
+    # @section -- UI parameters
+    annotations:
+    ## For example: The ALB ingress controller requires a special rule for handling SSL redirection.
+    ## extraPaths:
+    ## - path: /*
+    ##   backend:
+    ##     serviceName: ssl-redirect
+    ##     servicePort: use-annotation
+    # --  Any additional paths that may need to be added to the ingress under the main host
+    # @section -- UI parameters
+    extraPaths: []
+    ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-rules
+    ## e.g:
+    ## extraRules:
+    ## - host: example.local
+    ##     http:
+    ##       path: /
+    ##       backend:
+    ##         service:
+    ##           name: example-svc
+    ##           port:
+    ##             name: http
+    # --  Additional rules to be covered with this ingress record
+    # @section -- UI parameters
+    extraRules: []
+
+metricsExporter:
+  image:
+    registry: docker.io
+    repository: digmatic/k8s-metrics-exporter
+    tag: 0.0.10-alpha.3
+    # -- image pull policy
+    # @section -- MetricsExporter parameters
+    pullPolicy: IfNotPresent
+    ## Optionally specify an array of imagePullSecrets.
+    ## Secrets must be manually created in the namespace.
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+    ## e.g:
+    ## pullSecrets:
+    ##   - myRegistryKeySecretName
+    ##
+    # -- image pull secrets
+    # @section -- MetricsExporter parameters
+    pullSecrets: []
+  # -- Number of replicas to deploy
+  # @section -- MetricsExporter parameters
+  replicas: 1
+  resources: 
+    requests: 
+      memory: 512Mi
+      cpu: 500m
+    limits: 
+      memory: 768Mi
+      cpu: 750m   
+  service:
+    # -- Additional custom annotations for service
+    # @section -- MetricsExporter parameters
+    annotations: {}
+    ports:
+      # -- HTTP service port
+      # @section -- MetricsExporter parameters
+      http: 9091
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  # -- Extra labels for pods
+  # @section -- MetricsExporter parameters
+  podLabels: {}
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  # -- Extra annotations for pods
+  # @section -- MetricsExporter parameters
+  podAnnotations: {}
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  # -- Node labels for pods assignment
+  # @section -- MetricsExporter parameters
+  nodeSelector: {}
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  # -- Tolerations for pods assignment
+  # @section -- MetricsExporter parameters
+  tolerations: []
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
+  # -- Affinity for pods assignment
+  # @section -- MetricsExporter parameters
+  affinity: {}
+  # -- Annotations to add to the ServiceAccount Metadata
+  # @section -- MetricsExporter parameters
+  serviceAccount:
+    annotations: {}
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  livenessProbe:
+    # -- Enable livenessProbe
+    # @section -- MetricsExporter parameters
+    enabled: true
+    # -- Initial delay seconds for livenessProbe
+    # @section -- MetricsExporter parameters
+    initialDelaySeconds: 20
+    # -- Period seconds for livenessProbe
+    # @section -- MetricsExporter parameters
+    periodSeconds: 10
+    # -- Timeout seconds for livenessProbe
+    # @section -- MetricsExporter parameters
+    timeoutSeconds: 5
+    # -- Failure threshold for livenessProbe
+    # @section -- MetricsExporter parameters
+    failureThreshold: 6
+    # -- Success threshold for livenessProbe
+    # @section -- MetricsExporter parameters
+    successThreshold: 1
+  readinessProbe:
+    # -- Enable readinessProbe
+    # @section -- MetricsExporter parameters
+    enabled: true
+    # -- Initial delay seconds for readinessProbe
+    # @section -- MetricsExporter parameters
+    initialDelaySeconds: 20
+    # -- Period seconds for readinessProbe
+    # @section -- MetricsExporter parameters
+    periodSeconds: 10
+    # -- Timeout seconds for readinessProbe
+    # @section -- MetricsExporter parameters
+    timeoutSeconds: 5
+    # -- Failure threshold for readinessProbe
+    # @section -- MetricsExporter parameters
+    failureThreshold: 6
+    # -- Success threshold for readinessProbe
+    # @section -- MetricsExporter parameters
+    successThreshold: 1  
+otelCollectorDf:
+  fullnameOverride: "digma-otel-collector-df" # because we need to use this name other value in file
+  image:
+    # -- image registry
+    # @section -- Otel CollectorDF parameters
+    registry: docker.io
+    # -- image repository
+    # @section -- Otel CollectorDF parameters
+    repository: otel/opentelemetry-collector-contrib
+    # -- image tag
+    # @section -- Otel CollectorDF parameters
+    tag: 0.103.0
+    # -- image pull policy
+    # @section -- Otel CollectorDF parameters
+    pullPolicy: IfNotPresent
+    ## Optionally specify an array of imagePullSecrets.
+    ## Secrets must be manually created in the namespace.
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+    ## e.g:
+    ## pullSecrets:
+    ##   - myRegistryKeySecretName
+    ##
+    # -- image pull secrets
+    # @section -- Otel CollectorDF parameters
+    pullSecrets: []
+  # -- Number of replicas to deploy
+  # @section -- Otel CollectorDF parameters
+  replicas: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 100Mi
+    limits:
+      cpu: 200m
+      memory: 300Mi      
+  service:
+    # -- Additional custom annotations for service
+    # @section -- Otel CollectorDF parameters
+    annotations: {}
+    ports:
+      # -- health check service port
+      # @section -- Otel CollectorDF parameters
+      health: 13133
+      # -- HTTP gRPC service port
+      # @section -- Otel CollectorDF parameters
+      grpc: 4317
+      # -- prometheus scraper service port
+      # @section -- Otel CollectorDF parameters
+      prometheus_scraper: 8889
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  # -- Extra labels for pods
+  # @section -- Otel CollectorDF parameters
+  podLabels: {}
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  # -- Extra annotations for pods
+  # @section -- Otel CollectorDF parameters
+  podAnnotations: {}
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  # -- Node labels for pods assignment
+  # @section -- Otel CollectorDF parameters
+  nodeSelector: {}
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  # -- Tolerations for pods assignment
+  # @section -- Otel CollectorDF parameters
+  tolerations: []
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
+  # -- Affinity for pods assignment
+  # @section -- Otel CollectorDF parameters
+  affinity: {} 
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  livenessProbe:
+    # -- Enable livenessProbe
+    # @section -- Otel CollectorDF parameters
+    enabled: true
+    # -- Initial delay seconds for livenessProbe
+    # @section -- Otel CollectorDF parameters
+    initialDelaySeconds: 20
+    # -- Period seconds for livenessProbe
+    # @section -- Otel CollectorDF parameters
+    periodSeconds: 10
+    # -- Timeout seconds for livenessProbe
+    # @section -- Otel CollectorDF parameters
+    timeoutSeconds: 5
+    # -- Failure threshold for livenessProbe
+    # @section -- Otel CollectorDF parameters
+    failureThreshold: 6
+    # -- Success threshold for livenessProbe
+    # @section -- Otel CollectorDF parameters
+    successThreshold: 1
+  readinessProbe:
+    # -- Enable readinessProbe
+    # @section -- Otel CollectorDF parameters
+    enabled: true
+    # -- Initial delay seconds for readinessProbe
+    # @section -- Otel CollectorDF parameters
+    initialDelaySeconds: 20
+    # -- Period seconds for readinessProbe
+    # @section -- Otel CollectorDF parameters
+    periodSeconds: 10
+    # -- Timeout seconds for readinessProbe
+    # @section -- Otel CollectorDF parameters
+    timeoutSeconds: 5
+    # -- Failure threshold for readinessProbe
+    # @section -- Otel CollectorDF parameters
+    failureThreshold: 6
+    # -- Success threshold for readinessProbe
+    # @section -- Otel CollectorDF parameters
+    successThreshold: 1  
+## influxdb
+## ref: https://github.com/bitnami/charts/blob/main/bitnami/influxdb/values.yaml
+##
+influxdb:
+  resources: 
+    requests: 
+      memory: 500Mi
+      cpu: 500m
+    limits: 
+      memory: 2Gi
+      cpu: 2000m
+  auth:
+    user:
+      org: digma
+      username: admin
+      password: "12345678"
+      bucket: errors
+    admin:
+      org: digma
+      username: admin
+      password: "12345678"
+      token: dc61908e-05bc-411a-9fe2-e3356b8dc7c0
+      bucket: errors
+      retention: 4w    
+  service:
+    ports:
+      http: 8086  
+  persistence:
+    enabled: true
+    accessModes:
+    - ReadWriteOnce
+    size: 50Gi
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  # -- Extra labels for pods
+  # @section -- Influxdb parameters
+  podLabels: {}
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  # -- Extra annotations for pods
+  # @section -- Influxdb parameters
+  podAnnotations: {}
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  # -- Node labels for pods assignment
+  # @section -- Influxdb parameters
+  nodeSelector: {}
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  # -- Tolerations for pods assignment
+  # @section -- Influxdb parameters
+  tolerations: []
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
+  # -- Affinity for pods assignment
+  # @section -- Influxdb parameters
+  affinity: {} 
+## postgresql
+## ref: https://github.com/bitnami/charts/blob/main/bitnami/postgresql/values.yaml
+##
+postgresql:
+  enabled: true
+  auth:
+    database: postgres
+    username: postgres
+    password: postgres
+    enablePostgresUser: false
+  architecture: standalone
+  containerPorts:
+    postgresql: 5432
+  primary:
+    resources:
+      requests: 
+        memory: 1Gi
+        cpu: 200m
+      limits: 
+        memory: 2Gi
+        cpu: 1000m
+    networkPolicy:
+      enabled: false
+    service:
+      ports:
+        postgresql: 5432
+    persistence:
+      enabled: true
+      accessModes:
+      - ReadWriteOnce
+      size: 20Gi
+    extendedConfiguration: |
+      shared_buffers = '800MB'
+      logging_collector = on
+      log_directory ='log'
+    extraEnvVars:
+      - name: POSTGRESQL_MAX_CONNECTIONS
+        value: "400"
+    ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+    # -- Extra labels for pods
+    # @section -- Postgresql parameters
+    podLabels: {}
+    ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+    # -- Extra annotations for pods
+    # @section -- Postgresql parameters
+    podAnnotations: {}
+    ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+    # -- Node labels for pods assignment
+    # @section -- Postgresql parameters
+    nodeSelector: {}
+    ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+    # -- Tolerations for pods assignment
+    # @section -- Postgresql parameters
+    tolerations: []
+    ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+    ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
+    # -- Affinity for pods assignment
+    # @section -- Postgresql parameters
+    affinity: {} 
+## redis
+## ref: https://github.com/bitnami/charts/blob/main/bitnami/redis/values.yaml
+##
+redis:
+  enabled: true
+  auth:
+    enabled: false
+  architecture: standalone
+  master:
+    extraFlags:
+        ## The maxmemory configuration directive is used in order to configure Redis(R) to use a specified
+        ## amount of memory for the data set. Setting maxmemory to zero results into no memory limits
+        ## see https://redis.io/topics/lru-cache for more details
+        ##
+        - "--maxmemory 2g"
+        ## The exact behavior Redis(R) follows when the maxmemory limit is reached is configured using the
+        ## maxmemory-policy configuration directive
+        ## allkeys-lru: evict keys by trying to remove the less recently used (LRU) keys first, in order
+        ## to make space for the new data added
+        ##
+        - "--maxmemory-policy allkeys-lru"
+    resources:
+      requests:
+        memory: "100Mi"
+        cpu: "50m"
+      limits:
+        memory: "2Gi"
+        cpu: "400m"
+    persistence:
+      enabled: true
+      accessModes:
+      - ReadWriteOnce
+      size: 10Gi
+    ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+    # -- Extra labels for pods
+    # @section -- Redis parameters
+    podLabels: {}
+    ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+    # -- Extra annotations for pods
+    # @section -- Redis parameters
+    podAnnotations: {}
+    ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+    # -- Node labels for pods assignment
+    # @section -- Redis parameters
+    nodeSelector: {}
+    ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+    # -- Tolerations for pods assignment
+    # @section -- Redis parameters
+    tolerations: []
+    ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+    ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
+    # -- Affinity for pods assignment
+    # @section -- Redis parameters
+    affinity: {}   
+## jaeger
+## ref: https://github.com/bitnami/charts/blob/main/bitnami/jaeger/values.yaml
+##
+jaeger:
+  image:
+    # -- image registry
+    # @section -- Jaeger parameters
+    registry: docker.io
+    # -- image repository
+    # @section -- Jaeger parameters
+    repository: jaegertracing/all-in-one
+    # -- image tag
+    # @section -- Jaeger parameters
+    tag: 1.61.0
+    # -- image pull policy
+    # @section -- Jaeger parameters
+    pullPolicy: IfNotPresent
+    ## Optionally specify an array of imagePullSecrets.
+    ## Secrets must be manually created in the namespace.
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+    ## e.g:
+    ## pullSecrets:
+    ##   - myRegistryKeySecretName
+    ##
+    # -- image pull secrets
+    # @section -- Jaeger parameters
+    pullSecrets: []
+  # -- Number of replicas to deploy
+  # @section -- Jaeger parameters
+  replicas: 1
+  resources: 
+    requests: 
+      memory: 512Mi
+      cpu: 500m
+    limits: 
+      memory: 768Mi
+      cpu: 750m
+  ## jaeger service parameters
+  ##
+  service:
+    # -- service type
+    # @section -- Jaeger parameters
+    type: ClusterIP
+    # -- Additional custom annotations for service
+    # @section -- Jaeger parameters
+    annotations: {}
+    ports:
+      # -- UI HTTP service port
+      # @section -- Jaeger parameters
+      http_ui: 16686
+      # -- gRPC collector internal service port
+      # @section -- Jaeger parameters
+      grpc_internal: 4317
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  # -- Extra labels for pods
+  # @section -- Jaeger parameters
+  podLabels: {}
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  # -- Extra annotations for pods
+  # @section -- Jaeger parameters
+  podAnnotations: {}
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  # -- Node labels for pods assignment
+  # @section -- Jaeger parameters
+  nodeSelector: {}
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  # -- Tolerations for pods assignment
+  # @section -- Jaeger parameters
+  tolerations: []
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
+  # -- Affinity for pods assignment
+  # @section -- Jaeger parameters
+  affinity: {}   
+  ## jaeger ingress parameters
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
+  ingress:
+    # -- Enable ingress
+    # @section -- Jaeger parameters
+    enabled: false
+    # --  Ingress path type
+    # @section -- Jaeger parameters
+    pathType: ImplementationSpecific
+    # --  Force Ingress API version (automatically detected if not set)
+    # @section -- Jaeger parameters
+    apiVersion: ""
+    # --  Default host for the ingress record
+    # @section -- Jaeger parameters
+    hostname: 
+    ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
+    ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
+    # --  IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
+    # @section -- Jaeger parameters
+    ingressClassName:
+    # --  The Path to UI. You may need to set this to '/*' in order to use this with ALB ingress controllers.
+    # @section -- Jaeger parameters
+    path: /
+    ## For a full list of possible ingress annotations, please see
+    ## ref: https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/nginx-configuration/annotations.md
+    ## Use this parameter to set the required annotations for cert-manager, see
+    ## ref: https://cert-manager.io/docs/usage/ingress/#supported-annotations
+    ##
+    ## e.g:
+    ## annotations:
+    ##   kubernetes.io/ingress.class: nginx
+    ##   cert-manager.io/cluster-issuer: cluster-issuer-name
+    # --  Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
+    # @section -- Jaeger parameters
+    annotations:
+    ## For example: The ALB ingress controller requires a special rule for handling SSL redirection.
+    ## extraPaths:
+    ## - path: /*
+    ##   backend:
+    ##     serviceName: ssl-redirect
+    ##     servicePort: use-annotation
+    # --  Any additional paths that may need to be added to the ingress under the main host
+    # @section -- Jaeger parameters
+    extraPaths: []
+    ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-rules
+    ## e.g:
+    ## extraRules:
+    ## - host: example.local
+    ##     http:
+    ##       path: /
+    ##       backend:
+    ##         service:
+    ##           name: example-svc
+    ##           port:
+    ##             name: http
+    # --  Additional rules to be covered with this ingress record
+    # @section -- Jaeger parameters
+    extraRules: []
+  args: []
+## elasticsearch
+## ref: https://github.com/bitnami/charts/blob/main/bitnami/elasticsearch/values.yaml
+##
+elasticsearch:
+  enabled: true
+  sysctlImage:
+    enabled: true
+  security:
+    enabled: false
+    existingSecret: ""
+    tls:
+      restEncryption: false
+  ## Elasticsearch master-eligible node parameters
+  master:
+    masterOnly: false
+    replicaCount: 1
+    terminationGracePeriodSeconds: 5
+    podSecurityContext:
+      enabled: true
+      fsGroup: 1000
+    persistence:
+      enabled: true
+      size: 80Gi
+      accessModes:
+      - ReadWriteOnce
+    resources: 
+      requests: 
+        memory: 2Gi
+        cpu: 1
+      limits: 
+        memory: 4Gi
+        cpu: 2
+    extraEnvVars:
+    - name: ES_JAVA_OPTS
+      value: "-server -Xms1G -Xmx2G"
+    ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+    # -- Extra labels for pods
+    # @section -- Elasticsearch parameters
+    podLabels: {}
+    ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+    # -- Extra annotations for pods
+    # @section -- Elasticsearch parameters
+    podAnnotations: {}
+    ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+    # -- Node labels for pods assignment
+    # @section -- Elasticsearch parameters
+    nodeSelector: {}
+    ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+    # -- Tolerations for pods assignment
+    # @section -- Elasticsearch parameters
+    tolerations: []
+    ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+    ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
+    # -- Affinity for pods assignment
+    # @section -- Elasticsearch parameters
+    affinity: {}    
+  coordinating:
+    replicaCount: 0
+  data:
+    replicaCount: 0
+  ingest:
+    replicaCount: 0
+  service:
+    ports:
+      restAPI: 9200
+## grafana
+## ref: https://github.com/bitnami/charts/blob/main/bitnami/grafana/values.yaml
+##
+grafana:
+  admin:
+    user: admin
+    password: admin
+  dashboardsProvider:
+    enabled: true
+  dashboardsConfigMaps:
+  - configMapName: digma-grafana-activities-dashboards
+    fileName: activities.json
+  - configMapName: digma-grafana-environment-dashboards
+    fileName: environment.json
+  - configMapName: digma-grafana-kafka-dashboards
+    fileName: kafka.json
+  datasources:
+    secretName: grafana-datasource
+  grafana:
+    resources: 
+      requests: 
+        memory: 512Mi
+        cpu: 500m
+      limits: 
+        memory: 768Mi
+        cpu: 750m
+    ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+    # -- Extra labels for pods
+    # @section -- Grafana parameters
+    podLabels: {}
+    ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+    # -- Extra annotations for pods
+    # @section -- Grafana parameters
+    podAnnotations: {}
+    ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+    # -- Node labels for pods assignment
+    # @section -- Grafana parameters
+    nodeSelector: {}
+    ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+    # -- Tolerations for pods assignment
+    # @section -- Grafana parameters
+    tolerations: []
+    ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+    ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
+    # -- Affinity for pods assignment
+    # @section -- Grafana parameters
+    affinity: {}       
+## prometheus
+## ref: https://github.com/bitnami/charts/blob/main/bitnami/prometheus/values.yaml
+##
+prometheus:
+  enabled: false
+  fullnameOverride: "digma-prometheus" #todo shay
+  alertmanager:
+    enabled: false
+  server:
+    existingConfigmap: "digma-prometheus-service"
+    existingConfigmapKey: "prometheus.yaml"
+    service:
+      type: ClusterIP
+      ports:
+        http: 9090
+    resources: 
+      requests: 
+        memory: 512Mi
+        cpu: 500m
+      limits: 
+        memory: 768Mi
+        cpu: 750m
+    ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+    # -- Extra labels for pods
+    # @section -- Prometheus parameters
+    podLabels: {}
+    ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+    # -- Extra annotations for pods
+    # @section -- Prometheus parameters
+    podAnnotations: {}
+    ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+    # -- Node labels for pods assignment
+    # @section -- Prometheus parameters
+    nodeSelector: {}
+    ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+    # -- Tolerations for pods assignment
+    # @section -- Prometheus parameters
+    tolerations: []
+    ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+    ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
+    # -- Affinity for pods assignment
+    # @section -- Prometheus parameters
+    affinity: {}      
+  persistence:
+    enabled: true
+    accessModes:
+    - ReadWriteOnce
+    size: 20Gi
+## kafka
+## ref: https://github.com/bitnami/charts/blob/main/bitnami/kafka/values.yaml
+##
+kafka:
+  kraft:
+    clusterId: h4U35I9QRnGhbgsEQAlXAw
+  controller:
+    # -- Number of Kafka controller-eligible nodes
+    # @section -- Kafka parameters
+    replicaCount: 1
+    resources:
+      requests:
+        memory: 400Mi
+        cpu: 200m
+      limits: 
+        memory: 3Gi
+        cpu: 1000m
+    ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+    # -- Extra labels for pods
+    # @section -- Kafka parameters
+    podLabels: {}
+    ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+    # -- Extra annotations for pods
+    # @section -- Kafka parameters
+    podAnnotations: {}
+    ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+    # -- Node labels for pods assignment
+    # @section -- Kafka parameters
+    nodeSelector: {}
+    ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+    # -- Tolerations for pods assignment
+    # @section -- Kafka parameters
+    tolerations: []
+    ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+    ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
+    # -- Affinity for pods assignment
+    # @section -- Kafka parameters
+    affinity: {} 
+    persistence:
+      enabled: true
+      accessModes:
+      - ReadWriteOnce
+      size: 80Gi
+  listeners:
+    client:
+      protocol: PLAINTEXT
+    interbroker:
+      protocol: PLAINTEXT
+    external:
+      protocol: PLAINTEXT
+    controller:
+      protocol: PLAINTEXT
+  extraConfig: |
+    log.retention.check.interval.ms = 100000
+    log.roll.ms = 500000
+    log.retention.minutes = 10
+  service:
+    ports:
+      client: 9092
+      controller: 9093
+debug:
+  enabled: false
+  pullSecrets: []
+  kafkaUi:
+    image:
+      registry: docker.io
+      repository: provectuslabs/kafka-ui
+      tag: v0.7.1
+      ## Specify a imagePullPolicy
+      ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+      ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
+      ##
+      pullPolicy: IfNotPresent
+    port: 8080
+
+  redisCommander:
+    image:
+      registry: docker.io
+      repository: rediscommander/redis-commander
+      tag: latest
+      ## Specify a imagePullPolicy
+      ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+      ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
+      ##
+      pullPolicy: IfNotPresent
+    port: 8081
+   
+  pgadmin:
+    image:
+      registry: docker.io
+      repository: dpage/pgadmin4
+      tag: latest
+      ## Specify a imagePullPolicy
+      ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+      ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
+      ##
+      pullPolicy: IfNotPresent
+    port: 8082
+    env: #todo shay
+    - name: PGADMIN_DEFAULT_EMAIL
+      value: "admin@admin.com"
+    - name: PGADMIN_DEFAULT_PASSWORD
+      value: "admin"
+
+presets:
+  small:
+    collectorWorker:
+      replicas: 1
+    measurementAnalysis: 
+      replicas: 1
+    pipelineWorker: 
+      replicas: 1
+  medium:
+    collectorWorker:
+      replicas: 4
+    measurementAnalysis: 
+      replicas: 4
+    pipelineWorker: 
+      replicas: 1
+  large:
+    collectorWorker:
+      replicas: 6
+    measurementAnalysis: 
+      replicas: 4
+    pipelineWorker: 
+      replicas: 4
+
+
+    

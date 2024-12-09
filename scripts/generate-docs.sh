@@ -22,14 +22,14 @@ fi
 CHARTS_DIR="charts"
 
 # Generate docs for each chart
-for chart in $(find $CHARTS_DIR -type f -name "Chart.yaml" -exec dirname {} \;); do
-    echo "Generating docs for $chart..."
-
-    if has_wsl; then
-        wsl bash -c "helm-docs --chart-search-root \"$chart\" -s file --ignore-non-descriptions"
-    else
-        helm-docs --chart-search-root "$chart" -s file --ignore-non-descriptions
-    fi
-done
+# for chart in $(find $CHARTS_DIR -type f -name "Chart.yaml" -exec dirname {} \;); do
+#    echo "Generating docs for $chart..."
+chart='charts/digma-ng'
+if has_wsl; then
+    wsl bash -c "helm-docs --chart-search-root \"$chart\" -s file --ignore-non-descriptions"
+else
+    helm-docs --chart-search-root "$chart" -s file --ignore-non-descriptions
+fi
+# done
 
 echo "Helm docs generation complete."

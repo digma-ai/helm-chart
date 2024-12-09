@@ -1,0 +1,115 @@
+{{- if eq .Values.digmaSelfDiagnosis.otlpExporterEndpoint "local" }}
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-grafana-config
+data:
+  datasources-yml: |
+    apiVersion: 1
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        url: {{ printf "http://%s-prometheus:9090" (.Release.Name)}}
+        isDefault: true
+        access: proxy
+        editable: true
+        uid: prometheusdatasource
+
+  dashboards-yml: |
+    apiVersion: 1
+    providers:
+      - name: "Dashboard provider"
+        orgId: 1
+        type: file
+        disableDeletion: false
+        updateIntervalSeconds: 10
+        allowUiUpdates: true
+        options:
+          path: /var/lib/grafana/dashboards
+          foldersFromFilesStructure: true
+
+{{ (.Files.Glob "grafana-dashboards/*").AsConfig | indent 2 }}
+---
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-grafana-deployment
+  labels:
+    app: grafana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+        {{- range $key, $value := .Values.grafana.labels }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+      annotations:
+        {{- range $key, $value := .Values.grafana.annotations }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+    spec:
+      {{- include "imagePullSecrets" . | nindent  6 }}
+      {{- include "tolerations" . | nindent  6 }}
+      {{- include "nodeSelector" . | nindent  6 }}
+      volumes:
+      - name: grafana-provisioning
+        configMap:
+          name: {{ .Release.Name }}-grafana-config
+          items:
+          - key: "datasources-yml"
+            path: "datasources/main.yml"
+          - key: "dashboards-yml"
+            path: "dashboards/main.yml" 
+      - name: grafana-dashboards
+        configMap:
+          name: {{ .Release.Name }}-grafana-config
+          items:
+          {{- range $path, $_ := .Files.Glob "grafana-dashboards/*" }}
+            - key: {{ base $path }}
+              path: {{ base $path }}
+          {{- end }}
+        
+      containers:
+      - name: grafana
+        image: grafana/grafana:10.3.3
+        imagePullPolicy: Always
+        args:
+          {{- range .Values.grafana.args }}
+          - {{ . }}
+          {{- end }}
+        env:
+        - name: GF_SECURITY_ADMIN_USER
+          value: admin
+        - name: GF_SECURITY_ADMIN_PASSWORD
+          value: admin
+        - name: GF_USERS_ALLOW_SIGN_UP
+          value: 'false'
+        ports:
+        - containerPort: 9000
+        volumeMounts:
+        - name: grafana-provisioning
+          mountPath: /etc/grafana/provisioning
+        - name: grafana-dashboards
+          mountPath: /var/lib/grafana/dashboards
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ tpl .Values.grafana.host . }}
+spec:
+  selector:
+    app: grafana
+  ports:
+  - port: 3000
+    protocol: TCP
+
+{{- end }}

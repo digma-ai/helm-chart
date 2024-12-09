@@ -1,0 +1,109 @@
+{{- if .Values.embeddedJaeger.enabled }}
+  
+{{- if eq .Values.embeddedJaeger.storage "badger" }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-embedded-jaeger-stateful-set-persisted
+  labels:
+    app: embedded-jaeger
+spec:
+  serviceName: {{ tpl .Values.embeddedJaeger.host . }}
+  replicas: 1
+  selector:
+    matchLabels:
+      app: embedded-jaeger
+  template:
+    metadata:
+      labels:
+        app: embedded-jaeger
+        {{- range $key, $value := .Values.embeddedJaeger.labels }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+      annotations:
+        {{- range $key, $value := .Values.embeddedJaeger.annotations }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+    spec:
+      terminationGracePeriodSeconds: 5
+      {{- include "imagePullSecrets" . | nindent  6 }}
+      {{- include "tolerations" . | nindent  6 }}
+      {{- include "nodeSelector" . | nindent  6 }}
+      containers:
+        - name: embedded-jaeger
+          image: jaegertracing/all-in-one:1.44.0
+          imagePullPolicy: Always
+          args: ["--query.additional-headers", "Access-Control-Allow-Origin: *"]
+          env:
+            - name: SPAN_STORAGE_TYPE
+              value: badger
+            - name: COLLECTOR_OTLP_ENABLED
+              value: "true"
+            - name: BADGER_EPHEMERAL
+              value: "false"
+            - name: BADGER_DIRECTORY_VALUE
+              value: "/badger/data"
+            - name: BADGER_DIRECTORY_KEY
+              value: "/badger/key"
+            - name: BADGER_SPAN_STORE_TTL
+              value: "336h0m0s" # BADGER store ttl default is 72h
+            - name: COLLECTOR_OTLP_GRPC_MAX_MESSAGE_SIZE
+              value: "41943040"
+          volumeMounts:
+            - name: badger-data
+              mountPath: /badger
+  volumeClaimTemplates:
+    - metadata:
+        name: badger-data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{ .Values.embeddedJaeger.volumeSize | default "20Gi" }}
+{{- else if eq .Values.embeddedJaeger.storage "elasticsearch" }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-embedded-jaeger
+  labels:
+    app: embedded-jaeger
+spec:
+  serviceName: {{ tpl .Values.embeddedJaeger.host . }}  
+  replicas: 1
+  selector:
+    matchLabels:
+      app: embedded-jaeger
+  template:
+    metadata:
+      labels:
+        app: embedded-jaeger
+    spec:
+      initContainers:
+        - name: wait-for-elasticsearch
+          imagePullPolicy: Always
+          image: busybox:1.28
+          command: [ 'sh', '-c', 'until nc -z {{ .Release.Name }}-elasticsearch 9200; do echo waiting for elasticsearch; sleep 5; done;' ]
+      containers:
+      - name: embedded-jaeger
+        image: jaegertracing/all-in-one:{{ .Values.embeddedJaeger.imageTag }}
+        imagePullPolicy: Always
+        args: 
+          - "--query.additional-headers"
+          - "Access-Control-Allow-Origin: *"
+          {{- range .Values.embeddedJaeger.args }}
+          - {{ . }}
+          {{- end }}
+        env:
+        - name: SPAN_STORAGE_TYPE
+          value: elasticsearch
+        - name: ES_SERVER_URLS
+          value: "http://{{ .Release.Name }}-elasticsearch:9200"
+        - name: ES_INDEX_PREFIX
+          value: "digma"
+        - name: COLLECTOR_OTLP_ENABLED
+          value: "true"
+        - name: COLLECTOR_OTLP_GRPC_MAX_MESSAGE_SIZE
+          value: "41943040"
+{{- end }}
+{{- end }}

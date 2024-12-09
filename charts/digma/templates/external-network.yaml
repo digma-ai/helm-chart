@@ -1,0 +1,83 @@
+{{ if .Values.digmaAnalytics.loadbalancer }}
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Release.Name }}-analytics-service-lb
+  {{- if and .Values.digmaAnalytics.service .Values.digmaAnalytics.service.annotations }}
+  annotations:
+    {{ toYaml .Values.digmaAnalytics.service.annotations | indent 4 }}
+  {{- end }}
+spec:
+  type: LoadBalancer
+  selector:
+     app: "digma-analytics"
+  ports:
+    - name: analytics
+      protocol: TCP
+      port: 5051
+---
+{{ end }}
+
+{{ if .Values.digmaCollectorApi.loadbalancer }}
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Release.Name }}-collector-api-service-lb
+  {{- if and .Values.digmaCollectorApi.service .Values.digmaCollectorApi.service.annotations }}
+  annotations:
+    {{ toYaml .Values.digmaCollectorApi.service.annotations | indent 4 }}
+  {{- end }}
+spec:
+  type: LoadBalancer
+  selector:
+     app: "digma-collector-api"
+  ports:
+    - name: http
+      protocol: TCP
+      port: 5049
+    - name: grpc
+      protocol: TCP
+      port: 5050
+---
+{{ end }}
+
+{{ if and (eq .Values.embeddedJaeger.enabled true) (eq .Values.embeddedJaeger.loadbalancer true) }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-embedded-jaeger-lb
+  {{- if and .Values.embeddedJaeger.service .Values.embeddedJaeger.service.annotations }}
+  annotations:
+    {{ toYaml .Values.embeddedJaeger.service.annotations | indent 4 }}
+  {{- end }}
+spec:
+  type: LoadBalancer
+  selector:
+     app: "embedded-jaeger"
+  ports:
+  - name: api
+    port: 17686
+    protocol: TCP
+    targetPort: 16686
+---
+{{ end }}
+
+{{ if .Values.digmaUi.loadbalancer }}
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Release.Name }}-ui-service-lb
+  {{- if and .Values.digmaUi.service .Values.digmaUi.service.annotations }}
+  annotations:
+    {{ toYaml .Values.digmaUi.service.annotations | indent 4 }}
+  {{- end }}
+spec:
+  type: LoadBalancer
+  selector:
+     app: "digma-ui"
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+---
+{{ end }}
