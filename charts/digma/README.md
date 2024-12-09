@@ -406,6 +406,7 @@ helm install my-release
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| kafka.controller.replicaCount | int | `1` | Number of Kafka controller-eligible nodes |
 | kafka.controller.podLabels | object | `{}` | Extra labels for pods |
 | kafka.controller.podAnnotations | object | `{}` | Extra annotations for pods |
 | kafka.controller.nodeSelector | object | `{}` | Node labels for pods assignment |

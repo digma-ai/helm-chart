@@ -1570,6 +1570,9 @@ kafka:
   kraft:
     clusterId: h4U35I9QRnGhbgsEQAlXAw
   controller:
+    # -- Number of Kafka controller-eligible nodes
+    # @section -- Kafka parameters
+    replicaCount: 1
     resources:
       requests:
         memory: 400Mi
