@@ -1,12 +1,12 @@
 digma:
   deployment:
-    # -- replicas based on a given preset
+    # -- adjusts the deployment to efficiently handle different scales of workload, and can be either small, medium, or large.
     # @section -- Global Digma parameters
     size: medium
-  # -- replicas based on a given preset
+  # -- access token for plugin authentication, and set the same one in the IDE plugin settings.
   # @section -- Global Digma parameters
   accessToken: 
-  # -- replicas based on a given preset
+  # -- a digma license to use,If you've signed up for a free Digma account you should have received a Digma license to use. You can use this link [https://digma.ai/sign-up/] to sign up
   # @section -- Global Digma parameters
   licenseKey:
   ## daily issues report parameters
