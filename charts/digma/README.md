@@ -1,6 +1,6 @@
 # digma
 
-![Version: 1.0.254](https://img.shields.io/badge/Version-1.0.254-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.166-health-alpha.2](https://img.shields.io/badge/AppVersion-0.3.166--health--alpha.2-informational?style=flat-square)
+![Version: 1.0.254](https://img.shields.io/badge/Version-1.0.254-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.166-health-alpha.3](https://img.shields.io/badge/AppVersion-0.3.166--health--alpha.3-informational?style=flat-square)
 
 A Helm chart containing Digma's services
 
@@ -90,9 +90,15 @@ helm install my-release
 | collectorWorker.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
 | collectorWorker.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
 | collectorWorker.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
-| collectorWorker.livenessProbe.timeoutSeconds | int | `5` | Timeout seconds for livenessProbe |
+| collectorWorker.livenessProbe.timeoutSeconds | int | `10` | Timeout seconds for livenessProbe |
 | collectorWorker.livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
 | collectorWorker.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
+| collectorWorker.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
+| collectorWorker.readinessProbe.initialDelaySeconds | int | `10` | Initial delay seconds for readinessProbe |
+| collectorWorker.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
+| collectorWorker.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
+| collectorWorker.readinessProbe.failureThreshold | int | `12` | Failure threshold for readinessProbe |
+| collectorWorker.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 
 ### Otel Collector parameters
 
@@ -156,9 +162,15 @@ helm install my-release
 | collectorApi.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
 | collectorApi.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
 | collectorApi.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
-| collectorApi.livenessProbe.timeoutSeconds | int | `5` | Timeout seconds for livenessProbe |
+| collectorApi.livenessProbe.timeoutSeconds | int | `10` | Timeout seconds for livenessProbe |
 | collectorApi.livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
 | collectorApi.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
+| collectorApi.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
+| collectorApi.readinessProbe.initialDelaySeconds | int | `10` | Initial delay seconds for readinessProbe |
+| collectorApi.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
+| collectorApi.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
+| collectorApi.readinessProbe.failureThreshold | int | `12` | Failure threshold for readinessProbe |
+| collectorApi.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 
 ### AnalyticsApi parameters
 
@@ -188,9 +200,15 @@ helm install my-release
 | analyticsApi.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
 | analyticsApi.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
 | analyticsApi.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
-| analyticsApi.livenessProbe.timeoutSeconds | int | `5` | Timeout seconds for livenessProbe |
+| analyticsApi.livenessProbe.timeoutSeconds | int | `10` | Timeout seconds for livenessProbe |
 | analyticsApi.livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
 | analyticsApi.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
+| analyticsApi.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
+| analyticsApi.readinessProbe.initialDelaySeconds | int | `10` | Initial delay seconds for readinessProbe |
+| analyticsApi.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
+| analyticsApi.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
+| analyticsApi.readinessProbe.failureThreshold | int | `12` | Failure threshold for readinessProbe |
+| analyticsApi.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 
 ### MeasurementAnalysis parameters
 
@@ -209,9 +227,15 @@ helm install my-release
 | measurementAnalysis.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
 | measurementAnalysis.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
 | measurementAnalysis.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
-| measurementAnalysis.livenessProbe.timeoutSeconds | int | `5` | Timeout seconds for livenessProbe |
+| measurementAnalysis.livenessProbe.timeoutSeconds | int | `10` | Timeout seconds for livenessProbe |
 | measurementAnalysis.livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
 | measurementAnalysis.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
+| measurementAnalysis.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
+| measurementAnalysis.readinessProbe.initialDelaySeconds | int | `10` | Initial delay seconds for readinessProbe |
+| measurementAnalysis.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
+| measurementAnalysis.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
+| measurementAnalysis.readinessProbe.failureThreshold | int | `12` | Failure threshold for readinessProbe |
+| measurementAnalysis.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 
 ### Scheduler parameters
 
@@ -232,6 +256,12 @@ helm install my-release
 | scheduler.livenessProbe.timeoutSeconds | int | `5` | Timeout seconds for livenessProbe |
 | scheduler.livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
 | scheduler.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
+| scheduler.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
+| scheduler.readinessProbe.initialDelaySeconds | int | `10` | Initial delay seconds for readinessProbe |
+| scheduler.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
+| scheduler.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
+| scheduler.readinessProbe.failureThreshold | int | `12` | Failure threshold for readinessProbe |
+| scheduler.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 
 ### PipelineWorker parameters
 
@@ -249,9 +279,15 @@ helm install my-release
 | pipelineWorker.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
 | pipelineWorker.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
 | pipelineWorker.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
-| pipelineWorker.livenessProbe.timeoutSeconds | int | `5` | Timeout seconds for livenessProbe |
+| pipelineWorker.livenessProbe.timeoutSeconds | int | `10` | Timeout seconds for livenessProbe |
 | pipelineWorker.livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
 | pipelineWorker.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
+| pipelineWorker.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
+| pipelineWorker.readinessProbe.initialDelaySeconds | int | `10` | Initial delay seconds for readinessProbe |
+| pipelineWorker.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
+| pipelineWorker.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
+| pipelineWorker.readinessProbe.failureThreshold | int | `12` | Failure threshold for readinessProbe |
+| pipelineWorker.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 
 ### UI parameters
 

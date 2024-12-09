@@ -61,3 +61,10 @@ spec:
             port: http
             scheme: HTTP
         {{- end }}
+        {{- if .Values.collectorApi.readinessProbe.enabled }}
+        readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.collectorApi.readinessProbe "enabled") "context" $) | nindent 10 }}
+          httpGet:
+            path: /readiness
+            port: http
+            scheme: HTTP
+        {{- end }}        

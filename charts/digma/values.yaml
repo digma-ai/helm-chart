@@ -176,11 +176,30 @@ collectorWorker:
     periodSeconds: 10
     # -- Timeout seconds for livenessProbe
     # @section -- CollectorWorker parameters
-    timeoutSeconds: 5
+    timeoutSeconds: 10
     # -- Failure threshold for livenessProbe
     # @section -- CollectorWorker parameters
     failureThreshold: 3
     # -- Success threshold for livenessProbe
+    # @section -- CollectorWorker parameters
+    successThreshold: 1
+  readinessProbe:
+    # -- Enable readinessProbe
+    # @section -- CollectorWorker parameters
+    enabled: true
+    # -- Initial delay seconds for readinessProbe
+    # @section -- CollectorWorker parameters
+    initialDelaySeconds: 10
+    # -- Period seconds for readinessProbe
+    # @section -- CollectorWorker parameters
+    periodSeconds: 10
+    # -- Timeout seconds for readinessProbe
+    # @section -- CollectorWorker parameters
+    timeoutSeconds: 10
+    # -- Failure threshold for readinessProbe
+    # @section -- CollectorWorker parameters
+    failureThreshold: 12
+    # -- Success threshold for readinessProbe
     # @section -- CollectorWorker parameters
     successThreshold: 1
 otelCollector:
@@ -458,13 +477,32 @@ collectorApi:
     periodSeconds: 10
     # -- Timeout seconds for livenessProbe
     # @section -- CollectorApi parameters
-    timeoutSeconds: 5
+    timeoutSeconds: 10
     # -- Failure threshold for livenessProbe
     # @section -- CollectorApi parameters
     failureThreshold: 3
     # -- Success threshold for livenessProbe
     # @section -- CollectorApi parameters
     successThreshold: 1
+  readinessProbe:
+    # -- Enable readinessProbe
+    # @section -- CollectorApi parameters
+    enabled: true
+    # -- Initial delay seconds for readinessProbe
+    # @section -- CollectorApi parameters
+    initialDelaySeconds: 10
+    # -- Period seconds for readinessProbe
+    # @section -- CollectorApi parameters
+    periodSeconds: 10
+    # -- Timeout seconds for readinessProbe
+    # @section -- CollectorApi parameters
+    timeoutSeconds: 10
+    # -- Failure threshold for readinessProbe
+    # @section -- CollectorApi parameters
+    failureThreshold: 12
+    # -- Success threshold for readinessProbe
+    # @section -- CollectorApi parameters
+    successThreshold: 1    
 analyticsApi:
   # -- Indicates whether the analytics API uses a secured HTTPS connection. Set to false if ingress is enabled
   # @section -- AnalyticsApi parameters
@@ -598,32 +636,32 @@ analyticsApi:
     periodSeconds: 10
     # -- Timeout seconds for livenessProbe
     # @section -- AnalyticsApi parameters
-    timeoutSeconds: 5
+    timeoutSeconds: 10
     # -- Failure threshold for livenessProbe
     # @section -- AnalyticsApi parameters
     failureThreshold: 3
     # -- Success threshold for livenessProbe
     # @section -- AnalyticsApi parameters
     successThreshold: 1
-  # readinessProbe:
-  #   # -- Enable readinessProbe
-  #   # @section -- AnalyticsApi parameters
-  #   enabled: true
-  #   # -- Initial delay seconds for readinessProbe
-  #   # @section -- AnalyticsApi parameters
-  #   initialDelaySeconds: 10
-  #   # -- Period seconds for readinessProbe
-  #   # @section -- AnalyticsApi parameters
-  #   periodSeconds: 10
-  #   # -- Timeout seconds for readinessProbe
-  #   # @section -- AnalyticsApi parameters
-  #   timeoutSeconds: 5
-  #   # -- Failure threshold for readinessProbe
-  #   # @section -- AnalyticsApi parameters
-  #   failureThreshold: 12
-  #   # -- Success threshold for readinessProbe
-  #   # @section -- AnalyticsApi parameters
-  #   successThreshold: 1
+  readinessProbe:
+    # -- Enable readinessProbe
+    # @section -- AnalyticsApi parameters
+    enabled: true
+    # -- Initial delay seconds for readinessProbe
+    # @section -- AnalyticsApi parameters
+    initialDelaySeconds: 10
+    # -- Period seconds for readinessProbe
+    # @section -- AnalyticsApi parameters
+    periodSeconds: 10
+    # -- Timeout seconds for readinessProbe
+    # @section -- AnalyticsApi parameters
+    timeoutSeconds: 10
+    # -- Failure threshold for readinessProbe
+    # @section -- AnalyticsApi parameters
+    failureThreshold: 12
+    # -- Success threshold for readinessProbe
+    # @section -- AnalyticsApi parameters
+    successThreshold: 1
 measurementAnalysis:
   env:
     ThresholdOptions__UpsertEndpointThresholdSeconds: 5
@@ -701,13 +739,32 @@ measurementAnalysis:
     periodSeconds: 10
     # -- Timeout seconds for livenessProbe
     # @section -- MeasurementAnalysis parameters
-    timeoutSeconds: 5
+    timeoutSeconds: 10
     # -- Failure threshold for livenessProbe
     # @section -- MeasurementAnalysis parameters
     failureThreshold: 3
     # -- Success threshold for livenessProbe
     # @section -- MeasurementAnalysis parameters
     successThreshold: 1
+  readinessProbe:
+    # -- Enable readinessProbe
+    # @section -- MeasurementAnalysis parameters
+    enabled: true
+    # -- Initial delay seconds for readinessProbe
+    # @section -- MeasurementAnalysis parameters
+    initialDelaySeconds: 10
+    # -- Period seconds for readinessProbe
+    # @section -- MeasurementAnalysis parameters
+    periodSeconds: 10
+    # -- Timeout seconds for readinessProbe
+    # @section -- MeasurementAnalysis parameters
+    timeoutSeconds: 10
+    # -- Failure threshold for readinessProbe
+    # @section -- MeasurementAnalysis parameters
+    failureThreshold: 12
+    # -- Success threshold for readinessProbe
+    # @section -- MeasurementAnalysis parameters
+    successThreshold: 1      
 scheduler:
   image:
     registry: docker.io
@@ -780,7 +837,26 @@ scheduler:
     failureThreshold: 3
     # -- Success threshold for livenessProbe
     # @section -- Scheduler parameters
-    successThreshold: 1 
+    successThreshold: 1
+  readinessProbe:
+    # -- Enable readinessProbe
+    # @section -- Scheduler parameters
+    enabled: true
+    # -- Initial delay seconds for readinessProbe
+    # @section -- Scheduler parameters
+    initialDelaySeconds: 10
+    # -- Period seconds for readinessProbe
+    # @section -- Scheduler parameters
+    periodSeconds: 10
+    # -- Timeout seconds for readinessProbe
+    # @section -- Scheduler parameters
+    timeoutSeconds: 10
+    # -- Failure threshold for readinessProbe
+    # @section -- Scheduler parameters
+    failureThreshold: 12
+    # -- Success threshold for readinessProbe
+    # @section -- Scheduler parameters
+    successThreshold: 1     
 pipelineWorker:
   image:
     registry: docker.io
@@ -847,13 +923,32 @@ pipelineWorker:
     periodSeconds: 10
     # -- Timeout seconds for livenessProbe
     # @section -- PipelineWorker parameters
-    timeoutSeconds: 5
+    timeoutSeconds: 10
     # -- Failure threshold for livenessProbe
     # @section -- PipelineWorker parameters
     failureThreshold: 3
     # -- Success threshold for livenessProbe
     # @section -- PipelineWorker parameters
     successThreshold: 1
+  readinessProbe:
+    # -- Enable readinessProbe
+    # @section -- PipelineWorker parameters
+    enabled: true
+    # -- Initial delay seconds for readinessProbe
+    # @section -- PipelineWorker parameters
+    initialDelaySeconds: 10
+    # -- Period seconds for readinessProbe
+    # @section -- PipelineWorker parameters
+    periodSeconds: 10
+    # -- Timeout seconds for readinessProbe
+    # @section -- PipelineWorker parameters
+    timeoutSeconds: 10
+    # -- Failure threshold for readinessProbe
+    # @section -- PipelineWorker parameters
+    failureThreshold: 12
+    # -- Success threshold for readinessProbe
+    # @section -- PipelineWorker parameters
+    successThreshold: 1     
 nginx:
   image:
     registry: docker.io
