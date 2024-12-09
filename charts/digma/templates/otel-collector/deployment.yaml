@@ -43,6 +43,9 @@ spec:
         args:
           - --config=/conf/collector.yaml
         resources: {{- toYaml .Values.otelCollector.resources | nindent 12 }}
+        ports:
+        - name: health
+          containerPort: {{ .Values.otelCollector.service.ports.health }}
         env:
         - name: K8S_NODE_NAME
           valueFrom:
@@ -53,6 +56,18 @@ spec:
           - name: config
             mountPath: /conf
             readOnly: true
+        {{- if .Values.otelCollector.livenessProbe.enabled }}
+        livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.otelCollector.livenessProbe "enabled") "context" $) | nindent 10 }}
+          tcpSocket:
+            port: health
+        {{- end }}
+        {{- if .Values.otelCollector.readinessProbe.enabled }}
+        readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.otelCollector.readinessProbe "enabled") "context" $) | nindent 10 }}
+          httpGet:
+            path: /
+            port: health
+            scheme: HTTP
+        {{- end }}
       volumes:
         - name: config # volume name
           configMap:

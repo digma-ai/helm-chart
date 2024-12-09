@@ -141,6 +141,18 @@ helm install my-release
 | otelCollector.http.ingress.annotations | string | `nil` | Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations. |
 | otelCollector.http.ingress.extraPaths | list | `[]` | Any additional paths that may need to be added to the ingress under the main host |
 | otelCollector.http.ingress.extraRules | list | `[]` | Additional rules to be covered with this ingress record |
+| otelCollector.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
+| otelCollector.livenessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for livenessProbe |
+| otelCollector.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
+| otelCollector.livenessProbe.timeoutSeconds | int | `5` | Timeout seconds for livenessProbe |
+| otelCollector.livenessProbe.failureThreshold | int | `6` | Failure threshold for livenessProbe |
+| otelCollector.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
+| otelCollector.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
+| otelCollector.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
+| otelCollector.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
+| otelCollector.readinessProbe.timeoutSeconds | int | `5` | Timeout seconds for readinessProbe |
+| otelCollector.readinessProbe.failureThreshold | int | `6` | Failure threshold for readinessProbe |
+| otelCollector.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 
 ### CollectorApi parameters
 
@@ -365,6 +377,7 @@ helm install my-release
 | otelCollectorDf.image.pullSecrets | list | `[]` | image pull secrets |
 | otelCollectorDf.replicas | int | `1` | Number of replicas to deploy |
 | otelCollectorDf.service.annotations | object | `{}` | Additional custom annotations for service |
+| otelCollectorDf.service.ports.health | int | `13133` | health check service port |
 | otelCollectorDf.service.ports.grpc | int | `4317` | HTTP gRPC service port |
 | otelCollectorDf.service.ports.prometheus_scraper | int | `8889` | prometheus scraper service port |
 | otelCollectorDf.podLabels | object | `{}` | Extra labels for pods |
@@ -372,6 +385,18 @@ helm install my-release
 | otelCollectorDf.nodeSelector | object | `{}` | Node labels for pods assignment |
 | otelCollectorDf.tolerations | list | `[]` | Tolerations for pods assignment |
 | otelCollectorDf.affinity | object | `{}` | Affinity for pods assignment |
+| otelCollectorDf.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
+| otelCollectorDf.livenessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for livenessProbe |
+| otelCollectorDf.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
+| otelCollectorDf.livenessProbe.timeoutSeconds | int | `5` | Timeout seconds for livenessProbe |
+| otelCollectorDf.livenessProbe.failureThreshold | int | `6` | Failure threshold for livenessProbe |
+| otelCollectorDf.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
+| otelCollectorDf.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
+| otelCollectorDf.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
+| otelCollectorDf.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
+| otelCollectorDf.readinessProbe.timeoutSeconds | int | `5` | Timeout seconds for readinessProbe |
+| otelCollectorDf.readinessProbe.failureThreshold | int | `6` | Failure threshold for readinessProbe |
+| otelCollectorDf.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 
 ### Influxdb parameters
 

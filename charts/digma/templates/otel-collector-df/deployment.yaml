@@ -38,23 +38,38 @@ spec:
       tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.otelCollectorDf.tolerations "context" .) | nindent 8 }}
       {{- end }}
       containers:
-        - name: otel-collector-df
-          image: {{ include "common.images.image" ( dict "imageRoot" .Values.otelCollectorDf.image "global" .Values.global) }}
-          imagePullPolicy: {{ .Values.otelCollectorDf.image.pullPolicy }}
-          args:
-          - --config=/conf/collector.yaml
-          resources: {{- toYaml .Values.otelCollectorDf.resources | nindent 12 }}
-          env:
-          - name: K8S_NODE_NAME
-            valueFrom:
-              fieldRef:
-                fieldPath: spec.nodeName
-          ports:
-            - containerPort: 4317
-          volumeMounts:
-            - name: vn-config
-              mountPath: /conf
-              readOnly: true
+      - name: otel-collector-df
+        image: {{ include "common.images.image" ( dict "imageRoot" .Values.otelCollectorDf.image "global" .Values.global) }}
+        imagePullPolicy: {{ .Values.otelCollectorDf.image.pullPolicy }}
+        args:
+        - --config=/conf/collector.yaml
+        resources: {{- toYaml .Values.otelCollectorDf.resources | nindent 12 }}
+        env:
+        - name: K8S_NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        ports:
+        - name: health
+          containerPort: {{ .Values.otelCollectorDf.service.ports.health }}
+        - name: grpc
+          containerPort: {{ .Values.otelCollectorDf.service.ports.grpc }}
+        volumeMounts:
+          - name: vn-config
+            mountPath: /conf
+            readOnly: true
+        {{- if .Values.otelCollectorDf.livenessProbe.enabled }}
+        livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.otelCollectorDf.livenessProbe "enabled") "context" $) | nindent 10 }}
+          tcpSocket:
+            port: health
+        {{- end }}
+        {{- if .Values.otelCollectorDf.readinessProbe.enabled }}
+        readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.otelCollectorDf.readinessProbe "enabled") "context" $) | nindent 10 }}
+          httpGet:
+            path: /
+            port: health
+            scheme: HTTP
+        {{- end }}
       volumes:
         - name: vn-config # volume name
           configMap:

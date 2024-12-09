@@ -10,6 +10,9 @@ metadata:
   {{- end }}
 data:
   config.yaml: |
+    extensions:
+      health_check:
+        endpoint: "0.0.0.0:{{ .Values.otelCollectorDf.service.ports.health }}"
     receivers:
       otlp:
         protocols: 
@@ -52,6 +55,7 @@ data:
       {{- end }}
 
     service:
+      extensions: [health_check]
       pipelines:
         {{- if eq .Values.observability.useLocal true }}
         metrics:

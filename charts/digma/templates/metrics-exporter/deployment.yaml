@@ -52,7 +52,6 @@ spec:
         {{- if .Values.metricsExporter.livenessProbe.enabled }}
         livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.metricsExporter.livenessProbe "enabled") "context" $) | nindent 10 }}
           tcpSocket:
-            path: /
             port: http
         {{- end }}
         {{- if .Values.metricsExporter.readinessProbe.enabled }}

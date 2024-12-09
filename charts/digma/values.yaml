@@ -399,6 +399,45 @@ otelCollector:
       # --  Additional rules to be covered with this ingress record
       # @section -- Otel Collector parameters
       extraRules: []
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  livenessProbe:
+    # -- Enable livenessProbe
+    # @section -- Otel Collector parameters
+    enabled: true
+    # -- Initial delay seconds for livenessProbe
+    # @section -- Otel Collector parameters
+    initialDelaySeconds: 20
+    # -- Period seconds for livenessProbe
+    # @section -- Otel Collector parameters
+    periodSeconds: 10
+    # -- Timeout seconds for livenessProbe
+    # @section -- Otel Collector parameters
+    timeoutSeconds: 5
+    # -- Failure threshold for livenessProbe
+    # @section -- Otel Collector parameters
+    failureThreshold: 6
+    # -- Success threshold for livenessProbe
+    # @section -- Otel Collector parameters
+    successThreshold: 1
+  readinessProbe:
+    # -- Enable readinessProbe
+    # @section -- Otel Collector parameters
+    enabled: true
+    # -- Initial delay seconds for readinessProbe
+    # @section -- Otel Collector parameters
+    initialDelaySeconds: 20
+    # -- Period seconds for readinessProbe
+    # @section -- Otel Collector parameters
+    periodSeconds: 10
+    # -- Timeout seconds for readinessProbe
+    # @section -- Otel Collector parameters
+    timeoutSeconds: 5
+    # -- Failure threshold for readinessProbe
+    # @section -- Otel Collector parameters
+    failureThreshold: 6
+    # -- Success threshold for readinessProbe
+    # @section -- Otel Collector parameters
+    successThreshold: 1 
 collectorApi:
   image:
     registry: docker.io
@@ -1248,6 +1287,9 @@ otelCollectorDf:
     # @section -- Otel CollectorDF parameters
     annotations: {}
     ports:
+      # -- health check service port
+      # @section -- Otel CollectorDF parameters
+      health: 13133
       # -- HTTP gRPC service port
       # @section -- Otel CollectorDF parameters
       grpc: 4317
@@ -1275,6 +1317,45 @@ otelCollectorDf:
   # -- Affinity for pods assignment
   # @section -- Otel CollectorDF parameters
   affinity: {} 
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  livenessProbe:
+    # -- Enable livenessProbe
+    # @section -- Otel CollectorDF parameters
+    enabled: true
+    # -- Initial delay seconds for livenessProbe
+    # @section -- Otel CollectorDF parameters
+    initialDelaySeconds: 20
+    # -- Period seconds for livenessProbe
+    # @section -- Otel CollectorDF parameters
+    periodSeconds: 10
+    # -- Timeout seconds for livenessProbe
+    # @section -- Otel CollectorDF parameters
+    timeoutSeconds: 5
+    # -- Failure threshold for livenessProbe
+    # @section -- Otel CollectorDF parameters
+    failureThreshold: 6
+    # -- Success threshold for livenessProbe
+    # @section -- Otel CollectorDF parameters
+    successThreshold: 1
+  readinessProbe:
+    # -- Enable readinessProbe
+    # @section -- Otel CollectorDF parameters
+    enabled: true
+    # -- Initial delay seconds for readinessProbe
+    # @section -- Otel CollectorDF parameters
+    initialDelaySeconds: 20
+    # -- Period seconds for readinessProbe
+    # @section -- Otel CollectorDF parameters
+    periodSeconds: 10
+    # -- Timeout seconds for readinessProbe
+    # @section -- Otel CollectorDF parameters
+    timeoutSeconds: 5
+    # -- Failure threshold for readinessProbe
+    # @section -- Otel CollectorDF parameters
+    failureThreshold: 6
+    # -- Success threshold for readinessProbe
+    # @section -- Otel CollectorDF parameters
+    successThreshold: 1  
 ## influxdb
 ## ref: https://github.com/bitnami/charts/blob/main/bitnami/influxdb/values.yaml
 ##
