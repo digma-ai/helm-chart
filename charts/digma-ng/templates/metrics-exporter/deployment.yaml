@@ -49,6 +49,7 @@ spec:
         ports:
         - name: http
           containerPort: 9090 # hardcoded in image
+        {{- if not .Values.diagnosticMode.enabled }}
         {{- if .Values.metricsExporter.livenessProbe.enabled }}
         livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.metricsExporter.livenessProbe "enabled") "context" $) | nindent 10 }}
           tcpSocket:
@@ -60,5 +61,6 @@ spec:
             path: /
             port: http
             scheme: HTTP
+        {{- end }}
         {{- end }}
 {{- end }}

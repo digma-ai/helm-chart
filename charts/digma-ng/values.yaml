@@ -82,6 +82,11 @@ commonLabels: {}
 # @section -- Common parameters
 commonAnnotations: {}
 
+diagnosticMode:
+  # -- Enable diagnostic mode (all probes will be disabled)
+  # @section -- Common parameters
+  enabled: false
+
 
 collectorWorker:
   env:

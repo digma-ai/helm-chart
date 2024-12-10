@@ -51,6 +51,7 @@ spec:
         {{- include "env.postgres" . | nindent  8 }}
         {{- include "env.kafka" . | nindent  8 }}
         {{- include "env.jaeger" . | nindent 8 }}
+        {{- if not .Values.diagnosticMode.enabled }}
         {{- if .Values.pipelineWorker.livenessProbe.enabled }}
         livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.pipelineWorker.livenessProbe "enabled") "context" $) | nindent 10 }}
           httpGet:
@@ -65,3 +66,4 @@ spec:
             port: http
             scheme: HTTP
         {{- end }}          
+        {{- end }}

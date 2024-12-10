@@ -56,6 +56,7 @@ spec:
           - name: config
             mountPath: /conf
             readOnly: true
+        {{- if not .Values.diagnosticMode.enabled }}
         {{- if .Values.otelCollector.livenessProbe.enabled }}
         livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.otelCollector.livenessProbe "enabled") "context" $) | nindent 10 }}
           tcpSocket:
@@ -67,6 +68,7 @@ spec:
             path: /
             port: health
             scheme: HTTP
+        {{- end }}
         {{- end }}
       volumes:
         - name: config # volume name

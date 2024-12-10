@@ -82,6 +82,7 @@ spec:
           value: {{ $uiServiceBaseUrl | quote}}
           {{- end }}
         {{- end }} 
+        {{- if not .Values.diagnosticMode.enabled }}
         {{- if .Values.scheduler.livenessProbe.enabled }}
         livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.scheduler.livenessProbe "enabled") "context" $) | nindent 10 }}
           httpGet:
@@ -95,4 +96,5 @@ spec:
             path: /readiness
             port: http
             scheme: HTTP
-        {{- end }}          
+        {{- end }}
+        {{- end }}       

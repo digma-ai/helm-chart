@@ -60,6 +60,7 @@ spec:
         - name: AccessToken
           value: {{ .Values.digma.accessToken | quote }}
         {{- end }}
+        {{- if not .Values.diagnosticMode.enabled }}
         {{- if .Values.analyticsApi.livenessProbe.enabled }}
         livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.analyticsApi.livenessProbe "enabled") "context" $) | nindent 10 }}
           httpGet:
@@ -73,4 +74,5 @@ spec:
             path: /readiness
             port: http
             scheme: {{ include "digma.analytics-api.protocol" . | upper}}
+        {{- end }}
         {{- end }}

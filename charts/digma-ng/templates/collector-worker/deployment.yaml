@@ -74,6 +74,7 @@ spec:
         {{- if .Values.collectorWorker.extraEnvVars }}
         {{- include "common.tplvalues.render" (dict "value" .Values.collectorWorker.extraEnvVars "context" $) | nindent 8 }}
         {{- end }}
+        {{- if not .Values.diagnosticMode.enabled }}
         {{- if .Values.collectorWorker.livenessProbe.enabled }}
         livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.collectorWorker.livenessProbe "enabled") "context" $) | nindent 10 }}
           httpGet:
@@ -87,4 +88,5 @@ spec:
             path: /readiness
             port: http
             scheme: HTTP
-        {{- end }}         
+        {{- end }}
+        {{- end }}

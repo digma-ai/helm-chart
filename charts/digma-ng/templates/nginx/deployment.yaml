@@ -71,6 +71,7 @@ spec:
             subPath: nginx.conf
           - name: app-volume
             mountPath: /app
+        {{- if not .Values.diagnosticMode.enabled }}
         {{- if .Values.nginx.livenessProbe.enabled }}
         livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.nginx.livenessProbe "enabled") "context" $) | nindent 10 }}
           httpGet:
@@ -84,4 +85,5 @@ spec:
             path: /health
             port: ui
             scheme: HTTP
+        {{- end }}
         {{- end }}

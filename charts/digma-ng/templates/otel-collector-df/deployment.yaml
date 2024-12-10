@@ -58,6 +58,7 @@ spec:
           - name: vn-config
             mountPath: /conf
             readOnly: true
+        {{- if not .Values.diagnosticMode.enabled }}
         {{- if .Values.otelCollectorDf.livenessProbe.enabled }}
         livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.otelCollectorDf.livenessProbe "enabled") "context" $) | nindent 10 }}
           tcpSocket:
@@ -69,6 +70,7 @@ spec:
             path: /
             port: health
             scheme: HTTP
+        {{- end }}
         {{- end }}
       volumes:
         - name: vn-config # volume name
