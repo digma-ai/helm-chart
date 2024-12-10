@@ -1,6 +1,6 @@
 # digma-ng
 
-![Version: 1.0.254](https://img.shields.io/badge/Version-1.0.254-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.166-health-alpha.3](https://img.shields.io/badge/AppVersion-0.3.166--health--alpha.3-informational?style=flat-square)
+![Version: 1.0.254](https://img.shields.io/badge/Version-1.0.254-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.166-health-alpha.4](https://img.shields.io/badge/AppVersion-0.3.166--health--alpha.4-informational?style=flat-square)
 
 A Helm chart containing Digma's services
 
@@ -91,10 +91,10 @@ helm install my-release
 | collectorWorker.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
 | collectorWorker.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
 | collectorWorker.livenessProbe.timeoutSeconds | int | `10` | Timeout seconds for livenessProbe |
-| collectorWorker.livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
+| collectorWorker.livenessProbe.failureThreshold | int | `6` | Failure threshold for livenessProbe |
 | collectorWorker.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
 | collectorWorker.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
-| collectorWorker.readinessProbe.initialDelaySeconds | int | `10` | Initial delay seconds for readinessProbe |
+| collectorWorker.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
 | collectorWorker.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
 | collectorWorker.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
 | collectorWorker.readinessProbe.failureThreshold | int | `12` | Failure threshold for readinessProbe |
@@ -142,16 +142,16 @@ helm install my-release
 | otelCollector.http.ingress.extraPaths | list | `[]` | Any additional paths that may need to be added to the ingress under the main host |
 | otelCollector.http.ingress.extraRules | list | `[]` | Additional rules to be covered with this ingress record |
 | otelCollector.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
-| otelCollector.livenessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for livenessProbe |
+| otelCollector.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
 | otelCollector.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
-| otelCollector.livenessProbe.timeoutSeconds | int | `5` | Timeout seconds for livenessProbe |
+| otelCollector.livenessProbe.timeoutSeconds | int | `10` | Timeout seconds for livenessProbe |
 | otelCollector.livenessProbe.failureThreshold | int | `6` | Failure threshold for livenessProbe |
 | otelCollector.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
 | otelCollector.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
 | otelCollector.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
 | otelCollector.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
-| otelCollector.readinessProbe.timeoutSeconds | int | `5` | Timeout seconds for readinessProbe |
-| otelCollector.readinessProbe.failureThreshold | int | `6` | Failure threshold for readinessProbe |
+| otelCollector.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
+| otelCollector.readinessProbe.failureThreshold | int | `12` | Failure threshold for readinessProbe |
 | otelCollector.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 
 ### CollectorApi parameters
@@ -175,10 +175,10 @@ helm install my-release
 | collectorApi.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
 | collectorApi.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
 | collectorApi.livenessProbe.timeoutSeconds | int | `10` | Timeout seconds for livenessProbe |
-| collectorApi.livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
+| collectorApi.livenessProbe.failureThreshold | int | `6` | Failure threshold for livenessProbe |
 | collectorApi.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
 | collectorApi.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
-| collectorApi.readinessProbe.initialDelaySeconds | int | `10` | Initial delay seconds for readinessProbe |
+| collectorApi.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
 | collectorApi.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
 | collectorApi.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
 | collectorApi.readinessProbe.failureThreshold | int | `12` | Failure threshold for readinessProbe |
@@ -213,10 +213,10 @@ helm install my-release
 | analyticsApi.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
 | analyticsApi.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
 | analyticsApi.livenessProbe.timeoutSeconds | int | `10` | Timeout seconds for livenessProbe |
-| analyticsApi.livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
+| analyticsApi.livenessProbe.failureThreshold | int | `6` | Failure threshold for livenessProbe |
 | analyticsApi.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
 | analyticsApi.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
-| analyticsApi.readinessProbe.initialDelaySeconds | int | `10` | Initial delay seconds for readinessProbe |
+| analyticsApi.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
 | analyticsApi.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
 | analyticsApi.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
 | analyticsApi.readinessProbe.failureThreshold | int | `12` | Failure threshold for readinessProbe |
@@ -240,10 +240,10 @@ helm install my-release
 | measurementAnalysis.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
 | measurementAnalysis.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
 | measurementAnalysis.livenessProbe.timeoutSeconds | int | `10` | Timeout seconds for livenessProbe |
-| measurementAnalysis.livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
+| measurementAnalysis.livenessProbe.failureThreshold | int | `6` | Failure threshold for livenessProbe |
 | measurementAnalysis.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
 | measurementAnalysis.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
-| measurementAnalysis.readinessProbe.initialDelaySeconds | int | `10` | Initial delay seconds for readinessProbe |
+| measurementAnalysis.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
 | measurementAnalysis.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
 | measurementAnalysis.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
 | measurementAnalysis.readinessProbe.failureThreshold | int | `12` | Failure threshold for readinessProbe |
@@ -265,11 +265,11 @@ helm install my-release
 | scheduler.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
 | scheduler.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
 | scheduler.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
-| scheduler.livenessProbe.timeoutSeconds | int | `5` | Timeout seconds for livenessProbe |
-| scheduler.livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
+| scheduler.livenessProbe.timeoutSeconds | int | `10` | Timeout seconds for livenessProbe |
+| scheduler.livenessProbe.failureThreshold | int | `6` | Failure threshold for livenessProbe |
 | scheduler.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
 | scheduler.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
-| scheduler.readinessProbe.initialDelaySeconds | int | `10` | Initial delay seconds for readinessProbe |
+| scheduler.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
 | scheduler.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
 | scheduler.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
 | scheduler.readinessProbe.failureThreshold | int | `12` | Failure threshold for readinessProbe |
@@ -292,10 +292,10 @@ helm install my-release
 | pipelineWorker.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
 | pipelineWorker.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
 | pipelineWorker.livenessProbe.timeoutSeconds | int | `10` | Timeout seconds for livenessProbe |
-| pipelineWorker.livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
+| pipelineWorker.livenessProbe.failureThreshold | int | `6` | Failure threshold for livenessProbe |
 | pipelineWorker.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
 | pipelineWorker.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
-| pipelineWorker.readinessProbe.initialDelaySeconds | int | `10` | Initial delay seconds for readinessProbe |
+| pipelineWorker.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
 | pipelineWorker.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
 | pipelineWorker.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
 | pipelineWorker.readinessProbe.failureThreshold | int | `12` | Failure threshold for readinessProbe |
@@ -314,16 +314,16 @@ helm install my-release
 | nginx.tolerations | list | `[]` | Tolerations for pods assignment |
 | nginx.affinity | object | `{}` | Affinity for pods assignment |
 | nginx.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
-| nginx.livenessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for livenessProbe |
+| nginx.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
 | nginx.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
-| nginx.livenessProbe.timeoutSeconds | int | `5` | Timeout seconds for livenessProbe |
+| nginx.livenessProbe.timeoutSeconds | int | `10` | Timeout seconds for livenessProbe |
 | nginx.livenessProbe.failureThreshold | int | `6` | Failure threshold for livenessProbe |
 | nginx.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
 | nginx.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
 | nginx.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
 | nginx.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
-| nginx.readinessProbe.timeoutSeconds | int | `5` | Timeout seconds for readinessProbe |
-| nginx.readinessProbe.failureThreshold | int | `6` | Failure threshold for readinessProbe |
+| nginx.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
+| nginx.readinessProbe.failureThreshold | int | `12` | Failure threshold for readinessProbe |
 | nginx.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 | ui.service.type | string | `"ClusterIP"` | service type |
 | ui.service.annotations | object | `{}` | Additional custom annotations for service |
@@ -354,16 +354,16 @@ helm install my-release
 | metricsExporter.affinity | object | `{}` | Affinity for pods assignment |
 | metricsExporter.serviceAccount | object | `{"annotations":{}}` | Annotations to add to the ServiceAccount Metadata |
 | metricsExporter.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
-| metricsExporter.livenessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for livenessProbe |
+| metricsExporter.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
 | metricsExporter.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
-| metricsExporter.livenessProbe.timeoutSeconds | int | `5` | Timeout seconds for livenessProbe |
+| metricsExporter.livenessProbe.timeoutSeconds | int | `10` | Timeout seconds for livenessProbe |
 | metricsExporter.livenessProbe.failureThreshold | int | `6` | Failure threshold for livenessProbe |
 | metricsExporter.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
 | metricsExporter.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
 | metricsExporter.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
 | metricsExporter.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
-| metricsExporter.readinessProbe.timeoutSeconds | int | `5` | Timeout seconds for readinessProbe |
-| metricsExporter.readinessProbe.failureThreshold | int | `6` | Failure threshold for readinessProbe |
+| metricsExporter.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
+| metricsExporter.readinessProbe.failureThreshold | int | `12` | Failure threshold for readinessProbe |
 | metricsExporter.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 
 ### Otel CollectorDF parameters
@@ -386,16 +386,16 @@ helm install my-release
 | otelCollectorDf.tolerations | list | `[]` | Tolerations for pods assignment |
 | otelCollectorDf.affinity | object | `{}` | Affinity for pods assignment |
 | otelCollectorDf.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
-| otelCollectorDf.livenessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for livenessProbe |
+| otelCollectorDf.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
 | otelCollectorDf.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
-| otelCollectorDf.livenessProbe.timeoutSeconds | int | `5` | Timeout seconds for livenessProbe |
+| otelCollectorDf.livenessProbe.timeoutSeconds | int | `10` | Timeout seconds for livenessProbe |
 | otelCollectorDf.livenessProbe.failureThreshold | int | `6` | Failure threshold for livenessProbe |
 | otelCollectorDf.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
 | otelCollectorDf.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
 | otelCollectorDf.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
 | otelCollectorDf.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
-| otelCollectorDf.readinessProbe.timeoutSeconds | int | `5` | Timeout seconds for readinessProbe |
-| otelCollectorDf.readinessProbe.failureThreshold | int | `6` | Failure threshold for readinessProbe |
+| otelCollectorDf.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
+| otelCollectorDf.readinessProbe.failureThreshold | int | `12` | Failure threshold for readinessProbe |
 | otelCollectorDf.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 
 ### Influxdb parameters

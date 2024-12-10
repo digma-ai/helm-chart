@@ -179,7 +179,7 @@ collectorWorker:
     timeoutSeconds: 10
     # -- Failure threshold for livenessProbe
     # @section -- CollectorWorker parameters
-    failureThreshold: 3
+    failureThreshold: 6
     # -- Success threshold for livenessProbe
     # @section -- CollectorWorker parameters
     successThreshold: 1
@@ -189,7 +189,7 @@ collectorWorker:
     enabled: true
     # -- Initial delay seconds for readinessProbe
     # @section -- CollectorWorker parameters
-    initialDelaySeconds: 10
+    initialDelaySeconds: 20
     # -- Period seconds for readinessProbe
     # @section -- CollectorWorker parameters
     periodSeconds: 10
@@ -406,13 +406,13 @@ otelCollector:
     enabled: true
     # -- Initial delay seconds for livenessProbe
     # @section -- Otel Collector parameters
-    initialDelaySeconds: 20
+    initialDelaySeconds: 120
     # -- Period seconds for livenessProbe
     # @section -- Otel Collector parameters
     periodSeconds: 10
     # -- Timeout seconds for livenessProbe
     # @section -- Otel Collector parameters
-    timeoutSeconds: 5
+    timeoutSeconds: 10
     # -- Failure threshold for livenessProbe
     # @section -- Otel Collector parameters
     failureThreshold: 6
@@ -431,10 +431,10 @@ otelCollector:
     periodSeconds: 10
     # -- Timeout seconds for readinessProbe
     # @section -- Otel Collector parameters
-    timeoutSeconds: 5
+    timeoutSeconds: 10
     # -- Failure threshold for readinessProbe
     # @section -- Otel Collector parameters
-    failureThreshold: 6
+    failureThreshold: 12
     # -- Success threshold for readinessProbe
     # @section -- Otel Collector parameters
     successThreshold: 1 
@@ -519,7 +519,7 @@ collectorApi:
     timeoutSeconds: 10
     # -- Failure threshold for livenessProbe
     # @section -- CollectorApi parameters
-    failureThreshold: 3
+    failureThreshold: 6
     # -- Success threshold for livenessProbe
     # @section -- CollectorApi parameters
     successThreshold: 1
@@ -529,7 +529,7 @@ collectorApi:
     enabled: true
     # -- Initial delay seconds for readinessProbe
     # @section -- CollectorApi parameters
-    initialDelaySeconds: 10
+    initialDelaySeconds: 20
     # -- Period seconds for readinessProbe
     # @section -- CollectorApi parameters
     periodSeconds: 10
@@ -678,7 +678,7 @@ analyticsApi:
     timeoutSeconds: 10
     # -- Failure threshold for livenessProbe
     # @section -- AnalyticsApi parameters
-    failureThreshold: 3
+    failureThreshold: 6
     # -- Success threshold for livenessProbe
     # @section -- AnalyticsApi parameters
     successThreshold: 1
@@ -688,7 +688,7 @@ analyticsApi:
     enabled: true
     # -- Initial delay seconds for readinessProbe
     # @section -- AnalyticsApi parameters
-    initialDelaySeconds: 10
+    initialDelaySeconds: 20
     # -- Period seconds for readinessProbe
     # @section -- AnalyticsApi parameters
     periodSeconds: 10
@@ -781,7 +781,7 @@ measurementAnalysis:
     timeoutSeconds: 10
     # -- Failure threshold for livenessProbe
     # @section -- MeasurementAnalysis parameters
-    failureThreshold: 3
+    failureThreshold: 6
     # -- Success threshold for livenessProbe
     # @section -- MeasurementAnalysis parameters
     successThreshold: 1
@@ -791,7 +791,7 @@ measurementAnalysis:
     enabled: true
     # -- Initial delay seconds for readinessProbe
     # @section -- MeasurementAnalysis parameters
-    initialDelaySeconds: 10
+    initialDelaySeconds: 20
     # -- Period seconds for readinessProbe
     # @section -- MeasurementAnalysis parameters
     periodSeconds: 10
@@ -870,10 +870,10 @@ scheduler:
     periodSeconds: 10
     # -- Timeout seconds for livenessProbe
     # @section -- Scheduler parameters
-    timeoutSeconds: 5
+    timeoutSeconds: 10
     # -- Failure threshold for livenessProbe
     # @section -- Scheduler parameters
-    failureThreshold: 3
+    failureThreshold: 6
     # -- Success threshold for livenessProbe
     # @section -- Scheduler parameters
     successThreshold: 1
@@ -883,7 +883,7 @@ scheduler:
     enabled: true
     # -- Initial delay seconds for readinessProbe
     # @section -- Scheduler parameters
-    initialDelaySeconds: 10
+    initialDelaySeconds: 20
     # -- Period seconds for readinessProbe
     # @section -- Scheduler parameters
     periodSeconds: 10
@@ -965,7 +965,7 @@ pipelineWorker:
     timeoutSeconds: 10
     # -- Failure threshold for livenessProbe
     # @section -- PipelineWorker parameters
-    failureThreshold: 3
+    failureThreshold: 6
     # -- Success threshold for livenessProbe
     # @section -- PipelineWorker parameters
     successThreshold: 1
@@ -975,7 +975,7 @@ pipelineWorker:
     enabled: true
     # -- Initial delay seconds for readinessProbe
     # @section -- PipelineWorker parameters
-    initialDelaySeconds: 10
+    initialDelaySeconds: 20
     # -- Period seconds for readinessProbe
     # @section -- PipelineWorker parameters
     periodSeconds: 10
@@ -1044,13 +1044,13 @@ nginx:
     enabled: true
     # -- Initial delay seconds for livenessProbe
     # @section -- UI parameters
-    initialDelaySeconds: 20
+    initialDelaySeconds: 120
     # -- Period seconds for livenessProbe
     # @section -- UI parameters
     periodSeconds: 10
     # -- Timeout seconds for livenessProbe
     # @section -- UI parameters
-    timeoutSeconds: 5
+    timeoutSeconds: 10
     # -- Failure threshold for livenessProbe
     # @section -- UI parameters
     failureThreshold: 6
@@ -1069,10 +1069,10 @@ nginx:
     periodSeconds: 10
     # -- Timeout seconds for readinessProbe
     # @section -- UI parameters
-    timeoutSeconds: 5
+    timeoutSeconds: 10
     # -- Failure threshold for readinessProbe
     # @section -- UI parameters
-    failureThreshold: 6
+    failureThreshold: 12
     # -- Success threshold for readinessProbe
     # @section -- UI parameters
     successThreshold: 1 
@@ -1215,13 +1215,13 @@ metricsExporter:
     enabled: true
     # -- Initial delay seconds for livenessProbe
     # @section -- MetricsExporter parameters
-    initialDelaySeconds: 20
+    initialDelaySeconds: 120
     # -- Period seconds for livenessProbe
     # @section -- MetricsExporter parameters
     periodSeconds: 10
     # -- Timeout seconds for livenessProbe
     # @section -- MetricsExporter parameters
-    timeoutSeconds: 5
+    timeoutSeconds: 10
     # -- Failure threshold for livenessProbe
     # @section -- MetricsExporter parameters
     failureThreshold: 6
@@ -1240,10 +1240,10 @@ metricsExporter:
     periodSeconds: 10
     # -- Timeout seconds for readinessProbe
     # @section -- MetricsExporter parameters
-    timeoutSeconds: 5
+    timeoutSeconds: 10
     # -- Failure threshold for readinessProbe
     # @section -- MetricsExporter parameters
-    failureThreshold: 6
+    failureThreshold: 12
     # -- Success threshold for readinessProbe
     # @section -- MetricsExporter parameters
     successThreshold: 1  
@@ -1324,13 +1324,13 @@ otelCollectorDf:
     enabled: true
     # -- Initial delay seconds for livenessProbe
     # @section -- Otel CollectorDF parameters
-    initialDelaySeconds: 20
+    initialDelaySeconds: 120
     # -- Period seconds for livenessProbe
     # @section -- Otel CollectorDF parameters
     periodSeconds: 10
     # -- Timeout seconds for livenessProbe
     # @section -- Otel CollectorDF parameters
-    timeoutSeconds: 5
+    timeoutSeconds: 10
     # -- Failure threshold for livenessProbe
     # @section -- Otel CollectorDF parameters
     failureThreshold: 6
@@ -1349,10 +1349,10 @@ otelCollectorDf:
     periodSeconds: 10
     # -- Timeout seconds for readinessProbe
     # @section -- Otel CollectorDF parameters
-    timeoutSeconds: 5
+    timeoutSeconds: 10
     # -- Failure threshold for readinessProbe
     # @section -- Otel CollectorDF parameters
-    failureThreshold: 6
+    failureThreshold: 12
     # -- Success threshold for readinessProbe
     # @section -- Otel CollectorDF parameters
     successThreshold: 1  
