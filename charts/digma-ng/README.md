@@ -70,8 +70,8 @@ helm install my-release
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | kubeVersion | string | `""` | kubeVersion Override Kubernetes version |
-| commonLabels | object | `{}` | commonLabels Labels to add to all deployed objects |
-| commonAnnotations | object | `{}` | commonAnnotations Annotations to add to all deployed objects |
+| commonLabels | object | `{}` | Labels to add to all deployed objects |
+| commonAnnotations | object | `{}` | Annotations to add to all deployed objects |
 | diagnosticMode.enabled | bool | `false` | Enable diagnostic mode (all probes will be disabled) |
 
 ### CollectorWorker parameters

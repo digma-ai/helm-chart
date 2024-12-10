@@ -75,10 +75,10 @@ global:
 # -- kubeVersion Override Kubernetes version
 # @section -- Common parameters
 kubeVersion: ""
-# -- commonLabels Labels to add to all deployed objects
+# -- Labels to add to all deployed objects
 # @section -- Common parameters
 commonLabels: {}
-# -- commonAnnotations Annotations to add to all deployed objects
+# -- Annotations to add to all deployed objects
 # @section -- Common parameters
 commonAnnotations: {}
 
