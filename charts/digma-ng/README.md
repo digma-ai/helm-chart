@@ -490,6 +490,12 @@ helm install my-release
 | prometheus.server.tolerations | list | `[]` | Tolerations for pods assignment |
 | prometheus.server.affinity | object | `{}` | Affinity for pods assignment |
 
+### Kafka parameters   
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| kafka.extraConfig | string | `"offsets.topic.replication.factor=1\n"` | Additional configuration to be appended at the end of the generated Kafka configuration file. |
+
 ### Kafka parameters
 
 | Key | Type | Default | Description |
