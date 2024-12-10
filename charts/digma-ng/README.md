@@ -11,7 +11,9 @@ A Helm chart containing Digma's services
 ```console
 helm repo add digma https://digma-ai.github.io/helm-chart/
 helm repo update
-helm install digma digma/digma --namespace digma --create-namespace
+helm dependencies build
+kubectl create namespace digma
+helm upgrade --install digma digma/digma-ng -n digma
 
 ```
 ## Introduction
