@@ -49,8 +49,10 @@ spec:
         - {{ . }}
         {{- end }}
         ports:
-        - containerPort: {{ .Values.jaeger.service.ports.grpc_internal }}
-        - containerPort: {{ .Values.jaeger.service.ports.http_ui }}
+        - name: grpc 
+          containerPort: {{ .Values.jaeger.service.ports.grpc_internal }}
+        - name: http
+          containerPort: {{ .Values.jaeger.service.ports.http_ui }}
         env:
         - name: SPAN_STORAGE_TYPE
           value: elasticsearch

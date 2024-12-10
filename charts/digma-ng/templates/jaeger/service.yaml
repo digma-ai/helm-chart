@@ -11,10 +11,10 @@ metadata:
 spec:
   type: {{ .Values.jaeger.service.type }}
   ports:
-    - name: grpc-internal
+    - name: grpc
       protocol: TCP
       port: {{ .Values.jaeger.service.ports.grpc_internal }}
-    - name: http-ui
+    - name: http
       protocol: TCP
       port: {{ .Values.jaeger.service.ports.http_ui }}
   {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.jaeger.podLabels .Values.commonLabels ) "context" . ) }}
