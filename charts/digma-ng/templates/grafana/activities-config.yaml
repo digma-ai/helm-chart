@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: digma-grafana-activities-dashboards1
+  name: digma-grafana-activities-dashboards
   labels:
     {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
     app.kubernetes.io/component: digma-grafana-activities-dashboards
