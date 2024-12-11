@@ -922,8 +922,8 @@ pipelineWorker:
   # @section -- PipelineWorker parameters
   replicas: "{{ index .Values.presets .Values.digma.deployment.size \"pipelineWorker\" \"replicas\" }}"
   resources: 
-    requests: 
-      memory: 100Mi
+    requestss: 
+      memorys: 100v
       cpu: 50m
     limits: 
       memory: 400Mi
