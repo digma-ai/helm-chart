@@ -1,0 +1,108 @@
+digma:
+  licenseKey: ""
+
+observability:
+  useLocal: false
+
+otelCollector:
+  grpc:
+    ingress:
+      enabled: true
+      hostname: collector-grpc.local
+      ingressClassName: "alb"
+      annotations:
+        alb.ingress.kubernetes.io/load-balancer-name: "{{ .Release.Name }}-digma-public"
+        alb.ingress.kubernetes.io/scheme: internet-facing
+        alb.ingress.kubernetes.io/target-type: ip
+        alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
+        alb.ingress.kubernetes.io/backend-protocol-version: GRPC
+        alb.ingress.kubernetes.io/backend-protocol: HTTP
+        alb.ingress.kubernetes.io/certificate-arn:
+        alb.ingress.kubernetes.io/group.name: "{{ .Release.Name }}-digma-public"
+
+  http:
+    ingress:
+      enabled: true
+      hostname: collector-http.local
+      ingressClassName: "alb"
+      annotations:
+        alb.ingress.kubernetes.io/load-balancer-name: "{{ .Release.Name }}-digma-public"
+        alb.ingress.kubernetes.io/scheme: internet-facing
+        alb.ingress.kubernetes.io/target-type: ip
+        alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
+        alb.ingress.kubernetes.io/backend-protocol: HTTP
+        alb.ingress.kubernetes.io/certificate-arn:
+        alb.ingress.kubernetes.io/healthcheck-path: "/health"
+        alb.ingress.kubernetes.io/healthcheck-protocol: "HTTP"
+        alb.ingress.kubernetes.io/healthcheck-port: "health"
+        alb.ingress.kubernetes.io/healthcheck-interval-seconds: "30"
+        alb.ingress.kubernetes.io/healthcheck-timeout-seconds: "5"
+        alb.ingress.kubernetes.io/healthcheck-healthy-threshold-count: "3"
+        alb.ingress.kubernetes.io/healthcheck-unhealthy-threshold-count: "3"
+        alb.ingress.kubernetes.io/group.name: "{{ .Release.Name }}-digma-public"
+
+analyticsApi:
+  secured: false
+  ingress:
+    enabled: true
+    hostname: api.digma.local
+    ingressClassName: "alb"
+    path: /*
+    annotations:
+      alb.ingress.kubernetes.io/load-balancer-name: "{{ .Release.Name }}-digma-public"
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/target-type: ip
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]'
+      alb.ingress.kubernetes.io/certificate-arn:
+      alb.ingress.kubernetes.io/healthcheck-path: "/healthz"
+      alb.ingress.kubernetes.io/healthcheck-protocol: "HTTP"
+      alb.ingress.kubernetes.io/healthcheck-port: "traffic-port"
+      alb.ingress.kubernetes.io/healthcheck-interval-seconds: "30"
+      alb.ingress.kubernetes.io/healthcheck-timeout-seconds: "5"
+      alb.ingress.kubernetes.io/healthcheck-healthy-threshold-count: "3"
+      alb.ingress.kubernetes.io/healthcheck-unhealthy-threshold-count: "3"
+      alb.ingress.kubernetes.io/group.name: "{{ .Release.Name }}-digma-public"
+
+ui:
+  ingress:
+    enabled: true
+    apiVersion: ""
+    hostname: ui.local
+    ingressClassName: "alb"
+    pathType: ImplementationSpecific
+    path: /*
+    annotations:
+      alb.ingress.kubernetes.io/load-balancer-name: "{{ .Release.Name }}-digma-public"
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/target-type: ip
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]'
+      alb.ingress.kubernetes.io/certificate-arn:
+      alb.ingress.kubernetes.io/group.name: "{{ .Release.Name }}-digma-public"
+      alb.ingress.kubernetes.io/healthcheck-path: "/health"
+      alb.ingress.kubernetes.io/healthcheck-protocol: "HTTP"
+      alb.ingress.kubernetes.io/healthcheck-port: "traffic-port"
+      alb.ingress.kubernetes.io/healthcheck-interval-seconds: "30"
+      alb.ingress.kubernetes.io/healthcheck-timeout-seconds: "5"
+      alb.ingress.kubernetes.io/healthcheck-healthy-threshold-count: "3"
+      alb.ingress.kubernetes.io/healthcheck-unhealthy-threshold-count: "3"
+
+jaeger:
+  ingress:
+    enabled: true
+    hostname: jaeger.local
+    ingressClassName: "alb"
+    path: /*
+    annotations:
+      alb.ingress.kubernetes.io/load-balancer-name: "{{ .Release.Name }}-digma-public"
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/target-type: ip
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]'
+      alb.ingress.kubernetes.io/certificate-arn:
+      alb.ingress.kubernetes.io/group.name: "{{ .Release.Name }}-digma-public"
+      alb.ingress.kubernetes.io/healthcheck-path: "/health"
+      alb.ingress.kubernetes.io/healthcheck-protocol: "HTTP"
+      alb.ingress.kubernetes.io/healthcheck-port: "traffic-port"
+      alb.ingress.kubernetes.io/healthcheck-interval-seconds: "30"
+      alb.ingress.kubernetes.io/healthcheck-timeout-seconds: "5"
+      alb.ingress.kubernetes.io/healthcheck-healthy-threshold-count: "3"
+      alb.ingress.kubernetes.io/healthcheck-unhealthy-threshold-count: "3"
