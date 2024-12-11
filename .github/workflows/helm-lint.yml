@@ -30,8 +30,11 @@ jobs:
       - name: Validate Kubernetes Manifests
         run: |
           helm template ./charts/digma | kubeval --strict
+      
+      - name: Create k8s Kind Cluster
+        uses: helm/kind-action@v1 
       # Optional: Dry run with a Kubernetes cluster
       - name: Dry Run Deployment
         run: |
-          helm upgrade --install my-release ./charts/digma --dry-run --debug --kube-context=dummy --set digma.licenseKey="dummy-license-key"
+          helm upgrade --install my-release ./charts/digma --dry-run --debug --set digma.licenseKey="dummy-license-key"
 
