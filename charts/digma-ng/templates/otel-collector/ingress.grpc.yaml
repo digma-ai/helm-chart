@@ -1,0 +1,36 @@
+{{- if .Values.otelCollector.grpc.ingress.enabled }}
+apiVersion: {{ include "common.capabilities.ingress.apiVersion" . }}
+kind: Ingress
+metadata:
+  name: {{ include "digma.otel-collector" . }}.grpc
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: otel-collector.grpc
+  {{- if or .Values.otelCollector.grpc.ingress.annotations .Values.commonAnnotations }}
+  {{- $annotations := include "common.tplvalues.merge" ( dict "values" ( list .Values.otelCollector.grpc.ingress.annotations .Values.commonAnnotations ) "context" . ) }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if and .Values.otelCollector.grpc.ingress.ingressClassName (include "common.ingress.supportsIngressClassname" .) }}
+  ingressClassName: {{ .Values.otelCollector.grpc.ingress.ingressClassName | quote }}
+  {{- end }}
+  rules:
+    {{- if .Values.otelCollector.grpc.ingress.hostname }}
+    - host: {{ tpl .Values.otelCollector.grpc.ingress.hostname $ | quote }}
+      http:
+        paths:
+          {{- if .Values.otelCollector.grpc.ingress.extraPaths }}
+          {{- toYaml .Values.otelCollector.grpc.ingress.extraPaths | nindent 10 }}
+          {{- end }}
+          - path: /*
+            {{- if eq "true" (include "common.ingress.supportsPathType" .) }}
+            pathType: {{ .Values.otelCollector.grpc.ingress.pathType }}
+            {{- end }}
+            backend: {{- include "common.ingress.backend" (dict 
+            "serviceName" (include "digma.otel-collector" $) 
+            "servicePort" .Values.otelCollector.service.ports.grpc
+            "context" $) | nindent 14 }}
+    {{- end }}
+    {{- if .Values.otelCollector.grpc.ingress.extraRules }}
+    {{- include "common.tplvalues.render" (dict "value" .Values.otelCollector.grpc.ingress.extraRules "context" $) | nindent 4 }}
+    {{- end }}
+{{- end }}

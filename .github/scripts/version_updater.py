@@ -52,9 +52,8 @@ def update_deployment_version(version, chart_version, deployment_yml):
         yml.dump_all(docs, file)
 
 
-def update(version, chart_file_path, chart_version_level, deployment_yml):
-    chart_version = update_chart_version(version, chart_file_path, chart_version_level)
-    update_deployment_version(version, chart_version, deployment_yml)
+def update(version, chart_file_path, chart_version_level):
+    update_chart_version(version, chart_file_path, chart_version_level)
 
 
 def update_chart_version(version, chart_file_path, chart_version_level):
@@ -78,13 +77,12 @@ def update_chart_version(version, chart_file_path, chart_version_level):
     return new_version
 
 if __name__ == "__main__":
-    if len(sys.argv) != 4:
-        print("Usage: version_updater.py <new-version> <chart-location> <deployment-location>")
+    if len(sys.argv) != 3:
+        print("Usage: version_updater.py <new-version> <chart-location>")
         sys.exit(1)
 
     new_version = sys.argv[1]
     chart_yml = sys.argv[2]
-    deployment_yml = sys.argv[3]
     
-    update(new_version, chart_yml, 'patch', deployment_yml)
+    update(new_version, chart_yml, 'patch')
 

@@ -1,0 +1,92 @@
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ include "digma.collector-worker" . }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: collector-worker
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.collectorWorker.podLabels .Values.commonLabels ) "context" . ) }}
+  replicas: {{ include "replicas.value" (dict "value" .Values.collectorWorker.replicas "context" .) }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 6 }}
+      app.kubernetes.io/component: collector-worker
+  template:
+    metadata:
+      labels: 
+        {{- include "common.labels.standard" ( dict "customLabels" $podLabels "context" $ ) | nindent 8 }}
+        app.kubernetes.io/component: collector-worker
+      annotations:
+        {{- if .Values.commonAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.collectorWorker.podAnnotations }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.collectorWorker.podAnnotations "context" .) | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- include "common.images.pullSecrets" ( dict "images" (list .Values.collectorWorker.image) "global" .Values.global) | nindent 6 }}
+      {{- if .Values.collectorWorker.affinity }}
+      affinity: {{- include "common.tplvalues.render" ( dict "value" .Values.collectorWorker.affinity "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.collectorWorker.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.collectorWorker.nodeSelector "context" .) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.collectorWorker.tolerations }}
+      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.collectorWorker.tolerations "context" .) | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: digma-collector-worker
+        image: {{ include "common.images.image" (dict "imageRoot" .Values.collectorWorker.image "global" .Values.global "chart" .Chart) }}
+        imagePullPolicy: {{ .Values.collectorWorker.image.pullPolicy }}
+        resources: {{- toYaml .Values.collectorWorker.resources | nindent 12 }}
+        ports:
+        - name: http
+          containerPort: {{ .Values.collectorWorker.service.ports.http }}
+        env:
+        {{- include "env.digma.app.common" . | nindent  8 }}
+        {{- include "env.redis" . | nindent  8 }}
+        {{- include "env.influx" . | nindent  8 }}
+        {{- include "env.postgres" . | nindent  8 }}
+        {{- include "env.kafka" . | nindent  8 }}
+        {{- include "env.jaeger" . | nindent  8 }}
+        {{- range $index, $element := .Values.collectorWorker.app.ignoreEndpoints }}
+        - name: Filter__IgnoreEndpoints__{{$index}}__Route
+          value: {{ $element.Route | quote }}
+        - name: Filter__IgnoreEndpoints__{{$index}}__RouteRegex
+          value: {{ $element.RouteRegex | quote }}
+        - name: Filter__IgnoreEndpoints__{{$index}}__Method
+          value: {{ $element.Method | quote }}
+        - name: Filter__IgnoreEndpoints__{{$index}}__Service
+          value: {{ $element.Service | quote }}
+        {{- end }}
+        - name: "Sampling__Enable"
+          value: {{ .Values.collectorWorker.env.Sampling__Enable | quote }}
+        - name: "ExtendedObservability__Enable"
+          value: {{ .Values.collectorWorker.env.ExtendedObservability__Enable | quote }}
+        - name: "TraceTempStorage__TraceForJaegerExpirationInMinutes"
+          value: {{ .Values.collectorWorker.env.TraceTempStorage__TraceForJaegerExpirationInMinutes | quote }}
+        - name: BlockedTrace__TraceSpansLimit
+          value: {{ .Values.collectorWorker.env.BlockedTrace__TraceSpansLimit | quote }}
+        - name: ThresholdOptions__RecentActivityUpdateThresholdSeconds
+          value: {{ .Values.collectorWorker.env.ThresholdOptions__RecentActivityUpdateThresholdSeconds | quote }}
+        {{- if .Values.collectorWorker.extraEnvVars }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.collectorWorker.extraEnvVars "context" $) | nindent 8 }}
+        {{- end }}
+        {{- if not .Values.diagnosticMode.enabled }}
+        {{- if .Values.collectorWorker.livenessProbe.enabled }}
+        livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.collectorWorker.livenessProbe "enabled") "context" $) | nindent 10 }}
+          httpGet:
+            path: /healthz
+            port: http
+            scheme: HTTP
+        {{- end }}
+        {{- if .Values.collectorApi.readinessProbe.enabled }}
+        readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.collectorWorker.readinessProbe "enabled") "context" $) | nindent 10 }}
+          httpGet:
+            path: /readiness
+            port: http
+            scheme: HTTP
+        {{- end }}
+        {{- end }}

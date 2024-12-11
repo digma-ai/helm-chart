@@ -1,0 +1,14 @@
+{{ if .Values.observability.useLocal }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: digma-grafana-environment-dashboards
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component:  digma-grafana-environment-dashboards
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+data:
+  environment.json: |
+    {{ .Files.Get "files/grafana-dashboards/Environment.json" | nindent 4 }}
+{{- end }}

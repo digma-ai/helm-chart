@@ -1,0 +1,100 @@
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ include "digma.scheduler" . }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: scheduler
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.scheduler.podLabels .Values.commonLabels ) "context" . ) }}
+  replicas: {{ include "replicas.value" (dict "value" .Values.scheduler.replicas "context" .) }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 6 }}
+      app.kubernetes.io/component: scheduler
+  template:
+    metadata:
+      labels: 
+        {{- include "common.labels.standard" ( dict "customLabels" $podLabels "context" $ ) | nindent 8 }}
+        app.kubernetes.io/component: scheduler
+      annotations:
+        {{- if .Values.commonAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.scheduler.podAnnotations }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.scheduler.podAnnotations "context" .) | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- include "common.images.pullSecrets" ( dict "images" (list .Values.scheduler.image) "global" .Values.global) | nindent 6 }}
+      {{- if .Values.scheduler.affinity }}
+      affinity: {{- include "common.tplvalues.render" ( dict "value" .Values.scheduler.affinity "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.scheduler.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.scheduler.nodeSelector "context" .) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.scheduler.tolerations }}
+      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.scheduler.tolerations "context" .) | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: digma-scheduler
+        image: {{ include "common.images.image" (dict "imageRoot" .Values.scheduler.image "global" .Values.global "chart" .Chart) }}
+        imagePullPolicy: {{ .Values.scheduler.image.pullPolicy }}
+        resources: {{- toYaml .Values.scheduler.resources | nindent 12 }}
+        ports:
+        - name: http
+          containerPort: {{ .Values.scheduler.service.ports.http }}
+        env:
+        {{- include "env.digma.app.common" . | nindent  8 }}
+        {{- include "env.redis" . | nindent  8 }}
+        {{- include "env.influx" . | nindent  8 }}
+        {{- include "env.postgres" . | nindent  8 }}
+        {{- include "env.kafka" . | nindent  8 }}
+        {{- include "env.elasticsearch" . | nindent  8 }}
+        {{- if .Values.digma.report.enabled }}
+          {{- if .Values.digma.report.emailGateway.url }}
+        - name: "EmailGateway__Url"
+          value: {{ .Values.digma.report.emailGateway.url | quote}}
+          {{- end }}
+          {{- if .Values.digma.report.emailGateway.apiKey }}
+        - name: "EmailGateway__ApiKey"
+          value: {{ .Values.digma.report.emailGateway.apiKey | quote}}
+          {{- end }}
+          {{- if .Values.digma.report.recipients.to }}
+        - name: "EmailReport__Recipients__To"
+          value: {{ .Values.digma.report.recipients.to | quote}}
+          {{- end }}      
+          {{- if .Values.digma.report.recipients.cc }}
+        - name: "EmailReport__Recipients__Cc"
+          value: {{ .Values.digma.report.recipients.cc | quote}}
+          {{- end }} 
+          {{- if .Values.digma.report.recipients.bcc }}
+        - name: "EmailReport__Recipients__Bcc"
+          value: {{ .Values.digma.report.recipients.bcc | quote}}
+          {{- end }}
+          {{- if .Values.digma.report.scheduledTimeUtc }}
+        - name: "EmailReport__ScheduledTime"
+          value: {{ .Values.digma.report.scheduledTimeUtc | quote}}
+          {{- end }}
+          {{- $uiServiceBaseUrl := include "digma.report.uiServiceBaseUrl" . }}
+          {{- if ne $uiServiceBaseUrl "" }}
+        - name: "EmailReport__UIServiceBaseUrl"
+          value: {{ $uiServiceBaseUrl | quote}}
+          {{- end }}
+        {{- end }} 
+        {{- if not .Values.diagnosticMode.enabled }}
+        {{- if .Values.scheduler.livenessProbe.enabled }}
+        livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.scheduler.livenessProbe "enabled") "context" $) | nindent 10 }}
+          httpGet:
+            path: /healthz
+            port: http
+            scheme: HTTP
+        {{- end }}
+        {{- if .Values.scheduler.readinessProbe.enabled }}
+        readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.scheduler.readinessProbe "enabled") "context" $) | nindent 10 }}
+          httpGet:
+            path: /readiness
+            port: http
+            scheme: HTTP
+        {{- end }}
+        {{- end }}       

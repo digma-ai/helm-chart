@@ -1,0 +1,82 @@
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ include "digma.measurement-analysis" . }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: measurement-analysis
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.measurementAnalysis.podLabels .Values.commonLabels ) "context" . ) }}
+  replicas: {{ include "replicas.value" (dict "value" .Values.measurementAnalysis.replicas "context" .) }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 6 }}
+      app.kubernetes.io/component: measurement-analysis
+  template:
+    metadata:
+      labels: 
+        {{- include "common.labels.standard" ( dict "customLabels" $podLabels "context" $ ) | nindent 8 }}
+        app.kubernetes.io/component: measurement-analysis
+      annotations:
+        {{- if .Values.commonAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.measurementAnalysis.podAnnotations }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.measurementAnalysis.podAnnotations "context" .) | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- include "common.images.pullSecrets" ( dict "images" (list .Values.measurementAnalysis.image) "global" .Values.global) | nindent 6 }}
+      {{- if .Values.measurementAnalysis.affinity }}
+      affinity: {{- include "common.tplvalues.render" ( dict "value" .Values.measurementAnalysis.affinity "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.measurementAnalysis.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.measurementAnalysis.nodeSelector "context" .) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.measurementAnalysis.tolerations }}
+      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.measurementAnalysis.tolerations "context" .) | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: digma-measurement-analysis
+        image: {{ include "common.images.image" (dict "imageRoot" .Values.measurementAnalysis.image "global" .Values.global "chart" .Chart) }}
+        imagePullPolicy: {{ .Values.measurementAnalysis.image.pullPolicy }}
+        resources: {{- toYaml .Values.measurementAnalysis.resources | nindent 12 }}
+        ports:
+        - name: http
+          containerPort: {{ .Values.measurementAnalysis.service.ports.http }}
+        env:
+        {{- include "env.digma.app.common" . | nindent  8 }}
+        {{- include "env.redis" . | nindent  8 }}
+        {{- include "env.influx" . | nindent  8 }}
+        {{- include "env.postgres" . | nindent  8 }}
+        {{- include "env.kafka" . | nindent  8 }}
+        {{- include "env.jaeger" . | nindent  8 }}
+        - name: Kafka__SpanUpsertCG__Workers
+          value: '2'
+        - name: Kafka__AllMeasurementsCG__Workers
+          value: '2'
+        - name: ThresholdOptions__UpsertEndpointThresholdSeconds
+          value: {{ .Values.measurementAnalysis.env.ThresholdOptions__UpsertEndpointThresholdSeconds | quote }}
+        - name: ThresholdOptions__UpsertSpansThresholdSeconds
+          value: {{ .Values.measurementAnalysis.env.ThresholdOptions__UpsertSpansThresholdSeconds | quote }}
+        - name: ThresholdOptions__UpsertSpanFlowMetadataThresholdSeconds
+          value: {{ .Values.measurementAnalysis.env.ThresholdOptions__UpsertSpanFlowMetadataThresholdSeconds | quote }}
+        {{- if .Values.measurementAnalysis.extraEnvVars }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.measurementAnalysis.extraEnvVars "context" $) | nindent 8 }}
+        {{- end }}
+        {{- if not .Values.diagnosticMode.enabled }}
+        {{- if .Values.measurementAnalysis.livenessProbe.enabled }}
+        livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.measurementAnalysis.livenessProbe "enabled") "context" $) | nindent 10 }}
+          httpGet:
+            path: /healthz
+            port: http
+            scheme: HTTP
+        {{- end }}
+        {{- if .Values.measurementAnalysis.readinessProbe.enabled }}
+        readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.measurementAnalysis.readinessProbe "enabled") "context" $) | nindent 10 }}
+          httpGet:
+            path: /readiness
+            port: http
+            scheme: HTTP
+        {{- end }}  
+        {{- end }}        

@@ -1,4 +1,0 @@
-otlpExporter:
-  host: "localhost"
-
-expose: true

@@ -1,0 +1,33 @@
+{{- if .Values.jaeger.ingress.enabled }}
+apiVersion: {{ include "common.capabilities.ingress.apiVersion" . }}
+kind: Ingress
+metadata:
+  name: {{ include "digma.jaeger" . }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: jaeger
+  {{- if or .Values.jaeger.ingress.annotations .Values.commonAnnotations }}
+  {{- $annotations := include "common.tplvalues.merge" ( dict "values" ( list .Values.jaeger.ingress.annotations .Values.commonAnnotations ) "context" . ) }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if and .Values.jaeger.ingress.ingressClassName (include "common.ingress.supportsIngressClassname" .) }}
+  ingressClassName: {{ .Values.jaeger.ingress.ingressClassName | quote }}
+  {{- end }}
+  rules:
+    {{- if .Values.jaeger.ingress.hostname }}
+    - host: {{ tpl .Values.jaeger.ingress.hostname $ | quote }}
+      http:
+        paths:
+          {{- if .Values.jaeger.ingress.extraPaths }}
+          {{- toYaml .Values.jaeger.ingress.extraPaths | nindent 10 }}
+          {{- end }}
+          - path: {{ default "/" .Values.jaeger.ingress.path }}
+            {{- if eq "true" (include "common.ingress.supportsPathType" .) }}
+            pathType: {{ .Values.jaeger.ingress.pathType }}
+            {{- end }}
+            backend: {{- include "common.ingress.backend" (dict "serviceName" (include "digma.jaeger.ui" $) "servicePort" "http" "context" $)  | nindent 14 }}
+    {{- end }}
+    {{- if .Values.jaeger.ingress.extraRules }}
+    {{- include "common.tplvalues.render" (dict "value" .Values.jaeger.ingress.extraRules "context" $) | nindent 4 }}
+    {{- end }}
+{{- end }}

@@ -1,0 +1,24 @@
+{{- if eq "true" (include "digma.observability.enabled" .) }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "digma.otel-collector-df" . }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: otel-collector-df
+  {{- if or .Values.otelCollectorDf.service.annotations .Values.commonAnnotations }}
+  {{- $annotations := include "common.tplvalues.merge" ( dict "values" ( list .Values.otelCollectorDf.service.annotations .Values.commonAnnotations ) "context" . ) }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $) | nindent 4 }}
+  {{- end }}
+spec:
+  type: ClusterIP
+  {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.otelCollectorDf.podLabels .Values.commonLabels ) "context" . ) }}
+  selector: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: otel-collector-df
+  ports:
+  - name: grpc
+    protocol: TCP
+    port: {{ .Values.otelCollectorDf.service.ports.grpc }}
+  - name: prometheus-scraper
+    protocol: TCP
+    port: {{ .Values.otelCollectorDf.service.ports.prometheus_scraper }}
+{{- end }}

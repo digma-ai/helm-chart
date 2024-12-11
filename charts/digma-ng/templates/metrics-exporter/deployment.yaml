@@ -1,0 +1,66 @@
+{{- if eq "true" (include "digma.observability.enabled" .) }}
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ include "digma.k8s-metrics-exporter" . }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: k8s-metrics-exporter
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.metricsExporter.podLabels .Values.commonLabels ) "context" . ) }}
+  replicas: {{ include "replicas.value" (dict "value" .Values.metricsExporter.replicas "context" .) }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 6 }}
+      app.kubernetes.io/component: k8s-metrics-exporter
+  template:
+    metadata:
+      labels: 
+        {{- include "common.labels.standard" ( dict "customLabels" $podLabels "context" $ ) | nindent 8 }}
+        app.kubernetes.io/component: k8s-metrics-exporter
+      annotations:
+        {{- if .Values.commonAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.metricsExporter.podAnnotations }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.metricsExporter.podAnnotations "context" .) | nindent 8 }}
+        {{- end }}
+    spec:
+      serviceAccountName: {{ include "digma.k8s-metrics-exporter" . }}
+      {{- include "common.images.pullSecrets" ( dict "images" (list .Values.metricsExporter.image) "global" .Values.global) | nindent 6 }}
+      {{- if .Values.metricsExporter.affinity }}
+      affinity: {{- include "common.tplvalues.render" ( dict "value" .Values.metricsExporter.affinity "context" $) | nindent 8 }}
+      {{- end }}        
+      {{- if .Values.metricsExporter.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.metricsExporter.nodeSelector "context" .) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.metricsExporter.tolerations }}
+      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.metricsExporter.tolerations "context" .) | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: digma-k8s-metrics-exporter
+        image: {{ include "common.images.image" (dict "imageRoot" .Values.metricsExporter.image "global" .Values.global) }}
+        imagePullPolicy: {{ .Values.metricsExporter.image.pullPolicy }}
+        resources: {{- toYaml .Values.metricsExporter.resources | nindent 12 }}
+        env:
+        - name: KUBE_NAMESPACE
+          value: {{ .Release.Namespace }}
+        ports:
+        - name: http
+          containerPort: 9090 # hardcoded in image
+        {{- if not .Values.diagnosticMode.enabled }}
+        {{- if .Values.metricsExporter.livenessProbe.enabled }}
+        livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.metricsExporter.livenessProbe "enabled") "context" $) | nindent 10 }}
+          tcpSocket:
+            port: http
+        {{- end }}
+        {{- if .Values.metricsExporter.readinessProbe.enabled }}
+        readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.metricsExporter.readinessProbe "enabled") "context" $) | nindent 10 }}
+          httpGet:
+            path: /
+            port: http
+            scheme: HTTP
+        {{- end }}
+        {{- end }}
+{{- end }}

@@ -1,0 +1,72 @@
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ include "digma.collector-api" . }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: collector-api
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.collectorApi.podLabels .Values.commonLabels ) "context" . ) }}
+  replicas: {{ include "replicas.value" (dict "value" .Values.collectorApi.replicas "context" .) }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 6 }}
+      app.kubernetes.io/component: collector-api
+  template:
+    metadata:
+      labels: 
+        {{- include "common.labels.standard" ( dict "customLabels" $podLabels "context" $ ) | nindent 8 }}
+        app.kubernetes.io/component: collector-api
+      annotations:
+        {{- if .Values.commonAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.collectorApi.podAnnotations }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.collectorApi.podAnnotations "context" .) | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- include "common.images.pullSecrets" ( dict "images" (list .Values.collectorApi.image) "global" .Values.global) | nindent 6 }}
+      {{- if .Values.collectorApi.affinity }}
+      affinity: {{- include "common.tplvalues.render" ( dict "value" .Values.collectorApi.affinity "context" $) | nindent 8 }}
+      {{- end }}      
+      {{- if .Values.collectorApi.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.collectorApi.nodeSelector "context" .) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.collectorApi.tolerations }}
+      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.collectorApi.tolerations "context" .) | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: digma-collector-api
+        image: {{ include "common.images.image" (dict "imageRoot" .Values.collectorApi.image "global" .Values.global "chart" .Chart) }}
+        imagePullPolicy: {{ .Values.collectorApi.image.pullPolicy }}
+        resources: {{- toYaml .Values.collectorApi.resources | nindent 12 }}
+        ports:
+        - name: internal
+          containerPort: {{ .Values.collectorApi.service.ports.internal }}
+        - name: http
+          containerPort: {{ .Values.collectorApi.service.ports.http }}
+        - name: grpc
+          containerPort: {{ .Values.collectorApi.service.ports.grpc }}
+        env:
+        {{- include "env.digma.app.common" . | nindent  8 }}
+        {{- include "env.postgres" . | nindent  8 }}
+        {{- include "env.redis" . | nindent  8 }}
+        {{- include "env.kafka" . | nindent  8 }}
+        {{- include "env.jaeger" . | nindent  8 }}
+        {{- if not .Values.diagnosticMode.enabled }}
+        {{- if .Values.collectorApi.livenessProbe.enabled }}
+        livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.collectorApi.livenessProbe "enabled") "context" $) | nindent 10 }}
+          httpGet:
+            path: /healthz
+            port: http
+            scheme: HTTP
+        {{- end }}
+        {{- if .Values.collectorApi.readinessProbe.enabled }}
+        readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.collectorApi.readinessProbe "enabled") "context" $) | nindent 10 }}
+          httpGet:
+            path: /readiness
+            port: http
+            scheme: HTTP
+        {{- end }}      
+        {{- end }}  

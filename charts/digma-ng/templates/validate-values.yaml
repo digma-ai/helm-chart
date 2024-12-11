@@ -1,0 +1,6 @@
+{{- if and (eq .Values.observability.useLocal true)  (not (empty .Values.observability.otlp.remoteEndpoint)) }}
+{{ fail "Installation failed: 'observability.useLocal' is true while 'observability.otlp.remoteEndpoint' is set. This combination is not allowed." }}
+{{- end }}
+{{- if and (eq .Values.analyticsApi.secured true) (.Values.analyticsApi.ingress.enabled) }}
+{{ fail "Installation failed: 'analyticsApi.secured' is true while 'analyticsApi.ingress.enabled' is set to true. This combination is not allowed. " }}
+{{- end }}

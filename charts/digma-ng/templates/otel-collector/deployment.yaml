@@ -1,0 +1,81 @@
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ include "digma.otel-collector" . }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: otel-collector
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.otelCollector.podLabels .Values.commonLabels ) "context" . ) }}
+  replicas: {{ include "replicas.value" (dict "value" .Values.otelCollector.replicas "context" .) }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 6 }}
+      app.kubernetes.io/component: otel-collector
+  template:
+    metadata:
+      labels: 
+        {{- include "common.labels.standard" ( dict "customLabels" $podLabels "context" $ ) | nindent 8 }}
+        app.kubernetes.io/component: otel-collector
+      annotations:
+        {{- if .Values.commonAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.otelCollector.podAnnotations }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.otelCollector.podAnnotations "context" .) | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- include "common.images.pullSecrets" ( dict "images" (list .Values.otelCollector.image) "global" .Values.global) | nindent 6 }}
+      {{- if .Values.otelCollector.affinity }}
+      affinity: {{- include "common.tplvalues.render" ( dict "value" .Values.otelCollector.affinity "context" $) | nindent 8 }}
+      {{- end }}        
+      {{- if .Values.otelCollector.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.otelCollector.nodeSelector "context" .) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.otelCollector.tolerations }}
+      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.otelCollector.tolerations "context" .) | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: otel-collector
+        image: {{ include "common.images.image" ( dict "imageRoot" .Values.otelCollector.image "global" .Values.global) }}
+        imagePullPolicy: {{ .Values.otelCollector.image.pullPolicy }}
+        args:
+          - --config=/conf/collector.yaml
+        resources: {{- toYaml .Values.otelCollector.resources | nindent 12 }}
+        ports:
+        - name: health
+          containerPort: {{ .Values.otelCollector.service.ports.health }}
+        env:
+        - name: K8S_NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        
+        volumeMounts:
+          - name: config
+            mountPath: /conf
+            readOnly: true
+        {{- if not .Values.diagnosticMode.enabled }}
+        {{- if .Values.otelCollector.livenessProbe.enabled }}
+        livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.otelCollector.livenessProbe "enabled") "context" $) | nindent 10 }}
+          tcpSocket:
+            port: health
+        {{- end }}
+        {{- if .Values.otelCollector.readinessProbe.enabled }}
+        readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.otelCollector.readinessProbe "enabled") "context" $) | nindent 10 }}
+          httpGet:
+            path: /
+            port: health
+            scheme: HTTP
+        {{- end }}
+        {{- end }}
+      volumes:
+        - name: config # volume name
+          configMap:
+            name: {{ include "otel-collector.configmapName" . }}
+            items:
+              - key: {{ include "otel-collector.configmapKey" . }}
+                path: "collector.yaml"
+
+

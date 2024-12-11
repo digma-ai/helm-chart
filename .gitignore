@@ -1,1 +1,4 @@
-*-values.yaml
+# editor and IDE paraphernalia
+.idea
+.vscode
+.DS_Store

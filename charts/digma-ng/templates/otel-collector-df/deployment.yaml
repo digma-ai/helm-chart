@@ -1,0 +1,82 @@
+{{- if eq "true" (include "digma.observability.enabled" .) }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "digma.otel-collector-df" . }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: otel-collector-df
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.otelCollectorDf.podLabels .Values.commonLabels ) "context" . ) }}
+  replicas: {{ include "replicas.value" (dict "value" .Values.otelCollectorDf.replicas "context" .) }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 6 }}
+      app.kubernetes.io/component: otel-collector-df
+  template:
+    metadata:
+      labels: 
+        {{- include "common.labels.standard" ( dict "customLabels" $podLabels "context" $ ) | nindent 8 }}
+        app.kubernetes.io/component: otel-collector-df
+      annotations:
+        {{- if .Values.commonAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.otelCollectorDf.podAnnotations }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.otelCollectorDf.podAnnotations "context" .) | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- include "common.images.pullSecrets" ( dict "images" (list .Values.otelCollectorDf.image) "global" .Values.global) | nindent 6 }}
+      {{- if .Values.otelCollectorDf.affinity }}
+      affinity: {{- include "common.tplvalues.render" ( dict "value" .Values.otelCollectorDf.affinity "context" $) | nindent 8 }}
+      {{- end }}  
+      {{- if .Values.otelCollectorDf.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.otelCollectorDf.nodeSelector "context" .) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.otelCollectorDf.tolerations }}
+      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.otelCollectorDf.tolerations "context" .) | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: otel-collector-df
+        image: {{ include "common.images.image" ( dict "imageRoot" .Values.otelCollectorDf.image "global" .Values.global) }}
+        imagePullPolicy: {{ .Values.otelCollectorDf.image.pullPolicy }}
+        args:
+        - --config=/conf/collector.yaml
+        resources: {{- toYaml .Values.otelCollectorDf.resources | nindent 12 }}
+        env:
+        - name: K8S_NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        ports:
+        - name: health
+          containerPort: {{ .Values.otelCollectorDf.service.ports.health }}
+        - name: grpc
+          containerPort: {{ .Values.otelCollectorDf.service.ports.grpc }}
+        volumeMounts:
+          - name: vn-config
+            mountPath: /conf
+            readOnly: true
+        {{- if not .Values.diagnosticMode.enabled }}
+        {{- if .Values.otelCollectorDf.livenessProbe.enabled }}
+        livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.otelCollectorDf.livenessProbe "enabled") "context" $) | nindent 10 }}
+          tcpSocket:
+            port: health
+        {{- end }}
+        {{- if .Values.otelCollectorDf.readinessProbe.enabled }}
+        readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.otelCollectorDf.readinessProbe "enabled") "context" $) | nindent 10 }}
+          httpGet:
+            path: /
+            port: health
+            scheme: HTTP
+        {{- end }}
+        {{- end }}
+      volumes:
+        - name: vn-config # volume name
+          configMap:
+            name: {{ include "digma.otel-collector-df" . }}
+            items:
+              - key: "config.yaml"
+                path: "collector.yaml"
+{{- end }}

@@ -1,0 +1,42 @@
+{{ template "chart.header" . }}
+
+{{ template "chart.deprecationWarning" . }}
+
+{{ template "chart.badgesSection" . }}
+
+{{ template "chart.description" . }}
+
+{{ template "chart.homepageLine" . }}
+
+{{ template "chart.maintainersSection" . }}
+
+{{ template "chart.sourcesSection" . }}
+
+## TL;DR
+
+```console
+helm repo add digma https://digma-ai.github.io/helm-chart/
+helm repo update
+helm dependencies build
+kubectl create namespace digma
+helm upgrade --install digma digma/digma-ng -n digma
+
+```
+## Introduction
+
+This chart bootstraps a [Digma](https://digma.ai) deployment on a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
+
+
+## Prerequisites
+
+- Kubernetes 1.23+
+- Helm 3.8.0+
+
+## Installing the Chart
+
+To install the chart with the release name `my-release`:
+```console
+helm install my-release 
+```
+{{ template "chart.valuesSection" . }}
+{{ template "chart.requirementsSection" . }}

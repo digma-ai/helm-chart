@@ -1,0 +1,22 @@
+{{- if eq "true" (include "digma.observability.enabled" .) }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "digma.k8s-metrics-exporter" . }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: k8s-metrics-exporter
+  {{- if or .Values.metricsExporter.service.annotations .Values.commonAnnotations }}
+  {{- $annotations := include "common.tplvalues.merge" ( dict "values" ( list .Values.metricsExporter.service.annotations .Values.commonAnnotations ) "context" . ) }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $) | nindent 4 }}
+  {{- end }}
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      protocol: TCP
+      port: {{ .Values.metricsExporter.service.ports.http }}
+      targetPort: http
+  {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.metricsExporter.podLabels .Values.commonLabels ) "context" . ) }}
+  selector: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: k8s-metrics-exporter
+{{- end }}
