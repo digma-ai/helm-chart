@@ -1835,7 +1835,7 @@ kafka:
     # @section -- Kafka parameters
     replicaCount: 1
     resources:
-      requests:
+      requests1:
         memory: 400Mi
         cpu: 200m
       limits: 
