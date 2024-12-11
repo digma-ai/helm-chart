@@ -18,6 +18,9 @@ jobs:
           curl -LO https://github.com/instrumenta/kubeval/releases/latest/download/kubeval-linux-amd64.tar.gz
           tar xf kubeval-linux-amd64.tar.gz
           sudo mv kubeval /usr/local/bin
+      - name: Helm dependency update
+        run: |
+            helm dependency update ./charts/digma-ng
       - name: Run Helm Lint
         run: |
           helm lint ./charts/digma-ng --set digma.licenseKey="dummy-license-key"
