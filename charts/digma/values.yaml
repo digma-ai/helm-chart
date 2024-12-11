@@ -2,7 +2,7 @@ debug: false
 
 size: medium # small | medium | large
 presets:
-  small1:
+  small:
     digmaCollectorWorker:
       replicas: 1
     digmaMeasurementAnalysis: 
@@ -44,7 +44,7 @@ kafka:
       memory: 400Mi,
       cpu: 200m
     },
-    limits1: {
+    limits: {
       memory: 3Gi,
       cpu: 1000m
     }

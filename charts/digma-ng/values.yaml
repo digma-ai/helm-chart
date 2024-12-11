@@ -115,10 +115,10 @@ collectorWorker:
   # @section -- CollectorWorker parameters
   replicas: "{{ index .Values.presets .Values.digma.deployment.size \"collectorWorker\" \"replicas\" }}"
   resources: 
-    requests: 
+    requests1: 
       memory: 300Mi
       cpu: 300m
-    limits: 
+    limits1: 
       memory: 600Mi
       cpu: 600m
   service:
