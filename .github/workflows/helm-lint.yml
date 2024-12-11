@@ -23,7 +23,7 @@ jobs:
       # Run kubeval for Kubernetes Manifest Validation
       - name: Validate Kubernetes Manifests
         run: |
-          helm template ./charts/digma | kubeval --strict
+          helm template ./charts/digma --set digma.licenseKey="dummy-license-key" | kubeval --strict
       # Optional: Dry run with a Kubernetes cluster
       - name: Dry Run Deployment
         run: |
