@@ -1,4 +1,4 @@
-name: Lint Helm Charts - OLD
+name: Lint Helm Charts - OLD Digma Chart
 
 on: [pull_request]
 
@@ -8,32 +8,24 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
       - name: Install Helm
         run: |
           curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
-            # Install kubeval
-      - name: Install kubeval
+      # Install kubeval
+      - name: Install kubeconform
         run: |
-          curl -LO https://github.com/instrumenta/kubeval/releases/latest/download/kubeval-linux-amd64.tar.gz
-          tar xf kubeval-linux-amd64.tar.gz
-          sudo mv kubeval /usr/local/bin
-      - name: Run Helm Lint
+            curl -L https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz | tar xvzf - && \
+            sudo mv kubeconform /usr/local/bin/ 
+      - name: Run Helm Lint #validates the chart structure and Helm-specific syntax.
         run: |
           helm lint ./charts/digma --set digma.licenseKey="dummy-license-key"
-      # Validate YAML Syntax with yamllint
-      # - name: Validate YAML Files
-      #   uses: super-linter/super-linter@v7.2.0
-      #   with:
-      #     languages: "yaml"
-      # Run kubeval for Kubernetes Manifest Validation
-      - name: Validate Kubernetes Manifests
-        run: |
-          helm template ./charts/digma | kubeval --strict
-      
-      - name: Create k8s Kind Cluster
+      - name: Validate Kubernetes Manifests #ensuring templates render without errors, kubeconform validates the rendered manifests against Kubernetes API schemas, ensuring they are deployable
+        run: | 
+          set -e
+          helm template my-release ./charts/digma --set digma.licenseKey="dummy-license-key" > output.yaml
+          kubeconform -strict output.yaml
+      - name: Create k8s Kind Cluster # checking that resource dependencies are properly resolved (e.g., Secrets, ConfigMaps),close to real-world deployment.
         uses: helm/kind-action@v1 
-      # Optional: Dry run with a Kubernetes cluster
       - name: Dry Run Deployment
         run: |
           helm upgrade --install my-release ./charts/digma --dry-run --debug --set digma.licenseKey="dummy-license-key"

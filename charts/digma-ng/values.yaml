@@ -922,8 +922,8 @@ pipelineWorker:
   # @section -- PipelineWorker parameters
   replicas: "{{ index .Values.presets .Values.digma.deployment.size \"pipelineWorker\" \"replicas\" }}"
   resources: 
-    requestss: 
-      memorys: 100v
+    requests: 
+      memory: 100Mi
       cpu: 50m
     limits: 
       memory: 400Mi
@@ -1835,12 +1835,12 @@ kafka:
     # @section -- Kafka parameters
     replicaCount: 1
     resources:
-      requestsd:
-        memoryd: 400c
-        cpu: 200c
+      requests:
+        memory: 400Mi
+        cpu: 200m
       limits: 
-        memory: 3c
-        cpu: 1000c
+        memory: 3Gi
+        cpu: 1000m
     ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
     # -- Extra labels for pods
     # @section -- Kafka parameters
