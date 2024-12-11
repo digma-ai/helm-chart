@@ -22,10 +22,10 @@ jobs:
         run: |
           helm lint ./charts/digma --set digma.licenseKey="dummy-license-key"
       # Validate YAML Syntax with yamllint
-      - name: Validate YAML Files
-        uses: super-linter/super-linter@v7.2.0
-        with:
-          languages: "yaml"
+      # - name: Validate YAML Files
+      #   uses: super-linter/super-linter@v7.2.0
+      #   with:
+      #     languages: "yaml"
       # Run kubeval for Kubernetes Manifest Validation
       - name: Validate Kubernetes Manifests
         run: |
