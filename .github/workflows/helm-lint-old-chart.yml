@@ -1,10 +1,6 @@
 name: Lint Helm Charts - OLD Digma Chart
 
-on:
-  workflow_run:
-    workflows: ["Validate PR"]
-    types:
-      - completed
+on: [pull_request]
 
 jobs:
   lint-helm:
