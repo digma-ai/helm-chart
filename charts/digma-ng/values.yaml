@@ -1835,12 +1835,12 @@ kafka:
     # @section -- Kafka parameters
     replicaCount: 1
     resources:
-      requests1:
-        memory: 400Mi
-        cpu: 200m
+      requestsd:
+        memoryd: 400c
+        cpu: 200c
       limits: 
-        memory: 3Gi
-        cpu: 1000m
+        memory: 3c
+        cpu: 1000c
     ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
     # -- Extra labels for pods
     # @section -- Kafka parameters
