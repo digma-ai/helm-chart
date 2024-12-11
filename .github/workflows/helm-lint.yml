@@ -12,6 +12,12 @@ jobs:
       - name: Install Helm
         run: |
           curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+            # Install kubeval
+      - name: Install kubeval
+        run: |
+          curl -LO https://github.com/instrumenta/kubeval/releases/latest/download/kubeval-linux-amd64.tar.gz
+          tar xf kubeval-linux-amd64.tar.gz
+          sudo mv kubeval /usr/local/bin
       - name: Run Helm Lint
         run: |
           helm lint ./charts/digma --set digma.licenseKey="dummy-license-key"
@@ -23,7 +29,7 @@ jobs:
       # Run kubeval for Kubernetes Manifest Validation
       - name: Validate Kubernetes Manifests
         run: |
-          helm template ./charts/digma --set digma.licenseKey="dummy-license-key" | kubeval --strict
+          helm template ./charts/digma | kubeval --strict
       # Optional: Dry run with a Kubernetes cluster
       - name: Dry Run Deployment
         run: |
