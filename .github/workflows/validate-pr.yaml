@@ -1,4 +1,4 @@
-name: Validate Pull Request
+name: Validate PR
 
 on:
   pull_request:
@@ -18,7 +18,7 @@ jobs:
           fetch-depth: 0
 
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.7.0
+        uses: helm/chart-testing-action@v2.6.1
 
       - name: Validate PR
         run: scripts/validate-pr.sh
