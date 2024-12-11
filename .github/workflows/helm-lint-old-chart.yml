@@ -1,4 +1,4 @@
-name: Lint Helm Charts
+name: Lint Helm Charts - OLD
 
 on: [push, pull_request]
 
