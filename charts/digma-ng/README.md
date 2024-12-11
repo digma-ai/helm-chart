@@ -6,14 +6,21 @@ A Helm chart containing Digma's services
 
 **Homepage:** <https://github.com/digma-ai/digma>
 
-## TL;DR
+## License Key
+Digma will not function without a valid license key.
+You can obtain a license key by signing up for a free account using this [link](https://digma.ai/sign-up/).
 
+## Applying the License Key
+To apply the license key, set the digma.licenseKey value in your Helm chart to the key provided by Digma.
+
+## TL;DR
 ```console
 helm repo add digma https://digma-ai.github.io/helm-chart/
 helm repo update
 helm dependencies build
 kubectl create namespace digma
-helm upgrade --install digma digma/digma-ng -n digma
+DIGMA_LICENSE='XXX' # license key provided by Digma
+helm upgrade --install digma digma/digma-ng -n digma --set digma.licenseKey=$DIGMA_LICENSE
 
 ```
 ## Introduction
@@ -26,10 +33,17 @@ This chart bootstraps a [Digma](https://digma.ai) deployment on a [Kubernetes](h
 - Helm 3.8.0+
 
 ## Installing the Chart
-
-To install the chart with the release name `my-release`:
+1. Create a local `myvalues.yaml` file that contains the default values.
+2. Set a valid Digma license key in the myvalues.yaml file
+3. Deploy the Digma Helm chart to your Kubernetes cluster.
+To install the chart with the release name `digma`:
 ```console
-helm install my-release
+helm repo add digma https://digma-ai.github.io/helm-chart/
+helm repo update
+helm dependencies build
+kubectl create namespace digma
+helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
+
 ```
 ## Values
 
