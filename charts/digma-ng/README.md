@@ -9,11 +9,11 @@ A Helm chart containing Digma's services
 ## License Key
 Digma will not function without a valid license key.
 You can obtain a license key by signing up for a free account using this [link](https://digma.ai/sign-up/).
-## TL;DR
 
 ## Applying the License Key
 To apply the license key, set the digma.licenseKey value in your Helm chart to the key provided by Digma.
 
+## TL;DR
 ```console
 helm repo add digma https://digma-ai.github.io/helm-chart/
 helm repo update
