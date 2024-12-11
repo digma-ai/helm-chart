@@ -31,9 +31,13 @@ jobs:
           python .github/scripts/version_updater.py "${{ github.event.inputs.app_version }}" 'charts/digma/Chart.yaml'
           python .github/scripts/version_updater.py "${{ github.event.inputs.app_version }}" 'charts/digma-ng/Chart.yaml'
           VERSION=$(curl -s https://api.github.com/repos/norwoodj/helm-docs/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+          mkdir tmp
+          cd tmp
           curl -sL "https://github.com/norwoodj/helm-docs/releases/download/${VERSION}/helm-docs_${VERSION:1}_Linux_x86_64.tar.gz" -o helm-docs.tar.gz
           tar -xzf helm-docs.tar.gz
           sudo mv helm-docs /usr/local/bin/helm-docs
+          cd ..
+          rm -r tmp
           ./scripts/generate-docs.sh
       - name: Commit and Push
         run: |
