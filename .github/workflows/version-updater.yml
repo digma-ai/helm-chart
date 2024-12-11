@@ -29,6 +29,7 @@ jobs:
       - name: Run Python script
         run: |
           python .github/scripts/version_updater.py "${{ github.event.inputs.app_version }}" 'charts/digma/Chart.yaml'
+          python .github/scripts/version_updater.py "${{ github.event.inputs.app_version }}" 'charts/digma-ng/Chart.yaml'
       - name: Commit and Push
         run: |
           git config --global user.name 'github-actions[bot]'
