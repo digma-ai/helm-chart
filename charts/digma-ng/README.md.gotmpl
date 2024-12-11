@@ -11,15 +11,21 @@
 {{ template "chart.maintainersSection" . }}
 
 {{ template "chart.sourcesSection" . }}
-
+## License Key
+Digma will not function without a valid license key.
+You can obtain a license key by signing up for a free account using this [link](https://digma.ai/sign-up/).
 ## TL;DR
+
+## Applying the License Key
+To apply the license key, set the digma.licenseKey value in your Helm chart to the key provided by Digma.
 
 ```console
 helm repo add digma https://digma-ai.github.io/helm-chart/
 helm repo update
 helm dependencies build
 kubectl create namespace digma
-helm upgrade --install digma digma/digma-ng -n digma
+DIGMA_LICENSE='XXX' # license key provided by Digma
+helm upgrade --install digma digma/digma-ng -n digma --set digma.licenseKey=$DIGMA_LICENSE
 
 ```
 ## Introduction
