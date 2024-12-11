@@ -32,7 +32,7 @@ jobs:
       # Run kubeval for Kubernetes Manifest Validation
       - name: Validate Kubernetes Manifests
         run: |
-          helm template ./charts/digma-ng > output.yaml
+          helm template --set digma.licenseKey="dummy-license-key" ./charts/digma-ng > output.yaml
           kubeval output.yaml --strict
           kubectl apply --dry-run=client -f output.yaml
      # - name: Create k8s Kind Cluster
