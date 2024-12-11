@@ -15,7 +15,6 @@ jobs:
 
       - name: Run Helm Lint
         run: |
-          helm dependency update ./charts/digma
           helm lint ./charts/digma --set digma.licenseKey="dummy-license-key"
       - name: Run Helm Lint (NG)
         run: |
