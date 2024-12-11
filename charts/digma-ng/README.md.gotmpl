@@ -39,10 +39,17 @@ This chart bootstraps a [Digma](https://digma.ai) deployment on a [Kubernetes](h
 - Helm 3.8.0+
 
 ## Installing the Chart
-
-To install the chart with the release name `my-release`:
+1. Create a local `myvalues.yaml` file that contains the default values.
+2. Set a valid Digma license key in the myvalues.yaml file
+3. Deploy the Digma Helm chart to your Kubernetes cluster.
+To install the chart with the release name `digma`:
 ```console
-helm install my-release 
+helm repo add digma https://digma-ai.github.io/helm-chart/
+helm repo update
+helm dependencies build
+kubectl create namespace digma
+helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
+
 ```
 {{ template "chart.valuesSection" . }}
 {{ template "chart.requirementsSection" . }}
