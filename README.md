@@ -13,6 +13,5 @@
 # Central (on-prem) Install
 ### [In this simple guide](https://docs.digma.ai/digma-developer-guide/installation/central-on-prem-install), we’ll go over the basic steps required to move beyond local deployment and get Digma up and running in a Kubernetes cluster that multiple people can connect to.
 
-
 ## User Guide
-Switch to the `gh-pages` branch to see the [full user guide](https://github.com/digma-ai/helm-chart/tree/gh-pages).
+The actual chart can be found in the [charts](charts/digma-ng) directory and see the README of the chart for more information.
