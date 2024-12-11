@@ -95,7 +95,7 @@ jaeger:
     annotations:
       alb.ingress.kubernetes.io/load-balancer-name: "{{ .Release.Name }}-digma-public"
       alb.ingress.kubernetes.io/scheme: internet-facing
-      alb.ingress.kubernetes.io/target-type: ip #facilitating efficient load balancing for services exposed via ClusterIP
+      alb.ingress.kubernetes.io/target-type: ip
       alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]'
       alb.ingress.kubernetes.io/certificate-arn:
       alb.ingress.kubernetes.io/group.name: "{{ .Release.Name }}-digma-public"
