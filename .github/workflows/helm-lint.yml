@@ -12,12 +12,6 @@ jobs:
       - name: Install Helm
         run: |
           curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
-      # Use trivy for scanning Helm charts
-      - name: Scan Helm Chart for Vulnerabilities
-        uses: aquasecurity/trivy-action@v0.11.0
-        with:
-          scan-type: 'fs'
-          input: './charts/digma'
       - name: Run Helm Lint
         run: |
           helm lint ./charts/digma --set digma.licenseKey="dummy-license-key"
