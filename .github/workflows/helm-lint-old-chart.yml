@@ -1,6 +1,6 @@
 name: Lint Helm Charts - OLD
 
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
   lint-helm:
