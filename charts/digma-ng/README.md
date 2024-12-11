@@ -17,7 +17,6 @@ To apply the license key, set the digma.licenseKey value in your Helm chart to t
 ```console
 helm repo add digma https://digma-ai.github.io/helm-chart/
 helm repo update
-helm dependencies build
 kubectl create namespace digma
 DIGMA_LICENSE='XXX' # license key provided by Digma
 helm upgrade --install digma digma/digma-ng -n digma --set digma.licenseKey=$DIGMA_LICENSE
@@ -40,7 +39,6 @@ To install the chart with the release name `digma`:
 ```console
 helm repo add digma https://digma-ai.github.io/helm-chart/
 helm repo update
-helm dependencies build
 kubectl create namespace digma
 helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 
