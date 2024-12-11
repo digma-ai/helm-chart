@@ -1,4 +1,4 @@
-name: Lint Helm Charts
+name: Lint Helm Charts - OLD Digma Chart
 
 on: [pull_request]
 
@@ -15,20 +15,11 @@ jobs:
         run: |
             curl -L https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz | tar xvzf - && \
             sudo mv kubeconform /usr/local/bin/ 
-      - name: Helm dependency update
-        run: |
-            helm dependency update ./charts/digma-ng
       - name: Run Helm Lint #validates the chart structure and Helm-specific syntax.
         run: |
-          helm lint ./charts/digma-ng --set digma.licenseKey="dummy-license-key"
+          helm lint ./charts/digma --set digma.licenseKey="dummy-license-key"
       - name: Validate Kubernetes Manifests #ensuring templates render without errors, kubeconform validates the rendered manifests against Kubernetes API schemas, ensuring they are deployable
         run: | 
           set -e
-          helm template my-release ./charts/digma-ng --set digma.licenseKey="dummy-license-key" > output.yaml
+          helm template my-release ./charts/digma --set digma.licenseKey="dummy-license-key" > output.yaml
           kubeconform -strict output.yaml
-      # - name: Create k8s Kind Cluster # checking that resource dependencies are properly resolved (e.g., Secrets, ConfigMaps),close to real-world deployment.
-      #   uses: helm/kind-action@v1 
-      # - name: Dry Run Deployment
-      #   run: |
-      #     helm upgrade --install my-release ./charts/digma-ng --dry-run --debug --set digma.licenseKey="dummy-license-key"
-
