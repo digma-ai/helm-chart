@@ -33,5 +33,5 @@ jobs:
       # Optional: Dry run with a Kubernetes cluster
       - name: Dry Run Deployment
         run: |
-          helm upgrade --install my-release ./charts/digma --dry-run --debug --set digma.licenseKey="dummy-license-key"
+          helm upgrade --install my-release ./charts/digma --dry-run --debug --kube-context=dummy --set digma.licenseKey="dummy-license-key"
 
