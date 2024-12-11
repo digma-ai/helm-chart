@@ -27,6 +27,7 @@ jobs:
           set -e
           helm template my-release ./charts/digma-ng --set digma.licenseKey="dummy-license-key" > output.yaml
           kubeconform -strict output.yaml
+
       # - name: Create k8s Kind Cluster # checking that resource dependencies are properly resolved (e.g., Secrets, ConfigMaps),close to real-world deployment.
       #   uses: helm/kind-action@v1 
       # - name: Dry Run Deployment
