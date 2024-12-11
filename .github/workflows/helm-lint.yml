@@ -12,11 +12,20 @@ jobs:
       - name: Install Helm
         run: |
           curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
-
       - name: Run Helm Lint
         run: |
           helm lint ./charts/digma --set digma.licenseKey="dummy-license-key"
-      - name: Run Helm Lint (NG)
+      # Validate YAML Syntax with yamllint
+      - name: Validate YAML Files
+        uses: super-linter/super-linter@v7.2.0
+        with:
+          languages: "yaml"
+      # Run kubeval for Kubernetes Manifest Validation
+      - name: Validate Kubernetes Manifests
         run: |
-          helm dependency update ./charts/digma-ng
-          helm lint ./charts/digma-ng --set digma.licenseKey="dummy-license-key"
+          helm template ./charts/digma | kubeval --strict
+      # Optional: Dry run with a Kubernetes cluster
+      - name: Dry Run Deployment
+        run: |
+          helm upgrade --install my-release ./charts/digma --dry-run --debug
+

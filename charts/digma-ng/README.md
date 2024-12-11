@@ -494,7 +494,7 @@ helm install my-release
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| kafka.extraConfig | string | `"offsets.topic.replication.factor=1\n"` | Additional configuration to be appended at the end of the generated Kafka configuration file. |
+| kafka.extraConfig | string | `"offsets.topic.replication.factor=1\n"` | Number of Kafka controller-eligible nodes |
 
 ### Kafka parameters
 
