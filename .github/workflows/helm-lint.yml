@@ -27,16 +27,20 @@ jobs:
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
       - name: Install kubeconform
+        if: steps.list-changed.outputs.changed == 'true'
         run: |
             curl -L https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz | tar xvzf - && \
             sudo mv kubeconform /usr/local/bin/ 
       - name: Helm dependency update
+        if: steps.list-changed.outputs.changed == 'true'
         run: |
             helm dependency update ./charts/digma-ng
       - name: Run Helm Lint #validates the chart structure and Helm-specific syntax.
+        if: steps.list-changed.outputs.changed == 'true'
         run: |
           helm lint ./charts/digma-ng --set digma.licenseKey="dummy-license-key"
       - name: Validate Kubernetes Manifests #ensuring templates render without errors, kubeconform validates the rendered manifests against Kubernetes API schemas, ensuring they are deployable
+        if: steps.list-changed.outputs.changed == 'true'
         run: | 
           set -e
           helm template my-release ./charts/digma-ng --set digma.licenseKey="dummy-license-key" > output.yaml
