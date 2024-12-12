@@ -177,7 +177,7 @@ Return influx connectivity env
 */}}
 {{- define "env.influx" -}}
 - name: influx2__Url
-  value: {{ printf "http://%s:%v" (include "digma.influx.fullname" .) .Values.influxdb.service.ports.http }}
+  value: {{ printf "http://%s:%v" (include "digma.influx.fullname" .) .Values.influxdb.influxdb.service.ports.http }}
 {{- end -}}
 
 {{/*

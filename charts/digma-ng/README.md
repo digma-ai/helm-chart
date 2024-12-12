@@ -418,11 +418,11 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| influxdb.podLabels | object | `{}` | Extra labels for pods |
-| influxdb.podAnnotations | object | `{}` | Extra annotations for pods |
-| influxdb.nodeSelector | object | `{}` | Node labels for pods assignment |
-| influxdb.tolerations | list | `[]` | Tolerations for pods assignment |
-| influxdb.affinity | object | `{}` | Affinity for pods assignment |
+| influxdb.influxdb.podLabels | object | `{}` | Extra labels for pods |
+| influxdb.influxdb.podAnnotations | object | `{}` | Extra annotations for pods |
+| influxdb.influxdb.nodeSelector | object | `{}` | Node labels for pods assignment |
+| influxdb.influxdb.tolerations | list | `[]` | Tolerations for pods assignment |
+| influxdb.influxdb.affinity | object | `{}` | Affinity for pods assignment |
 
 ### Postgresql parameters
 
