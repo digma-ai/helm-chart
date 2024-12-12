@@ -240,6 +240,37 @@ otelCollector:
     # -- image pull secrets
     # @section -- Otel Collector parameters
     pullSecrets: []
+  # -- This content will be stored in the the config.yaml file and the content can be a template.
+  # @section -- Otel Collector parameters
+  configuration: |
+    extensions:
+      health_check:
+        endpoint: "0.0.0.0:{{ .Values.otelCollector.service.ports.health }}"
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:{{ .Values.otelCollector.service.ports.grpc }}
+          http:
+            endpoint: 0.0.0.0:{{ .Values.otelCollector.service.ports.http }}
+    processors:
+      batch:
+      probabilistic_sampler:
+        sampling_percentage: {{ .Values.otelCollector.samplingPercentage }}
+    exporters:
+      logging:
+        loglevel: debug
+      otlphttp:
+        endpoint: http://{{ include "digma.collector-api" . }}:{{ .Values.collectorApi.service.ports.http }}
+        tls:
+          insecure: true
+    service:
+      extensions: [health_check]
+      pipelines:
+        traces:
+          receivers: [otlp]
+          processors: [batch, probabilistic_sampler]
+          exporters: [otlphttp, logging]
   # -- Number of replicas to deploy
   # @section -- Otel Collector parameters
   replicas: 1
@@ -1277,6 +1308,70 @@ otelCollectorDf:
     # -- image pull secrets
     # @section -- Otel CollectorDF parameters
     pullSecrets: []
+  configuration: |
+    extensions:
+      health_check:
+        endpoint: "0.0.0.0:{{ .Values.otelCollectorDf.service.ports.health }}"
+    receivers:
+      otlp:
+        protocols: 
+          grpc:
+            endpoint: 0.0.0.0:{{ .Values.otelCollectorDf.service.ports.grpc }}
+      kafkametrics:
+        protocol_version: 2.0.0
+        collection_interval: 10s
+        brokers: [{{include "digma.kafka.client" .}}]
+        scrapers:
+          - brokers
+          - topics
+          - consumers
+      prometheus/k8s_metrics:
+        config:
+          scrape_configs:
+            - job_name: k8s-metrics
+              scrape_interval: 5s
+              static_configs:
+                - targets: [{{ include "digma.k8s-metrics-exporter-target" .}}]
+    processors:
+      batch:
+      attributes/add_source_env:
+        actions:
+          - key: source_env
+            value: {{.Values.observability.environmentName}}
+            action: insert
+
+    exporters:
+      logging:
+        verbosity: detailed
+      {{- if eq .Values.observability.useLocal true }}
+      prometheus:
+        endpoint: 0.0.0.0:{{ .Values.otelCollectorDf.service.ports.prometheus_scraper }}
+        send_timestamps: true
+        metric_expiration: 10m
+      {{- else }}
+      otlp:
+        endpoint: {{.Values.observability.otlp.remoteEndpoint}}
+      {{- end }}
+
+    service:
+      extensions: [health_check]
+      pipelines:
+        {{- if eq .Values.observability.useLocal true }}
+        metrics:
+          receivers: [otlp, kafkametrics, prometheus/k8s_metrics]
+          processors: [attributes/add_source_env, batch]
+          exporters: [prometheus]
+        {{- else }}
+        traces:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [otlp]
+        metrics:
+          receivers: [otlp, kafkametrics, prometheus/k8s_metrics]
+          processors: [attributes/add_source_env, batch]
+          exporters: [otlp]
+        {{- end }}
+
   # -- Number of replicas to deploy
   # @section -- Otel CollectorDF parameters
   replicas: 1
@@ -1826,10 +1921,6 @@ prometheus:
 kafka:
   kraft:
     clusterId: h4U35I9QRnGhbgsEQAlXAw
-  # -- Additional configuration to be appended at the end of the generated Kafka configuration file.
-  # @section -- Kafka parameters    
-  extraConfig: |
-      offsets.topic.replication.factor=1
   controller:
     # -- Number of Kafka controller-eligible nodes
     # @section -- Kafka parameters
@@ -1841,6 +1932,12 @@ kafka:
       limits: 
         memory: 3Gi
         cpu: 1000m
+    # -- Additional configuration to be appended at the end of the generated Kafka configuration file.
+    # @section -- Kafka parameters    
+    extraConfig: |
+      offsets.topic.replication.factor=1
+      transaction.state.log.replication.factor=1
+
     ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
     # -- Extra labels for pods
     # @section -- Kafka parameters
