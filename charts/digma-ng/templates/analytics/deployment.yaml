@@ -53,7 +53,7 @@ spec:
         - name: GlobalExceptionSettings__ExposeInternalDetails
           value: "true"
         - name: Analytics.Endpoints__Default__Secured
-          value: {{ .Values.analyticsApi.secured | quote }}
+          value: {{ if .Values.analyticsApi.ingress.enabled }}"false"{{ else }}{{ .Values.analyticsApi.secured | quote }}{{ end }}
         - name: CollectorUrl
           value: http://{{(include "digma.collector-api" $)}}:{{ .Values.collectorApi.service.ports.internal }}
         {{- if .Values.digma.accessToken }}

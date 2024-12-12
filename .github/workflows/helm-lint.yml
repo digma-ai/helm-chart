@@ -8,20 +8,39 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      - name: Install Helm
+        with:
+          fetch-depth: 0
+      - name: Set up Helm
+        uses: azure/setup-helm@v4.2.0
+        with:
+          version: v3.14.4
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2.6.1
+        with:
+          version: v3.10.1
+      - name: Run chart-testing (list-changed)
+        id: list-changed
         run: |
-          curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+          changed=$(ct list-changed --target-branch ${{ github.event.repository.default_branch }})
+          echo "Changed charts: $changed"
+          if [[ -n "$changed" ]]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
       - name: Install kubeconform
+        if: steps.list-changed.outputs.changed == 'true'
         run: |
             curl -L https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz | tar xvzf - && \
             sudo mv kubeconform /usr/local/bin/ 
       - name: Helm dependency update
+        if: steps.list-changed.outputs.changed == 'true'
         run: |
             helm dependency update ./charts/digma-ng
       - name: Run Helm Lint #validates the chart structure and Helm-specific syntax.
+        if: steps.list-changed.outputs.changed == 'true'
         run: |
           helm lint ./charts/digma-ng --set digma.licenseKey="dummy-license-key"
       - name: Validate Kubernetes Manifests #ensuring templates render without errors, kubeconform validates the rendered manifests against Kubernetes API schemas, ensuring they are deployable
+        if: steps.list-changed.outputs.changed == 'true'
         run: | 
           set -e
           helm template my-release ./charts/digma-ng --set digma.licenseKey="dummy-license-key" > output.yaml
