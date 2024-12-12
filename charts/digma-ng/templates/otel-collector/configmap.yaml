@@ -9,33 +9,6 @@ metadata:
   annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 data: # config.yaml:
-  config.yaml: |-
-    extensions:
-      health_check:
-        endpoint: "0.0.0.0:{{ .Values.otelCollector.service.ports.health }}"
-    receivers:
-      otlp:
-        protocols:
-          grpc:
-            endpoint: 0.0.0.0:{{ .Values.otelCollector.service.ports.grpc }}
-          http:
-            endpoint: 0.0.0.0:{{ .Values.otelCollector.service.ports.http }}
-    processors:
-      batch:
-      probabilistic_sampler:
-        sampling_percentage: {{ .Values.otelCollector.samplingPercentage }}
-    exporters:
-      logging:
-        loglevel: debug
-      otlphttp:
-        endpoint: http://{{ include "digma.collector-api" . }}:{{ .Values.collectorApi.service.ports.http }}
-        tls:
-          insecure: true
-    service:
-      extensions: [health_check]
-      pipelines:
-        traces:
-          receivers: [otlp]
-          processors: [batch, probabilistic_sampler]
-          exporters: [otlphttp, logging]
+  config.yaml:
+    {{- include "common.tplvalues.render" (dict "value" .Values.otelCollector.configuration "context" $) | toYaml | nindent 4 }}
 {{- end }}

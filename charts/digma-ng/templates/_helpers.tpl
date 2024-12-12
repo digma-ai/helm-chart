@@ -15,10 +15,21 @@ Return the proper analytics api fullname
 {{- end -}}
 
 {{/*
+Return calculated secured property value
+*/}}
+{{- define "digma.analytics-api.secured" -}}
+{{- if .Values.analyticsApi.ingress.enabled -}}
+false
+{{- else -}}
+{{.Values.analyticsApi.secured}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Return http or https depending on the secured property value
 */}}
 {{- define "digma.analytics-api.protocol" -}}
-{{- if .Values.analyticsApi.secured -}}
+{{- if eq "true" (include "digma.analytics-api.secured" .) }}
 https
 {{- else -}}
 http

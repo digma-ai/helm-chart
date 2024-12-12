@@ -127,6 +127,7 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 | otelCollector.image.tag | string | `"0.103.0"` | image tag |
 | otelCollector.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
 | otelCollector.image.pullSecrets | list | `[]` | image pull secrets |
+| otelCollector.configuration | string | `"extensions:\n  health_check:\n    endpoint: \"0.0.0.0:{{ .Values.otelCollector.service.ports.health }}\"\nreceivers:\n  otlp:\n    protocols:\n      grpc:\n        endpoint: 0.0.0.0:{{ .Values.otelCollector.service.ports.grpc }}\n      http:\n        endpoint: 0.0.0.0:{{ .Values.otelCollector.service.ports.http }}\nprocessors:\n  batch:\n  probabilistic_sampler:\n    sampling_percentage: {{ .Values.otelCollector.samplingPercentage }}\nexporters:\n  logging:\n    loglevel: debug\n  otlphttp:\n    endpoint: http://{{ include \"digma.collector-api\" . }}:{{ .Values.collectorApi.service.ports.http }}\n    tls:\n      insecure: true\nservice:\n  extensions: [health_check]\n  pipelines:\n    traces:\n      receivers: [otlp]\n      processors: [batch, probabilistic_sampler]\n      exporters: [otlphttp, logging]\n"` | This content will be stored in the the config.yaml file and the content can be a template. |
 | otelCollector.replicas | int | `1` | Number of replicas to deploy |
 | otelCollector.service.type | string | `"ClusterIP"` | service type |
 | otelCollector.service.annotations | object | `{}` | Additional custom annotations for service |
@@ -502,12 +503,6 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 | prometheus.server.tolerations | list | `[]` | Tolerations for pods assignment |
 | prometheus.server.affinity | object | `{}` | Affinity for pods assignment |
 
-### Kafka parameters   
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| kafka.extraConfig | string | `"offsets.topic.replication.factor=1\n"` | Additional configuration to be appended at the end of the generated Kafka configuration file. |
-
 ### Kafka parameters
 
 | Key | Type | Default | Description |
@@ -518,6 +513,12 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 | kafka.controller.nodeSelector | object | `{}` | Node labels for pods assignment |
 | kafka.controller.tolerations | list | `[]` | Tolerations for pods assignment |
 | kafka.controller.affinity | object | `{}` | Affinity for pods assignment |
+
+### Kafka parameters   
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| kafka.controller.extraConfig | string | `"offsets.topic.replication.factor=1\ntransaction.state.log.replication.factor=1\n"` | Additional configuration to be appended at the end of the generated Kafka configuration file. |
 ## Requirements
 
 | Repository | Name | Version |
