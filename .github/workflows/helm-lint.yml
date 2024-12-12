@@ -13,6 +13,8 @@ jobs:
           curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
       - name: Set up chart-testing
         uses: helm/chart-testing-action@v2.6.1
+        with:
+          version: v3.10.1
       - name: Run chart-testing (list-changed)
         id: list-changed
         run: |
