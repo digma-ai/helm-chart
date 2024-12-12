@@ -203,7 +203,7 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| analyticsApi.secured | bool | `true` | Indicates whether the analytics API uses a secured HTTPS connection. Set to false if ingress is enabled |
+| analyticsApi.secured | bool | `true` | Indicates whether the analytics API uses a secured HTTPS connection. will be set to false when ingress is enabled |
 | analyticsApi.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
 | analyticsApi.image.pullSecrets | list | `[]` | image pull secrets |
 | analyticsApi.replicas | int | `1` | Number of replicas to deploy |
@@ -215,7 +215,7 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 | analyticsApi.nodeSelector | object | `{}` | Node labels for pods assignment |
 | analyticsApi.tolerations | list | `[]` | Tolerations for pods assignment |
 | analyticsApi.affinity | object | `{}` | Affinity for pods assignment |
-| analyticsApi.ingress.enabled | bool | `false` | Enable ingress |
+| analyticsApi.ingress.enabled | bool | `false` | Enable ingress, secured parameter will be set to false |
 | analyticsApi.ingress.pathType | string | `"ImplementationSpecific"` | Ingress path type |
 | analyticsApi.ingress.apiVersion | string | `""` | Force Ingress API version (automatically detected if not set) |
 | analyticsApi.ingress.hostname | string | `nil` | Default host for the ingress record |

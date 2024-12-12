@@ -548,7 +548,7 @@ collectorApi:
     # @section -- CollectorApi parameters
     successThreshold: 1    
 analyticsApi:
-  # -- Indicates whether the analytics API uses a secured HTTPS connection. Set to false if ingress is enabled
+  # -- Indicates whether the analytics API uses a secured HTTPS connection. will be set to false when ingress is enabled
   # @section -- AnalyticsApi parameters
   secured: true
   image:
@@ -612,7 +612,7 @@ analyticsApi:
   ## analyticsApi ingress parameters
   ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
   ingress:
-    # -- Enable ingress
+    # -- Enable ingress, secured parameter will be set to false
     # @section -- AnalyticsApi parameters
     enabled: false
     # --  Ingress path type
