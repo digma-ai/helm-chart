@@ -352,7 +352,7 @@ Return true if observability enabled
   value: {{.Chart.Version}}
   {{- if eq "true" (include "digma.observability.enabled" .) }}
 - name: Site
-  value: {{ .Values.observability.siteName }}
+  value: {{ .Values.observability.environmentName }}
 - name: DEPLOYMENT_ENV
   value: {{ .Values.observability.environmentName }}
 - name: DIGMA_ENV_TYPE

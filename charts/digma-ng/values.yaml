@@ -42,9 +42,6 @@ observability:
   # -- Use local observability, Deploys Prometheus and Grafana 
   # @section -- Observability parameters
   useLocal: true
-  # -- siteName
-  # @section -- Observability parameters
-  siteName: undefined
   # -- Environments represent different deployment stages or scopes
   # @section -- Observability parameters
   environmentName: digma
@@ -270,7 +267,7 @@ otelCollector:
         traces:
           receivers: [otlp]
           processors: [batch, probabilistic_sampler]
-          exporters: [otlphttp, logging]
+          exporters: [otlphttp]
   # -- Number of replicas to deploy
   # @section -- Otel Collector parameters
   replicas: 1
@@ -1339,7 +1336,6 @@ otelCollectorDf:
           - key: source_env
             value: {{.Values.observability.environmentName}}
             action: insert
-
     exporters:
       logging:
         verbosity: detailed
@@ -1349,10 +1345,9 @@ otelCollectorDf:
         send_timestamps: true
         metric_expiration: 10m
       {{- else }}
-      otlp:
+      otlp/remote:
         endpoint: {{.Values.observability.otlp.remoteEndpoint}}
       {{- end }}
-
     service:
       extensions: [health_check]
       pipelines:
@@ -1369,7 +1364,7 @@ otelCollectorDf:
         metrics:
           receivers: [otlp, kafkametrics, prometheus/k8s_metrics]
           processors: [attributes/add_source_env, batch]
-          exporters: [otlp]
+          exporters: [otlp/remote]
         {{- end }}
 
   # -- Number of replicas to deploy

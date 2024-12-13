@@ -66,7 +66,6 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | observability.useLocal | bool | `true` | Use local observability, Deploys Prometheus and Grafana  |
-| observability.siteName | string | `"undefined"` | siteName |
 | observability.environmentName | string | `"digma"` | Environments represent different deployment stages or scopes |
 | observability.otlp.remoteEndpoint | string | `nil` | Please note this parameter, cannot be set while useLocal is true |
 | observability.otlp.samplerProbability | float | `0.1` | Control the fraction of traces that are sampled |
@@ -127,7 +126,7 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 | otelCollector.image.tag | string | `"0.103.0"` | image tag |
 | otelCollector.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
 | otelCollector.image.pullSecrets | list | `[]` | image pull secrets |
-| otelCollector.configuration | string | `"extensions:\n  health_check:\n    endpoint: \"0.0.0.0:{{ .Values.otelCollector.service.ports.health }}\"\nreceivers:\n  otlp:\n    protocols:\n      grpc:\n        endpoint: 0.0.0.0:{{ .Values.otelCollector.service.ports.grpc }}\n      http:\n        endpoint: 0.0.0.0:{{ .Values.otelCollector.service.ports.http }}\nprocessors:\n  batch:\n  probabilistic_sampler:\n    sampling_percentage: {{ .Values.otelCollector.samplingPercentage }}\nexporters:\n  logging:\n    loglevel: debug\n  otlphttp:\n    endpoint: http://{{ include \"digma.collector-api\" . }}:{{ .Values.collectorApi.service.ports.http }}\n    tls:\n      insecure: true\nservice:\n  extensions: [health_check]\n  pipelines:\n    traces:\n      receivers: [otlp]\n      processors: [batch, probabilistic_sampler]\n      exporters: [otlphttp, logging]\n"` | This content will be stored in the the config.yaml file and the content can be a template. |
+| otelCollector.configuration | string | `"extensions:\n  health_check:\n    endpoint: \"0.0.0.0:{{ .Values.otelCollector.service.ports.health }}\"\nreceivers:\n  otlp:\n    protocols:\n      grpc:\n        endpoint: 0.0.0.0:{{ .Values.otelCollector.service.ports.grpc }}\n      http:\n        endpoint: 0.0.0.0:{{ .Values.otelCollector.service.ports.http }}\nprocessors:\n  batch:\n  probabilistic_sampler:\n    sampling_percentage: {{ .Values.otelCollector.samplingPercentage }}\nexporters:\n  logging:\n    loglevel: debug\n  otlphttp:\n    endpoint: http://{{ include \"digma.collector-api\" . }}:{{ .Values.collectorApi.service.ports.http }}\n    tls:\n      insecure: true\nservice:\n  extensions: [health_check]\n  pipelines:\n    traces:\n      receivers: [otlp]\n      processors: [batch, probabilistic_sampler]\n      exporters: [otlphttp]\n"` | This content will be stored in the the config.yaml file and the content can be a template. |
 | otelCollector.replicas | int | `1` | Number of replicas to deploy |
 | otelCollector.service.type | string | `"ClusterIP"` | service type |
 | otelCollector.service.annotations | object | `{}` | Additional custom annotations for service |
