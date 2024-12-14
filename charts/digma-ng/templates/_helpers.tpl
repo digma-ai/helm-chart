@@ -295,7 +295,7 @@ Return the proper grafana fullname
 Return the proper prometheus fullname
 */}}
 {{- define "digma.prometheus.fullname" -}}
-{{- printf "%s-service" (include "digma.prometheus" .) }}
+{{- printf "%s-server" (include "digma.prometheus" .) }}
 {{- end -}}
 
 {{/*

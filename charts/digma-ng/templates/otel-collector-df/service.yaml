@@ -18,7 +18,7 @@ spec:
   - name: grpc
     protocol: TCP
     port: {{ .Values.otelCollectorDf.service.ports.grpc }}
-  - name: prometheus-scraper
+  - name: prometheus
     protocol: TCP
     port: {{ .Values.otelCollectorDf.service.ports.prometheus_scraper }}
 {{- end }}

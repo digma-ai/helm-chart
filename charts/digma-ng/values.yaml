@@ -1281,7 +1281,6 @@ metricsExporter:
     # @section -- MetricsExporter parameters
     successThreshold: 1  
 otelCollectorDf:
-  fullnameOverride: "digma-otel-collector-df" # because we need to use this name other value in file
   image:
     # -- image registry
     # @section -- Otel CollectorDF parameters
@@ -1868,11 +1867,10 @@ grafana:
 ##
 prometheus:
   enabled: false
-  fullnameOverride: "digma-prometheus" #todo shay
   alertmanager:
     enabled: false
   server:
-    existingConfigmap: "digma-prometheus-service"
+    existingConfigmap: "{{ .Release.Name }}-prometheus-server"
     existingConfigmapKey: "prometheus.yaml"
     service:
       type: ClusterIP

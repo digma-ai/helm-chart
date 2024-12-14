@@ -54,6 +54,8 @@ spec:
           containerPort: {{ .Values.otelCollectorDf.service.ports.health }}
         - name: grpc
           containerPort: {{ .Values.otelCollectorDf.service.ports.grpc }}
+        - name: prometheus
+          containerPort: {{ .Values.otelCollectorDf.service.ports.prometheus_scraper }}
         volumeMounts:
           - name: vn-config
             mountPath: /conf
