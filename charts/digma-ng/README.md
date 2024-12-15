@@ -90,6 +90,7 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 | commonLabels | object | `{}` | Labels to add to all deployed objects |
 | commonAnnotations | object | `{}` | Annotations to add to all deployed objects |
 | diagnosticMode.enabled | bool | `false` | Enable diagnostic mode (all probes will be disabled) |
+| extraDeploy | list | `[]` | Array of extra objects to deploy with the release |
 
 ### CollectorWorker parameters
 
