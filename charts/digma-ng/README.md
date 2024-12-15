@@ -102,12 +102,14 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 | collectorWorker.affinity | object | `{}` | Affinity for pods assignment |
 | collectorWorker.extraEnvVars | list | `[]` | Array with extra environment variables to add |
 | collectorWorker.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
+| collectorWorker.livenessProbe.path | string | `"/healthz"` | Path for livenessProbe |
 | collectorWorker.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
 | collectorWorker.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
 | collectorWorker.livenessProbe.timeoutSeconds | int | `10` | Timeout seconds for livenessProbe |
 | collectorWorker.livenessProbe.failureThreshold | int | `6` | Failure threshold for livenessProbe |
 | collectorWorker.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
 | collectorWorker.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
+| collectorWorker.readinessProbe.path | string | `"/readiness"` | Path for livenessProbe |
 | collectorWorker.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
 | collectorWorker.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
 | collectorWorker.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
@@ -163,6 +165,7 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 | otelCollector.livenessProbe.failureThreshold | int | `6` | Failure threshold for livenessProbe |
 | otelCollector.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
 | otelCollector.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
+| otelCollector.readinessProbe.path | string | `"/"` | Path for readinessProbe |
 | otelCollector.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
 | otelCollector.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
 | otelCollector.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
@@ -187,12 +190,14 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 | collectorApi.tolerations | list | `[]` | Tolerations for pods assignment |
 | collectorApi.affinity | object | `{}` | Affinity for pods assignment |
 | collectorApi.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
+| collectorApi.livenessProbe.path | string | `"/healthz"` | Path for livenessProbe |
 | collectorApi.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
 | collectorApi.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
 | collectorApi.livenessProbe.timeoutSeconds | int | `10` | Timeout seconds for livenessProbe |
 | collectorApi.livenessProbe.failureThreshold | int | `6` | Failure threshold for livenessProbe |
 | collectorApi.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
 | collectorApi.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
+| collectorApi.readinessProbe.path | string | `"/readiness"` | Path for readinessProbe |
 | collectorApi.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
 | collectorApi.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
 | collectorApi.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
@@ -225,12 +230,14 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 | analyticsApi.ingress.extraPaths | list | `[]` | Any additional paths that may need to be added to the ingress under the main host |
 | analyticsApi.ingress.extraRules | list | `[]` | Additional rules to be covered with this ingress record |
 | analyticsApi.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
+| analyticsApi.livenessProbe.path | string | `"/healthz"` | Path for livenessProbe |
 | analyticsApi.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
 | analyticsApi.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
 | analyticsApi.livenessProbe.timeoutSeconds | int | `10` | Timeout seconds for livenessProbe |
 | analyticsApi.livenessProbe.failureThreshold | int | `6` | Failure threshold for livenessProbe |
 | analyticsApi.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
 | analyticsApi.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
+| analyticsApi.readinessProbe.path | string | `"/readiness"` | Path for readinessProbe |
 | analyticsApi.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
 | analyticsApi.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
 | analyticsApi.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
@@ -252,12 +259,14 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 | measurementAnalysis.affinity | object | `{}` | Affinity for pods assignment |
 | measurementAnalysis.extraEnvVars | list | `[]` | Array with extra environment variables to add |
 | measurementAnalysis.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
+| measurementAnalysis.livenessProbe.path | string | `"/healthz"` | Path for livenessProbe |
 | measurementAnalysis.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
 | measurementAnalysis.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
 | measurementAnalysis.livenessProbe.timeoutSeconds | int | `10` | Timeout seconds for livenessProbe |
 | measurementAnalysis.livenessProbe.failureThreshold | int | `6` | Failure threshold for livenessProbe |
 | measurementAnalysis.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
 | measurementAnalysis.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
+| measurementAnalysis.readinessProbe.path | string | `"/readiness"` | Path for readinessProbe |
 | measurementAnalysis.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
 | measurementAnalysis.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
 | measurementAnalysis.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
@@ -278,12 +287,14 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 | scheduler.tolerations | list | `[]` | Tolerations for pods assignment |
 | scheduler.affinity | object | `{}` | Affinity for pods assignment |
 | scheduler.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
+| scheduler.livenessProbe.path | string | `"/healthz"` | Path for livenessProbe |
 | scheduler.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
 | scheduler.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
 | scheduler.livenessProbe.timeoutSeconds | int | `10` | Timeout seconds for livenessProbe |
 | scheduler.livenessProbe.failureThreshold | int | `6` | Failure threshold for livenessProbe |
 | scheduler.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
 | scheduler.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
+| scheduler.readinessProbe.path | string | `"/readiness"` | Path for readinessProbe |
 | scheduler.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
 | scheduler.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
 | scheduler.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
@@ -304,12 +315,14 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 | pipelineWorker.tolerations | list | `[]` | Tolerations for pods assignment |
 | pipelineWorker.affinity | object | `{}` | Affinity for pods assignment |
 | pipelineWorker.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
+| pipelineWorker.livenessProbe.path | string | `"/healthz"` | Path for livenessProbe |
 | pipelineWorker.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
 | pipelineWorker.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
 | pipelineWorker.livenessProbe.timeoutSeconds | int | `10` | Timeout seconds for livenessProbe |
 | pipelineWorker.livenessProbe.failureThreshold | int | `6` | Failure threshold for livenessProbe |
 | pipelineWorker.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
 | pipelineWorker.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
+| pipelineWorker.readinessProbe.path | string | `"/readiness"` | Path for readinessProbe |
 | pipelineWorker.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
 | pipelineWorker.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
 | pipelineWorker.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
@@ -375,6 +388,7 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 | metricsExporter.livenessProbe.failureThreshold | int | `6` | Failure threshold for livenessProbe |
 | metricsExporter.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
 | metricsExporter.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
+| metricsExporter.readinessProbe.path | string | `"/"` | Path for readinessProbe |
 | metricsExporter.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
 | metricsExporter.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
 | metricsExporter.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
@@ -407,6 +421,7 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 | otelCollectorDf.livenessProbe.failureThreshold | int | `6` | Failure threshold for livenessProbe |
 | otelCollectorDf.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
 | otelCollectorDf.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
+| otelCollectorDf.readinessProbe.path | string | `"/"` | Path for readinessProbe |
 | otelCollectorDf.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
 | otelCollectorDf.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
 | otelCollectorDf.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
@@ -417,6 +432,7 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| influxdb.influxdb.updateStrategy.type | string | `"Recreate"` | Influxdb deployment strategy type. Is a deployment resource therefore, Strategy type should be set to Recreate to avoid dead locks |
 | influxdb.influxdb.podLabels | object | `{}` | Extra labels for pods |
 | influxdb.influxdb.podAnnotations | object | `{}` | Extra annotations for pods |
 | influxdb.influxdb.nodeSelector | object | `{}` | Node labels for pods assignment |
@@ -496,6 +512,7 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| prometheus.server.updateStrategy | object | `{"type":"Recreate"}` | Prometheus deployment strategy type. Is a deployment resource therefore, Strategy type should be set to Recreate to avoid dead locks |
 | prometheus.server.podLabels | object | `{}` | Extra labels for pods |
 | prometheus.server.podAnnotations | object | `{}` | Extra annotations for pods |
 | prometheus.server.nodeSelector | object | `{}` | Node labels for pods assignment |

@@ -66,16 +66,16 @@ spec:
         {{- end }}
         {{- if not .Values.diagnosticMode.enabled }}
         {{- if .Values.measurementAnalysis.livenessProbe.enabled }}
-        livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.measurementAnalysis.livenessProbe "enabled") "context" $) | nindent 10 }}
+        livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit (omit .Values.measurementAnalysis.livenessProbe "enabled") "path") "context" $) | nindent 10 }}
           httpGet:
-            path: /healthz
+            path: {{ .Values.measurementAnalysis.livenessProbe.path }}
             port: http
             scheme: HTTP
         {{- end }}
         {{- if .Values.measurementAnalysis.readinessProbe.enabled }}
-        readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.measurementAnalysis.readinessProbe "enabled") "context" $) | nindent 10 }}
+        readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit (omit .Values.measurementAnalysis.readinessProbe "enabled") "path") "context" $) | nindent 10 }}
           httpGet:
-            path: /readiness
+            path: {{ .Values.measurementAnalysis.readinessProbe.path }}
             port: http
             scheme: HTTP
         {{- end }}  

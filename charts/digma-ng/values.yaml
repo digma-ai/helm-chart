@@ -170,6 +170,9 @@ collectorWorker:
     # -- Enable livenessProbe
     # @section -- CollectorWorker parameters
     enabled: true
+    # -- Path for livenessProbe
+    # @section -- CollectorWorker parameters
+    path: /healthz
     # -- Initial delay seconds for livenessProbe
     # @section -- CollectorWorker parameters
     initialDelaySeconds: 120
@@ -189,6 +192,9 @@ collectorWorker:
     # -- Enable readinessProbe
     # @section -- CollectorWorker parameters
     enabled: true
+    # -- Path for livenessProbe
+    # @section -- CollectorWorker parameters
+    path: /readiness
     # -- Initial delay seconds for readinessProbe
     # @section -- CollectorWorker parameters
     initialDelaySeconds: 20
@@ -456,6 +462,9 @@ otelCollector:
     # -- Enable readinessProbe
     # @section -- Otel Collector parameters
     enabled: true
+    # -- Path for readinessProbe
+    # @section -- Otel Collector parameters
+    path: /    
     # -- Initial delay seconds for readinessProbe
     # @section -- Otel Collector parameters
     initialDelaySeconds: 20
@@ -541,6 +550,9 @@ collectorApi:
     # -- Enable livenessProbe
     # @section -- CollectorApi parameters
     enabled: true
+    # -- Path for livenessProbe
+    # @section -- CollectorApi parameters
+    path: /healthz
     # -- Initial delay seconds for livenessProbe
     # @section -- CollectorApi parameters
     initialDelaySeconds: 120
@@ -560,6 +572,9 @@ collectorApi:
     # -- Enable readinessProbe
     # @section -- CollectorApi parameters
     enabled: true
+    # -- Path for readinessProbe
+    # @section -- CollectorApi parameters
+    path: /readiness
     # -- Initial delay seconds for readinessProbe
     # @section -- CollectorApi parameters
     initialDelaySeconds: 20
@@ -700,6 +715,9 @@ analyticsApi:
     # -- Enable livenessProbe
     # @section -- AnalyticsApi parameters
     enabled: true
+    # -- Path for livenessProbe
+    # @section -- AnalyticsApi parameters
+    path: /healthz
     # -- Initial delay seconds for livenessProbe
     # @section -- AnalyticsApi parameters
     initialDelaySeconds: 120
@@ -719,6 +737,9 @@ analyticsApi:
     # -- Enable readinessProbe
     # @section -- AnalyticsApi parameters
     enabled: true
+    # -- Path for readinessProbe
+    # @section -- AnalyticsApi parameters
+    path: /readiness
     # -- Initial delay seconds for readinessProbe
     # @section -- AnalyticsApi parameters
     initialDelaySeconds: 20
@@ -803,6 +824,9 @@ measurementAnalysis:
     # -- Enable livenessProbe
     # @section -- MeasurementAnalysis parameters
     enabled: true
+    # -- Path for livenessProbe
+    # @section -- MeasurementAnalysis parameters
+    path: /healthz    
     # -- Initial delay seconds for livenessProbe
     # @section -- MeasurementAnalysis parameters
     initialDelaySeconds: 120
@@ -822,6 +846,9 @@ measurementAnalysis:
     # -- Enable readinessProbe
     # @section -- MeasurementAnalysis parameters
     enabled: true
+    # -- Path for readinessProbe
+    # @section -- MeasurementAnalysis parameters
+    path: /readiness       
     # -- Initial delay seconds for readinessProbe
     # @section -- MeasurementAnalysis parameters
     initialDelaySeconds: 20
@@ -895,6 +922,9 @@ scheduler:
     # -- Enable livenessProbe
     # @section -- Scheduler parameters
     enabled: true
+    # -- Path for livenessProbe
+    # @section -- Scheduler parameters
+    path: /healthz    
     # -- Initial delay seconds for livenessProbe
     # @section -- Scheduler parameters
     initialDelaySeconds: 120
@@ -914,6 +944,9 @@ scheduler:
     # -- Enable readinessProbe
     # @section -- Scheduler parameters
     enabled: true
+    # -- Path for readinessProbe
+    # @section -- Scheduler parameters
+    path: /readiness 
     # -- Initial delay seconds for readinessProbe
     # @section -- Scheduler parameters
     initialDelaySeconds: 20
@@ -987,6 +1020,9 @@ pipelineWorker:
     # -- Enable livenessProbe
     # @section -- PipelineWorker parameters
     enabled: true
+    # -- Path for livenessProbe
+    # @section -- PipelineWorker parameters
+    path: /healthz    
     # -- Initial delay seconds for livenessProbe
     # @section -- PipelineWorker parameters
     initialDelaySeconds: 120
@@ -1006,6 +1042,9 @@ pipelineWorker:
     # -- Enable readinessProbe
     # @section -- PipelineWorker parameters
     enabled: true
+    # -- Path for readinessProbe
+    # @section -- PipelineWorker parameters
+    path: /readiness     
     # -- Initial delay seconds for readinessProbe
     # @section -- PipelineWorker parameters
     initialDelaySeconds: 20
@@ -1265,6 +1304,9 @@ metricsExporter:
     # -- Enable readinessProbe
     # @section -- MetricsExporter parameters
     enabled: true
+    # -- Path for readinessProbe
+    # @section -- MetricsExporter parameters
+    path: /   
     # -- Initial delay seconds for readinessProbe
     # @section -- MetricsExporter parameters
     initialDelaySeconds: 20
@@ -1365,7 +1407,6 @@ otelCollectorDf:
           processors: [attributes/add_source_env, batch]
           exporters: [otlp/remote]
         {{- end }}
-
   # -- Number of replicas to deploy
   # @section -- Otel CollectorDF parameters
   replicas: 1
@@ -1435,6 +1476,9 @@ otelCollectorDf:
     # -- Enable readinessProbe
     # @section -- Otel CollectorDF parameters
     enabled: true
+    # -- Path for readinessProbe
+    # @section -- Otel CollectorDF parameters
+    path: / 
     # -- Initial delay seconds for readinessProbe
     # @section -- Otel CollectorDF parameters
     initialDelaySeconds: 20
@@ -1468,6 +1512,10 @@ influxdb:
       bucket: errors
       retention: 4w    
   influxdb:
+    updateStrategy:
+      # -- Influxdb deployment strategy type. Is a deployment resource therefore, Strategy type should be set to Recreate to avoid dead locks
+      # @section -- Influxdb parameters
+      type: Recreate
     resources: 
       requests: 
         memory: 500Mi
@@ -1821,7 +1869,7 @@ elasticsearch:
 grafana:
   admin:
     user: admin
-    password: admin
+    password: JNeCDfQ$SYlp5T
   dashboardsProvider:
     enabled: true
   dashboardsConfigMaps:
@@ -1834,6 +1882,8 @@ grafana:
   datasources:
     secretName: grafana-datasource
   grafana:
+    updateStrategy:
+      type: Recreate
     resources: 
       requests: 
         memory: 512Mi
@@ -1872,6 +1922,10 @@ prometheus:
   server:
     existingConfigmap: "{{ .Release.Name }}-prometheus-server"
     existingConfigmapKey: "prometheus.yaml"
+    # -- Prometheus deployment strategy type. Is a deployment resource therefore, Strategy type should be set to Recreate to avoid dead locks
+    # @section -- Prometheus parameters
+    updateStrategy:
+      type: Recreate
     service:
       type: ClusterIP
       ports:

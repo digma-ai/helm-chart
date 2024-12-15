@@ -56,9 +56,9 @@ spec:
             port: http
         {{- end }}
         {{- if .Values.metricsExporter.readinessProbe.enabled }}
-        readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.metricsExporter.readinessProbe "enabled") "context" $) | nindent 10 }}
+        readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit (omit .Values.metricsExporter.readinessProbe "enabled") "path") "context" $) | nindent 10 }}
           httpGet:
-            path: /
+            path: {{.Values.metricsExporter.readinessProbe.path}}
             port: http
             scheme: HTTP
         {{- end }}
