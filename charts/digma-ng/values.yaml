@@ -47,10 +47,10 @@ digma:
       # @section -- Global Digma parameters
       user: ""
       # -- Password of an external PostgreSQL instance to connect (only if postgresql.enabled=false)
-      # @section -- Global Digma parameters    
+      # @section -- Global Digma parameters
       password: ""
       # -- Port of an external PostgreSQL instance to connect (only if postgresql.enabled=false)
-      # @section -- Global Digma parameters  
+      # @section -- Global Digma parameters
       port: 5432
 observability:
   # -- Use local observability, Deploys Prometheus and Grafana 
