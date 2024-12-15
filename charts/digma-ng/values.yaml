@@ -5,7 +5,7 @@ digma:
     size: medium
   # -- access token for plugin authentication, and set the same one in the IDE plugin settings.
   # @section -- Global Digma parameters
-  accessToken: 
+  accessToken:
   # -- a digma license to use,If you've signed up for a free Digma account you should have received a Digma license to use. You can use this [link](https://digma.ai/sign-up/) to sign up
   # @section -- Global Digma parameters
   licenseKey:
@@ -82,7 +82,6 @@ global:
   # -- Global Docker registry secret names as an array
   # @section -- Global Docker image parameters
   imagePullSecrets: []
-
 # -- kubeVersion Override Kubernetes version
 # @section -- Common parameters
 kubeVersion: ""
@@ -92,13 +91,10 @@ commonLabels: {}
 # -- Annotations to add to all deployed objects
 # @section -- Common parameters
 commonAnnotations: {}
-
 diagnosticMode:
   # -- Enable diagnostic mode (all probes will be disabled)
   # @section -- Common parameters
   enabled: false
-
-
 collectorWorker:
   env:
     Sampling__Enable: true
@@ -124,12 +120,12 @@ collectorWorker:
     pullSecrets: []
   # -- replicas based on a given preset(.Values.digma.deployment.size) Number of replicas to deploy
   # @section -- CollectorWorker parameters
-  replicas: "{{ index .Values.presets .Values.digma.deployment.size \"collectorWorker\" \"replicas\" }}"
-  resources: 
-    requests: 
+  replicas: '{{ index .Values.presets .Values.digma.deployment.size "collectorWorker" "replicas" }}'
+  resources:
+    requests:
       memory: 300Mi
       cpu: 300m
-    limits: 
+    limits:
       memory: 600Mi
       cpu: 600m
   service:
@@ -167,18 +163,18 @@ collectorWorker:
   extraEnvVars: []
   app:
     ignoreEndpoints:
-      - Route: "/health"
+      - Route: /health
         RouteRegex: ""
-        Method: "GET"
-        Service: "*"
-      - Route: "/healthcheck"
+        Method: GET
+        Service: '*'
+      - Route: /healthcheck
         RouteRegex: ""
-        Method: "GET"
-        Service: "*"
-      - Route: "/metrics"
+        Method: GET
+        Service: '*'
+      - Route: /metrics
         RouteRegex: ""
-        Method: "GET"
-        Service: "*"
+        Method: GET
+        Service: '*'
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
   livenessProbe:
     # -- Enable livenessProbe
@@ -349,7 +345,7 @@ otelCollector:
       apiVersion: ""
       # --  Default host for the ingress record
       # @section -- Otel Collector parameters
-      hostname: 
+      hostname:
       ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
       ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
       # --  IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
@@ -408,7 +404,7 @@ otelCollector:
       apiVersion: ""
       # --  Default host for the ingress record
       # @section -- Otel Collector parameters
-      hostname: 
+      hostname:
       ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
       ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
       # --  IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
@@ -478,7 +474,7 @@ otelCollector:
     enabled: true
     # -- Path for readinessProbe
     # @section -- Otel Collector parameters
-    path: /    
+    path: /
     # -- Initial delay seconds for readinessProbe
     # @section -- Otel Collector parameters
     initialDelaySeconds: 20
@@ -493,7 +489,7 @@ otelCollector:
     failureThreshold: 12
     # -- Success threshold for readinessProbe
     # @section -- Otel Collector parameters
-    successThreshold: 1 
+    successThreshold: 1
 collectorApi:
   image:
     registry: docker.io
@@ -515,10 +511,10 @@ collectorApi:
   # @section -- CollectorApi parameters
   replicas: 1
   resources:
-    requests: 
+    requests:
       memory: 100Mi
       cpu: 200m
-    limits: 
+    limits:
       memory: 600Mi
       cpu: 800m
   service:
@@ -558,7 +554,7 @@ collectorApi:
   ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
   # -- Affinity for pods assignment
   # @section -- CollectorApi parameters
-  affinity: {}    
+  affinity: {}
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
   livenessProbe:
     # -- Enable livenessProbe
@@ -603,7 +599,7 @@ collectorApi:
     failureThreshold: 12
     # -- Success threshold for readinessProbe
     # @section -- CollectorApi parameters
-    successThreshold: 1    
+    successThreshold: 1
 analyticsApi:
   # -- Indicates whether the analytics API uses a secured HTTPS connection. will be set to false when ingress is enabled
   # @section -- AnalyticsApi parameters
@@ -627,11 +623,11 @@ analyticsApi:
   # -- Number of replicas to deploy
   # @section -- AnalyticsApi parameters
   replicas: 1
-  resources: 
-    requests: 
+  resources:
+    requests:
       memory: 300Mi
       cpu: 100m
-    limits: 
+    limits:
       memory: 800Mi
       cpu: 800m
   service:
@@ -665,7 +661,7 @@ analyticsApi:
   ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
   # -- Affinity for pods assignment
   # @section -- AnalyticsApi parameters
-  affinity: {}    
+  affinity: {}
   ## analyticsApi ingress parameters
   ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
   ingress:
@@ -680,7 +676,7 @@ analyticsApi:
     apiVersion: ""
     # --  Default host for the ingress record
     # @section -- AnalyticsApi parameters
-    hostname: 
+    hostname:
     ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
     ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
     # --  IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
@@ -792,12 +788,12 @@ measurementAnalysis:
     pullSecrets: []
   # -- replicas based on a given preset(.Values.digma.deployment.size) Number of replicas to deploy
   # @section -- MeasurementAnalysis parameters
-  replicas: "{{ index .Values.presets .Values.digma.deployment.size \"measurementAnalysis\" \"replicas\" }}"
-  resources: 
-    requests: 
+  replicas: '{{ index .Values.presets .Values.digma.deployment.size "measurementAnalysis" "replicas" }}'
+  resources:
+    requests:
       memory: 100Mi
       cpu: 200m
-    limits: 
+    limits:
       memory: 800Mi
       cpu: 800m
   service:
@@ -825,7 +821,7 @@ measurementAnalysis:
   ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
   # -- Affinity for pods assignment
   # @section -- MeasurementAnalysis parameters
-  affinity: {}    
+  affinity: {}
   ## e.g:
   ## extraEnvVars:
   ##   - name: FOO
@@ -840,7 +836,7 @@ measurementAnalysis:
     enabled: true
     # -- Path for livenessProbe
     # @section -- MeasurementAnalysis parameters
-    path: /healthz    
+    path: /healthz
     # -- Initial delay seconds for livenessProbe
     # @section -- MeasurementAnalysis parameters
     initialDelaySeconds: 120
@@ -862,7 +858,7 @@ measurementAnalysis:
     enabled: true
     # -- Path for readinessProbe
     # @section -- MeasurementAnalysis parameters
-    path: /readiness       
+    path: /readiness
     # -- Initial delay seconds for readinessProbe
     # @section -- MeasurementAnalysis parameters
     initialDelaySeconds: 20
@@ -877,7 +873,7 @@ measurementAnalysis:
     failureThreshold: 12
     # -- Success threshold for readinessProbe
     # @section -- MeasurementAnalysis parameters
-    successThreshold: 1      
+    successThreshold: 1
 scheduler:
   image:
     registry: docker.io
@@ -898,11 +894,11 @@ scheduler:
   # -- Number of replicas to deploy
   # @section -- Scheduler parameters
   replicas: 1
-  resources: 
-    requests: 
+  resources:
+    requests:
       memory: 300Mi
       cpu: 200m
-    limits: 
+    limits:
       memory: 600Mi
       cpu: 500m
   service:
@@ -938,7 +934,7 @@ scheduler:
     enabled: true
     # -- Path for livenessProbe
     # @section -- Scheduler parameters
-    path: /healthz    
+    path: /healthz
     # -- Initial delay seconds for livenessProbe
     # @section -- Scheduler parameters
     initialDelaySeconds: 120
@@ -960,7 +956,7 @@ scheduler:
     enabled: true
     # -- Path for readinessProbe
     # @section -- Scheduler parameters
-    path: /readiness 
+    path: /readiness
     # -- Initial delay seconds for readinessProbe
     # @section -- Scheduler parameters
     initialDelaySeconds: 20
@@ -975,7 +971,7 @@ scheduler:
     failureThreshold: 12
     # -- Success threshold for readinessProbe
     # @section -- Scheduler parameters
-    successThreshold: 1     
+    successThreshold: 1
 pipelineWorker:
   image:
     registry: docker.io
@@ -995,12 +991,12 @@ pipelineWorker:
     pullSecrets: []
   # -- replicas based on a given preset(.Values.digma.deployment.size) Number of replicas to deploy
   # @section -- PipelineWorker parameters
-  replicas: "{{ index .Values.presets .Values.digma.deployment.size \"pipelineWorker\" \"replicas\" }}"
-  resources: 
-    requests: 
+  replicas: '{{ index .Values.presets .Values.digma.deployment.size "pipelineWorker" "replicas" }}'
+  resources:
+    requests:
       memory: 100Mi
       cpu: 50m
-    limits: 
+    limits:
       memory: 400Mi
       cpu: 500m
   service:
@@ -1036,7 +1032,7 @@ pipelineWorker:
     enabled: true
     # -- Path for livenessProbe
     # @section -- PipelineWorker parameters
-    path: /healthz    
+    path: /healthz
     # -- Initial delay seconds for livenessProbe
     # @section -- PipelineWorker parameters
     initialDelaySeconds: 120
@@ -1058,7 +1054,7 @@ pipelineWorker:
     enabled: true
     # -- Path for readinessProbe
     # @section -- PipelineWorker parameters
-    path: /readiness     
+    path: /readiness
     # -- Initial delay seconds for readinessProbe
     # @section -- PipelineWorker parameters
     initialDelaySeconds: 20
@@ -1073,7 +1069,7 @@ pipelineWorker:
     failureThreshold: 12
     # -- Success threshold for readinessProbe
     # @section -- PipelineWorker parameters
-    successThreshold: 1     
+    successThreshold: 1
 nginx:
   image:
     registry: docker.io
@@ -1095,11 +1091,11 @@ nginx:
   # -- Number of replicas to deploy
   # @section -- UI parameters
   replicas: 1
-  resources: 
-    requests: 
+  resources:
+    requests:
       memory: 100Mi
       cpu: 100m
-    limits: 
+    limits:
       memory: 200Mi
       cpu: 200m
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
@@ -1161,7 +1157,7 @@ nginx:
     failureThreshold: 12
     # -- Success threshold for readinessProbe
     # @section -- UI parameters
-    successThreshold: 1 
+    successThreshold: 1
 ui:
   service:
     # -- service type
@@ -1188,7 +1184,7 @@ ui:
     apiVersion: ""
     # --  Default host for the ingress record
     # @section -- UI parameters
-    hostname: 
+    hostname:
     ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
     ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
     # --  IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
@@ -1232,7 +1228,6 @@ ui:
     # --  Additional rules to be covered with this ingress record
     # @section -- UI parameters
     extraRules: []
-
 metricsExporter:
   image:
     registry: docker.io
@@ -1254,13 +1249,13 @@ metricsExporter:
   # -- Number of replicas to deploy
   # @section -- MetricsExporter parameters
   replicas: 1
-  resources: 
-    requests: 
+  resources:
+    requests:
       memory: 512Mi
       cpu: 500m
-    limits: 
+    limits:
       memory: 768Mi
-      cpu: 750m   
+      cpu: 750m
   service:
     # -- Additional custom annotations for service
     # @section -- MetricsExporter parameters
@@ -1320,7 +1315,7 @@ metricsExporter:
     enabled: true
     # -- Path for readinessProbe
     # @section -- MetricsExporter parameters
-    path: /   
+    path: /
     # -- Initial delay seconds for readinessProbe
     # @section -- MetricsExporter parameters
     initialDelaySeconds: 20
@@ -1335,7 +1330,7 @@ metricsExporter:
     failureThreshold: 12
     # -- Success threshold for readinessProbe
     # @section -- MetricsExporter parameters
-    successThreshold: 1  
+    successThreshold: 1
 otelCollectorDf:
   image:
     # -- image registry
@@ -1360,67 +1355,7 @@ otelCollectorDf:
     # -- image pull secrets
     # @section -- Otel CollectorDF parameters
     pullSecrets: []
-  configuration: |
-    extensions:
-      health_check:
-        endpoint: "0.0.0.0:{{ .Values.otelCollectorDf.service.ports.health }}"
-    receivers:
-      otlp:
-        protocols: 
-          grpc:
-            endpoint: 0.0.0.0:{{ .Values.otelCollectorDf.service.ports.grpc }}
-      kafkametrics:
-        protocol_version: 2.0.0
-        collection_interval: 10s
-        brokers: [{{include "digma.kafka.client" .}}]
-        scrapers:
-          - brokers
-          - topics
-          - consumers
-      prometheus/k8s_metrics:
-        config:
-          scrape_configs:
-            - job_name: k8s-metrics
-              scrape_interval: 5s
-              static_configs:
-                - targets: [{{ include "digma.k8s-metrics-exporter-target" .}}]
-    processors:
-      batch:
-      attributes/add_source_env:
-        actions:
-          - key: source_env
-            value: {{.Values.observability.environmentName}}
-            action: insert
-    exporters:
-      logging:
-        verbosity: detailed
-      {{- if eq .Values.observability.useLocal true }}
-      prometheus:
-        endpoint: 0.0.0.0:{{ .Values.otelCollectorDf.service.ports.prometheus_scraper }}
-        send_timestamps: true
-        metric_expiration: 10m
-      {{- else }}
-      otlp/remote:
-        endpoint: {{ include "observability.otlp.remoteEndpoint" .}}
-      {{- end }}
-    service:
-      extensions: [health_check]
-      pipelines:
-        {{- if eq .Values.observability.useLocal true }}
-        metrics:
-          receivers: [otlp, kafkametrics, prometheus/k8s_metrics]
-          processors: [attributes/add_source_env, batch]
-          exporters: [prometheus]
-        {{- else }}
-        traces:
-          receivers: [otlp]
-          processors: [batch]
-          exporters: [otlp/remote]
-        metrics:
-          receivers: [otlp, kafkametrics, prometheus/k8s_metrics]
-          processors: [attributes/add_source_env, batch]
-          exporters: [otlp/remote]
-        {{- end }}
+  configuration: "extensions:\n  health_check:\n    endpoint: \"0.0.0.0:{{ .Values.otelCollectorDf.service.ports.health }}\"\nreceivers:\n  otlp:\n    protocols: \n      grpc:\n        endpoint: 0.0.0.0:{{ .Values.otelCollectorDf.service.ports.grpc }}\n  kafkametrics:\n    protocol_version: 2.0.0\n    collection_interval: 10s\n    brokers: [{{include \"digma.kafka.client\" .}}]\n    scrapers:\n      - brokers\n      - topics\n      - consumers\n  prometheus/k8s_metrics:\n    config:\n      scrape_configs:\n        - job_name: k8s-metrics\n          scrape_interval: 5s\n          static_configs:\n            - targets: [{{ include \"digma.k8s-metrics-exporter-target\" .}}]\nprocessors:\n  batch:\n  attributes/add_source_env:\n    actions:\n      - key: source_env\n        value: {{.Values.observability.environmentName}}\n        action: insert\nexporters:\n  logging:\n    verbosity: detailed\n  {{- if eq .Values.observability.useLocal true }}\n  prometheus:\n    endpoint: 0.0.0.0:{{ .Values.otelCollectorDf.service.ports.prometheus_scraper }}\n    send_timestamps: true\n    metric_expiration: 10m\n  {{- else }}\n  otlp/remote:\n    endpoint: {{ include \"observability.otlp.remoteEndpoint\" .}}\n  {{- end }}\nservice:\n  extensions: [health_check]\n  pipelines:\n    {{- if eq .Values.observability.useLocal true }}\n    metrics:\n      receivers: [otlp, kafkametrics, prometheus/k8s_metrics]\n      processors: [attributes/add_source_env, batch]\n      exporters: [prometheus]\n    {{- else }}\n    traces:\n      receivers: [otlp]\n      processors: [batch]\n      exporters: [otlp/remote]\n    metrics:\n      receivers: [otlp, kafkametrics, prometheus/k8s_metrics]\n      processors: [attributes/add_source_env, batch]\n      exporters: [otlp/remote]\n    {{- end }}\n"
   # -- Number of replicas to deploy
   # @section -- Otel CollectorDF parameters
   replicas: 1
@@ -1430,7 +1365,7 @@ otelCollectorDf:
       memory: 100Mi
     limits:
       cpu: 200m
-      memory: 300Mi      
+      memory: 300Mi
   service:
     # -- Additional custom annotations for service
     # @section -- Otel CollectorDF parameters
@@ -1465,7 +1400,7 @@ otelCollectorDf:
   ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
   # -- Affinity for pods assignment
   # @section -- Otel CollectorDF parameters
-  affinity: {} 
+  affinity: {}
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
   livenessProbe:
     # -- Enable livenessProbe
@@ -1492,7 +1427,7 @@ otelCollectorDf:
     enabled: true
     # -- Path for readinessProbe
     # @section -- Otel CollectorDF parameters
-    path: / 
+    path: /
     # -- Initial delay seconds for readinessProbe
     # @section -- Otel CollectorDF parameters
     initialDelaySeconds: 20
@@ -1507,7 +1442,7 @@ otelCollectorDf:
     failureThreshold: 12
     # -- Success threshold for readinessProbe
     # @section -- Otel CollectorDF parameters
-    successThreshold: 1  
+    successThreshold: 1
 ## influxdb
 ## ref: https://github.com/bitnami/charts/blob/main/bitnami/influxdb/values.yaml
 ##
@@ -1524,22 +1459,22 @@ influxdb:
       password: "12345678"
       token: dc61908e-05bc-411a-9fe2-e3356b8dc7c0
       bucket: errors
-      retention: 4w    
+      retention: 4w
   influxdb:
     updateStrategy:
       # -- Influxdb deployment strategy type. Is a deployment resource therefore, Strategy type should be set to Recreate to avoid dead locks
       # @section -- Influxdb parameters
       type: Recreate
-    resources: 
-      requests: 
+    resources:
+      requests:
         memory: 500Mi
         cpu: 500m
-      limits: 
+      limits:
         memory: 2Gi
         cpu: 2000m
     service:
       ports:
-        http: 8086 
+        http: 8086
     ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
     # -- Extra labels for pods
     # @section -- Influxdb parameters
@@ -1560,11 +1495,11 @@ influxdb:
     ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
     # -- Affinity for pods assignment
     # @section -- Influxdb parameters
-    affinity: {} 
+    affinity: {}
   persistence:
     enabled: true
     accessModes:
-    - ReadWriteOnce
+      - ReadWriteOnce
     size: 50Gi
 ## postgresql
 ## ref: https://github.com/bitnami/charts/blob/main/bitnami/postgresql/values.yaml
@@ -1581,10 +1516,10 @@ postgresql:
     postgresql: 5432
   primary:
     resources:
-      requests: 
+      requests:
         memory: 1Gi
         cpu: 200m
-      limits: 
+      limits:
         memory: 2Gi
         cpu: 1000m
     networkPolicy:
@@ -1595,7 +1530,7 @@ postgresql:
     persistence:
       enabled: true
       accessModes:
-      - ReadWriteOnce
+        - ReadWriteOnce
       size: 20Gi
     extendedConfiguration: |
       shared_buffers = '800MB'
@@ -1624,7 +1559,7 @@ postgresql:
     ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
     # -- Affinity for pods assignment
     # @section -- Postgresql parameters
-    affinity: {} 
+    affinity: {}
 ## redis
 ## ref: https://github.com/bitnami/charts/blob/main/bitnami/redis/values.yaml
 ##
@@ -1635,28 +1570,28 @@ redis:
   architecture: standalone
   master:
     extraFlags:
-        ## The maxmemory configuration directive is used in order to configure Redis(R) to use a specified
-        ## amount of memory for the data set. Setting maxmemory to zero results into no memory limits
-        ## see https://redis.io/topics/lru-cache for more details
-        ##
-        - "--maxmemory 2g"
-        ## The exact behavior Redis(R) follows when the maxmemory limit is reached is configured using the
-        ## maxmemory-policy configuration directive
-        ## allkeys-lru: evict keys by trying to remove the less recently used (LRU) keys first, in order
-        ## to make space for the new data added
-        ##
-        - "--maxmemory-policy allkeys-lru"
+      ## The maxmemory configuration directive is used in order to configure Redis(R) to use a specified
+      ## amount of memory for the data set. Setting maxmemory to zero results into no memory limits
+      ## see https://redis.io/topics/lru-cache for more details
+      ##
+      - --maxmemory 2g
+      ## The exact behavior Redis(R) follows when the maxmemory limit is reached is configured using the
+      ## maxmemory-policy configuration directive
+      ## allkeys-lru: evict keys by trying to remove the less recently used (LRU) keys first, in order
+      ## to make space for the new data added
+      ##
+      - --maxmemory-policy allkeys-lru
     resources:
       requests:
-        memory: "100Mi"
-        cpu: "50m"
+        memory: 100Mi
+        cpu: 50m
       limits:
-        memory: "2Gi"
-        cpu: "400m"
+        memory: 2Gi
+        cpu: 400m
     persistence:
       enabled: true
       accessModes:
-      - ReadWriteOnce
+        - ReadWriteOnce
       size: 10Gi
     ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
     # -- Extra labels for pods
@@ -1678,7 +1613,7 @@ redis:
     ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
     # -- Affinity for pods assignment
     # @section -- Redis parameters
-    affinity: {}   
+    affinity: {}
 ## jaeger
 ## ref: https://github.com/bitnami/charts/blob/main/bitnami/jaeger/values.yaml
 ##
@@ -1709,11 +1644,11 @@ jaeger:
   # -- Number of replicas to deploy
   # @section -- Jaeger parameters
   replicas: 1
-  resources: 
-    requests: 
+  resources:
+    requests:
       memory: 512Mi
       cpu: 500m
-    limits: 
+    limits:
       memory: 768Mi
       cpu: 750m
   ## jaeger service parameters
@@ -1752,7 +1687,7 @@ jaeger:
   ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
   # -- Affinity for pods assignment
   # @section -- Jaeger parameters
-  affinity: {}   
+  affinity: {}
   ## jaeger ingress parameters
   ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
   ingress:
@@ -1767,7 +1702,7 @@ jaeger:
     apiVersion: ""
     # --  Default host for the ingress record
     # @section -- Jaeger parameters
-    hostname: 
+    hostname:
     ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
     ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
     # --  IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
@@ -1836,17 +1771,17 @@ elasticsearch:
       enabled: true
       size: 80Gi
       accessModes:
-      - ReadWriteOnce
-    resources: 
-      requests: 
+        - ReadWriteOnce
+    resources:
+      requests:
         memory: 2Gi
         cpu: 1
-      limits: 
+      limits:
         memory: 4Gi
         cpu: 2
     extraEnvVars:
-    - name: ES_JAVA_OPTS
-      value: "-server -Xms1G -Xmx2G"
+      - name: ES_JAVA_OPTS
+        value: -server -Xms1G -Xmx2G
     ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
     # -- Extra labels for pods
     # @section -- Elasticsearch parameters
@@ -1867,7 +1802,7 @@ elasticsearch:
     ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
     # -- Affinity for pods assignment
     # @section -- Elasticsearch parameters
-    affinity: {}    
+    affinity: {}
   coordinating:
     replicaCount: 0
   data:
@@ -1887,22 +1822,22 @@ grafana:
   dashboardsProvider:
     enabled: true
   dashboardsConfigMaps:
-  - configMapName: digma-grafana-activities-dashboards
-    fileName: activities.json
-  - configMapName: digma-grafana-environment-dashboards
-    fileName: environment.json
-  - configMapName: digma-grafana-kafka-dashboards
-    fileName: kafka.json
+    - configMapName: digma-grafana-activities-dashboards
+      fileName: activities.json
+    - configMapName: digma-grafana-environment-dashboards
+      fileName: environment.json
+    - configMapName: digma-grafana-kafka-dashboards
+      fileName: kafka.json
   datasources:
     secretName: grafana-datasource
   grafana:
     updateStrategy:
       type: Recreate
-    resources: 
-      requests: 
+    resources:
+      requests:
         memory: 512Mi
         cpu: 500m
-      limits: 
+      limits:
         memory: 768Mi
         cpu: 750m
     ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
@@ -1925,7 +1860,7 @@ grafana:
     ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
     # -- Affinity for pods assignment
     # @section -- Grafana parameters
-    affinity: {}       
+    affinity: {}
 ## prometheus
 ## ref: https://github.com/bitnami/charts/blob/main/bitnami/prometheus/values.yaml
 ##
@@ -1934,8 +1869,8 @@ prometheus:
   alertmanager:
     enabled: false
   server:
-    existingConfigmap: "{{ .Release.Name }}-prometheus-server"
-    existingConfigmapKey: "prometheus.yaml"
+    existingConfigmap: '{{ .Release.Name }}-prometheus-server'
+    existingConfigmapKey: prometheus.yaml
     # -- Prometheus deployment strategy type. Is a deployment resource therefore, Strategy type should be set to Recreate to avoid dead locks
     # @section -- Prometheus parameters
     updateStrategy:
@@ -1944,11 +1879,11 @@ prometheus:
       type: ClusterIP
       ports:
         http: 9090
-    resources: 
-      requests: 
+    resources:
+      requests:
         memory: 512Mi
         cpu: 500m
-      limits: 
+      limits:
         memory: 768Mi
         cpu: 750m
     ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
@@ -1971,11 +1906,11 @@ prometheus:
     ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
     # -- Affinity for pods assignment
     # @section -- Prometheus parameters
-    affinity: {}      
+    affinity: {}
   persistence:
     enabled: true
     accessModes:
-    - ReadWriteOnce
+      - ReadWriteOnce
     size: 20Gi
 ## kafka
 ## ref: https://github.com/bitnami/charts/blob/main/bitnami/kafka/values.yaml
@@ -1991,7 +1926,7 @@ kafka:
       requests:
         memory: 400Mi
         cpu: 200m
-      limits: 
+      limits:
         memory: 3Gi
         cpu: 1000m
     # -- Additional configuration to be appended at the end of the generated Kafka configuration file.
@@ -2002,7 +1937,6 @@ kafka:
       log.retention.check.interval.ms = 100000
       log.roll.ms = 500000
       log.retention.minutes = 10
-
     ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
     # -- Extra labels for pods
     # @section -- Kafka parameters
@@ -2023,11 +1957,11 @@ kafka:
     ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
     # -- Affinity for pods assignment
     # @section -- Kafka parameters
-    affinity: {} 
+    affinity: {}
     persistence:
       enabled: true
       accessModes:
-      - ReadWriteOnce
+        - ReadWriteOnce
       size: 80Gi
   listeners:
     client:
@@ -2037,7 +1971,7 @@ kafka:
     external:
       protocol: PLAINTEXT
     controller:
-      protocol: PLAINTEXT    
+      protocol: PLAINTEXT
   service:
     ports:
       client: 9092
@@ -2056,7 +1990,6 @@ debug:
       ##
       pullPolicy: IfNotPresent
     port: 8080
-
   redisCommander:
     image:
       registry: ghcr.io
@@ -2068,7 +2001,6 @@ debug:
       ##
       pullPolicy: IfNotPresent
     port: 8081
-   
   pgadmin:
     image:
       registry: docker.io
@@ -2081,33 +2013,29 @@ debug:
       pullPolicy: IfNotPresent
     port: 8082
     env: #todo shay
-    - name: PGADMIN_DEFAULT_EMAIL
-      value: "admin@admin.com"
-    - name: PGADMIN_DEFAULT_PASSWORD
-      value: "admin"
-
+      - name: PGADMIN_DEFAULT_EMAIL
+        value: admin@admin.com
+      - name: PGADMIN_DEFAULT_PASSWORD
+        value: admin
 presets:
   small:
     collectorWorker:
       replicas: 1
-    measurementAnalysis: 
+    measurementAnalysis:
       replicas: 1
-    pipelineWorker: 
+    pipelineWorker:
       replicas: 1
   medium:
     collectorWorker:
       replicas: 4
-    measurementAnalysis: 
+    measurementAnalysis:
       replicas: 4
-    pipelineWorker: 
+    pipelineWorker:
       replicas: 1
   large:
     collectorWorker:
       replicas: 6
-    measurementAnalysis: 
+    measurementAnalysis:
       replicas: 4
-    pipelineWorker: 
+    pipelineWorker:
       replicas: 4
-
-
-    
