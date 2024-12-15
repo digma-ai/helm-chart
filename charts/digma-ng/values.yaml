@@ -1401,7 +1401,7 @@ otelCollectorDf:
         traces:
           receivers: [otlp]
           processors: [batch]
-          exporters: [otlp]
+          exporters: [otlp/remote]
         metrics:
           receivers: [otlp, kafkametrics, prometheus/k8s_metrics]
           processors: [attributes/add_source_env, batch]
