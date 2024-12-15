@@ -338,6 +338,23 @@ Return true if observability enabled
 {{- end -}}
 {{- end -}}
 
+{{/*
+Return true if observability enabled
+*/}}
+{{- define "observability.otlp.remoteEndpoint" -}}
+{{- if (not (empty (default "" .Values.observability.otlp.remoteEndpoint))) }}
+  {{- if (regexMatch ".*:[0-9]+$" .Values.observability.otlp.remoteEndpoint) -}}
+{{ .Values.observability.otlp.remoteEndpoint }}
+  {{- else -}}
+{{ .Values.observability.otlp.remoteEndpoint }}:443
+  {{- end }}
+{{- else -}}
+{{- print "" -}}
+{{- end -}}
+{{- end -}}
+
+
+
 
 {{- define "env.digma.app.common" -}}
 - name: BACKEND_DEPLOYMENT_TYPE

@@ -67,7 +67,7 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 |-----|------|---------|-------------|
 | observability.useLocal | bool | `true` | Use local observability, Deploys Prometheus and Grafana  |
 | observability.environmentName | string | `"digma"` | Environments represent different deployment stages or scopes |
-| observability.otlp.remoteEndpoint | string | `nil` | Please note this parameter, cannot be set while useLocal is true |
+| observability.otlp.remoteEndpoint | string | `nil` | Please note this parameter, cannot be set while useLocal is true, If no port is defined, port 443 will be added automatically  |
 | observability.otlp.samplerProbability | float | `0.1` | Control the fraction of traces that are sampled |
 | observability.otlp.exportTraces | bool | `true` | Export traces |
 | observability.otlp.exportMetrics | bool | `true` | Export metrics |

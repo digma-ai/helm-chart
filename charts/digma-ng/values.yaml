@@ -46,7 +46,7 @@ observability:
   # @section -- Observability parameters
   environmentName: digma
   otlp:
-    # -- Please note this parameter, cannot be set while useLocal is true
+    # -- Please note this parameter, cannot be set while useLocal is true, If no port is defined, port 443 will be added automatically 
     # @section -- Observability parameters
     remoteEndpoint:
     # -- Control the fraction of traces that are sampled
@@ -1387,7 +1387,7 @@ otelCollectorDf:
         metric_expiration: 10m
       {{- else }}
       otlp/remote:
-        endpoint: {{.Values.observability.otlp.remoteEndpoint}}
+        endpoint: {{ include "observability.otlp.remoteEndpoint" .}}
       {{- end }}
     service:
       extensions: [health_check]
