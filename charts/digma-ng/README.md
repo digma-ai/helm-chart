@@ -61,18 +61,18 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 | digma.report.emailGateway.apiKey | string | `nil` | Email gateway email api key |
 | digma.report.emailGateway.url | string | `nil` | Email gateway URL |
 | digma.externals.postgresql.host | string | `""` | Host of an external PostgreSQL instance to connect (only if postgresql.enabled=false) |
-
-### Global Digma parameters     
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
 | digma.externals.postgresql.user | string | `""` | User of an external PostgreSQL instance to connect (only if postgresql.enabled=false) |
 
-### Global Digma parameters       
+### Global Digma parameters   
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | digma.externals.postgresql.password | string | `""` | Password of an external PostgreSQL instance to connect (only if postgresql.enabled=false) |
+
+### Global Digma parameters 
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
 | digma.externals.postgresql.port | int | `5432` | Port of an external PostgreSQL instance to connect (only if postgresql.enabled=false) |
 
 ### Observability parameters
