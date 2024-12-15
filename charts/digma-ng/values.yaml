@@ -38,6 +38,20 @@ digma:
       # -- Email gateway URL
       # @section -- Global Digma parameters
       url:
+  externals:
+    postgresql:
+      # -- Host of an external PostgreSQL instance to connect (only if postgresql.enabled=false)
+      # @section -- Global Digma parameters
+      host: ""
+      # -- User of an external PostgreSQL instance to connect (only if postgresql.enabled=false)
+      # @section -- Global Digma parameters      
+      user: ""
+      # -- Password of an external PostgreSQL instance to connect (only if postgresql.enabled=false)
+      # @section -- Global Digma parameters        
+      password: ""
+      # -- Port of an external PostgreSQL instance to connect (only if postgresql.enabled=false)
+      # @section -- Global Digma parameters        
+      port: 5432
 observability:
   # -- Use local observability, Deploys Prometheus and Grafana 
   # @section -- Observability parameters
