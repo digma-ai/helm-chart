@@ -3,6 +3,17 @@ entries:
   digma:
   - apiVersion: v2
     appVersion: 0.3.167
+    created: "2024-12-16T12:17:15.26287831Z"
+    description: A Helm chart containing Digma's services and dbs
+    digest: 45dfcc8b4cc0af3db51c40acba2ad1ceb1b76360142690bd55872622fc823cdb
+    home: https://github.com/digma-ai/digma
+    name: digma
+    type: application
+    urls:
+    - https://github.com/digma-ai/helm-chart/releases/download/digma-1.0.259/digma-1.0.259.tgz
+    version: 1.0.259
+  - apiVersion: v2
+    appVersion: 0.3.167
     created: "2024-12-11T16:14:50.006810825Z"
     description: A Helm chart containing Digma's services and dbs
     digest: 5b8eebf8b9d2bd0871c2140e4bbb795d7f6598e6ed0b531b89c9ba752cae5630
@@ -2525,6 +2536,49 @@ entries:
       category: Application
     apiVersion: v2
     appVersion: 0.3.167
+    created: "2024-12-16T12:17:15.506311937Z"
+    dependencies:
+    - name: kafka
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 31.0.0
+    - condition: observability.useLocal
+      name: prometheus
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 1.3.28
+    - condition: observability.useLocal
+      name: grafana
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 11.3.26
+    - name: elasticsearch
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 21.3.17
+    - name: influxdb
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 6.3.22
+    - name: redis
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 20.3.0
+    - name: postgresql
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 16.2.1
+    - name: common
+      repository: oci://registry-1.docker.io/bitnamicharts
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    description: A Helm chart containing Digma's services
+    digest: d2b711cb618491bdc8760151aaad372e3d556004d1e2cae996aab51ee35e7f84
+    home: https://github.com/digma-ai/digma
+    icon: https://digma.ai/wp-content/uploads/2024/02/logo-alt-1.svg
+    name: digma-ng
+    type: application
+    urls:
+    - https://github.com/digma-ai/helm-chart/releases/download/digma-ng-1.0.258/digma-ng-1.0.258.tgz
+    version: 1.0.258
+  - annotations:
+      category: Application
+    apiVersion: v2
+    appVersion: 0.3.167
     created: "2024-12-16T09:47:49.000419413Z"
     dependencies:
     - name: kafka
@@ -2661,4 +2715,4 @@ entries:
     urls:
     - https://github.com/digma-ai/helm-chart/releases/download/sample-app-go-1.1.0/sample-app-go-1.1.0.tgz
     version: 1.1.0
-generated: "2024-12-16T09:47:49.000764356Z"
+generated: "2024-12-16T12:17:15.50735891Z"
