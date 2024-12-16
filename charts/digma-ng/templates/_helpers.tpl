@@ -162,7 +162,35 @@ Return postgres connectivity env
 */}}
 {{- define "env.postgres" -}}
 - name: ConnectionStrings__Postgres
-  value:  {{ printf "Server=%s;Port=%v;Database=digma_analytics;User Id=%s;Password=%s;" ( include "digma.postgresql" . )  .Values.postgresql.primary.service.ports.postgresql .Values.postgresql.auth.username .Values.postgresql.auth.password}}
+  value:  {{ printf "Server=%s;Port=%v;Database=digma_analytics;User Id=%s;Password=%s;" ( include "digma.database.host" . ) ( include "digma.database.port" . ) ( include "digma.database.user" . ) ( include "digma.database.password" . )}}
+{{- end -}}
+
+{{/*
+Return the Database Hostname
+*/}}
+{{- define "digma.database.host" -}}
+{{- ternary (include "digma.postgresql" .) .Values.digma.externals.postgresql.host .Values.postgresql.enabled -}}
+{{- end -}}
+
+{{/*
+Return the Database Port
+*/}}
+{{- define "digma.database.port" -}}
+{{- ternary .Values.postgresql.primary.service.ports.postgresql .Values.digma.externals.postgresql.port .Values.postgresql.enabled -}}
+{{- end -}}
+
+{{/*
+Return the Database User
+*/}}
+{{- define "digma.database.user" -}}
+{{- ternary .Values.postgresql.auth.username .Values.digma.externals.postgresql.user .Values.postgresql.enabled -}}
+{{- end -}}
+
+{{/*
+Return the Database Password
+*/}}
+{{- define "digma.database.password" -}}
+{{- ternary .Values.postgresql.auth.username .Values.digma.externals.postgresql.user .Values.postgresql.enabled -}}
 {{- end -}}
 
 {{/*
@@ -295,7 +323,7 @@ Return the proper grafana fullname
 Return the proper prometheus fullname
 */}}
 {{- define "digma.prometheus.fullname" -}}
-{{- printf "%s-service" (include "digma.prometheus" .) }}
+{{- printf "%s-server" (include "digma.prometheus" .) }}
 {{- end -}}
 
 {{/*
@@ -337,6 +365,23 @@ Return true if observability enabled
 {{- print "false" -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Return true if observability enabled
+*/}}
+{{- define "observability.otlp.remoteEndpoint" -}}
+{{- if (not (empty (default "" .Values.observability.otlp.remoteEndpoint))) }}
+  {{- if (regexMatch ".*:[0-9]+$" .Values.observability.otlp.remoteEndpoint) -}}
+{{ .Values.observability.otlp.remoteEndpoint }}
+  {{- else -}}
+{{ .Values.observability.otlp.remoteEndpoint }}:443
+  {{- end }}
+{{- else -}}
+{{- print "" -}}
+{{- end -}}
+{{- end -}}
+
+
 
 
 {{- define "env.digma.app.common" -}}

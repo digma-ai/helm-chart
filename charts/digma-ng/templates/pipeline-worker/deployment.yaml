@@ -53,16 +53,16 @@ spec:
         {{- include "env.jaeger" . | nindent 8 }}
         {{- if not .Values.diagnosticMode.enabled }}
         {{- if .Values.pipelineWorker.livenessProbe.enabled }}
-        livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.pipelineWorker.livenessProbe "enabled") "context" $) | nindent 10 }}
+        livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit (omit .Values.pipelineWorker.livenessProbe "enabled") "path") "context" $) | nindent 10 }}
           httpGet:
-            path: /healthz
+            path: {{ .Values.pipelineWorker.livenessProbe.path }}
             port: http
             scheme: HTTP
         {{- end }}
         {{- if .Values.pipelineWorker.readinessProbe.enabled }}
-        readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.pipelineWorker.readinessProbe "enabled") "context" $) | nindent 10 }}
+        readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit (omit .Values.pipelineWorker.readinessProbe "enabled") "path") "context" $) | nindent 10 }}
           httpGet:
-            path: /readiness
+            path: {{ .Values.pipelineWorker.readinessProbe.path }}
             port: http
             scheme: HTTP
         {{- end }}          

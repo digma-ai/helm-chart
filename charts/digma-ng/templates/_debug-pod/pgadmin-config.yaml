@@ -15,9 +15,9 @@ data:
         "1": {
           "Name": "PostgreSQL Server",
           "Group": "Servers",
-          "Host": "{{ include "digma.postgresql" .}}",
-          "Port": {{.Values.postgresql.primary.service.ports.postgresql}},
-          "Username": "{{.Values.postgresql.auth.username}}",
+          "Host": "{{ include "digma.database.host" .}}",
+          "Port": {{ include "digma.database.port" .}},
+          "Username": "{{ include "digma.database.user" .}}",
           "SSLMode": "prefer",
           "MaintenanceDB": "postgres"
         }

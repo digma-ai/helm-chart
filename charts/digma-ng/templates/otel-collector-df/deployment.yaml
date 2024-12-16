@@ -54,20 +54,22 @@ spec:
           containerPort: {{ .Values.otelCollectorDf.service.ports.health }}
         - name: grpc
           containerPort: {{ .Values.otelCollectorDf.service.ports.grpc }}
+        - name: prometheus
+          containerPort: {{ .Values.otelCollectorDf.service.ports.prometheus_scraper }}
         volumeMounts:
           - name: vn-config
             mountPath: /conf
             readOnly: true
         {{- if not .Values.diagnosticMode.enabled }}
         {{- if .Values.otelCollectorDf.livenessProbe.enabled }}
-        livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.otelCollectorDf.livenessProbe "enabled") "context" $) | nindent 10 }}
+        livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit (omit .Values.otelCollectorDf.livenessProbe "enabled") "path") "context" $) | nindent 10 }}
           tcpSocket:
             port: health
         {{- end }}
         {{- if .Values.otelCollectorDf.readinessProbe.enabled }}
-        readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.otelCollectorDf.readinessProbe "enabled") "context" $) | nindent 10 }}
+        readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit (omit .Values.otelCollectorDf.readinessProbe "enabled") "path") "context" $) | nindent 10 }}
           httpGet:
-            path: /
+            path: {{.Values.otelCollectorDf.readinessProbe.path}}
             port: health
             scheme: HTTP
         {{- end }}

@@ -84,16 +84,16 @@ spec:
         {{- end }} 
         {{- if not .Values.diagnosticMode.enabled }}
         {{- if .Values.scheduler.livenessProbe.enabled }}
-        livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.scheduler.livenessProbe "enabled") "context" $) | nindent 10 }}
+        livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit (omit .Values.scheduler.livenessProbe "enabled") "path") "context" $) | nindent 10 }}
           httpGet:
-            path: /healthz
+            path: {{ .Values.scheduler.livenessProbe.path }}
             port: http
             scheme: HTTP
         {{- end }}
         {{- if .Values.scheduler.readinessProbe.enabled }}
-        readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.scheduler.readinessProbe "enabled") "context" $) | nindent 10 }}
+        readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit (omit .Values.scheduler.readinessProbe "enabled") "path") "context" $) | nindent 10 }}
           httpGet:
-            path: /readiness
+            path: {{ .Values.scheduler.readinessProbe.path }}
             port: http
             scheme: HTTP
         {{- end }}
