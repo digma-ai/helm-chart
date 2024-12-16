@@ -37,7 +37,7 @@ spec:
       tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.pipelineWorker.tolerations "context" .) | nindent 8 }}
       {{- end }}
       containers:
-      - name: digma-collector-worker
+      - name: digma-pipeline-worker
         image: {{ include "common.images.image" (dict "imageRoot" .Values.pipelineWorker.image "global" .Values.global "chart" .Chart) }}
         imagePullPolicy: {{ .Values.pipelineWorker.image.pullPolicy }}
         resources: {{- toYaml .Values.pipelineWorker.resources | nindent 12 }}
