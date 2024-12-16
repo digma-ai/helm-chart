@@ -1359,7 +1359,67 @@ otelCollectorDf:
     # -- image pull secrets
     # @section -- Otel CollectorDF parameters
     pullSecrets: []
-  configuration: "extensions:\n  health_check:\n    endpoint: \"0.0.0.0:{{ .Values.otelCollectorDf.service.ports.health }}\"\nreceivers:\n  otlp:\n    protocols: \n      grpc:\n        endpoint: 0.0.0.0:{{ .Values.otelCollectorDf.service.ports.grpc }}\n  kafkametrics:\n    protocol_version: 2.0.0\n    collection_interval: 10s\n    brokers: [{{include \"digma.kafka.client\" .}}]\n    scrapers:\n      - brokers\n      - topics\n      - consumers\n  prometheus/k8s_metrics:\n    config:\n      scrape_configs:\n        - job_name: k8s-metrics\n          scrape_interval: 5s\n          static_configs:\n            - targets: [{{ include \"digma.k8s-metrics-exporter-target\" .}}]\nprocessors:\n  batch:\n  attributes/add_source_env:\n    actions:\n      - key: source_env\n        value: {{.Values.observability.environmentName}}\n        action: insert\nexporters:\n  logging:\n    verbosity: detailed\n  {{- if eq .Values.observability.useLocal true }}\n  prometheus:\n    endpoint: 0.0.0.0:{{ .Values.otelCollectorDf.service.ports.prometheus_scraper }}\n    send_timestamps: true\n    metric_expiration: 10m\n  {{- else }}\n  otlp/remote:\n    endpoint: {{ include \"observability.otlp.remoteEndpoint\" .}}\n  {{- end }}\nservice:\n  extensions: [health_check]\n  pipelines:\n    {{- if eq .Values.observability.useLocal true }}\n    metrics:\n      receivers: [otlp, kafkametrics, prometheus/k8s_metrics]\n      processors: [attributes/add_source_env, batch]\n      exporters: [prometheus]\n    {{- else }}\n    traces:\n      receivers: [otlp]\n      processors: [batch]\n      exporters: [otlp/remote]\n    metrics:\n      receivers: [otlp, kafkametrics, prometheus/k8s_metrics]\n      processors: [attributes/add_source_env, batch]\n      exporters: [otlp/remote]\n    {{- end }}\n"
+  configuration: |
+    extensions:
+      health_check:
+        endpoint: "0.0.0.0:{{ .Values.otelCollectorDf.service.ports.health }}"
+        receivers:
+      otlp:
+        protocols: 
+          grpc:
+            endpoint: 0.0.0.0:{{ .Values.otelCollectorDf.service.ports.grpc }}
+      kafkametrics:
+        protocol_version: 2.0.0
+        collection_interval: 10s
+        brokers: [{{include "digma.kafka.client" .}}]
+        scrapers:
+          - brokers
+          - topics
+          - consumers
+      prometheus/k8s_metrics:
+        config:
+          scrape_configs:
+            - job_name: k8s-metrics
+              scrape_interval: 5s
+              static_configs:
+                - targets: [{{ include "digma.k8s-metrics-exporter-target" .}}]
+    processors:
+      batch:
+      attributes/add_source_env:
+        actions:
+          - key: source_env
+            value: {{.Values.observability.environmentName}}
+            action: insert
+    exporters:
+      logging:
+        verbosity: detailed
+      {{- if eq .Values.observability.useLocal true }}
+      prometheus:
+        endpoint: 0.0.0.0:{{ .Values.otelCollectorDf.service.ports.prometheus_scraper }}
+        send_timestamps: true
+        metric_expiration: 10m
+      {{- else }}
+      otlp/remote:
+        endpoint: {{ include "observability.otlp.remoteEndpoint" .}}
+      {{- end }}
+    service:
+      extensions: [health_check]
+      pipelines:
+        {{- if eq .Values.observability.useLocal true }}
+        metrics:
+          receivers: [otlp, kafkametrics, prometheus/k8s_metrics]
+          processors: [attributes/add_source_env, batch]
+          exporters: [prometheus]
+        {{- else }}
+        traces:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [otlp/remote]
+        metrics:
+          receivers: [otlp, kafkametrics, prometheus/k8s_metrics]
+          processors: [attributes/add_source_env, batch]
+          exporters: [otlp/remote]
+        {{- end }}
   # -- Number of replicas to deploy
   # @section -- Otel CollectorDF parameters
   replicas: 1
