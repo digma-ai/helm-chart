@@ -17,7 +17,7 @@
   },
   "editable": true,
   "fiscalYearStartMonth": 0,
-  "graphTooltip": 0,
+  "graphTooltip": 1,
   "id": 720,
   "links": [],
   "panels": [
@@ -78,52 +78,7 @@
             ]
           }
         },
-        "overrides": [
-          {
-            "__systemRef": "hideSeriesFrom",
-            "matcher": {
-              "id": "byNames",
-              "options": {
-                "mode": "exclude",
-                "names": [
-                  "cg-digma-classifications-duration",
-                  "cg-digma-db-span-durations-hourly-aggregator",
-                  "cg-digma-endpoint-bottlenecks",
-                  "cg-digma-endpoint-query-count",
-                  "cg-digma-error-processor",
-                  "cg-digma-insight-calc-requests-df",
-                  "cg-digma-node-worker",
-                  "cg-digma-pipeline-worker",
-                  "cg-digma-span-aggregator",
-                  "cg-digma-span-duration-summary",
-                  "cg-digma-span-duration-window-aggregator",
-                  "cg-digma-span-flow-measurement",
-                  "cg-digma-span-measurements-processor",
-                  "cg-digma-span-usage-stats",
-                  "cg-digma-spans-direct-relations",
-                  "cg-digma-spans-relations-duration",
-                  "cg-digma-traces-aggregation",
-                  "cg-digma-traces-aggregation-df",
-                  "cg-digma-traces-processing",
-                  "cg-digma-traces-processing-df",
-                  "cg-digma-endpoint-nplus1"
-                ],
-                "prefix": "All except:",
-                "readOnly": true
-              }
-            },
-            "properties": [
-              {
-                "id": "custom.hideFrom",
-                "value": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": true
-                }
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
         "h": 9,
@@ -151,7 +106,7 @@
             "uid": "prometheusdatasource"
           },
           "editorMode": "code",
-          "expr": "sum(kafka_consumer_group_lag_sum_ratio{source_env=\"$environment\"}) by (group) ",
+          "expr": "sum(kafka_consumer_group_lag_sum_ratio{source_env=\"$environment\"} unless rate(kafka_consumer_group_lag_sum_ratio{source_env=\"$environment\"}[5m]) == 0) by (group) ",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -578,7 +533,7 @@
       },
       "gridPos": {
         "h": 9,
-        "w": 6,
+        "w": 12,
         "x": 12,
         "y": 18
       },
@@ -609,8 +564,10 @@
             "uid": "aBLB9Z4Sz"
           },
           "editorMode": "code",
-          "expr": "sum by(topic) (kafka_topic_partitions{source_env=\"$environment\"})",
+          "exemplar": false,
+          "expr": "last_over_time(kafka_topic_partitions{source_env=\"$environment\"}[7d])",
           "format": "time_series",
+          "instant": false,
           "intervalFactor": 1,
           "legendFormat": "{{topic}}",
           "range": true,
@@ -619,6 +576,87 @@
       ],
       "title": "Partitions per Topic",
       "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheusdatasource"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 24,
+        "x": 0,
+        "y": 27
+      },
+      "id": 7,
+      "options": {
+        "calculate": false,
+        "cellGap": 1,
+        "color": {
+          "exponent": 0.5,
+          "fill": "dark-orange",
+          "max": 3,
+          "min": 0,
+          "mode": "scheme",
+          "reverse": false,
+          "scale": "exponential",
+          "scheme": "RdYlGn",
+          "steps": 64
+        },
+        "exemplars": {
+          "color": "rgba(255,0,255,0.7)"
+        },
+        "filterValues": {
+          "le": 1e-9
+        },
+        "legend": {
+          "show": true
+        },
+        "rowsFrame": {
+          "layout": "auto"
+        },
+        "tooltip": {
+          "mode": "single",
+          "showColorScale": false,
+          "yHistogram": false
+        },
+        "yAxis": {
+          "axisPlacement": "left",
+          "reverse": false
+        }
+      },
+      "pluginVersion": "10.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheusdatasource"
+          },
+          "editorMode": "code",
+          "expr": "(\r\n    stddev (kafka_consumer_group_offset_ratio{source_env=\"$environment\"}) \r\n    by (group) \r\n    /\r\n    avg (kafka_consumer_group_offset_ratio{source_env=\"$environment\"}) \r\n    by (group) \r\n) ",
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Partition distribution z-score",
+      "type": "heatmap"
     }
   ],
   "refresh": "10s",
@@ -629,8 +667,8 @@
       {
         "current": {
           "selected": false,
-          "text": "ASAF-POC",
-          "value": "ASAF-POC"
+          "text": "MELOONA",
+          "value": "MELOONA"
         },
         "datasource": {
           "type": "prometheus",
@@ -657,13 +695,13 @@
     ]
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-1h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "Kafka",
   "uid": "edq1za6ae0em8b",
-  "version": 8,
+  "version": 15,
   "weekStart": ""
 }

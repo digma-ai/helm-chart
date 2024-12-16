@@ -56,8 +56,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -208,7 +207,7 @@
             "h": 17,
             "w": 14,
             "x": 0,
-            "y": 1
+            "y": 9
           },
           "id": 18,
           "interval": "1m",
@@ -325,8 +324,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -402,7 +400,7 @@
             "h": 9,
             "w": 7,
             "x": 15,
-            "y": 1
+            "y": 9
           },
           "id": 19,
           "maxDataPoints": 1,
@@ -572,7 +570,7 @@
             "uid": "prometheusdatasource"
           },
           "editorMode": "code",
-          "expr": "sum(kube_pod_cpu_usage{source_env=\"$environment\"}) by (container)",
+          "expr": "sum(kube_pod_cpu_usage{source_env=\"$environment\"} unless rate(kube_pod_cpu_usage{source_env=\"$environment\"}[5m]) == 0) by (container)",
           "instant": false,
           "legendFormat": "{{workload}}",
           "range": true,
@@ -584,8 +582,8 @@
         {
           "id": "renameByRegex",
           "options": {
-            "regex": "^(meloona-(digma-)?)+(.*)(-deployment|-stateful-set)$",
-            "renamePattern": "$3"
+            "regex": "^digma-(.*)$",
+            "renamePattern": "$1"
           }
         }
       ],
@@ -678,7 +676,7 @@
             "uid": "prometheusdatasource"
           },
           "editorMode": "code",
-          "expr": "sum(kube_pod_mem_usage{source_env=\"$environment\"}) by (container)\r\n",
+          "expr": "sum(kube_pod_mem_usage{source_env=\"$environment\"} unless rate(kube_pod_mem_usage{source_env=\"$environment\"}[5m]) == 0) by (container) \r\n",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -690,8 +688,8 @@
         {
           "id": "renameByRegex",
           "options": {
-            "regex": "^(meloona-)(digma-)?(.*)(-deployment|-stateful-set)$",
-            "renamePattern": "$3"
+            "regex": "^digma-(.*)$",
+            "renamePattern": "$1"
           }
         }
       ],
@@ -713,6 +711,7 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMin": 0,
             "barAlignment": 0,
             "drawStyle": "line",
             "fillOpacity": 0,
@@ -784,10 +783,24 @@
           },
           "editorMode": "code",
           "expr": "(\r\n  sum (min_over_time(kubelet_volume_stats_capacity_bytes{cluster=\"\", job=\"kubelet\", metrics_path=\"/metrics\", namespace=\"meloona\",}[5m])) by (persistentvolumeclaim)\r\n  -\r\n  sum (min_over_time(kubelet_volume_stats_available_bytes{cluster=\"\", job=\"kubelet\", metrics_path=\"/metrics\", namespace=\"meloona\"}[5m])) by (persistentvolumeclaim)\r\n)",
+          "hide": true,
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheusdatasource"
+          },
+          "editorMode": "code",
+          "expr": "sum(kube_pvc_used_storage{source_env=\"$environment\"}) by (pod)",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "B"
         }
       ],
       "title": "Disk Usage",
@@ -795,7 +808,7 @@
         {
           "id": "renameByRegex",
           "options": {
-            "regex": "^.+meloona-(.+)-stateful-set-0$",
+            "regex": "^\\w+-(.*)-stateful-set(-persisted)?-0$",
             "renamePattern": "$1"
           }
         }
@@ -915,7 +928,7 @@
             "uid": "prometheusdatasource"
           },
           "editorMode": "code",
-          "expr": "sum(kube_pod_cpu_usage{source_env=\"$environment\"}) by ()",
+          "expr": "sum(kube_pod_cpu_usage{source_env=\"$environment\"} unless rate(kube_pod_cpu_usage{source_env=\"$environment\"}[5m]) == 0) by ()",
           "instant": false,
           "legendFormat": "Total",
           "range": true,
@@ -1012,7 +1025,7 @@
             "uid": "prometheusdatasource"
           },
           "editorMode": "code",
-          "expr": "sum(kube_pod_mem_usage{source_env=\"$environment\"}) by ()",
+          "expr": "sum(kube_pod_mem_usage{source_env=\"$environment\"} unless rate(kube_pod_mem_usage{source_env=\"$environment\"}[5m]) == 0) by ()",
           "instant": false,
           "legendFormat": "Total",
           "range": true,
@@ -1095,7 +1108,7 @@
           "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": false
         },
         "tooltip": {
           "mode": "multi",
@@ -1109,7 +1122,7 @@
             "uid": "prometheusdatasource"
           },
           "editorMode": "code",
-          "expr": "(\r\n  sum (min_over_time(kubelet_volume_stats_capacity_bytes{cluster=\"\", job=\"kubelet\", metrics_path=\"/metrics\", namespace=\"meloona\",}[5m])) by ()\r\n  -\r\n  sum (min_over_time(kubelet_volume_stats_available_bytes{cluster=\"\", job=\"kubelet\", metrics_path=\"/metrics\", namespace=\"meloona\"}[5m])) by ()\r\n)",
+          "expr": "sum(kube_pvc_used_storage{source_env=\"$environment\"}) by ()",
           "instant": false,
           "legendFormat": "Total",
           "range": true,
@@ -1358,6 +1371,7 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMin": 0,
             "barAlignment": 0,
             "drawStyle": "line",
             "fillOpacity": 0,
@@ -1427,7 +1441,7 @@
             "uid": "prometheusdatasource"
           },
           "editorMode": "code",
-          "expr": "sum(rate(log_error_count_total{source_env=\"$environment\"}[2m])*2*60) by (app)",
+          "expr": "sum(delta(log_error_count_total{source_env=\"$environment\"}[$__rate_interval])) by (app)",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -1453,6 +1467,7 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMin": 0,
             "barAlignment": 0,
             "drawStyle": "line",
             "fillOpacity": 0,
@@ -1522,7 +1537,7 @@
             "uid": "prometheusdatasource"
           },
           "editorMode": "code",
-          "expr": "sum(rate(log_error_count_total{source_env=\"$environment\"}[2m])*2*60) by (logger)",
+          "expr": "sum(delta(log_error_count_total{source_env=\"$environment\"}[$__rate_interval])) by (logger)",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -1549,6 +1564,7 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMin": 0,
             "barAlignment": 0,
             "drawStyle": "line",
             "fillOpacity": 0,
@@ -1614,7 +1630,7 @@
             "uid": "prometheusdatasource"
           },
           "editorMode": "code",
-          "expr": "sum(rate(log_error_count_total{source_env=\"$environment\"}[2m])*2*60) by (exceptionType)",
+          "expr": "sum(delta(log_error_count_total{source_env=\"$environment\"}[$__rate_interval])) by (exceptionType)",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -1722,7 +1738,7 @@
             "uid": "prometheusdatasource"
           },
           "editorMode": "code",
-          "expr": "sum by (env) (rate(request_traces_total{source_env=\"$environment\", env=~\".+\"}[5m]))",
+          "expr": "sum by (env) (rate(request_traces_total{source_env=\"$environment\", env=~\".+\"}[$__rate_interval]))",
           "instant": false,
           "legendFormat": "{{digma_env}}",
           "range": true,
@@ -1820,6 +1836,10 @@
               {
                 "id": "custom.lineWidth",
                 "value": 2
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 24
               }
             ]
           }
@@ -1851,7 +1871,7 @@
             "uid": "prometheusdatasource"
           },
           "editorMode": "code",
-          "expr": "sum(rate(request_spans_total{source_env=\"$environment\", env=~\".+\"}[5m])) by (env)",
+          "expr": "sum(rate(request_spans_total{source_env=\"$environment\", env=~\".+\"}[$__rate_interval])) by (env)",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -1863,12 +1883,25 @@
             "uid": "prometheusdatasource"
           },
           "editorMode": "code",
-          "expr": "sum(rate(throttled_spans_total{source_env=\"$environment\"}[5m])) by ()",
+          "expr": "sum(rate(throttled_spans_total{source_env=\"$environment\"}[$__rate_interval])) by ()",
           "hide": false,
           "instant": false,
           "legendFormat": "{{label_name}} (throttled)",
           "range": true,
           "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheusdatasource"
+          },
+          "editorMode": "code",
+          "expr": "sum(rate(blocked_spans_total{source_env=\"$environment\"}[$__rate_interval])) by ()",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "{{label_name}} (blocked)",
+          "range": true,
+          "refId": "C"
         }
       ],
       "title": "Spans per Second",
@@ -1959,7 +1992,7 @@
             "uid": "prometheusdatasource"
           },
           "editorMode": "code",
-          "expr": "sum(rate(request_spans_total{source_env=\"$environment\", env=~\".+\"}[5m])) by (env, service)",
+          "expr": "sum(rate(request_spans_total{source_env=\"$environment\", env=~\".+\"}[$__rate_interval])) by (env, service)",
           "instant": false,
           "legendFormat": "{{env}} ({{service}})",
           "range": true,
@@ -2053,7 +2086,7 @@
             "uid": "prometheusdatasource"
           },
           "editorMode": "code",
-          "expr": "max_over_time(alive_traces_count{source_env=\"$environment\"}[$__interval])",
+          "expr": "max_over_time(alive_traces_count{source_env=\"$environment\"}[$__rate_interval])>0",
           "instant": false,
           "legendFormat": "collector-worker-{{exported_instance}}",
           "range": true,
@@ -2147,7 +2180,7 @@
             "uid": "prometheusdatasource"
           },
           "editorMode": "code",
-          "expr": "max_over_time(alive_spans_count{source_env=\"$environment\"}[$__interval])",
+          "expr": "max_over_time(alive_spans_count{source_env=\"$environment\"}[$__rate_interval])>0",
           "instant": false,
           "legendFormat": "collector-worker-{{exported_instance}}",
           "range": true,
@@ -2155,6 +2188,126 @@
         }
       ],
       "title": "Alive Spans",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheusdatasource"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 43
+      },
+      "id": 33,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheusdatasource"
+          },
+          "editorMode": "code",
+          "expr": "max_over_time(soft_limit{source_env=\"$environment\"}[$__rate_interval])>0",
+          "instant": false,
+          "legendFormat": "limit-{{exported_instance}}",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheusdatasource"
+          },
+          "editorMode": "code",
+          "expr": "max_over_time(items_count{source_env=\"$environment\"}[$__rate_interval])>0",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "size-{{exported_instance}}",
+          "range": true,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheusdatasource"
+          },
+          "editorMode": "code",
+          "expr": "delta(items_added_total{source_env=\"$environment\"}[$__rate_interval])",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "added-{{exported_instance}}",
+          "range": true,
+          "refId": "C"
+        }
+      ],
+      "title": "Buffer",
       "type": "timeseries"
     },
     {
@@ -2230,7 +2383,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 51
+            "y": 75
           },
           "id": 2,
           "options": {
@@ -2328,7 +2481,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 51
+            "y": 75
           },
           "id": 1,
           "options": {
@@ -2375,6 +2528,307 @@
         "w": 24,
         "x": 0,
         "y": 52
+      },
+      "id": 34,
+      "panels": [],
+      "title": "Jaeger Exporter",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheusdatasource"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 53
+      },
+      "id": 35,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheusdatasource"
+          },
+          "editorMode": "code",
+          "expr": "sum(delta(jaeger_exporter_traces_size_kb_count{source_env=\"$environment\"}[5m])/5) by (caller)",
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Jaeger Exporter Trace/minute",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheusdatasource"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "deckbytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 53
+      },
+      "id": 36,
+      "maxDataPoints": 100,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheusdatasource"
+          },
+          "editorMode": "code",
+          "expr": "sum(delta(jaeger_exporter_traces_size_kb_sum{source_env=\"$environment\"}[2m])) by (le, caller)",
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Jaeger Exporter Upload/hour",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheusdatasource"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 53
+      },
+      "id": 37,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheusdatasource"
+          },
+          "editorMode": "code",
+          "expr": "histogram_quantile(0.99, sum(rate(jaeger_exporter_traces_spans_bucket{source_env=\"$environment\"}[5m])) by (le, caller))",
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Jaeger Exporter Spans/Trace P99",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 61
       },
       "id": 12,
       "panels": [],
@@ -2445,7 +2899,7 @@
         "h": 10,
         "w": 12,
         "x": 0,
-        "y": 53
+        "y": 62
       },
       "id": 11,
       "options": {
@@ -2481,31 +2935,6 @@
           "options": {
             "regex": "^(cg-digma-)(.*)$",
             "renamePattern": "$2"
-          }
-        },
-        {
-          "id": "filterFieldsByName",
-          "options": {
-            "include": {
-              "names": [
-                "Time",
-                "collector-worker",
-                "db-span-durations-hourly-aggregator",
-                "endpoint-bottlenecks",
-                "endpoint-query-count",
-                "insight-calc-requests-df",
-                "node-worker",
-                "pipeline-worker",
-                "span-aggregator",
-                "span-duration-summary",
-                "span-duration-total",
-                "span-duration-window-aggregator",
-                "span-measurements-processor",
-                "span-usage-stats",
-                "spans-direct-relations",
-                "spans-relations-duration"
-              ]
-            }
           }
         }
       ],
@@ -2575,7 +3004,7 @@
         "h": 10,
         "w": 12,
         "x": 12,
-        "y": 53
+        "y": 62
       },
       "id": 20,
       "options": {
@@ -2611,31 +3040,6 @@
           "options": {
             "regex": "^(cg-digma-)(.*)$",
             "renamePattern": "$2"
-          }
-        },
-        {
-          "id": "filterFieldsByName",
-          "options": {
-            "include": {
-              "names": [
-                "Time",
-                "collector-worker",
-                "db-span-durations-hourly-aggregator",
-                "endpoint-bottlenecks",
-                "endpoint-query-count",
-                "insight-calc-requests-df",
-                "node-worker",
-                "pipeline-worker",
-                "span-aggregator",
-                "span-duration-summary",
-                "span-duration-total",
-                "span-duration-window-aggregator",
-                "span-measurements-processor",
-                "span-usage-stats",
-                "spans-direct-relations",
-                "spans-relations-duration"
-              ]
-            }
           }
         }
       ],
@@ -2705,7 +3109,7 @@
         "h": 10,
         "w": 12,
         "x": 0,
-        "y": 63
+        "y": 72
       },
       "id": 25,
       "options": {
@@ -2727,9 +3131,9 @@
             "uid": "prometheusdatasource"
           },
           "editorMode": "code",
-          "expr": "histogram_quantile(0.95, sum(rate(kafka_messages_in_batch_bucket{source_env=\"$environment\"}[5m])) by (le, consumerGroupId))",
+          "expr": "histogram_quantile(0.95, sum(rate(kafka_messages_in_batch_bucket{source_env=\"$environment\"}[$__rate_interval])) by (le, consumerGroupId))",
           "instant": false,
-          "legendFormat": "{{consumer_type}}",
+          "legendFormat": "{{consumerGroupId}}",
           "range": true,
           "refId": "A"
         }
@@ -2741,28 +3145,6 @@
           "options": {
             "regex": "^(cg-digma-)(.*)$",
             "renamePattern": "$2"
-          }
-        },
-        {
-          "id": "filterFieldsByName",
-          "options": {
-            "include": {
-              "names": [
-                "Time",
-                "db-span-durations-hourly-aggregator",
-                "endpoint-bottlenecks",
-                "endpoint-query-count",
-                "insight-calc-requests-df",
-                "span-aggregator",
-                "span-duration-summary",
-                "span-duration-total",
-                "span-duration-window-aggregator",
-                "span-measurements-processor",
-                "span-usage-stats",
-                "spans-direct-relations",
-                "spans-relations-duration"
-              ]
-            }
           }
         }
       ],
@@ -2796,7 +3178,7 @@
           "query": "label_values(activity_call_duration_ms_bucket,source_env)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
-        "refresh": 1,
+        "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
         "sort": 0,
@@ -2812,6 +3194,6 @@
   "timezone": "",
   "title": "Environment",
   "uid": "edqivwqldju2of",
-  "version": 12,
+  "version": 43,
   "weekStart": ""
 }
