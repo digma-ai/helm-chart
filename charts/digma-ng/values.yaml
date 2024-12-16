@@ -1363,7 +1363,7 @@ otelCollectorDf:
     extensions:
       health_check:
         endpoint: "0.0.0.0:{{ .Values.otelCollectorDf.service.ports.health }}"
-        receivers:
+    receivers:
       otlp:
         protocols: 
           grpc:
