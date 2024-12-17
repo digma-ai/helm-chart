@@ -54,6 +54,9 @@ spec:
         {{- include "env.redis" . | nindent  8 }}
         {{- include "env.kafka" . | nindent  8 }}
         {{- include "env.jaeger" . | nindent  8 }}
+        {{- if .Values.collectorApi.extraEnvVars }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.collectorApi.extraEnvVars "context" $) | nindent 8 }}
+        {{- end }}
         {{- if not .Values.diagnosticMode.enabled }}
         {{- if .Values.collectorApi.livenessProbe.enabled }}
         livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit (omit .Values.collectorApi.livenessProbe "enabled") "path") "context" $) | nindent 10 }}

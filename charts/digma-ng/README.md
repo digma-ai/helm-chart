@@ -1,16 +1,10 @@
 # digma-ng
 
-
-
-
-![Version: 1.0.258](https://img.shields.io/badge/Version-1.0.258-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.167](https://img.shields.io/badge/AppVersion-0.3.167-informational?style=flat-square) 
+![Version: 1.0.258](https://img.shields.io/badge/Version-1.0.258-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.167](https://img.shields.io/badge/AppVersion-0.3.167-informational?style=flat-square)
 
 A Helm chart containing Digma's services
 
 **Homepage:** <https://github.com/digma-ai/digma>
-
-
-
 
 ## License Key
 Digma will not function without a valid license key.
@@ -31,7 +25,6 @@ helm upgrade --install digma digma/digma-ng -n digma --set digma.licenseKey=$DIG
 ## Introduction
 
 This chart bootstraps a [Digma](https://digma.ai) deployment on a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
-
 
 ## Prerequisites
 
@@ -201,6 +194,7 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 | collectorApi.nodeSelector | object | `{}` | Node labels for pods assignment |
 | collectorApi.tolerations | list | `[]` | Tolerations for pods assignment |
 | collectorApi.affinity | object | `{}` | Affinity for pods assignment |
+| collectorApi.extraEnvVars | list | `[]` | Array with extra environment variables to add |
 | collectorApi.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
 | collectorApi.livenessProbe.path | string | `"/healthz"` | Path for livenessProbe |
 | collectorApi.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
@@ -232,6 +226,7 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 | analyticsApi.nodeSelector | object | `{}` | Node labels for pods assignment |
 | analyticsApi.tolerations | list | `[]` | Tolerations for pods assignment |
 | analyticsApi.affinity | object | `{}` | Affinity for pods assignment |
+| analyticsApi.extraEnvVars | list | `[]` | Array with extra environment variables to add |
 | analyticsApi.ingress.enabled | bool | `false` | Enable ingress, secured parameter will be set to false |
 | analyticsApi.ingress.pathType | string | `"ImplementationSpecific"` | Ingress path type |
 | analyticsApi.ingress.apiVersion | string | `""` | Force Ingress API version (automatically detected if not set) |
@@ -298,6 +293,7 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 | scheduler.nodeSelector | object | `{}` | Node labels for pods assignment |
 | scheduler.tolerations | list | `[]` | Tolerations for pods assignment |
 | scheduler.affinity | object | `{}` | Affinity for pods assignment |
+| scheduler.extraEnvVars | list | `[]` | Array with extra environment variables to add |
 | scheduler.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
 | scheduler.livenessProbe.path | string | `"/healthz"` | Path for livenessProbe |
 | scheduler.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
@@ -326,6 +322,7 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 | pipelineWorker.nodeSelector | object | `{}` | Node labels for pods assignment |
 | pipelineWorker.tolerations | list | `[]` | Tolerations for pods assignment |
 | pipelineWorker.affinity | object | `{}` | Affinity for pods assignment |
+| pipelineWorker.extraEnvVars | list | `[]` | Array with extra environment variables to add |
 | pipelineWorker.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
 | pipelineWorker.livenessProbe.path | string | `"/healthz"` | Path for livenessProbe |
 | pipelineWorker.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |

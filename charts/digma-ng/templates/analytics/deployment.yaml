@@ -50,6 +50,9 @@ spec:
         {{- include "env.influx" . | nindent  8 }}
         {{- include "env.kafka" . | nindent  8 }}
         {{- include "env.postgres" . | nindent  8 }}
+        {{- if .Values.analyticsApi.extraEnvVars }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.analyticsApi.extraEnvVars "context" $) | nindent 8 }}
+        {{- end }}
         - name: GlobalExceptionSettings__ExposeInternalDetails
           value: "true"
         - name: Analytics.Endpoints__Default__Secured

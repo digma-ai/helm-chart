@@ -51,6 +51,9 @@ spec:
         {{- include "env.postgres" . | nindent  8 }}
         {{- include "env.kafka" . | nindent  8 }}
         {{- include "env.elasticsearch" . | nindent  8 }}
+        {{- if .Values.scheduler.extraEnvVars }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.scheduler.extraEnvVars "context" $) | nindent 8 }}
+        {{- end }}
         {{- if .Values.digma.report.enabled }}
           {{- if .Values.digma.report.emailGateway.url }}
         - name: "EmailGateway__Url"
