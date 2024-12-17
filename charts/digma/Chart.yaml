@@ -6,4 +6,4 @@ description: A Helm chart containing Digma's services and dbs
 home: https://github.com/digma-ai/digma
 type: application
 # appVersion: digma version (affects image tag)
-appVersion: 0.3.167
+appVersion: 0.3.168

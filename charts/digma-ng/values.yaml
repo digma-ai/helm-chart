@@ -789,6 +789,7 @@ measurementAnalysis:
     ThresholdOptions__UpsertEndpointThresholdSeconds: 5
     ThresholdOptions__UpsertSpansThresholdSeconds: 5
     ThresholdOptions__UpsertSpanFlowMetadataThresholdSeconds: 5
+    ThresholdOptions__UpsertSpanFlowTraceThresholdHours: 24
   image:
     registry: docker.io
     repository: digmatic/digma-measurement-analysis
