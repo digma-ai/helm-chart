@@ -559,6 +559,14 @@ collectorApi:
   # -- Affinity for pods assignment
   # @section -- CollectorApi parameters
   affinity: {}
+  ## e.g:
+  ## extraEnvVars:
+  ##   - name: FOO
+  ##     value: "bar"
+  # -- Array with extra environment variables to add
+  # @section -- CollectorApi parameters
+  extraEnvVars: []
+
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
   livenessProbe:
     # -- Enable livenessProbe
@@ -666,6 +674,13 @@ analyticsApi:
   # -- Affinity for pods assignment
   # @section -- AnalyticsApi parameters
   affinity: {}
+  ## e.g:
+  ## extraEnvVars:
+  ##   - name: FOO
+  ##     value: "bar"
+  # -- Array with extra environment variables to add
+  # @section -- AnalyticsApi parameters
+  extraEnvVars: []
   ## analyticsApi ingress parameters
   ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
   ingress:
@@ -931,6 +946,13 @@ scheduler:
   # -- Affinity for pods assignment
   # @section -- Scheduler parameters
   affinity: {}
+  ## e.g:
+  ## extraEnvVars:
+  ##   - name: FOO
+  ##     value: "bar"
+  # -- Array with extra environment variables to add
+  # @section -- Scheduler parameters
+  extraEnvVars: []
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
   livenessProbe:
     # -- Enable livenessProbe
@@ -1029,6 +1051,13 @@ pipelineWorker:
   # -- Affinity for pods assignment
   # @section -- PipelineWorker parameters
   affinity: {}
+  ## e.g:
+  ## extraEnvVars:
+  ##   - name: FOO
+  ##     value: "bar"
+  # -- Array with extra environment variables to add
+  # @section -- PipelineWorker parameters
+  extraEnvVars: []  
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
   livenessProbe:
     # -- Enable livenessProbe

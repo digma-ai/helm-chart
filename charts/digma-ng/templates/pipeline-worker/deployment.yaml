@@ -51,6 +51,9 @@ spec:
         {{- include "env.postgres" . | nindent  8 }}
         {{- include "env.kafka" . | nindent  8 }}
         {{- include "env.jaeger" . | nindent 8 }}
+        {{- if .Values.pipelineWorker.extraEnvVars }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.pipelineWorker.extraEnvVars "context" $) | nindent 8 }}
+        {{- end }}
         {{- if not .Values.diagnosticMode.enabled }}
         {{- if .Values.pipelineWorker.livenessProbe.enabled }}
         livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit (omit .Values.pipelineWorker.livenessProbe "enabled") "path") "context" $) | nindent 10 }}
