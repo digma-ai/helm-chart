@@ -61,6 +61,8 @@ spec:
           value: {{ .Values.measurementAnalysis.env.ThresholdOptions__UpsertSpansThresholdSeconds | quote }}
         - name: ThresholdOptions__UpsertSpanFlowMetadataThresholdSeconds
           value: {{ .Values.measurementAnalysis.env.ThresholdOptions__UpsertSpanFlowMetadataThresholdSeconds | quote }}
+        - name: ThresholdOptions__UpsertSpanFlowTraceThresholdHours
+          value: {{ .Values.measurementAnalysis.env.ThresholdOptions__UpsertSpanFlowTraceThresholdHours  | quote }}
         {{- if .Values.measurementAnalysis.extraEnvVars }}
         {{- include "common.tplvalues.render" (dict "value" .Values.measurementAnalysis.extraEnvVars "context" $) | nindent 8 }}
         {{- end }}
