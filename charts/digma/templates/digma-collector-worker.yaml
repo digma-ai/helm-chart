@@ -65,6 +65,8 @@ spec:
           value: {{ .Values.digmaCollectorWorker.extendedObservability.enable | quote }}
         - name: Sampling__Enable
           value: {{ .Values.digmaCollectorWorker.sampling.enable | quote }}
+        - name: ThresholdOptions__RecentActivityUpdateThresholdSeconds
+          value: {{ .Values.traceCollectorThresholds.recentActivityUpdateThresholdSeconds | quote }}
         {{- range $index, $element := .Values.digmaCollectorWorker.ignoreEndpoints }}
         - name: Filter__IgnoreEndpoints__{{$index}}__Route
           value: {{ $element.Route | quote }}

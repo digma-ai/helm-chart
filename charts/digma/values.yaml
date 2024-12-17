@@ -34,7 +34,8 @@ traceCollectorThresholds:
   recentActivityUpdateThresholdSeconds: 5
   upsertEndpointThresholdSeconds: 5
   upsertSpansThresholdSeconds: 5
-  upsertSpanFlowMetadataThresholdSeconds: 5
+  upsertSpanFlowMetadataThresholdSeconds: 5  
+  upsertSpanFlowTraceThresholdHours: 24
 
 kafka:
   host: "{{ .Release.Name }}-kafka"
