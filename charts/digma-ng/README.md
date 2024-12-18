@@ -550,7 +550,7 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| kafka.controller.extraConfig | string | `"offsets.topic.replication.factor=1\ntransaction.state.log.replication.factor=1\nlog.retention.check.interval.ms = 100000\nlog.roll.ms = 500000\nlog.retention.minutes = 10\n"` | Additional configuration to be appended at the end of the generated Kafka configuration file. |
+| kafka.controller.extraConfig | string | `"offsets.topic.replication.factor=1\ntransaction.state.log.replication.factor=1\nlog.retention.check.interval.ms = 120000\nlog.roll.ms = 120000\nlog.retention.minutes = 10\n"` | Additional configuration to be appended at the end of the generated Kafka configuration file. |
 ## Requirements
 
 | Repository | Name | Version |
