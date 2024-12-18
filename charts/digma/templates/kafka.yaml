@@ -73,9 +73,9 @@ spec:
         - name: KAFKA_CFG_LOG_RETENTION_MINUTES
           value: "10"
         - name: KAFKA_CFG_LOG_RETENTION_CHECK_INTERVAL_MS
-          value: "100000" # 1 min
+          value: "120000" # 2 min
         - name: KAFKA_CFG_LOG_ROLL_MS
-          value: "500000" # 5 min
+          value: "120000" # 2 min
   volumeClaimTemplates:
   - metadata:
       name: kafka-data

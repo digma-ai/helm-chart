@@ -2028,8 +2028,8 @@ kafka:
     extraConfig: |
       offsets.topic.replication.factor=1
       transaction.state.log.replication.factor=1
-      log.retention.check.interval.ms = 100000
-      log.roll.ms = 500000
+      log.retention.check.interval.ms = 120000
+      log.roll.ms = 120000
       log.retention.minutes = 10
     ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
     # -- Extra labels for pods
