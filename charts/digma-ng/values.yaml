@@ -1922,6 +1922,8 @@ grafana:
       fileName: environment.json
     - configMapName: digma-grafana-kafka-dashboards
       fileName: kafka.json
+    - configMapName: digma-grafana-apps-dashboards
+      fileName: apps.json
   datasources:
     secretName: grafana-datasource
   grafana:
@@ -1965,6 +1967,11 @@ prometheus:
   server:
     existingConfigmap: '{{ .Release.Name }}-prometheus-server'
     existingConfigmapKey: prometheus.yaml
+    persistence:
+      enabled: true
+      accessModes:
+        - ReadWriteOnce
+      size: 20Gi
     # -- Prometheus deployment strategy type. Is a deployment resource therefore, Strategy type should be set to Recreate to avoid dead locks
     # @section -- Prometheus parameters
     updateStrategy:
@@ -2001,11 +2008,7 @@ prometheus:
     # -- Affinity for pods assignment
     # @section -- Prometheus parameters
     affinity: {}
-  persistence:
-    enabled: true
-    accessModes:
-      - ReadWriteOnce
-    size: 20Gi
+
 ## kafka
 ## ref: https://github.com/bitnami/charts/blob/main/bitnami/kafka/values.yaml
 ##
