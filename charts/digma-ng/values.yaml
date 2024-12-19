@@ -1561,10 +1561,10 @@ influxdb:
       type: Recreate
     resources:
       requests:
-        memory: 500Mi
+        memory: 2Gi
         cpu: 500m
       limits:
-        memory: 2Gi
+        memory: 4Gi
         cpu: 2000m
     service:
       ports:
@@ -1871,7 +1871,7 @@ elasticsearch:
         memory: 2Gi
         cpu: 1
       limits:
-        memory: 4Gi
+        memory: 3Gi
         cpu: 2
     extraEnvVars:
       - name: ES_JAVA_OPTS
@@ -2018,7 +2018,7 @@ kafka:
     replicaCount: 1
     resources:
       requests:
-        memory: 400Mi
+        memory: 2Gi
         cpu: 200m
       limits:
         memory: 3Gi
