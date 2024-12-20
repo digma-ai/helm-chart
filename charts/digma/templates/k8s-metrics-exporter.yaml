@@ -29,7 +29,7 @@ spec:
       {{- include "nodeSelector" . | nindent  6 }}
       containers:
         - name: k8s-metrics-exporter
-          image: digmatic/k8s-metrics-exporter:0.0.9
+          image: digmatic/k8s-metrics-exporter:0.0.10
           imagePullPolicy: Always
           env:
           - name: KUBE_NAMESPACE
