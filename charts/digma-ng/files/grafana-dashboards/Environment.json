@@ -18,8 +18,9 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
-  "id": 4,
+  "id": 721,
   "links": [],
+  "liveNow": false,
   "panels": [
     {
       "collapsed": false,
@@ -53,7 +54,6 @@
             "axisPlacement": "auto",
             "axisSoftMin": 0,
             "barAlignment": 0,
-            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -95,7 +95,32 @@
           },
           "unit": "percentunit"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "Value"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 11,
@@ -116,7 +141,6 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -124,7 +148,7 @@
             "uid": "prometheusdatasource"
           },
           "editorMode": "code",
-          "expr": "sum(kube_pod_cpu_usage{source_env=\"$environment\"} unless rate(kube_pod_cpu_usage{source_env=\"$environment\"}[$__rate_interval]) == 0) by (container)",
+          "expr": "sum(kube_pod_cpu_usage{source_env=\"$environment\"} unless rate(kube_pod_cpu_usage{source_env=\"$environment\"}[$__rate_interval]) == 0) by (app)",
           "instant": false,
           "legendFormat": "{{workload}}",
           "range": true,
@@ -161,7 +185,6 @@
             "axisPlacement": "auto",
             "axisSoftMin": 0,
             "barAlignment": 0,
-            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -224,7 +247,6 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -232,7 +254,7 @@
             "uid": "prometheusdatasource"
           },
           "editorMode": "code",
-          "expr": "sum(kube_pod_mem_usage{source_env=\"$environment\"} unless rate(kube_pod_mem_usage{source_env=\"$environment\"}[5m]) == 0) by (container) \r\n",
+          "expr": "sum(kube_pod_mem_usage{source_env=\"$environment\"} unless rate(kube_pod_mem_usage{source_env=\"$environment\"}[5m]) == 0) by (app) \r\n",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -269,7 +291,6 @@
             "axisPlacement": "auto",
             "axisSoftMin": 0,
             "barAlignment": 0,
-            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -332,7 +353,6 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -340,20 +360,7 @@
             "uid": "prometheusdatasource"
           },
           "editorMode": "code",
-          "expr": "(\r\n  sum (min_over_time(kubelet_volume_stats_capacity_bytes{cluster=\"\", job=\"kubelet\", metrics_path=\"/metrics\", namespace=\"meloona\",}[$__rate_interval])) by (persistentvolumeclaim)\r\n  -\r\n  sum (min_over_time(kubelet_volume_stats_available_bytes{cluster=\"\", job=\"kubelet\", metrics_path=\"/metrics\", namespace=\"meloona\"}[$__rate_interval])) by (persistentvolumeclaim)\r\n)",
-          "hide": true,
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheusdatasource"
-          },
-          "editorMode": "code",
-          "expr": "sum(kube_pvc_used_storage{source_env=\"$environment\"}) by (pod)",
+          "expr": "sum(kube_pod_disk_usage{source_env=\"$environment\"}) by (app)",
           "hide": false,
           "instant": false,
           "legendFormat": "__auto",
@@ -392,7 +399,6 @@
             "axisPlacement": "auto",
             "axisSoftMin": 0,
             "barAlignment": 0,
-            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -480,7 +486,6 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -516,7 +521,6 @@
             "axisPlacement": "auto",
             "axisSoftMin": 0,
             "barAlignment": 0,
-            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -579,7 +583,6 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -615,7 +618,6 @@
             "axisPlacement": "auto",
             "axisSoftMin": 0,
             "barAlignment": 0,
-            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -678,7 +680,6 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -686,7 +687,7 @@
             "uid": "prometheusdatasource"
           },
           "editorMode": "code",
-          "expr": "sum(kube_pvc_used_storage{source_env=\"$environment\"}) by ()",
+          "expr": "sum(kube_pod_disk_usage{source_env=\"$environment\"}) by ()",
           "instant": false,
           "legendFormat": "Total",
           "range": true,
@@ -724,7 +725,6 @@
             "axisPlacement": "auto",
             "axisSoftMin": 0,
             "barAlignment": 0,
-            "barWidthFactor": 0.6,
             "drawStyle": "bars",
             "fillOpacity": 100,
             "gradientMode": "none",
@@ -803,7 +803,7 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.3.0-pre",
+      "pluginVersion": "10.4.0",
       "targets": [
         {
           "datasource": {
@@ -812,7 +812,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(delta(kube_pod_restarts{source_env=\"$environment\"}[$__rate_interval])>0) by (container)",
+          "expr": "sum(delta(kube_pod_restarts{source_env=\"$environment\"}[$__rate_interval])>0) by (app)",
           "format": "time_series",
           "instant": false,
           "legendFormat": "{{container}}",
@@ -869,7 +869,6 @@
         "graphMode": "area",
         "justifyMode": "center",
         "orientation": "auto",
-        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -881,7 +880,7 @@
         "textMode": "value_and_name",
         "wideLayout": true
       },
-      "pluginVersion": "11.3.0-pre",
+      "pluginVersion": "10.4.0",
       "targets": [
         {
           "datasource": {
@@ -941,7 +940,6 @@
             "axisPlacement": "auto",
             "axisSoftMin": 0,
             "barAlignment": 0,
-            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -1004,7 +1002,6 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -1040,7 +1037,6 @@
             "axisPlacement": "auto",
             "axisSoftMin": 0,
             "barAlignment": 0,
-            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -1103,7 +1099,6 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -1140,7 +1135,6 @@
             "axisPlacement": "auto",
             "axisSoftMin": 0,
             "barAlignment": 0,
-            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -1199,7 +1193,6 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -1248,7 +1241,6 @@
             "axisPlacement": "auto",
             "axisSoftMin": 0,
             "barAlignment": 0,
-            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -1310,7 +1302,6 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -1346,7 +1337,6 @@
             "axisPlacement": "auto",
             "axisSoftMin": 0,
             "barAlignment": 0,
-            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -1446,7 +1436,6 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -1508,7 +1497,6 @@
             "axisPlacement": "auto",
             "axisSoftMin": 0,
             "barAlignment": 0,
-            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -1570,7 +1558,6 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -1605,7 +1592,6 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
-            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -1667,7 +1653,6 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -1702,7 +1687,6 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
-            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -1764,7 +1748,6 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -1799,7 +1782,6 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
-            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -1861,7 +1843,6 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -2147,7 +2128,6 @@
             "axisPlacement": "auto",
             "axisSoftMin": 0,
             "barAlignment": 0,
-            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -2209,7 +2189,6 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -2245,7 +2224,6 @@
             "axisPlacement": "auto",
             "axisSoftMin": 0,
             "barAlignment": 0,
-            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -2309,7 +2287,6 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -2345,7 +2322,6 @@
             "axisPlacement": "auto",
             "axisSoftMin": 0,
             "barAlignment": 0,
-            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -2408,7 +2384,6 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -2457,7 +2432,6 @@
             "axisPlacement": "auto",
             "axisSoftMin": 0,
             "barAlignment": 0,
-            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -2520,7 +2494,6 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -2565,7 +2538,6 @@
             "axisPlacement": "auto",
             "axisSoftMin": 0,
             "barAlignment": 0,
-            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -2628,7 +2600,6 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -2673,7 +2644,6 @@
             "axisPlacement": "auto",
             "axisSoftMin": 0,
             "barAlignment": 0,
-            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -2736,7 +2706,6 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -2764,24 +2733,26 @@
       "type": "timeseries"
     }
   ],
-  "preload": false,
   "refresh": "10s",
-  "schemaVersion": 40,
+  "schemaVersion": 39,
   "tags": [],
   "templating": {
     "list": [
       {
         "current": {
-          "text": "MELOONA",
-          "value": "MELOONA"
+          "selected": false,
+          "text": "LAC",
+          "value": "LAC"
         },
         "datasource": {
           "type": "prometheus",
           "uid": "prometheusdatasource"
         },
         "definition": "label_values(activity_call_duration_ms_bucket,source_env)",
+        "hide": 0,
         "includeAll": false,
         "label": "Environment",
+        "multi": false,
         "name": "environment",
         "options": [],
         "query": {
@@ -2791,18 +2762,20 @@
         },
         "refresh": 2,
         "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
         "type": "query"
       }
     ]
   },
   "time": {
-    "from": "now-30m",
+    "from": "now-1h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Environment",
   "uid": "edqivwqldju2of",
-  "version": 3,
+  "version": 44,
   "weekStart": ""
 }

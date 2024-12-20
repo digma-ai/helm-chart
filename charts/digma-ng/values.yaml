@@ -1266,7 +1266,7 @@ metricsExporter:
   image:
     registry: docker.io
     repository: digmatic/k8s-metrics-exporter
-    tag: 0.0.10-alpha.3
+    tag: 0.0.10
     # -- image pull policy
     # @section -- MetricsExporter parameters
     pullPolicy: IfNotPresent
@@ -1868,14 +1868,14 @@ elasticsearch:
         - ReadWriteOnce
     resources:
       requests:
-        memory: 2Gi
+        memory: 3Gi
         cpu: 1
       limits:
-        memory: 3Gi
+        memory: 4Gi
         cpu: 2
     extraEnvVars:
       - name: ES_JAVA_OPTS
-        value: -server -Xms1G -Xmx2G
+        value: -server -Xms2G -Xmx2G
     ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
     # -- Extra labels for pods
     # @section -- Elasticsearch parameters
