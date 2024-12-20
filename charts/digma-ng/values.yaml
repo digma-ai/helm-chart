@@ -1193,6 +1193,7 @@ nginx:
     # @section -- UI parameters
     successThreshold: 1
 ui:
+  artifactsVersion: 4.0.0
   service:
     # -- service type
     # @section -- UI parameters

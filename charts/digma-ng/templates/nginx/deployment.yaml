@@ -49,7 +49,7 @@ spec:
           - /bin/sh
           - -c
           - |
-            wget -O /tmp/digma-ui.zip "https://github.com/digma-ai/digma-ui/releases/download/v4.0.0/dist-web-v4.0.0.zip" &&
+            wget -O /tmp/digma-ui.zip "https://github.com/digma-ai/digma-ui/releases/download/v{{.Values.ui.artifactsVersion}}/dist-web-v{{.Values.ui.artifactsVersion}}.zip" &&
             unzip -o /tmp/digma-ui.zip -d /app &&
             rm /tmp/digma-ui.zip
         volumeMounts:
