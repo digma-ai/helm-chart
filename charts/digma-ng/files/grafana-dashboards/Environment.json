@@ -95,32 +95,7 @@
           },
           "unit": "percentunit"
         },
-        "overrides": [
-          {
-            "__systemRef": "hideSeriesFrom",
-            "matcher": {
-              "id": "byNames",
-              "options": {
-                "mode": "exclude",
-                "names": [
-                  "Value"
-                ],
-                "prefix": "All except:",
-                "readOnly": true
-              }
-            },
-            "properties": [
-              {
-                "id": "custom.hideFrom",
-                "value": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": true
-                }
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
         "h": 11,
@@ -160,7 +135,7 @@
         {
           "id": "renameByRegex",
           "options": {
-            "regex": "^digma-(.*)$",
+            "regex": "^digma-ng-(.*)$",
             "renamePattern": "$1"
           }
         }
@@ -266,7 +241,7 @@
         {
           "id": "renameByRegex",
           "options": {
-            "regex": "^digma-(.*)$",
+            "regex": "^digma-ng-(.*)$",
             "renamePattern": "$1"
           }
         }
@@ -373,7 +348,7 @@
         {
           "id": "renameByRegex",
           "options": {
-            "regex": "^\\w+-(.*)-stateful-set(-persisted)?-0$",
+            "regex": "^digma-ng-(.*)$",
             "renamePattern": "$1"
           }
         }
@@ -2769,13 +2744,13 @@
     ]
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-30m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Environment",
   "uid": "edqivwqldju2of",
-  "version": 44,
+  "version": 46,
   "weekStart": ""
 }
