@@ -520,7 +520,7 @@ collectorApi:
     pullSecrets: []
   # -- Number of replicas to deploy
   # @section -- CollectorApi parameters
-  replicas: 1
+  replicas: 2
   resources:
     requests:
       memory: 100Mi

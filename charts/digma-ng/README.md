@@ -183,7 +183,7 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 |-----|------|---------|-------------|
 | collectorApi.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
 | collectorApi.image.pullSecrets | list | `[]` | image pull secrets |
-| collectorApi.replicas | int | `1` | Number of replicas to deploy |
+| collectorApi.replicas | int | `2` | Number of replicas to deploy |
 | collectorApi.service.type | string | `"ClusterIP"` | service type |
 | collectorApi.service.annotations | object | `{}` | Additional custom annotations for service |
 | collectorApi.service.ports.internal | int | `5048` | internal service port |
