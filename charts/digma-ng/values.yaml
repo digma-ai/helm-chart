@@ -272,6 +272,9 @@ otelCollector:
             endpoint: 0.0.0.0:{{ .Values.otelCollector.service.ports.http }}
     processors:
       batch:
+        timeout: 1000ms
+        send_batch_size: 500
+        send_batch_max_size: 500
       probabilistic_sampler:
         sampling_percentage: {{ .Values.otelCollector.samplingPercentage }}
     exporters:
@@ -281,12 +284,16 @@ otelCollector:
         endpoint: http://{{ include "digma.collector-api" . }}:{{ .Values.collectorApi.service.ports.http }}
         tls:
           insecure: true
+        sending_queue:
+          enabled: true
+          num_consumers: 100
+          queue_size: 1000
     service:
       extensions: [health_check]
       pipelines:
         traces:
           receivers: [otlp]
-          processors: [batch, probabilistic_sampler]
+          processors: [probabilistic_sampler, batch]
           exporters: [otlphttp]
   # -- Number of replicas to deploy
   # @section -- Otel Collector parameters
@@ -1611,11 +1618,11 @@ postgresql:
   primary:
     resources:
       requests:
-        memory: 1Gi
-        cpu: 200m
+        memory: 2048Mi
+        cpu: 1.0
       limits:
-        memory: 2Gi
-        cpu: 1000m
+        memory: 3072Mi
+        cpu: 1.5
     networkPolicy:
       enabled: false
     service:
@@ -1625,7 +1632,7 @@ postgresql:
       enabled: true
       accessModes:
         - ReadWriteOnce
-      size: 20Gi
+      size: 50Gi
     extendedConfiguration: |
       shared_buffers = '800MB'
       logging_collector = on
@@ -1983,10 +1990,10 @@ prometheus:
     resources:
       requests:
         memory: 512Mi
-        cpu: 500m
+        cpu: 750m
       limits:
         memory: 768Mi
-        cpu: 750m
+        cpu: 1.0
     ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
     # -- Extra labels for pods
     # @section -- Prometheus parameters
