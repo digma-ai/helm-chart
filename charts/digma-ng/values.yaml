@@ -811,10 +811,10 @@ measurementAnalysis:
   replicas: '{{ index .Values.presets .Values.digma.deployment.size "measurementAnalysis" "replicas" }}'
   resources:
     requests:
-      memory: 100Mi
-      cpu: 200m
+      memory: 512Mi
+      cpu: 500m
     limits:
-      memory: 800Mi
+      memory: 768Mi
       cpu: 800m
   service:
     ports:
@@ -1677,11 +1677,11 @@ redis:
       - --maxmemory-policy allkeys-lru
     resources:
       requests:
-        memory: 100Mi
-        cpu: 50m
+        memory: 2048Mi
+        cpu: 1.0
       limits:
-        memory: 2Gi
-        cpu: 400m
+        memory: 3072Mi
+        cpu: 1.5
     persistence:
       enabled: true
       accessModes:
