@@ -293,11 +293,11 @@ otelCollector:
   replicas: 1
   resources:
     requests:
-      cpu: 100m
-      memory: 100Mi
+      cpu: 500m
+      memory: 1024Mi
     limits:
-      cpu: 200m
-      memory: 300Mi
+      cpu: 750m
+      memory: 1536Mi
   service:
     # -- service type
     # @section -- Otel Collector parameters
@@ -1455,11 +1455,11 @@ otelCollectorDf:
   replicas: 1
   resources:
     requests:
-      cpu: 100m
-      memory: 100Mi
+      cpu: 500m
+      memory: 1024Mi
     limits:
-      cpu: 200m
-      memory: 300Mi
+      cpu: 750m
+      memory: 1536Mi
   service:
     # -- Additional custom annotations for service
     # @section -- Otel CollectorDF parameters
