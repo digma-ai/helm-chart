@@ -272,6 +272,9 @@ otelCollector:
             endpoint: 0.0.0.0:{{ .Values.otelCollector.service.ports.http }}
     processors:
       batch:
+        timeout: 1000ms
+        send_batch_size: 500
+        send_batch_max_size: 500
       probabilistic_sampler:
         sampling_percentage: {{ .Values.otelCollector.samplingPercentage }}
     exporters:
@@ -281,23 +284,27 @@ otelCollector:
         endpoint: http://{{ include "digma.collector-api" . }}:{{ .Values.collectorApi.service.ports.http }}
         tls:
           insecure: true
+        sending_queue:
+          enabled: true
+          num_consumers: 100
+          queue_size: 1000
     service:
       extensions: [health_check]
       pipelines:
         traces:
           receivers: [otlp]
-          processors: [batch, probabilistic_sampler]
+          processors: [probabilistic_sampler, batch]
           exporters: [otlphttp]
   # -- Number of replicas to deploy
   # @section -- Otel Collector parameters
   replicas: 1
   resources:
     requests:
-      cpu: 100m
-      memory: 100Mi
+      cpu: 500m
+      memory: 1024Mi
     limits:
-      cpu: 200m
-      memory: 300Mi
+      cpu: 750m
+      memory: 1536Mi
   service:
     # -- service type
     # @section -- Otel Collector parameters
@@ -513,7 +520,7 @@ collectorApi:
     pullSecrets: []
   # -- Number of replicas to deploy
   # @section -- CollectorApi parameters
-  replicas: 1
+  replicas: 2
   resources:
     requests:
       memory: 100Mi
@@ -811,10 +818,10 @@ measurementAnalysis:
   replicas: '{{ index .Values.presets .Values.digma.deployment.size "measurementAnalysis" "replicas" }}'
   resources:
     requests:
-      memory: 100Mi
-      cpu: 200m
+      memory: 512Mi
+      cpu: 500m
     limits:
-      memory: 800Mi
+      memory: 768Mi
       cpu: 800m
   service:
     ports:
@@ -1413,7 +1420,16 @@ otelCollectorDf:
             - job_name: k8s-metrics
               scrape_interval: 5s
               static_configs:
-                - targets: [{{ include "digma.k8s-metrics-exporter-target" .}}]
+                - targets: [{{ include "digma.k8s-metrics-exporter-target" . }}]
+      {{ if eq (include "digma.redis.metrics.enabled" .) "true" }}
+      prometheus/redis:
+        config:
+          scrape_configs:
+            - job_name: k8s-metrics
+              scrape_interval: 5s
+              static_configs:
+                - targets: [{{ include "digma.redis.metrics.url" . }}]
+      {{ end }}
     processors:
       batch:
       attributes/add_source_env:
@@ -1438,7 +1454,7 @@ otelCollectorDf:
       pipelines:
         {{- if eq .Values.observability.useLocal true }}
         metrics:
-          receivers: [otlp, kafkametrics, prometheus/k8s_metrics]
+          receivers: [otlp, kafkametrics, prometheus/k8s_metrics{{- if eq (include "digma.redis.metrics.enabled" .) "true" -}}, prometheus/redis {{- end }}]
           processors: [attributes/add_source_env, batch]
           exporters: [prometheus]
         {{- else }}
@@ -1447,7 +1463,7 @@ otelCollectorDf:
           processors: [batch]
           exporters: [otlp/remote]
         metrics:
-          receivers: [otlp, kafkametrics, prometheus/k8s_metrics]
+          receivers: [otlp, kafkametrics, prometheus/k8s_metrics{{- if eq (include "digma.redis.metrics.enabled" .) "true" -}}, prometheus/redis {{- end }}]
           processors: [attributes/add_source_env, batch]
           exporters: [otlp/remote]
         {{- end }}
@@ -1456,11 +1472,11 @@ otelCollectorDf:
   replicas: 1
   resources:
     requests:
-      cpu: 100m
-      memory: 100Mi
+      cpu: 500m
+      memory: 1024Mi
     limits:
-      cpu: 200m
-      memory: 300Mi
+      cpu: 750m
+      memory: 1536Mi
   service:
     # -- Additional custom annotations for service
     # @section -- Otel CollectorDF parameters
@@ -1612,11 +1628,11 @@ postgresql:
   primary:
     resources:
       requests:
-        memory: 1Gi
-        cpu: 200m
+        memory: 2048Mi
+        cpu: 1.0
       limits:
-        memory: 2Gi
-        cpu: 1000m
+        memory: 3072Mi
+        cpu: 1.5
     networkPolicy:
       enabled: false
     service:
@@ -1626,7 +1642,7 @@ postgresql:
       enabled: true
       accessModes:
         - ReadWriteOnce
-      size: 20Gi
+      size: 50Gi
     extendedConfiguration: |
       shared_buffers = '800MB'
       logging_collector = on
@@ -1662,6 +1678,13 @@ redis:
   enabled: true
   auth:
     enabled: false
+  metrics:
+    ## ref: https://github.com/bitnami/charts/tree/main/bitnami/redis
+    # -- Start a sidecar prometheus exporter to expose Redis® metrics
+    # @section -- Redis parameters
+    enabled: true
+    containerPorts:
+      http: 9121
   architecture: standalone
   master:
     extraFlags:
@@ -1678,11 +1701,11 @@ redis:
       - --maxmemory-policy allkeys-lru
     resources:
       requests:
-        memory: 100Mi
-        cpu: 50m
+        memory: 2048Mi
+        cpu: 1.0
       limits:
-        memory: 2Gi
-        cpu: 400m
+        memory: 3072Mi
+        cpu: 1.5
     persistence:
       enabled: true
       accessModes:
@@ -1984,10 +2007,10 @@ prometheus:
     resources:
       requests:
         memory: 512Mi
-        cpu: 500m
+        cpu: 750m
       limits:
         memory: 768Mi
-        cpu: 750m
+        cpu: 1.0
     ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
     # -- Extra labels for pods
     # @section -- Prometheus parameters

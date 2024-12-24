@@ -140,7 +140,7 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 | otelCollector.image.tag | string | `"0.103.0"` | image tag |
 | otelCollector.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
 | otelCollector.image.pullSecrets | list | `[]` | image pull secrets |
-| otelCollector.configuration | string | `"extensions:\n  health_check:\n    endpoint: \"0.0.0.0:{{ .Values.otelCollector.service.ports.health }}\"\nreceivers:\n  otlp:\n    protocols:\n      grpc:\n        endpoint: 0.0.0.0:{{ .Values.otelCollector.service.ports.grpc }}\n      http:\n        endpoint: 0.0.0.0:{{ .Values.otelCollector.service.ports.http }}\nprocessors:\n  batch:\n  probabilistic_sampler:\n    sampling_percentage: {{ .Values.otelCollector.samplingPercentage }}\nexporters:\n  logging:\n    loglevel: debug\n  otlphttp:\n    endpoint: http://{{ include \"digma.collector-api\" . }}:{{ .Values.collectorApi.service.ports.http }}\n    tls:\n      insecure: true\nservice:\n  extensions: [health_check]\n  pipelines:\n    traces:\n      receivers: [otlp]\n      processors: [batch, probabilistic_sampler]\n      exporters: [otlphttp]\n"` | This content will be stored in the the config.yaml file and the content can be a template. |
+| otelCollector.configuration | string | `"extensions:\n  health_check:\n    endpoint: \"0.0.0.0:{{ .Values.otelCollector.service.ports.health }}\"\nreceivers:\n  otlp:\n    protocols:\n      grpc:\n        endpoint: 0.0.0.0:{{ .Values.otelCollector.service.ports.grpc }}\n      http:\n        endpoint: 0.0.0.0:{{ .Values.otelCollector.service.ports.http }}\nprocessors:\n  batch:\n    timeout: 1000ms\n    send_batch_size: 500\n    send_batch_max_size: 500\n  probabilistic_sampler:\n    sampling_percentage: {{ .Values.otelCollector.samplingPercentage }}\nexporters:\n  logging:\n    loglevel: debug\n  otlphttp:\n    endpoint: http://{{ include \"digma.collector-api\" . }}:{{ .Values.collectorApi.service.ports.http }}\n    tls:\n      insecure: true\n    sending_queue:\n      enabled: true\n      num_consumers: 100\n      queue_size: 1000\nservice:\n  extensions: [health_check]\n  pipelines:\n    traces:\n      receivers: [otlp]\n      processors: [probabilistic_sampler, batch]\n      exporters: [otlphttp]\n"` | This content will be stored in the the config.yaml file and the content can be a template. |
 | otelCollector.replicas | int | `1` | Number of replicas to deploy |
 | otelCollector.service.type | string | `"ClusterIP"` | service type |
 | otelCollector.service.annotations | object | `{}` | Additional custom annotations for service |
@@ -190,7 +190,7 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 |-----|------|---------|-------------|
 | collectorApi.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
 | collectorApi.image.pullSecrets | list | `[]` | image pull secrets |
-| collectorApi.replicas | int | `1` | Number of replicas to deploy |
+| collectorApi.replicas | int | `2` | Number of replicas to deploy |
 | collectorApi.service.type | string | `"ClusterIP"` | service type |
 | collectorApi.service.annotations | object | `{}` | Additional custom annotations for service |
 | collectorApi.service.ports.internal | int | `5048` | internal service port |
@@ -469,6 +469,7 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| redis.metrics.enabled | bool | `true` | Start a sidecar prometheus exporter to expose Redis® metrics |
 | redis.master.podLabels | object | `{}` | Extra labels for pods |
 | redis.master.podAnnotations | object | `{}` | Extra annotations for pods |
 | redis.master.nodeSelector | object | `{}` | Node labels for pods assignment |
