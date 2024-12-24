@@ -1,7 +1,7 @@
 annotations:
   category: Application
 apiVersion: v2
-appVersion: 0.3.170
+appVersion: 0.3.171
 dependencies:
 - name: kafka
   repository: oci://registry-1.docker.io/bitnamicharts
@@ -36,5 +36,5 @@ description: A Helm chart containing Digma's services
 home: https://github.com/digma-ai/digma
 icon: https://digma.ai/wp-content/uploads/2024/02/logo-alt-1.svg
 type: application
-version: 1.0.259
+version: 1.0.260
 
