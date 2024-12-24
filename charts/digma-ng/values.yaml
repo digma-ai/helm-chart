@@ -1678,6 +1678,9 @@ redis:
   auth:
     enabled: false
   metrics:
+    ## ref: https://github.com/bitnami/charts/tree/main/bitnami/redis
+    # -- Start a sidecar prometheus exporter to expose Redis® metrics
+    # @section -- Redis parameters
     enabled: true
     containerPorts:
       http: 9121

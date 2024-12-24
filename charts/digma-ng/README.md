@@ -462,6 +462,7 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| redis.metrics.enabled | bool | `true` | Start a sidecar prometheus exporter to expose Redis® metrics |
 | redis.master.podLabels | object | `{}` | Extra labels for pods |
 | redis.master.podAnnotations | object | `{}` | Extra annotations for pods |
 | redis.master.nodeSelector | object | `{}` | Node labels for pods assignment |
