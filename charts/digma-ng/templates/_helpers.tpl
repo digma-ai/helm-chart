@@ -238,6 +238,39 @@ Return the proper redis host
 {{- end -}}
 
 {{/*
+Return the proper redis metrics host
+*/}}
+{{- define "digma.redis.metrics.host" -}}
+{{- if eq (include "digma.redis.metrics.enabled" .) "true" -}}
+{{- printf "%s-metrics" (include "digma.redis.fullname" .) | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- print "" -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Return the proper redis metrics url
+*/}}
+{{- define "digma.redis.metrics.url" -}}
+{{- if eq (include "digma.redis.metrics.enabled" .) "true" -}}
+{{ printf "%s:%v" (include "digma.redis.metrics.host" .) .Values.redis.metrics.containerPorts.http }}
+{{- else -}}
+{{- print "" -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Return the proper redis metrics enabled
+*/}}
+{{- define "digma.redis.metrics.enabled" -}}
+{{- if and .Values.redis.metrics.enabled .Values.redis.enabled -}}
+true
+{{- else -}}
+false
+{{- end -}}
+{{- end -}}
+
+{{/*
 Return the proper jaeger fullname
 */}}
 {{- define "digma.jaeger" -}}
