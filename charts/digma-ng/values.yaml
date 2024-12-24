@@ -1948,6 +1948,8 @@ grafana:
       fileName: kafka.json
     - configMapName: digma-grafana-apps-dashboards
       fileName: apps.json
+    - configMapName: digma-grafana-redis-dashboards
+      fileName: redis.json
   datasources:
     secretName: grafana-datasource
   grafana:

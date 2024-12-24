@@ -21,13 +21,11 @@
       }
     ]
   },
-  "description": "",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
-  "id": 378,
+  "id": 4,
   "links": [],
-  "liveNow": false,
   "panels": [
     {
       "datasource": {
@@ -68,6 +66,12 @@
       "id": 3,
       "options": {
         "displayMode": "gradient",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
         "maxVizHeight": 0,
         "minVizHeight": 12,
         "minVizWidth": 75,
@@ -88,7 +92,7 @@
         },
         "valueMode": "color"
       },
-      "pluginVersion": "10.4.0",
+      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -124,6 +128,7 @@
             "axisPlacement": "auto",
             "axisSoftMin": 0,
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -168,7 +173,7 @@
       },
       "gridPos": {
         "h": 10,
-        "w": 16,
+        "w": 8,
         "x": 8,
         "y": 0
       },
@@ -185,6 +190,7 @@
           "sort": "desc"
         }
       },
+      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -224,6 +230,110 @@
             "axisPlacement": "auto",
             "axisSoftMin": 0,
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 8,
+        "x": 16,
+        "y": 0
+      },
+      "id": 4,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "11.3.0-pre",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheusdatasource"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "sum(rate(activity_call_duration_ms_sum{source_env=\"$environment\", source=~\"$source\"}[5m])) by (source, name)",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "{{source}}.{{name}}",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Sum of Durations per second",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheusdatasource"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -286,6 +396,7 @@
           "sort": "desc"
         }
       },
+      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -325,6 +436,7 @@
             "axisPlacement": "auto",
             "axisSoftMin": 0,
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -374,7 +486,7 @@
         "x": 16,
         "y": 10
       },
-      "id": 4,
+      "id": 5,
       "options": {
         "legend": {
           "calcs": [],
@@ -387,6 +499,7 @@
           "sort": "desc"
         }
       },
+      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -395,7 +508,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "sum(rate(activity_call_duration_ms_sum{source_env=\"$environment\", source=~\"$source\"}[5m])) by (source, name)",
+          "expr": "histogram_quantile(0.50, sum(rate(activity_call_duration_ms_bucket{source_env=\"$environment\", source=~\"$source\"}[5m])) by (le, source, name))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -405,18 +518,18 @@
           "useBackend": false
         }
       ],
-      "title": "Sum of Durations per second",
+      "title": "Duration P50",
       "type": "timeseries"
     }
   ],
+  "preload": false,
   "refresh": "5s",
-  "schemaVersion": 39,
+  "schemaVersion": 40,
   "tags": [],
   "templating": {
     "list": [
       {
         "current": {
-          "selected": true,
           "text": "MELOONA",
           "value": "MELOONA"
         },
@@ -425,10 +538,8 @@
           "uid": "prometheusdatasource"
         },
         "definition": "label_values(activity_call_duration_ms_bucket,source_env)",
-        "hide": 0,
         "includeAll": false,
         "label": "Environment",
-        "multi": false,
         "name": "environment",
         "options": [],
         "query": {
@@ -438,13 +549,10 @@
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
         "type": "query"
       },
       {
         "current": {
-          "selected": false,
           "text": "All",
           "value": "$__all"
         },
@@ -453,10 +561,8 @@
           "uid": "prometheusdatasource"
         },
         "definition": "label_values(activity_calls_total,source)",
-        "hide": 0,
         "includeAll": true,
         "label": "Activity Source",
-        "multi": false,
         "name": "source",
         "options": [],
         "query": {
@@ -466,8 +572,6 @@
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
         "type": "query"
       }
     ]
@@ -480,6 +584,6 @@
   "timezone": "",
   "title": "Activities",
   "uid": "d562326f-36da-4d9a-8ef8-fd6b5c26b994",
-  "version": 3,
+  "version": 1,
   "weekStart": ""
 }
