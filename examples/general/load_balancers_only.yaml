@@ -1,0 +1,21 @@
+digma:
+  licenseKey: ""
+
+observability:
+  useLocal: false
+
+otelCollector:
+  service:
+    type: "LoadBalancer"
+
+analyticsApi:
+  service:
+    type: "LoadBalancer"
+
+ui:
+  service:
+    type: "LoadBalancer"
+
+jaeger:
+  service:
+    type: "LoadBalancer"
