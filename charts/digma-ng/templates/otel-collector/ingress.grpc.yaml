@@ -21,14 +21,11 @@ spec:
           {{- if .Values.otelCollector.grpc.ingress.extraPaths }}
           {{- toYaml .Values.otelCollector.grpc.ingress.extraPaths | nindent 10 }}
           {{- end }}
-          - path: /*
-            {{- if eq "true" (include "common.ingress.supportsPathType" .) }}
-            pathType: {{ .Values.otelCollector.grpc.ingress.pathType }}
-            {{- end }}
-            backend: {{- include "common.ingress.backend" (dict 
-            "serviceName" (include "digma.otel-collector" $) 
-            "servicePort" .Values.otelCollector.service.ports.grpc
-            "context" $) | nindent 14 }}
+        - path: {{ default "/" .Values.otelCollector.grpc.ingress.path }}
+          {{- if eq "true" (include "common.ingress.supportsPathType" .) }}
+          pathType: {{ .Values.otelCollector.grpc.ingress.pathType }}
+          {{- end }}
+          backend: {{- include "common.ingress.backend" (dict "serviceName" (include "digma.otel-collector" $) "servicePort" "grpc" "context" $)  | nindent 14 }}
     {{- end }}
     {{- if .Values.otelCollector.grpc.ingress.extraRules }}
     {{- include "common.tplvalues.render" (dict "value" .Values.otelCollector.grpc.ingress.extraRules "context" $) | nindent 4 }}
