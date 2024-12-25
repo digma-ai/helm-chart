@@ -1,0 +1,129 @@
+# This example includes additional ingress resources to be deployed alongside the release.
+# To enable this setup, all default ingress resources are disabled. 
+# If you choose to provide your own ingress resources, ensure the following:
+# - Set digma.report.uiExternalBaseUrl explicitly to the specified UI host.
+# - Set analyticsApi.secured to false.
+digma:
+  report:
+    uiExternalBaseUrl: https://ui.local
+
+otelCollector:
+  http:
+    ingress:
+      enabled: false
+  grpc:
+    ingress:
+      enabled: false
+analyticsApi:
+  secured: false
+  ingress:
+    enabled: false
+ui:
+  ingress:
+    enabled: false
+jaeger:
+  ingress:
+    enabled: false
+extraDeploy:
+  - |
+    apiVersion: networking.k8s.io/v1
+    kind: Ingress
+    metadata:
+      name: {{ include "digma.analytics-api" $ }}
+      labels:
+        app.kubernetes.io/component: analytics-api
+    spec:
+      ingressClassName: "nginx"
+      rules:
+        - host: "api.local"
+          http:
+            paths:
+              - path: /
+                pathType: Prefix
+                backend:
+                  service:
+                    name: {{ include "digma.analytics-api" $ }}
+                    port:
+                      name: http
+  - |              
+    apiVersion: networking.k8s.io/v1
+    kind: Ingress
+    metadata:
+      name: {{ include "digma.jaeger" . }}
+      labels:
+        app.kubernetes.io/component: jaeger
+    spec:
+      ingressClassName: "nginx"
+      rules:
+        - host: "jaeger.local"
+          http:
+            paths:
+              - path: /
+                pathType: Prefix
+                backend:
+                  service:
+                    name: {{ include "digma.jaeger.ui" $}}
+                    port:
+                      name: http
+  - |  
+    apiVersion: networking.k8s.io/v1
+    kind: Ingress
+    metadata:
+      name: {{ include "digma.otel-collector" . }}.grpc
+      labels:
+        app.kubernetes.io/component: otel-collector.grpc
+      annotations:
+        nginx.ingress.kubernetes.io/backend-protocol: GRPC
+    spec:
+      ingressClassName: "nginx"
+      rules:
+        - host: "collector-grpc.local"
+          http:
+            paths:
+            - path: /
+              pathType: Prefix
+              backend:
+                  service:
+                    name: {{ include "digma.otel-collector" $ }}
+                    port:
+                      name: grpc
+  - |
+    apiVersion: networking.k8s.io/v1
+    kind: Ingress
+    metadata:
+      name: {{ include "digma.otel-collector" . }}.http
+      labels:
+        app.kubernetes.io/component: otel-collector.http
+    spec:
+      ingressClassName: "nginx"
+      rules:
+        - host: "collector-http.local"
+          http:
+            paths:
+            - path: /
+              pathType: Prefix
+              backend:
+                  service:
+                    name: {{ include "digma.otel-collector" $ }}
+                    port:
+                      name: http
+  - |
+    apiVersion: networking.k8s.io/v1
+    kind: Ingress
+    metadata:
+      name: {{ include "digma.ui" . }}
+      labels:
+        app.kubernetes.io/component: ui
+    spec:
+      ingressClassName: "nginx"
+      rules:
+        - host: "ui.local"
+          http:
+            paths:
+              - path: /
+                pathType: Prefix
+                backend:
+                  service:
+                    name: {{ include "digma.ui" $ }}
+                    port:
+                      name: http
