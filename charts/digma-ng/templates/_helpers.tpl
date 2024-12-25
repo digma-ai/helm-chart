@@ -173,6 +173,39 @@ Return the Database Hostname
 {{- end -}}
 
 {{/*
+Return the proper postgresql metrics url
+*/}}
+{{- define "digma.postgresql.metrics.url" -}}
+{{- if eq (include "digma.postgresql.metrics.enabled" .) "true" -}}
+{{ printf "%s:%v" (include "digma.postgresql.metrics.host" .) .Values.postgresql.metrics.containerPorts.metrics }}
+{{- else -}}
+{{- print "" -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Return the proper postgresql metrics host
+*/}}
+{{- define "digma.postgresql.metrics.host" -}}
+{{- if eq (include "digma.postgresql.metrics.enabled" .) "true" -}}
+{{- printf "%s-metrics" (include "digma.postgresql.fullname" .) | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- print "" -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Return the proper postgresql metrics enabled
+*/}}
+{{- define "digma.postgresql.metrics.enabled" -}}
+{{- if and .Values.postgresql.metrics.enabled .Values.postgresql.enabled -}}
+true
+{{- else -}}
+false
+{{- end -}}
+{{- end -}}
+
+{{/*
 Return the Database Port
 */}}
 {{- define "digma.database.port" -}}

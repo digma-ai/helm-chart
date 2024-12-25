@@ -1670,6 +1670,10 @@ postgresql:
     # -- Affinity for pods assignment
     # @section -- Postgresql parameters
     affinity: {}
+  metrics:
+    enabled: true
+    containerPorts:
+      metrics: 9187
 ## redis
 ## ref: https://github.com/bitnami/charts/blob/main/bitnami/redis/values.yaml
 ##
