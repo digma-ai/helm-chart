@@ -1,0 +1,33 @@
+otelCollector:
+  http:
+    ingress:
+      enabled: true
+      ingressClassName: "nginx"
+      hostname: collector-http.local
+      pathType: Prefix
+  grpc:
+    ingress:
+      enabled: true
+      ingressClassName: "nginx"
+      hostname: collector-grpc.local
+      pathType: Prefix
+      annotations:
+        nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
+analyticsApi:
+  ingress:
+    enabled: true
+    ingressClassName: "nginx"
+    hostname: api.local
+    pathType: Prefix
+ui:
+  ingress:
+    enabled: true
+    ingressClassName: "nginx"
+    hostname: ui.local
+    pathType: Prefix
+jaeger:
+  ingress:
+    enabled: true
+    ingressClassName: "nginx"
+    hostname: jaeger.local
+    pathType: Prefix
