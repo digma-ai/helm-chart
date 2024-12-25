@@ -264,10 +264,12 @@ otelCollector:
       health_check:
         endpoint: "0.0.0.0:{{ .Values.otelCollector.service.ports.health }}"
     receivers:
-      otlp:
+      otlp/grpc:
         protocols:
           grpc:
             endpoint: 0.0.0.0:{{ .Values.otelCollector.service.ports.grpc }}
+      otlp/http:
+        protocols:
           http:
             endpoint: 0.0.0.0:{{ .Values.otelCollector.service.ports.http }}
     processors:
@@ -282,6 +284,15 @@ otelCollector:
         loglevel: debug
       otlphttp:
         endpoint: http://{{ include "digma.collector-api" . }}:{{ .Values.collectorApi.service.ports.http }}
+        compression: gzip
+        tls:
+          insecure: true
+        sending_queue:
+          enabled: true
+          num_consumers: 100
+          queue_size: 1000
+      otlp:
+        endpoint: {{ include "digma.collector-api" . }}:{{ .Values.collectorApi.service.ports.grpc }}
         tls:
           insecure: true
         sending_queue:
@@ -291,10 +302,14 @@ otelCollector:
     service:
       extensions: [health_check]
       pipelines:
-        traces:
-          receivers: [otlp]
+        traces/1:
+          receivers: [otlp/http]
           processors: [probabilistic_sampler, batch]
           exporters: [otlphttp]
+        traces/2:
+          receivers: [otlp/grpc]
+          processors: [probabilistic_sampler, batch]
+          exporters: [otlp]
   # -- Number of replicas to deploy
   # @section -- Otel Collector parameters
   replicas: 1

@@ -9,7 +9,7 @@ metadata:
   annotations: {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $) | nindent 4 }}
   {{- end }}
 spec:
-  type: {{ .Values.jaeger.service.type }}
+  type: ClusterIP
   ports:
     - name: grpc
       protocol: TCP
