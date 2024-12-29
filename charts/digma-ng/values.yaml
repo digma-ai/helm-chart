@@ -1984,6 +1984,8 @@ grafana:
       fileName: apps.json
     - configMapName: digma-grafana-redis-dashboards
       fileName: redis.json
+    - configMapName: digma-grafana-postgres-dashboards
+      fileName: postgres.json
   datasources:
     secretName: grafana-datasource
   grafana:
