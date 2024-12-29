@@ -35,8 +35,10 @@ spec:
       {{- if .Values.metricsExporter.nodeSelector }}
       nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.metricsExporter.nodeSelector "context" .) | nindent 8 }}
       {{- end }}
-      {{- if .Values.metricsExporter.tolerations }}
-      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.metricsExporter.tolerations "context" .) | nindent 8 }}
+      {{- $mergedTolerations := (concat .Values.global.tolerations .Values.metricsExporter.tolerations) -}}
+      {{- if $mergedTolerations }}
+      tolerations: 
+      {{- toYaml $mergedTolerations | nindent 6 -}}
       {{- end }}
       containers:
       - name: digma-k8s-metrics-exporter

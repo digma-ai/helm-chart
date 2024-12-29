@@ -76,21 +76,22 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 | observability.otlp.exportTraces | bool | `true` | Export traces |
 | observability.otlp.exportMetrics | bool | `true` | Export metrics |
 
-### Global Docker image parameters
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| global.imagePullSecrets | list | `[]` | Global Docker registry secret names as an array |
-
 ### Common parameters
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| global.tolerations | list | `[]` | Tolerations to add to all deployed objects, except prometheus and redis |
 | kubeVersion | string | `""` | kubeVersion Override Kubernetes version |
 | commonLabels | object | `{}` | Labels to add to all deployed objects |
 | commonAnnotations | object | `{}` | Annotations to add to all deployed objects |
 | diagnosticMode.enabled | bool | `false` | Enable diagnostic mode (all probes will be disabled) |
 | extraDeploy | list | `[]` | Array of extra objects to deploy with the release |
+
+### Global Docker image parameters
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| global.imagePullSecrets | list | `[]` | Global Docker registry secret names as an array |
 
 ### CollectorWorker parameters
 
@@ -445,7 +446,7 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 | influxdb.influxdb.podLabels | object | `{}` | Extra labels for pods |
 | influxdb.influxdb.podAnnotations | object | `{}` | Extra annotations for pods |
 | influxdb.influxdb.nodeSelector | object | `{}` | Node labels for pods assignment |
-| influxdb.influxdb.tolerations | list | `[]` | Tolerations for pods assignment |
+| influxdb.influxdb.tolerations | string | `"{{ include \"common.tplvalues.render\" (dict \"value\" .Values.global.tolerations \"context\" $) }}"` | Tolerations for pods assignment |
 | influxdb.influxdb.affinity | object | `{}` | Affinity for pods assignment |
 
 ### Postgresql parameters
@@ -455,8 +456,14 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 | postgresql.primary.podLabels | object | `{}` | Extra labels for pods |
 | postgresql.primary.podAnnotations | object | `{}` | Extra annotations for pods |
 | postgresql.primary.nodeSelector | object | `{}` | Node labels for pods assignment |
-| postgresql.primary.tolerations | list | `[]` | Tolerations for pods assignment |
+| postgresql.primary.tolerations | string | `"{{ include \"common.tplvalues.render\" (dict \"value\" .Values.global.tolerations \"context\" $) }}"` | Tolerations for pods assignment |
 | postgresql.primary.affinity | object | `{}` | Affinity for pods assignment |
+
+### postgresql parameters
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| postgresql.metrics.enabled | bool | `true` | Start a prometheus exporter	 |
 
 ### Redis parameters
 
@@ -505,7 +512,7 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 | elasticsearch.master.podLabels | object | `{}` | Extra labels for pods |
 | elasticsearch.master.podAnnotations | object | `{}` | Extra annotations for pods |
 | elasticsearch.master.nodeSelector | object | `{}` | Node labels for pods assignment |
-| elasticsearch.master.tolerations | list | `[]` | Tolerations for pods assignment |
+| elasticsearch.master.tolerations | string | `"{{ include \"common.tplvalues.render\" (dict \"value\" .Values.global.tolerations \"context\" $) }}"` | Tolerations for pods assignment |
 | elasticsearch.master.affinity | object | `{}` | Affinity for pods assignment |
 
 ### Grafana parameters
@@ -515,7 +522,7 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 | grafana.grafana.podLabels | object | `{}` | Extra labels for pods |
 | grafana.grafana.podAnnotations | object | `{}` | Extra annotations for pods |
 | grafana.grafana.nodeSelector | object | `{}` | Node labels for pods assignment |
-| grafana.grafana.tolerations | list | `[]` | Tolerations for pods assignment |
+| grafana.grafana.tolerations | string | `"{{ include \"common.tplvalues.render\" (dict \"value\" .Values.global.tolerations \"context\" $) }}"` | Tolerations for pods assignment |
 | grafana.grafana.affinity | object | `{}` | Affinity for pods assignment |
 
 ### Prometheus parameters
@@ -537,7 +544,7 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 | kafka.controller.podLabels | object | `{}` | Extra labels for pods |
 | kafka.controller.podAnnotations | object | `{}` | Extra annotations for pods |
 | kafka.controller.nodeSelector | object | `{}` | Node labels for pods assignment |
-| kafka.controller.tolerations | list | `[]` | Tolerations for pods assignment |
+| kafka.controller.tolerations | string | `"{{ include \"common.tplvalues.render\" (dict \"value\" .Values.global.tolerations \"context\" $) }}"` | Tolerations for pods assignment |
 | kafka.controller.affinity | object | `{}` | Affinity for pods assignment |
 
 ### Kafka parameters   

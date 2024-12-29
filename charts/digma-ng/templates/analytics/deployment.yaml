@@ -33,8 +33,10 @@ spec:
       {{- if .Values.analyticsApi.nodeSelector }}
       nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.analyticsApi.nodeSelector "context" .) | nindent 8 }}
       {{- end }}
-      {{- if .Values.analyticsApi.tolerations }}
-      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.analyticsApi.tolerations "context" .) | nindent 8 }}
+      {{- $mergedTolerations := (concat .Values.global.tolerations .Values.analyticsApi.tolerations) -}}
+      {{- if $mergedTolerations }}
+      tolerations: 
+      {{- toYaml $mergedTolerations | nindent 6 -}}
       {{- end }}
       containers:
       - name: digma-analytics

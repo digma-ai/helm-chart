@@ -33,8 +33,10 @@ spec:
       {{- if .Values.collectorApi.nodeSelector }}
       nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.collectorApi.nodeSelector "context" .) | nindent 8 }}
       {{- end }}
-      {{- if .Values.collectorApi.tolerations }}
-      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.collectorApi.tolerations "context" .) | nindent 8 }}
+      {{- $mergedTolerations := (concat .Values.global.tolerations .Values.collectorApi.tolerations) -}}
+      {{- if $mergedTolerations }}
+      tolerations: 
+      {{- toYaml $mergedTolerations | nindent 6 -}}
       {{- end }}
       containers:
       - name: digma-collector-api
