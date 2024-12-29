@@ -2,15 +2,15 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: digma-grafana-redis-dashboards
+  name: digma-grafana-postgres-dashboards
   labels:
     {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
-    app.kubernetes.io/component: digma-grafana-redis-dashboards
+    app.kubernetes.io/component: digma-grafana-postgres-dashboards
   {{- if .Values.commonAnnotations }}
   annotations:
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 data:
-  redis.json: |
-    {{ .Files.Get "files/grafana-dashboards/Redis.json" | nindent 4 }}
+  postgres.json: |
+    {{ .Files.Get "files/grafana-dashboards/PostgresSQL.json" | nindent 4 }}
 {{- end }}

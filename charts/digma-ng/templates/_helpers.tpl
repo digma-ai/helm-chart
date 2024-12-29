@@ -157,6 +157,30 @@ Return the proper postgres fullname
 {{- include "common.names.dependency.fullname" (dict "chartName" "postgresql" "chartValues" .Values.postgresql "context" $) -}}
 {{- end -}}
 
+
+{{/*
+Return the proper postgresql metrics url
+*/}}
+{{- define "digma.postgresql.metrics.url" -}}
+{{- if eq (include "digma.postgresql.metrics.enabled" .) "true" -}}
+{{ printf "%s-metrics:%v" (include "digma.postgresql" .) .Values.postgresql.metrics.containerPorts.metrics }}
+{{- else -}}
+{{- print "" -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Return the proper postgresql metrics enabled
+*/}}
+{{- define "digma.postgresql.metrics.enabled" -}}
+{{- if and .Values.postgresql.metrics.enabled .Values.postgresql.enabled -}}
+true
+{{- else -}}
+false
+{{- end -}}
+{{- end -}}
+
+
 {{/*
 Return postgres connectivity env
 */}}
@@ -237,23 +261,13 @@ Return the proper redis host
 {{- end -}}
 {{- end -}}
 
-{{/*
-Return the proper redis metrics host
-*/}}
-{{- define "digma.redis.metrics.host" -}}
-{{- if eq (include "digma.redis.metrics.enabled" .) "true" -}}
-{{- printf "%s-metrics" (include "digma.redis.fullname" .) | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- print "" -}}
-{{- end -}}
-{{- end -}}
 
 {{/*
 Return the proper redis metrics url
 */}}
 {{- define "digma.redis.metrics.url" -}}
 {{- if eq (include "digma.redis.metrics.enabled" .) "true" -}}
-{{ printf "%s:%v" (include "digma.redis.metrics.host" .) .Values.redis.metrics.containerPorts.http }}
+{{ printf "%s-metrics:%v" (include "digma.redis.fullname" .) .Values.redis.metrics.containerPorts.http }}
 {{- else -}}
 {{- print "" -}}
 {{- end -}}
@@ -447,9 +461,3 @@ Return true if observability enabled
   value: "false"
   {{- end -}}
 {{- end -}}
-
-
-
-
-
-

@@ -34,8 +34,10 @@ spec:
       {{- if .Values.otelCollectorDf.nodeSelector }}
       nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.otelCollectorDf.nodeSelector "context" .) | nindent 8 }}
       {{- end }}
-      {{- if .Values.otelCollectorDf.tolerations }}
-      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.otelCollectorDf.tolerations "context" .) | nindent 8 }}
+      {{- $mergedTolerations := (concat .Values.global.tolerations .Values.otelCollectorDf.tolerations) -}}
+      {{- if $mergedTolerations }}
+      tolerations: 
+      {{- toYaml $mergedTolerations | nindent 6 -}}
       {{- end }}
       containers:
       - name: otel-collector-df

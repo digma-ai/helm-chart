@@ -33,8 +33,10 @@ spec:
       {{- if .Values.pipelineWorker.nodeSelector }}
       nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.pipelineWorker.nodeSelector "context" .) | nindent 8 }}
       {{- end }}
-      {{- if .Values.pipelineWorker.tolerations }}
-      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.pipelineWorker.tolerations "context" .) | nindent 8 }}
+      {{- $mergedTolerations := (concat .Values.global.tolerations .Values.pipelineWorker.tolerations) -}}
+      {{- if $mergedTolerations }}
+      tolerations: 
+      {{- toYaml $mergedTolerations | nindent 6 -}}
       {{- end }}
       containers:
       - name: digma-pipeline-worker

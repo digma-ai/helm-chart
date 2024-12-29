@@ -33,8 +33,10 @@ spec:
       {{- if .Values.collectorWorker.nodeSelector }}
       nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.collectorWorker.nodeSelector "context" .) | nindent 8 }}
       {{- end }}
-      {{- if .Values.collectorWorker.tolerations }}
-      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.collectorWorker.tolerations "context" .) | nindent 8 }}
+      {{- $mergedTolerations := (concat .Values.global.tolerations .Values.collectorWorker.tolerations) -}}
+      {{- if $mergedTolerations }}
+      tolerations: 
+      {{- toYaml $mergedTolerations | nindent 6 -}}
       {{- end }}
       containers:
       - name: digma-collector-worker

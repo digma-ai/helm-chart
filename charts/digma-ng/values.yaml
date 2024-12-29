@@ -76,6 +76,9 @@ observability:
 ## Please, note that this will override the image parameters
 ##
 global:
+  # -- Tolerations to add to all deployed objects, except prometheus and redis
+  # @section -- Common parameters
+  tolerations: []
   ## E.g.
   ## imagePullSecrets:
   ##   - myRegistryKeySecretName
@@ -1445,6 +1448,15 @@ otelCollectorDf:
               static_configs:
                 - targets: [{{ include "digma.redis.metrics.url" . }}]
       {{ end }}
+      {{ if eq (include "digma.postgresql.metrics.enabled" .) "true" }}
+      prometheus/postgresql:
+        config:
+          scrape_configs:
+            - job_name: k8s-metrics
+              scrape_interval: 5s
+              static_configs:
+                - targets: [{{ include "digma.postgresql.metrics.url" . }}]
+      {{ end }}
     processors:
       batch:
       attributes/add_source_env:
@@ -1469,7 +1481,7 @@ otelCollectorDf:
       pipelines:
         {{- if eq .Values.observability.useLocal true }}
         metrics:
-          receivers: [otlp, kafkametrics, prometheus/k8s_metrics{{- if eq (include "digma.redis.metrics.enabled" .) "true" -}}, prometheus/redis {{- end }}]
+          receivers: [otlp, kafkametrics, prometheus/k8s_metrics{{- if eq (include "digma.redis.metrics.enabled" .) "true" -}}, prometheus/redis {{- end }}{{- if eq (include "digma.postgresql.metrics.enabled" .) "true" -}}, prometheus/postgresql {{- end }}]
           processors: [attributes/add_source_env, batch]
           exporters: [prometheus]
         {{- else }}
@@ -1478,7 +1490,7 @@ otelCollectorDf:
           processors: [batch]
           exporters: [otlp/remote]
         metrics:
-          receivers: [otlp, kafkametrics, prometheus/k8s_metrics{{- if eq (include "digma.redis.metrics.enabled" .) "true" -}}, prometheus/redis {{- end }}]
+          receivers: [otlp, kafkametrics, prometheus/k8s_metrics{{- if eq (include "digma.redis.metrics.enabled" .) "true" -}}, prometheus/redis {{- end }}{{- if eq (include "digma.postgresql.metrics.enabled" .) "true" -}}, prometheus/postgresql {{- end }}]
           processors: [attributes/add_source_env, batch]
           exporters: [otlp/remote]
         {{- end }}
@@ -1616,7 +1628,7 @@ influxdb:
     ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
     # -- Tolerations for pods assignment
     # @section -- Influxdb parameters
-    tolerations: []
+    tolerations: '{{ include "common.tplvalues.render" (dict "value" .Values.global.tolerations "context" $) }}'
     ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
     ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
     # -- Affinity for pods assignment
@@ -1680,12 +1692,19 @@ postgresql:
     ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
     # -- Tolerations for pods assignment
     # @section -- Postgresql parameters
-    tolerations: []
+    tolerations: '{{ include "common.tplvalues.render" (dict "value" .Values.global.tolerations "context" $) }}'
     ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
     ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
     # -- Affinity for pods assignment
     # @section -- Postgresql parameters
     affinity: {}
+  metrics:
+    ## ref: https://github.com/bitnami/charts/tree/main/bitnami/postgresql
+    # -- Start a prometheus exporter	
+    # @section -- postgresql parameters
+    enabled: true
+    containerPorts:
+      metrics: 9187
 ## redis
 ## ref: https://github.com/bitnami/charts/blob/main/bitnami/redis/values.yaml
 ##
@@ -1930,7 +1949,7 @@ elasticsearch:
     ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
     # -- Tolerations for pods assignment
     # @section -- Elasticsearch parameters
-    tolerations: []
+    tolerations: '{{ include "common.tplvalues.render" (dict "value" .Values.global.tolerations "context" $) }}'
     ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
     ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
     # -- Affinity for pods assignment
@@ -1965,6 +1984,8 @@ grafana:
       fileName: apps.json
     - configMapName: digma-grafana-redis-dashboards
       fileName: redis.json
+    - configMapName: digma-grafana-postgres-dashboards
+      fileName: postgres.json
   datasources:
     secretName: grafana-datasource
   grafana:
@@ -1992,7 +2013,7 @@ grafana:
     ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
     # -- Tolerations for pods assignment
     # @section -- Grafana parameters
-    tolerations: []
+    tolerations: '{{ include "common.tplvalues.render" (dict "value" .Values.global.tolerations "context" $) }}'
     ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
     ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
     # -- Affinity for pods assignment
@@ -2090,7 +2111,7 @@ kafka:
     ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
     # -- Tolerations for pods assignment
     # @section -- Kafka parameters
-    tolerations: []
+    tolerations: '{{ include "common.tplvalues.render" (dict "value" .Values.global.tolerations "context" $) }}'
     ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
     ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
     # -- Affinity for pods assignment
