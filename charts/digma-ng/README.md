@@ -463,7 +463,7 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| postgresql.metrics.enabled | bool | `true` | Start a prometheus exporter	 |
+| postgresql.metrics.enabled | bool | `true` | Start a prometheus exporter |
 
 ### Redis parameters
 
@@ -541,17 +541,12 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | kafka.controller.replicaCount | int | `1` | Number of Kafka controller-eligible nodes |
+| kafka.controller.extraConfig | string | `"offsets.topic.replication.factor=1\ntransaction.state.log.replication.factor=1\nlog.retention.check.interval.ms = 120000\nlog.roll.ms = 120000\nlog.retention.minutes = 10\n"` | Additional configuration to be appended at the end of the generated Kafka configuration file. |
 | kafka.controller.podLabels | object | `{}` | Extra labels for pods |
 | kafka.controller.podAnnotations | object | `{}` | Extra annotations for pods |
 | kafka.controller.nodeSelector | object | `{}` | Node labels for pods assignment |
 | kafka.controller.tolerations | string | `"{{ include \"common.tplvalues.render\" (dict \"value\" .Values.global.tolerations \"context\" $) }}"` | Tolerations for pods assignment |
 | kafka.controller.affinity | object | `{}` | Affinity for pods assignment |
-
-### Kafka parameters   
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| kafka.controller.extraConfig | string | `"offsets.topic.replication.factor=1\ntransaction.state.log.replication.factor=1\nlog.retention.check.interval.ms = 120000\nlog.roll.ms = 120000\nlog.retention.minutes = 10\n"` | Additional configuration to be appended at the end of the generated Kafka configuration file. |
 ## Requirements
 
 | Repository | Name | Version |
