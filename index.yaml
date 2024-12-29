@@ -2580,6 +2580,49 @@ entries:
       category: Application
     apiVersion: v2
     appVersion: 0.3.172
+    created: "2024-12-29T13:20:14.843658176Z"
+    dependencies:
+    - name: kafka
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 31.0.0
+    - condition: observability.useLocal
+      name: prometheus
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 1.3.28
+    - condition: observability.useLocal
+      name: grafana
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 11.3.26
+    - name: elasticsearch
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 21.3.17
+    - name: influxdb
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 6.3.22
+    - name: redis
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 20.3.0
+    - name: postgresql
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 16.2.1
+    - name: common
+      repository: oci://registry-1.docker.io/bitnamicharts
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    description: A Helm chart containing Digma's services
+    digest: 77ae158e8001536ef2472676385dc3af1a2c50c796416b9ab7c7b5e0a7933a5e
+    home: https://github.com/digma-ai/digma
+    icon: https://digma.ai/wp-content/uploads/2024/02/logo-alt-1.svg
+    name: digma-ng
+    type: application
+    urls:
+    - https://github.com/digma-ai/helm-chart/releases/download/digma-ng-1.0.262/digma-ng-1.0.262.tgz
+    version: 1.0.262
+  - annotations:
+      category: Application
+    apiVersion: v2
+    appVersion: 0.3.172
     created: "2024-12-29T12:04:59.700215255Z"
     dependencies:
     - name: kafka
@@ -2888,4 +2931,4 @@ entries:
     urls:
     - https://github.com/digma-ai/helm-chart/releases/download/sample-app-go-1.1.0/sample-app-go-1.1.0.tgz
     version: 1.1.0
-generated: "2024-12-29T12:59:27.929201021Z"
+generated: "2024-12-29T13:20:14.844090623Z"
