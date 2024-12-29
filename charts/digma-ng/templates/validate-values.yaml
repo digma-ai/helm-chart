@@ -1,3 +1,17 @@
 {{- if and (eq .Values.observability.useLocal true)  (not (empty .Values.observability.otlp.remoteEndpoint)) }}
 {{ fail "Installation failed: 'observability.useLocal' is true while 'observability.otlp.remoteEndpoint' is set. This combination is not allowed." }}
 {{- end }}
+
+
+{{- $globalTolerations := default (list) .Values.global.tolerations -}}
+
+{{- $prometheusTolerations := default (list) .Values.prometheus.server.tolerations -}}
+{{- if and (not (empty $globalTolerations)) (empty $prometheusTolerations) ( .Values.observability.useLocal) }}
+{{ fail "global tolerations are set, but prometheus.server.tolerations is empty." }}
+{{- end }}
+
+
+{{- $redisTolerations := default (list) .Values.redis.master.tolerations -}}
+{{- if and (not (empty $globalTolerations)) (empty $redisTolerations) }}
+{{ fail "global tolerations are set, but redis.master.tolerations is empty." }}
+{{- end }}
