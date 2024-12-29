@@ -458,11 +458,6 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 | postgresql.primary.nodeSelector | object | `{}` | Node labels for pods assignment |
 | postgresql.primary.tolerations | string | `"{{ include \"common.tplvalues.render\" (dict \"value\" .Values.global.tolerations \"context\" $) }}"` | Tolerations for pods assignment |
 | postgresql.primary.affinity | object | `{}` | Affinity for pods assignment |
-
-### postgresql parameters
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
 | postgresql.metrics.enabled | bool | `true` | Start a prometheus exporter |
 
 ### Redis parameters

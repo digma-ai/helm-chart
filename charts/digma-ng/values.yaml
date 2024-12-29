@@ -1701,7 +1701,7 @@ postgresql:
   metrics:
     ## ref: https://github.com/bitnami/charts/tree/main/bitnami/postgresql
     # -- Start a prometheus exporter
-    # @section -- postgresql parameters
+    # @section -- Postgresql parameters
     enabled: true
     containerPorts:
       metrics: 9187
