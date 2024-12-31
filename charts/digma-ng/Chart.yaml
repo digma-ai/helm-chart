@@ -17,6 +17,11 @@ dependencies:
 - name: elasticsearch
   repository: oci://registry-1.docker.io/bitnamicharts
   version: 21.3.17
+- name: elasticsearch
+  version: 21.3.17
+  repository: https://charts.bitnami.com/bitnami
+  alias: elasticsearch-logs
+  condition: observability.useLocal
 - name: influxdb
   repository: oci://registry-1.docker.io/bitnamicharts
   version: 6.3.22

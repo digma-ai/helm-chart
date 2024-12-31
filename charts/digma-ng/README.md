@@ -509,6 +509,11 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 | elasticsearch.master.nodeSelector | object | `{}` | Node labels for pods assignment |
 | elasticsearch.master.tolerations | string | `"{{ include \"common.tplvalues.render\" (dict \"value\" .Values.global.tolerations \"context\" $) }}"` | Tolerations for pods assignment |
 | elasticsearch.master.affinity | object | `{}` | Affinity for pods assignment |
+| elasticsearch-logs.master.podLabels | object | `{}` | Extra labels for pods |
+| elasticsearch-logs.master.podAnnotations | object | `{}` | Extra annotations for pods |
+| elasticsearch-logs.master.nodeSelector | object | `{}` | Node labels for pods assignment |
+| elasticsearch-logs.master.tolerations | string | `"{{ include \"common.tplvalues.render\" (dict \"value\" .Values.global.tolerations \"context\" $) }}"` | Tolerations for pods assignment |
+| elasticsearch-logs.master.affinity | object | `{}` | Affinity for pods assignment |
 
 ### Grafana parameters
 
@@ -546,6 +551,7 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 
 | Repository | Name | Version |
 |------------|------|---------|
+| https://charts.bitnami.com/bitnami | elasticsearch-logs(elasticsearch) | 21.3.17 |
 | oci://registry-1.docker.io/bitnamicharts | common | 2.x.x |
 | oci://registry-1.docker.io/bitnamicharts | elasticsearch | 21.3.17 |
 | oci://registry-1.docker.io/bitnamicharts | grafana | 11.3.26 |

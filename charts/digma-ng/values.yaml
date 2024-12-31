@@ -1638,7 +1638,7 @@ influxdb:
     enabled: true
     accessModes:
       - ReadWriteOnce
-    size: 50Gi
+    size: 100Gi
 ## postgresql
 ## ref: https://github.com/bitnami/charts/blob/main/bitnami/postgresql/values.yaml
 ##
@@ -1964,6 +1964,78 @@ elasticsearch:
   service:
     ports:
       restAPI: 9200
+## elasticsearch
+## ref: https://github.com/bitnami/charts/blob/main/bitnami/elasticsearch/values.yaml
+##
+elasticsearch-logs:
+  enabled: true
+  global:
+    kibanaEnabled: true
+  kibana:
+    elasticsearch:
+      security:
+        tls:
+          enabled: false
+  sysctlImage:
+    enabled: true
+  security:
+    enabled: false
+    existingSecret: ""
+    tls:
+      restEncryption: false
+  ## Elasticsearch master-eligible node parameters
+  master:
+    masterOnly: false
+    replicaCount: 1
+    terminationGracePeriodSeconds: 5
+    podSecurityContext:
+      enabled: true
+      fsGroup: 1000
+    persistence:
+      enabled: true
+      size: 80Gi
+      accessModes:
+        - ReadWriteOnce
+    resources:
+      requests:
+        memory: 3Gi
+        cpu: 1
+      limits:
+        memory: 4Gi
+        cpu: 2
+    extraEnvVars:
+      - name: ES_JAVA_OPTS
+        value: -server -Xms2G -Xmx2G
+    ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+    # -- Extra labels for pods
+    # @section -- Elasticsearch parameters
+    podLabels: {}
+    ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+    # -- Extra annotations for pods
+    # @section -- Elasticsearch parameters
+    podAnnotations: {}
+    ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+    # -- Node labels for pods assignment
+    # @section -- Elasticsearch parameters
+    nodeSelector: {}
+    ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+    # -- Tolerations for pods assignment
+    # @section -- Elasticsearch parameters
+    tolerations: '{{ include "common.tplvalues.render" (dict "value" .Values.global.tolerations "context" $) }}'
+    ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+    ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
+    # -- Affinity for pods assignment
+    # @section -- Elasticsearch parameters
+    affinity: {}
+  coordinating:
+    replicaCount: 0
+  data:
+    replicaCount: 0
+  ingest:
+    replicaCount: 0
+  service:
+    ports:
+      restAPI: 9200
 ## grafana
 ## ref: https://github.com/bitnami/charts/blob/main/bitnami/grafana/values.yaml
 ##
@@ -2135,6 +2207,7 @@ kafka:
     ports:
       client: 9092
       controller: 9093
+
 debug:
   enabled: false
   pullSecrets: []
