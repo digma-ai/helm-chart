@@ -412,7 +412,7 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 |-----|------|---------|-------------|
 | otelCollectorDf.image.registry | string | `"docker.io"` | image registry |
 | otelCollectorDf.image.repository | string | `"otel/opentelemetry-collector-contrib"` | image repository |
-| otelCollectorDf.image.tag | string | `"0.116.1"` | image tag |
+| otelCollectorDf.image.tag | string | `"0.103.0"` | image tag |
 | otelCollectorDf.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
 | otelCollectorDf.image.pullSecrets | list | `[]` | image pull secrets |
 | otelCollectorDf.replicas | int | `1` | Number of replicas to deploy |
