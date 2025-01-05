@@ -1604,7 +1604,7 @@ influxdb:
       password: "12345678"
       token: dc61908e-05bc-411a-9fe2-e3356b8dc7c0
       bucket: errors
-      retention: 4w
+      retention: 2w
   influxdb:
     updateStrategy:
       # -- Influxdb deployment strategy type. Is a deployment resource therefore, Strategy type should be set to Recreate to avoid dead locks
