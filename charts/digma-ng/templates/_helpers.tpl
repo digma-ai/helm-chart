@@ -414,7 +414,7 @@ Return true if observability enabled
 {{- end -}}
 
 {{/*
-Return true if observability enabled
+Return remote endpoint url
 */}}
 {{- define "observability.otlp.remoteEndpoint" -}}
 {{- if (not (empty (default "" .Values.observability.otlp.remoteEndpoint))) }}
@@ -458,6 +458,6 @@ Return true if observability enabled
 - name: OtlpExportMetrics
   value: {{ quote .Values.observability.otlp.exportMetrics }}
 - name: OtlpExportLogs
-  value: "false"
+  value: {{ quote .Values.observability.otlp.exportLogs }}
   {{- end -}}
 {{- end -}}

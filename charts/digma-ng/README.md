@@ -1,6 +1,6 @@
 # digma-ng
 
-![Version: 1.0.262](https://img.shields.io/badge/Version-1.0.262-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.172](https://img.shields.io/badge/AppVersion-0.3.172-informational?style=flat-square)
+![Version: 1.0.262](https://img.shields.io/badge/Version-1.0.262-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.176-alpha.2](https://img.shields.io/badge/AppVersion-0.3.176--alpha.2-informational?style=flat-square)
 
 A Helm chart containing Digma's services
 
@@ -75,6 +75,7 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 | observability.otlp.samplerProbability | float | `0.1` | Control the fraction of traces that are sampled |
 | observability.otlp.exportTraces | bool | `true` | Export traces |
 | observability.otlp.exportMetrics | bool | `true` | Export metrics |
+| observability.otlp.exportLogs | bool | `true` | Export logs |
 
 ### Common parameters
 
@@ -411,7 +412,7 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 |-----|------|---------|-------------|
 | otelCollectorDf.image.registry | string | `"docker.io"` | image registry |
 | otelCollectorDf.image.repository | string | `"otel/opentelemetry-collector-contrib"` | image repository |
-| otelCollectorDf.image.tag | string | `"0.103.0"` | image tag |
+| otelCollectorDf.image.tag | string | `"0.116.1"` | image tag |
 | otelCollectorDf.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
 | otelCollectorDf.image.pullSecrets | list | `[]` | image pull secrets |
 | otelCollectorDf.replicas | int | `1` | Number of replicas to deploy |
@@ -509,11 +510,11 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 | elasticsearch.master.nodeSelector | object | `{}` | Node labels for pods assignment |
 | elasticsearch.master.tolerations | string | `"{{ include \"common.tplvalues.render\" (dict \"value\" .Values.global.tolerations \"context\" $) }}"` | Tolerations for pods assignment |
 | elasticsearch.master.affinity | object | `{}` | Affinity for pods assignment |
-| elasticsearch-logs.master.podLabels | object | `{}` | Extra labels for pods |
-| elasticsearch-logs.master.podAnnotations | object | `{}` | Extra annotations for pods |
-| elasticsearch-logs.master.nodeSelector | object | `{}` | Node labels for pods assignment |
-| elasticsearch-logs.master.tolerations | string | `"{{ include \"common.tplvalues.render\" (dict \"value\" .Values.global.tolerations \"context\" $) }}"` | Tolerations for pods assignment |
-| elasticsearch-logs.master.affinity | object | `{}` | Affinity for pods assignment |
+| elasticsearchlogs.master.podLabels | object | `{}` | Extra labels for pods |
+| elasticsearchlogs.master.podAnnotations | object | `{}` | Extra annotations for pods |
+| elasticsearchlogs.master.nodeSelector | object | `{}` | Node labels for pods assignment |
+| elasticsearchlogs.master.tolerations | string | `"{{ include \"common.tplvalues.render\" (dict \"value\" .Values.global.tolerations \"context\" $) }}"` | Tolerations for pods assignment |
+| elasticsearchlogs.master.affinity | object | `{}` | Affinity for pods assignment |
 
 ### Grafana parameters
 
@@ -551,7 +552,7 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com/bitnami | elasticsearch-logs(elasticsearch) | 21.3.17 |
+| https://charts.bitnami.com/bitnami | elasticsearchlogs(elasticsearch) | 21.3.17 |
 | oci://registry-1.docker.io/bitnamicharts | common | 2.x.x |
 | oci://registry-1.docker.io/bitnamicharts | elasticsearch | 21.3.17 |
 | oci://registry-1.docker.io/bitnamicharts | grafana | 11.3.26 |

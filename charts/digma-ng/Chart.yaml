@@ -1,7 +1,7 @@
 annotations:
   category: Application
 apiVersion: v2
-appVersion: 0.3.172
+appVersion: 0.3.176-alpha.2
 dependencies:
 - name: kafka
   repository: oci://registry-1.docker.io/bitnamicharts
@@ -20,8 +20,8 @@ dependencies:
 - name: elasticsearch
   version: 21.3.17
   repository: https://charts.bitnami.com/bitnami
-  alias: elasticsearch-logs
-  condition: observability.useLocal
+  alias: elasticsearchlogs
+  condition: elasticsearchlogs.enabled
 - name: influxdb
   repository: oci://registry-1.docker.io/bitnamicharts
   version: 6.3.22
