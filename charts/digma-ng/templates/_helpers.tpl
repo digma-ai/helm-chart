@@ -337,6 +337,20 @@ Return elasticsearch connectivity env
 {{- end -}}
 
 {{/*
+Return the proper elasticsearchlogs fullname
+*/}}
+{{- define "digma.elasticsearchlogs.fullname" -}}
+{{- include "common.names.dependency.fullname" (dict "chartName" "elasticsearch" "chartValues" .Values.elasticsearchlogs "context" $) -}}
+{{- end -}}
+
+{{/*
+Return elasticsearchlogs url
+*/}}
+{{- define "digma.elasticsearchlogs.url" -}}
+ {{ printf "https://%s:%v" (include "digma.elasticsearchlogs.fullname" .) .Values.elasticsearchlogs.service.ports.restAPI }}
+{{- end -}}
+
+{{/*
 Return the proper kafka fullname
 */}}
 {{- define "digma.kafka.fullname" -}}

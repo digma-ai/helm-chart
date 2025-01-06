@@ -173,6 +173,14 @@ collectorWorker:
   extraEnvVars: []
   app:
     ignoreEndpoints:
+      - Route: /healthz
+        RouteRegex: ""
+        Method: GET
+        Service: '*'
+      - Route: /readiness
+        RouteRegex: ""
+        Method: GET
+        Service: '*'
       - Route: /health
         RouteRegex: ""
         Method: GET
@@ -315,7 +323,7 @@ otelCollector:
         traces/2:
           receivers: [otlp/grpc]
           processors: [probabilistic_sampler, batch]
-          exporters: [otlp]
+          exporters: [otlphttp]
   # -- Number of replicas to deploy
   # @section -- Otel Collector parameters
   replicas: 1
@@ -1498,8 +1506,8 @@ otelCollectorDf:
           exporters: [otlp/remote]
         logs:
           receivers: [otlp]
-          processors: [batch]
-          exporters: [debug, otlp/remote]
+          processors: [attributes/add_source_env, batch]
+          exporters: [otlp/remote]
         {{- end }}
   # -- Number of replicas to deploy
   # @section -- Otel CollectorDF parameters
@@ -1976,81 +1984,7 @@ elasticsearch:
 ## ref: https://github.com/bitnami/charts/blob/main/bitnami/elasticsearch/values.yaml
 ##
 elasticsearchlogs:
-  nameOverride: elasticsearchlogs
   enabled: false
-  clusterName: elastic-logs
-  global:
-    kibanaEnabled: true
-    elasticsearch: 
-      service:
-        name: elasticsearchlogs
-  kibana:
-    updateStrategy:
-      type: Recreate
-    elasticsearch:
-      security:
-        tls:
-          enabled: false
-  sysctlImage:
-    enabled: true
-  security:
-    enabled: false
-    existingSecret: ""
-    tls:
-      restEncryption: false
-  ## Elasticsearch master-eligible node parameters
-  master:
-    masterOnly: false
-    replicaCount: 1
-    terminationGracePeriodSeconds: 5
-    podSecurityContext:
-      enabled: true
-      fsGroup: 1000
-    persistence:
-      enabled: true
-      size: 80Gi
-      accessModes:
-        - ReadWriteOnce
-    resources:
-      requests:
-        memory: 1Gi
-        cpu: 1
-      limits:
-        memory: 2Gi
-        cpu: 2
-    extraEnvVars:
-      - name: ES_JAVA_OPTS
-        value: -server -Xms1G -Xmx2G
-    ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
-    # -- Extra labels for pods
-    # @section -- Elasticsearch parameters
-    podLabels: {}
-    ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
-    # -- Extra annotations for pods
-    # @section -- Elasticsearch parameters
-    podAnnotations: {}
-    ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
-    # -- Node labels for pods assignment
-    # @section -- Elasticsearch parameters
-    nodeSelector: {}
-    ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
-    # -- Tolerations for pods assignment
-    # @section -- Elasticsearch parameters
-    tolerations: '{{ include "common.tplvalues.render" (dict "value" .Values.global.tolerations "context" $) }}'
-    ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
-    ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
-    # -- Affinity for pods assignment
-    # @section -- Elasticsearch parameters
-    affinity: {}
-  coordinating:
-    replicaCount: 0
-  data:
-    replicaCount: 0
-  ingest:
-    replicaCount: 0
-  service:
-    ports:
-      restAPI: 9200
 ## grafana
 ## ref: https://github.com/bitnami/charts/blob/main/bitnami/grafana/values.yaml
 ##
