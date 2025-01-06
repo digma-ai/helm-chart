@@ -337,6 +337,20 @@ Return elasticsearch connectivity env
 {{- end -}}
 
 {{/*
+Return the proper elasticsearchlogs fullname
+*/}}
+{{- define "digma.elasticsearchlogs.fullname" -}}
+{{- include "common.names.dependency.fullname" (dict "chartName" "elasticsearch" "chartValues" .Values.elasticsearchlogs "context" $) -}}
+{{- end -}}
+
+{{/*
+Return elasticsearchlogs url
+*/}}
+{{- define "digma.elasticsearchlogs.url" -}}
+ {{ printf "https://%s:%v" (include "digma.elasticsearchlogs.fullname" .) .Values.elasticsearchlogs.service.ports.restAPI }}
+{{- end -}}
+
+{{/*
 Return the proper kafka fullname
 */}}
 {{- define "digma.kafka.fullname" -}}
@@ -414,7 +428,7 @@ Return true if observability enabled
 {{- end -}}
 
 {{/*
-Return true if observability enabled
+Return remote endpoint url
 */}}
 {{- define "observability.otlp.remoteEndpoint" -}}
 {{- if (not (empty (default "" .Values.observability.otlp.remoteEndpoint))) }}
@@ -458,6 +472,6 @@ Return true if observability enabled
 - name: OtlpExportMetrics
   value: {{ quote .Values.observability.otlp.exportMetrics }}
 - name: OtlpExportLogs
-  value: "false"
+  value: {{ quote .Values.observability.otlp.exportLogs }}
   {{- end -}}
 {{- end -}}

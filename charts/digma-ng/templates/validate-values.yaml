@@ -7,11 +7,11 @@
 
 {{- $prometheusTolerations := default (list) .Values.prometheus.server.tolerations -}}
 {{- if and (not (empty $globalTolerations)) (empty $prometheusTolerations) ( .Values.observability.useLocal) }}
-{{ fail "global tolerations are set, but prometheus.server.tolerations is empty." }}
+{{ fail "global tolerations are set, but prometheus.server.tolerations are empty." }}
 {{- end }}
 
 
 {{- $redisTolerations := default (list) .Values.redis.master.tolerations -}}
 {{- if and (not (empty $globalTolerations)) (empty $redisTolerations) }}
-{{ fail "global tolerations are set, but redis.master.tolerations is empty." }}
+{{ fail "global tolerations are set, but redis.master.tolerations are empty." }}
 {{- end }}

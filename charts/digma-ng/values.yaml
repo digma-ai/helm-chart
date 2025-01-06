@@ -72,6 +72,9 @@ observability:
     # -- Export metrics
     # @section -- Observability parameters
     exportMetrics: true
+    # -- Export logs
+    # @section -- Observability parameters
+    exportLogs: true
 ## Global Docker image parameters
 ## Please, note that this will override the image parameters
 ##
@@ -170,6 +173,14 @@ collectorWorker:
   extraEnvVars: []
   app:
     ignoreEndpoints:
+      - Route: /healthz
+        RouteRegex: ""
+        Method: GET
+        Service: '*'
+      - Route: /readiness
+        RouteRegex: ""
+        Method: GET
+        Service: '*'
       - Route: /health
         RouteRegex: ""
         Method: GET
@@ -312,7 +323,7 @@ otelCollector:
         traces/2:
           receivers: [otlp/grpc]
           processors: [probabilistic_sampler, batch]
-          exporters: [otlp]
+          exporters: [otlphttp]
   # -- Number of replicas to deploy
   # @section -- Otel Collector parameters
   replicas: 1
@@ -1493,6 +1504,10 @@ otelCollectorDf:
           receivers: [otlp, kafkametrics, prometheus/k8s_metrics{{- if eq (include "digma.redis.metrics.enabled" .) "true" -}}, prometheus/redis {{- end }}{{- if eq (include "digma.postgresql.metrics.enabled" .) "true" -}}, prometheus/postgresql {{- end }}]
           processors: [attributes/add_source_env, batch]
           exporters: [otlp/remote]
+        logs:
+          receivers: [otlp]
+          processors: [attributes/add_source_env, batch]
+          exporters: [otlp/remote]
         {{- end }}
   # -- Number of replicas to deploy
   # @section -- Otel CollectorDF parameters
@@ -1904,6 +1919,7 @@ jaeger:
 ##
 elasticsearch:
   enabled: true
+  clusterName: elastic
   sysctlImage:
     enabled: true
   security:
@@ -1964,6 +1980,11 @@ elasticsearch:
   service:
     ports:
       restAPI: 9200
+## elasticsearch
+## ref: https://github.com/bitnami/charts/blob/main/bitnami/elasticsearch/values.yaml
+##
+elasticsearchlogs:
+  enabled: false
 ## grafana
 ## ref: https://github.com/bitnami/charts/blob/main/bitnami/grafana/values.yaml
 ##
@@ -2135,6 +2156,7 @@ kafka:
     ports:
       client: 9092
       controller: 9093
+
 debug:
   enabled: false
   pullSecrets: []
