@@ -330,7 +330,7 @@ otelCollector:
   resources:
     requests:
       cpu: 500m
-      memory: 1024Mi
+      memory: 512Mi
     limits:
       cpu: 750m
       memory: 1536Mi
@@ -553,7 +553,7 @@ collectorApi:
   resources:
     requests:
       memory: 768Mi
-      cpu: 1.0
+      cpu: 500m
     limits:
       memory: 1024Mi
       cpu: 1.5
@@ -1944,7 +1944,7 @@ elasticsearch:
         - ReadWriteOnce
     resources:
       requests:
-        memory: 3Gi
+        memory: 2Gi
         cpu: 1
       limits:
         memory: 4Gi
