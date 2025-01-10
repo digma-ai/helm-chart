@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 1738,
+  "id": 12,
   "links": [],
   "panels": [
     {
@@ -32,7 +32,6 @@
       "id": 4,
       "panels": [],
       "repeat": "app",
-      "repeatDirection": "h",
       "title": "$app",
       "type": "row"
     },
@@ -55,6 +54,7 @@
             "axisPlacement": "auto",
             "axisSoftMin": 0,
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -110,13 +110,14 @@
           "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
-          "showLegend": false
+          "showLegend": true
         },
         "tooltip": {
           "mode": "multi",
           "sort": "desc"
         }
       },
+      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -124,9 +125,9 @@
             "uid": "prometheusdatasource"
           },
           "editorMode": "code",
-          "expr": "sum(kube_pod_cpu_usage{source_env=\"$environment\", app=\"$app\"} unless rate(kube_pod_cpu_usage{source_env=\"$environment\", app=\"$app\"}[$__rate_interval]) == 0) by ()",
+          "expr": "sum(kube_pod_cpu_usage{source_env=\"$environment\", app=\"$app\"} unless rate(kube_pod_cpu_usage{source_env=\"$environment\", app=\"$app\"}[$__rate_interval]) == 0) by (pod)",
           "instant": false,
-          "legendFormat": "{{workload}}",
+          "legendFormat": "{{pod}}",
           "range": true,
           "refId": "A"
         }
@@ -161,6 +162,7 @@
             "axisPlacement": "auto",
             "axisSoftMin": 0,
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -216,13 +218,14 @@
           "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
-          "showLegend": false
+          "showLegend": true
         },
         "tooltip": {
           "mode": "multi",
           "sort": "desc"
         }
       },
+      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -230,9 +233,9 @@
             "uid": "prometheusdatasource"
           },
           "editorMode": "code",
-          "expr": "sum(kube_pod_mem_usage{source_env=\"$environment\", app=\"$app\"} unless rate(kube_pod_mem_usage{source_env=\"$environment\", app=\"$app\"}[5m]) == 0) by (app)\r\n",
+          "expr": "sum(kube_pod_mem_usage{source_env=\"$environment\", app=\"$app\"} unless rate(kube_pod_mem_usage{source_env=\"$environment\", app=\"$app\"}[5m]) == 0) by (pod)\r\n",
           "instant": false,
-          "legendFormat": "__auto",
+          "legendFormat": "{{pod}}",
           "range": true,
           "refId": "A"
         }
@@ -267,6 +270,7 @@
             "axisPlacement": "auto",
             "axisSoftMin": 0,
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -329,6 +333,7 @@
           "sort": "desc"
         }
       },
+      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -370,26 +375,24 @@
       "type": "timeseries"
     }
   ],
+  "preload": false,
   "refresh": "",
-  "schemaVersion": 39,
+  "schemaVersion": 40,
   "tags": [],
   "templating": {
     "list": [
       {
         "current": {
-          "selected": false,
-          "text": "LAC",
-          "value": "LAC"
+          "text": "BOODKA",
+          "value": "BOODKA"
         },
         "datasource": {
           "type": "prometheus",
           "uid": "prometheusdatasource"
         },
         "definition": "label_values(activity_call_duration_ms_sum,source_env)",
-        "hide": 0,
         "includeAll": false,
         "label": "Environment",
-        "multi": false,
         "name": "environment",
         "options": [],
         "query": {
@@ -399,13 +402,10 @@
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
         "type": "query"
       },
       {
         "current": {
-          "selected": true,
           "text": [
             "All"
           ],
@@ -418,7 +418,6 @@
           "uid": "prometheusdatasource"
         },
         "definition": "label_values(kube_pod_cpu_usage,app)",
-        "hide": 0,
         "includeAll": true,
         "label": "App",
         "multi": true,
@@ -431,8 +430,6 @@
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
         "type": "query"
       }
     ]
@@ -444,7 +441,7 @@
   "timepicker": {},
   "timezone": "browser",
   "title": "Apps System Metrics",
-  "uid": "ae7dk82fc3doge",
-  "version": 16,
+  "uid": "ce9h2p30o1pmob",
+  "version": 2,
   "weekStart": ""
 }

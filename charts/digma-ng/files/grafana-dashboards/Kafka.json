@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
-  "id": 720,
+  "id": 5,
   "links": [],
   "panels": [
     {
@@ -51,6 +51,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -116,6 +117,7 @@
           "sort": "desc"
         }
       },
+      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -123,7 +125,7 @@
             "uid": "aBLB9Z4Sz"
           },
           "editorMode": "code",
-          "expr": "histogram_quantile(0.50, sum(rate(kafka_message_time_in_queue_bucket{source_env=\"$environment\"}[5m])) by (le, consumerGroupId))",
+          "expr": "histogram_quantile(0.50, sum(rate(kafka_message_time_in_queue_bucket{source_env=\"$environment\"}[5m])) by (le, topic))",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -149,6 +151,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -214,6 +217,7 @@
           "sort": "desc"
         }
       },
+      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -221,7 +225,7 @@
             "uid": "aBLB9Z4Sz"
           },
           "editorMode": "code",
-          "expr": "histogram_quantile(0.75, sum(rate(kafka_message_time_in_queue_bucket{source_env=\"$environment\"}[5m])) by (le, consumerGroupId))",
+          "expr": "histogram_quantile(0.75, sum(rate(kafka_message_time_in_queue_bucket{source_env=\"$environment\"}[5m])) by (le, topic))",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -247,6 +251,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -312,6 +317,7 @@
           "sort": "desc"
         }
       },
+      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -319,7 +325,7 @@
             "uid": "aBLB9Z4Sz"
           },
           "editorMode": "code",
-          "expr": "histogram_quantile(0.99, sum(rate(kafka_message_time_in_queue_bucket{source_env=\"$environment\"}[5m])) by (le, consumerGroupId))",
+          "expr": "histogram_quantile(0.99, sum(rate(kafka_message_time_in_queue_bucket{source_env=\"$environment\"}[5m])) by (le, topic))",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -358,6 +364,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -423,6 +430,7 @@
           "sort": "desc"
         }
       },
+      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -430,7 +438,7 @@
             "uid": "aBLB9Z4Sz"
           },
           "editorMode": "code",
-          "expr": "histogram_quantile(0.50, sum(rate(kafka_message_time_in_consumer_bucket{source_env=\"$environment\"}[5m])>0) by (le, consumerGroupId))",
+          "expr": "histogram_quantile(0.50, sum(rate(kafka_message_time_in_consumer_bucket{source_env=\"$environment\"}[5m])>0) by (le, topic))",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -456,6 +464,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -521,6 +530,7 @@
           "sort": "desc"
         }
       },
+      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -528,7 +538,7 @@
             "uid": "aBLB9Z4Sz"
           },
           "editorMode": "code",
-          "expr": "histogram_quantile(0.75, sum(rate(kafka_message_time_in_consumer_bucket{source_env=\"$environment\"}[5m])>0) by (le, consumerGroupId))",
+          "expr": "histogram_quantile(0.75, sum(rate(kafka_message_time_in_consumer_bucket{source_env=\"$environment\"}[5m])>0) by (le, topic))",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -554,6 +564,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -619,6 +630,7 @@
           "sort": "desc"
         }
       },
+      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -626,7 +638,7 @@
             "uid": "aBLB9Z4Sz"
           },
           "editorMode": "code",
-          "expr": "histogram_quantile(0.99, sum(rate(kafka_message_time_in_consumer_bucket{source_env=\"$environment\"}[5m])>0) by (le, consumerGroupId))",
+          "expr": "histogram_quantile(0.99, sum(rate(kafka_message_time_in_consumer_bucket{source_env=\"$environment\"}[5m])>0) by (le, topic))",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -665,6 +677,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -726,6 +739,7 @@
           "sort": "desc"
         }
       },
+      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -760,6 +774,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -821,6 +836,7 @@
           "sort": "desc"
         }
       },
+      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -828,7 +844,7 @@
             "uid": "prometheusdatasource"
           },
           "editorMode": "code",
-          "expr": "sum(kafka_consumer_group_lag_sum_ratio{source_env=\"$environment\"} unless rate(kafka_consumer_group_lag_sum_ratio{source_env=\"$environment\"}[5m]) == 0) by (group) ",
+          "expr": "sum(kafka_consumer_group_lag_sum_ratio{source_env=\"$environment\"} unless rate(kafka_consumer_group_lag_sum_ratio{source_env=\"$environment\"}[5m]) == 0) by (topic) ",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -855,6 +871,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -916,6 +933,7 @@
           "sort": "desc"
         }
       },
+      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -923,7 +941,7 @@
             "uid": "prometheusdatasource"
           },
           "editorMode": "code",
-          "expr": "sum(delta(kafka_consumer_group_offset_sum_ratio{source_env=\"$environment\"}[5m])/5) by (group)",
+          "expr": "sum(delta(kafka_consumer_group_offset_sum_ratio{source_env=\"$environment\"}[5m])/5) by (topic)",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -973,6 +991,12 @@
       "id": 6,
       "options": {
         "displayMode": "basic",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
         "maxVizHeight": 300,
         "minVizHeight": 10,
         "minVizWidth": 0,
@@ -989,7 +1013,7 @@
         "sizing": "auto",
         "valueMode": "color"
       },
-      "pluginVersion": "10.4.0",
+      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -1073,7 +1097,7 @@
           "reverse": false
         }
       },
-      "pluginVersion": "10.4.0",
+      "pluginVersion": "11.3.0-pre",
       "targets": [
         {
           "datasource": {
@@ -1092,14 +1116,14 @@
       "type": "heatmap"
     }
   ],
+  "preload": false,
   "refresh": "10s",
-  "schemaVersion": 39,
+  "schemaVersion": 40,
   "tags": [],
   "templating": {
     "list": [
       {
         "current": {
-          "selected": false,
           "text": "MELOONA",
           "value": "MELOONA"
         },
@@ -1108,10 +1132,8 @@
           "uid": "prometheusdatasource"
         },
         "definition": "label_values(kafka_consumer_group_lag_sum_ratio,source_env)",
-        "hide": 0,
         "includeAll": false,
         "label": "Environment",
-        "multi": false,
         "name": "environment",
         "options": [],
         "query": {
@@ -1121,8 +1143,6 @@
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
         "type": "query"
       }
     ]
@@ -1135,6 +1155,6 @@
   "timezone": "browser",
   "title": "Kafka",
   "uid": "edq1za6ae0em8b",
-  "version": 15,
+  "version": 1,
   "weekStart": ""
 }
