@@ -1,1 +1,0 @@
-window.jaegerUiUrl = {{ include "digma.jaeger.publicBaseUrl" . }};

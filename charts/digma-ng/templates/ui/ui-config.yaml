@@ -11,4 +11,4 @@ metadata:
   {{- end }}
 data:
   admin-env.js: |
-    {{ .Files.Get "files/ui/admin/env.js" | tpl | indent 4 }}
+    window.jaegerUiUrl = {{ include "digma.jaeger.publicBaseUrl" . }};
