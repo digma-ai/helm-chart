@@ -1901,6 +1901,9 @@ redis:
 ## ref: https://github.com/bitnami/charts/blob/main/bitnami/jaeger/values.yaml
 ##
 jaeger:
+  # -- jaeger external or public URL, automatically detected if not set
+  # @section -- Jaeger parameters
+  publicBaseUrl: ""
   image:
     # -- image registry
     # @section -- Jaeger parameters

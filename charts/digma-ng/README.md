@@ -507,6 +507,7 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| jaeger.publicBaseUrl | string | `""` | jaeger external or public URL, automatically detected if not set |
 | jaeger.image.registry | string | `"docker.io"` | image registry |
 | jaeger.image.repository | string | `"jaegertracing/all-in-one"` | image repository |
 | jaeger.image.tag | string | `"1.61.0"` | image tag |
