@@ -111,7 +111,7 @@ collectorWorker:
     ExtendedObservability__Enable: true
     TraceTempStorage__TraceForJaegerExpirationInMinutes: 10
     BlockedTrace__TraceSpansLimit: 3000
-    ThresholdOptions__RecentActivityUpdateThresholdSeconds: 5
+    ThresholdOptions__RecentActivityUpdateThresholdSeconds: 30
   image:
     registry: docker.io
     repository: digmatic/digma-collector-worker
@@ -1299,6 +1299,120 @@ ui:
     # --  Additional rules to be covered with this ingress record
     # @section -- UI parameters
     extraRules: []
+ai:
+  enabled: false
+  image:
+    registry: docker.io
+    repository: digmatic/digma-ai
+    tag: 0.0.8
+    # -- image pull policy
+    # @section -- AI parameters
+    pullPolicy: IfNotPresent
+    ## Optionally specify an array of imagePullSecrets.
+    ## Secrets must be manually created in the namespace.
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+    ## e.g:
+    ## pullSecrets:
+    ##   - myRegistryKeySecretName
+    ##
+    # -- image pull secrets
+    # @section -- AI parameters
+    pullSecrets: []
+  # -- Number of replicas to deploy
+  # @section -- AI parameters
+  replicas: 1
+  resources:
+    requests:
+      memory: 512Mi
+      cpu: 500m
+    limits:
+      memory: 768Mi
+      cpu: 750m
+  service:
+    # -- service type
+    # @section -- AI parameters
+    type: ClusterIP
+    # -- Additional custom annotations for service
+    # @section -- AI parameters
+    annotations: {}
+    ports:
+      # -- HTTP port listen to path: /analyze, health check at /health
+      # @section -- AI parameters
+      http: 3000
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  # -- Extra labels for pods
+  # @section -- AI parameters
+  podLabels: {}
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  # -- Extra annotations for pods
+  # @section -- AI parameters
+  podAnnotations: {}
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  # -- Node labels for pods assignment
+  # @section -- AI parameters
+  nodeSelector: {}
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  # -- Tolerations for pods assignment
+  # @section -- AI parameters
+  tolerations: []
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
+  # -- Affinity for pods assignment
+  # @section -- AI parameters
+  affinity: {}
+  ## e.g:
+  ## extraEnvVars:
+  ##   - name: FOO
+  ##     value: "bar"
+  # -- Array with extra environment variables to add
+  # @section -- AI parameters
+  extraEnvVars: []
+
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  livenessProbe:
+    # -- Enable livenessProbe
+    # @section -- AI parameters
+    enabled: true
+    # -- Path for livenessProbe
+    # @section -- AI parameters
+    path: /health
+    # -- Initial delay seconds for livenessProbe
+    # @section -- AI parameters
+    initialDelaySeconds: 120
+    # -- Period seconds for livenessProbe
+    # @section -- AI parameters
+    periodSeconds: 10
+    # -- Timeout seconds for livenessProbe
+    # @section -- AI parameters
+    timeoutSeconds: 10
+    # -- Failure threshold for livenessProbe
+    # @section -- AI parameters
+    failureThreshold: 6
+    # -- Success threshold for livenessProbe
+    # @section -- AI parameters
+    successThreshold: 1
+  readinessProbe:
+    # -- Enable readinessProbe
+    # @section -- AI parameters
+    enabled: true
+    # -- Path for readinessProbe
+    # @section -- AI parameters
+    path: /readiness
+    # -- Initial delay seconds for readinessProbe
+    # @section -- AI parameters
+    initialDelaySeconds: 20
+    # -- Period seconds for readinessProbe
+    # @section -- AI parameters
+    periodSeconds: 10
+    # -- Timeout seconds for readinessProbe
+    # @section -- AI parameters
+    timeoutSeconds: 10
+    # -- Failure threshold for readinessProbe
+    # @section -- AI parameters
+    failureThreshold: 12
+    # -- Success threshold for readinessProbe
+    # @section -- AI parameters
+    successThreshold: 1
 metricsExporter:
   image:
     registry: docker.io

@@ -1,6 +1,6 @@
 # digma-ng
 
-![Version: 1.0.266](https://img.shields.io/badge/Version-1.0.266-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.181](https://img.shields.io/badge/AppVersion-0.3.181-informational?style=flat-square)
+![Version: 1.0.266](https://img.shields.io/badge/Version-1.0.266-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.182-alpha.8](https://img.shields.io/badge/AppVersion-0.3.182--alpha.8-informational?style=flat-square)
 
 A Helm chart containing Digma's services
 
@@ -376,6 +376,37 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 | ui.ingress.annotations | string | `nil` | Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations. |
 | ui.ingress.extraPaths | list | `[]` | Any additional paths that may need to be added to the ingress under the main host |
 | ui.ingress.extraRules | list | `[]` | Additional rules to be covered with this ingress record |
+
+### AI parameters
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| ai.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
+| ai.image.pullSecrets | list | `[]` | image pull secrets |
+| ai.replicas | int | `1` | Number of replicas to deploy |
+| ai.service.type | string | `"ClusterIP"` | service type |
+| ai.service.annotations | object | `{}` | Additional custom annotations for service |
+| ai.service.ports.http | int | `3000` | HTTP port listen to path: /analyze, health check at /health |
+| ai.podLabels | object | `{}` | Extra labels for pods |
+| ai.podAnnotations | object | `{}` | Extra annotations for pods |
+| ai.nodeSelector | object | `{}` | Node labels for pods assignment |
+| ai.tolerations | list | `[]` | Tolerations for pods assignment |
+| ai.affinity | object | `{}` | Affinity for pods assignment |
+| ai.extraEnvVars | list | `[]` | Array with extra environment variables to add |
+| ai.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
+| ai.livenessProbe.path | string | `"/health"` | Path for livenessProbe |
+| ai.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
+| ai.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
+| ai.livenessProbe.timeoutSeconds | int | `10` | Timeout seconds for livenessProbe |
+| ai.livenessProbe.failureThreshold | int | `6` | Failure threshold for livenessProbe |
+| ai.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
+| ai.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
+| ai.readinessProbe.path | string | `"/readiness"` | Path for readinessProbe |
+| ai.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
+| ai.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
+| ai.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
+| ai.readinessProbe.failureThreshold | int | `12` | Failure threshold for readinessProbe |
+| ai.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 
 ### MetricsExporter parameters
 
