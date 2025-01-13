@@ -8,6 +8,13 @@
 {{- end -}}
 
 {{/*
+Return the proper ai api fullname
+*/}}
+{{- define "digma.ai" -}}
+  {{- printf "%s-ai" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+{{- end -}}
+
+{{/*
 Return the proper analytics api fullname
 */}}
 {{- define "digma.analytics-api" -}}

@@ -1,0 +1,71 @@
+{{ if .Values.ai.enabled }}
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ include "digma.ai" . }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: ai
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.ai.podLabels .Values.commonLabels ) "context" . ) }}
+  replicas: {{ include "replicas.value" (dict "value" .Values.ai.replicas "context" .) }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 6 }}
+      app.kubernetes.io/component: ai
+  template:
+    metadata:
+      labels:
+        {{- include "common.labels.standard" ( dict "customLabels" $podLabels "context" $ ) | nindent 8 }}
+        app.kubernetes.io/component: ai
+      annotations:
+        {{- if .Values.commonAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.ai.podAnnotations }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.ai.podAnnotations "context" .) | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- include "common.images.pullSecrets" ( dict "images" (list .Values.ai.image) "global" .Values.global) | nindent 6 }}
+      {{- if .Values.ai.affinity }}
+      affinity: {{- include "common.tplvalues.render" ( dict "value" .Values.ai.affinity "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.ai.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.ai.nodeSelector "context" .) | nindent 8 }}
+      {{- end }}
+      {{- $mergedTolerations := (concat .Values.global.tolerations .Values.ai.tolerations) -}}
+      {{- if $mergedTolerations }}
+      tolerations: 
+      {{- toYaml $mergedTolerations | nindent 6 -}}
+      {{- end }}
+      containers:
+      - name: digma-ai
+        image: {{ include "common.images.image" (dict "imageRoot" .Values.ai.image "global" .Values.global) }}
+        imagePullPolicy: {{ .Values.ai.image.pullPolicy }}
+        resources: {{- toYaml .Values.ai.resources | nindent 12 }}
+        ports:
+        - name: http
+          containerPort: {{ .Values.ai.service.ports.http }}        
+        env:
+        {{- include "env.digma.app.common" . | nindent  8 }}
+        {{- if .Values.ai.extraEnvVars }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.ai.extraEnvVars "context" $) | nindent 8 }}
+        {{- end }}
+        {{- if not .Values.diagnosticMode.enabled }}
+        {{- if .Values.ai.livenessProbe.enabled }}
+        livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit (omit .Values.ai.livenessProbe "enabled") "path") "context" $) | nindent 10 }}
+          httpGet:
+            path: {{ .Values.ai.livenessProbe.path }}
+            port: http
+            scheme: HTTP
+        {{- end }}
+        {{- if .Values.ai.readinessProbe.enabled }}
+        readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit (omit .Values.ai.readinessProbe "enabled") "path") "context" $) | nindent 10 }}
+          httpGet:
+            path: {{ .Values.ai.readinessProbe.path }}
+            port: http
+            scheme: HTTP
+        {{- end }}          
+        {{- end }}
+{{- end }}
