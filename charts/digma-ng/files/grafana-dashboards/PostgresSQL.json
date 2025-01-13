@@ -19,7 +19,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 8,
+  "id": 11,
   "links": [],
   "panels": [
     {
@@ -262,7 +262,7 @@
             "uid": "prometheusdatasource"
           },
           "editorMode": "code",
-          "expr": "SUM(pg_stat_database_tup_fetched{source_env=~\"$environment\", datname=~\"$datname\", instance=~\"$instance\"})",
+          "expr": "SUM(pg_stat_database_tup_fetched_total{source_env=~\"$environment\", datname=~\"$datname\", instance=~\"$instance\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "range": true,
@@ -341,7 +341,7 @@
             "uid": "prometheusdatasource"
           },
           "editorMode": "code",
-          "expr": "SUM(pg_stat_database_tup_inserted{source_env=~\"$environment\", release=\"$release\", datname=~\"$datname\", instance=~\"$instance\"})",
+          "expr": "SUM(pg_stat_database_tup_inserted_total{source_env=~\"$environment\", release=\"$release\", datname=~\"$datname\", instance=~\"$instance\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "range": true,
@@ -419,9 +419,11 @@
             "type": "prometheus",
             "uid": "prometheusdatasource"
           },
-          "expr": "SUM(pg_stat_database_tup_updated{datname=~\"$datname\", instance=~\"$instance\"})",
+          "editorMode": "code",
+          "expr": "SUM(pg_stat_database_tup_updated_total{datname=~\"$datname\", instance=~\"$instance\"})",
           "format": "time_series",
           "intervalFactor": 2,
+          "range": true,
           "refId": "A",
           "step": 4
         }
@@ -1632,7 +1634,7 @@
             "max"
           ],
           "displayMode": "table",
-          "placement": "right",
+          "placement": "bottom",
           "showLegend": true
         },
         "tooltip": {
@@ -1651,7 +1653,7 @@
           "expr": "pg_stat_activity_count{source_env=~\"$environment\", datname=~\"$datname\", instance=~\"$instance\", state=~\"idle|idle in transaction|idle in transaction (aborted)\"}",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "{{datname}}, s: {{state}}",
+          "legendFormat": "{{application_name}}",
           "range": true,
           "refId": "A",
           "step": 2
@@ -1738,12 +1740,12 @@
             "max"
           ],
           "displayMode": "table",
-          "placement": "right",
+          "placement": "bottom",
           "showLegend": true
         },
         "tooltip": {
           "mode": "multi",
-          "sort": "none"
+          "sort": "desc"
         }
       },
       "pluginVersion": "11.3.0-pre",
@@ -1758,7 +1760,7 @@
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "{{datname}}, s: {{state}}",
+          "legendFormat": "{{application_name}}",
           "range": true,
           "refId": "A",
           "step": 2
@@ -1857,7 +1859,7 @@
             "sum"
           ],
           "displayMode": "table",
-          "placement": "right",
+          "placement": "bottom",
           "showLegend": true
         },
         "tooltip": {
@@ -1873,7 +1875,7 @@
             "uid": "prometheusdatasource"
           },
           "editorMode": "code",
-          "expr": "pg_stat_database_tup_fetched{source_env=~\"$environment\", datname=~\"$datname\", instance=~\"$instance\"} != 0",
+          "expr": "rate(pg_stat_database_tup_fetched_total{source_env=~\"$environment\", datname=~\"$datname\", instance=~\"$instance\"}[5m])",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{datname}}",
@@ -1962,7 +1964,7 @@
             "sum"
           ],
           "displayMode": "table",
-          "placement": "right",
+          "placement": "bottom",
           "showLegend": true
         },
         "tooltip": {
@@ -1978,7 +1980,7 @@
             "uid": "prometheusdatasource"
           },
           "editorMode": "code",
-          "expr": "irate(pg_stat_database_xact_commit{source_env=~\"$environment\", instance=\"$instance\", datname=~\"$datname\"}[5m])",
+          "expr": "irate(pg_stat_database_xact_commit_total{source_env=~\"$environment\", instance=\"$instance\", datname=~\"$datname\"}[5m])",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "{{datname}} commits",
@@ -2079,7 +2081,7 @@
             "sum"
           ],
           "displayMode": "table",
-          "placement": "right",
+          "placement": "bottom",
           "showLegend": true
         },
         "tooltip": {
@@ -2095,7 +2097,7 @@
             "uid": "prometheusdatasource"
           },
           "editorMode": "code",
-          "expr": "pg_stat_database_tup_updated{source_env=~\"$environment\", datname=~\"$datname\", instance=~\"$instance\"} != 0",
+          "expr": "rate(pg_stat_database_tup_updated_total{source_env=~\"$environment\", datname=~\"$datname\", instance=~\"$instance\"}[5m])",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{datname}}",
@@ -2184,7 +2186,7 @@
             "sum"
           ],
           "displayMode": "table",
-          "placement": "right",
+          "placement": "bottom",
           "showLegend": true
         },
         "tooltip": {
@@ -2200,7 +2202,7 @@
             "uid": "prometheusdatasource"
           },
           "editorMode": "code",
-          "expr": "pg_stat_database_tup_returned{source_env=~\"$environment\", datname=~\"$datname\", instance=~\"$instance\"} != 0",
+          "expr": "rate(pg_stat_database_tup_returned_total{source_env=~\"$environment\", datname=~\"$datname\", instance=~\"$instance\"}[5m])",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{datname}}",
@@ -2209,7 +2211,7 @@
           "step": 2
         }
       ],
-      "title": "Return data",
+      "title": "Return data (Shared Cache)",
       "type": "timeseries"
     },
     {
@@ -2289,7 +2291,7 @@
             "sum"
           ],
           "displayMode": "table",
-          "placement": "right",
+          "placement": "bottom",
           "showLegend": true
         },
         "tooltip": {
@@ -2305,7 +2307,7 @@
             "uid": "prometheusdatasource"
           },
           "editorMode": "code",
-          "expr": "pg_stat_database_tup_inserted{source_env=~\"$environment\", datname=~\"$datname\", instance=~\"$instance\"} != 0",
+          "expr": "rate(pg_stat_database_tup_inserted_total{source_env=~\"$environment\", datname=~\"$datname\", instance=~\"$instance\"}[5m])",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{datname}}",
@@ -2396,7 +2398,7 @@
             "sum"
           ],
           "displayMode": "table",
-          "placement": "right",
+          "placement": "bottom",
           "showLegend": true
         },
         "tooltip": {
@@ -2516,7 +2518,7 @@
             "uid": "prometheusdatasource"
           },
           "editorMode": "code",
-          "expr": "pg_stat_database_blks_hit{source_env=~\"$environment\", instance=\"$instance\", datname=~\"$datname\"} / (pg_stat_database_blks_read{source_env=~\"$environment\", instance=\"$instance\", datname=~\"$datname\"} + pg_stat_database_blks_hit{source_env=~\"$environment\", instance=\"$instance\", datname=~\"$datname\"})",
+          "expr": "pg_stat_database_blks_hit_total{source_env=~\"$environment\", instance=\"$instance\", datname=~\"$datname\"} / (pg_stat_database_blks_read_total{source_env=~\"$environment\", instance=\"$instance\", datname=~\"$datname\"} + pg_stat_database_blks_hit_total{source_env=~\"$environment\", instance=\"$instance\", datname=~\"$datname\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "{{ datname }}",
@@ -2760,7 +2762,7 @@
             "sum"
           ],
           "displayMode": "table",
-          "placement": "right",
+          "placement": "bottom",
           "showLegend": true
         },
         "tooltip": {
@@ -2776,7 +2778,7 @@
             "uid": "prometheusdatasource"
           },
           "editorMode": "code",
-          "expr": "pg_stat_database_tup_deleted{source_env=~\"$environment\", datname=~\"$datname\", instance=~\"$instance\"} != 0",
+          "expr": "rate(pg_stat_database_tup_deleted_total{source_env=~\"$environment\", datname=~\"$datname\", instance=~\"$instance\"}[5m])",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{datname}}",
@@ -2882,7 +2884,7 @@
             "uid": "prometheusdatasource"
           },
           "editorMode": "code",
-          "expr": "irate(pg_stat_database_temp_bytes{source_env=~\"$environment\", instance=\"$instance\", datname=~\"$datname\"}[5m])",
+          "expr": "irate(pg_stat_database_temp_bytes_total{source_env=~\"$environment\", instance=\"$instance\", datname=~\"$datname\"}[5m])",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "{{datname}}",
@@ -2891,6 +2893,123 @@
         }
       ],
       "title": "Temp File (Bytes)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheusdatasource"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 8,
+        "y": 43
+      },
+      "id": 70,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "lastNotNull",
+            "max",
+            "min"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.3.0-pre",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheusdatasource"
+          },
+          "editorMode": "code",
+          "expr": "irate(pg_stat_bgwriter_checkpoint_write_time_total{source_env=~\"$environment\", instance=\"$instance\"}[5m])",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "write_time - Total amount of time that has been spent in the portion of checkpoint processing where files are written to disk.",
+          "range": true,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheusdatasource"
+          },
+          "editorMode": "code",
+          "expr": "irate(pg_stat_bgwriter_checkpoint_sync_time_total{source_env=~\"$environment\", instance=\"$instance\"}[5m])",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "sync_time - Total amount of time that has been spent in the portion of checkpoint processing where files are synchronized to disk.",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Checkpoint Stats",
       "type": "timeseries"
     },
     {
@@ -2986,7 +3105,7 @@
             "uid": "prometheusdatasource"
           },
           "editorMode": "code",
-          "expr": "irate(pg_stat_database_conflicts{source_env=~\"$environment\", instance=\"$instance\", datname=~\"$datname\"}[5m])",
+          "expr": "irate(pg_stat_database_conflicts_total{source_env=~\"$environment\", instance=\"$instance\", datname=~\"$datname\"}[5m])",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "{{datname}} conflicts",
@@ -3009,133 +3128,12 @@
       ],
       "title": "Conflicts/Deadlocks",
       "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheusdatasource"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "ms"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 16,
-        "x": 8,
-        "y": 50
-      },
-      "id": 70,
-      "options": {
-        "legend": {
-          "calcs": [
-            "mean",
-            "lastNotNull",
-            "max",
-            "min"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "11.3.0-pre",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheusdatasource"
-          },
-          "editorMode": "code",
-          "expr": "irate(pg_stat_bgwriter_checkpoint_write_time_total{source_env=~\"$environment\", instance=\"$instance\"}[5m])",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "write_time - Total amount of time that has been spent in the portion of checkpoint processing where files are written to disk.",
-          "range": true,
-          "refId": "B"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheusdatasource"
-          },
-          "editorMode": "code",
-          "expr": "irate(pg_stat_bgwriter_checkpoint_sync_time_total{source_env=~\"$environment\", instance=\"$instance\"}[5m])",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "sync_time - Total amount of time that has been spent in the portion of checkpoint processing where files are synchronized to disk.",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Checkpoint Stats",
-      "type": "timeseries"
     }
   ],
   "preload": false,
   "refresh": "10s",
   "schemaVersion": 40,
-  "tags": [
-    "postgres",
-    "db",
-    "stats"
-  ],
+  "tags": [],
   "templating": {
     "list": [
       {
@@ -3174,14 +3172,14 @@
         "auto_count": 200,
         "auto_min": "1s",
         "current": {
-          "text": "$__auto",
-          "value": "$__auto"
+          "text": "1s",
+          "value": "1s"
         },
         "label": "Interval",
         "name": "interval",
         "options": [
           {
-            "selected": false,
+            "selected": true,
             "text": "1s",
             "value": "1s"
           },
@@ -3322,8 +3320,8 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "PostgreSQL",
-  "uid": "000000039",
-  "version": 35,
+  "title": "PostgreSQL Copy",
+  "uid": "ce9daf4og8v7kd",
+  "version": 32,
   "weekStart": ""
 }
