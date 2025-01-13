@@ -44,6 +44,9 @@ spec:
             name: {{ include "digma.nginx" . }}
         - name: app-volume
           emptyDir: {}
+        - name: ui-envs-volume
+          configMap:
+            name: {{ include "digma.ui" . }}
       initContainers:
       - name: copy-nginx-config
         image: busybox:latest #bitnami/nginx:latest
@@ -53,10 +56,13 @@ spec:
           - |
             wget -O /tmp/digma-ui.zip "https://github.com/digma-ai/digma-ui/releases/download/v{{.Values.ui.artifactsVersion}}/dist-web-v{{.Values.ui.artifactsVersion}}.zip" &&
             unzip -o /tmp/digma-ui.zip -d /app &&
-            rm /tmp/digma-ui.zip
+            rm /tmp/digma-ui.zip &&
+            cp /config/ui/envs/admin-env.js /app/admin/env.js;
         volumeMounts:
           - name: app-volume
             mountPath: /app
+          - name: ui-envs-volume
+            mountPath: /config/ui/envs
       containers:
       - name: nginx
         image: {{ include "common.images.image" (dict "imageRoot" .Values.nginx.image "global" .Values.global "chart" .Chart) }}

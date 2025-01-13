@@ -305,6 +305,19 @@ Return the proper jaeger-ui fullname
   {{- printf "%s-jaeger-ui" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
 {{- end -}}
 
+{{/*
+Return the proper jaeger service external url
+*/}}
+{{- define "digma.jaeger.publicBaseUrl" -}}
+{{- if not (empty (default "" .Values.jaeger.publicBaseUrl)) -}}
+{{.Values.jaeger.publicBaseUrl}}
+{{- else }}
+{{- if and .Values.jaeger.ingress.enabled (and .Values.jaeger.ingress.hostname (ne .Values.jaeger.ingress.hostname "")) }}
+{{- printf "https://%s" .Values.jaeger.ingress.hostname -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
 
 {{/*
 Return the proper nginx fullname
