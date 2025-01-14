@@ -58,6 +58,8 @@ spec:
             unzip -o /tmp/digma-ui.zip -d /app &&
             rm /tmp/digma-ui.zip &&
             cp /config/ui/envs/admin-env.js /app/admin/env.js;
+            cp /config/ui/envs/ide-launcher-env.js /app/ide-launcher/env.js;
+            cp /config/ui/envs/login-env.js /app/login/env.js;
         volumeMounts:
           - name: app-volume
             mountPath: /app
