@@ -1,0 +1,51 @@
+{{- if and .Values.postgresql_backup.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ printf "%s-backup-db" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+  labels:
+    {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: backup-db
+  {{- if or .Values.postgresql_backup.annotations .Values.commonAnnotations }}
+  {{- $annotations := include "common.tplvalues.merge" (dict "values" (list .Values.postgresql_backup.annotations .Values.commonAnnotations) "context" .) }}
+  annotations:
+    {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  ttlSecondsAfterFinished: 300 
+  template:
+    metadata:
+      labels:
+        {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 8 }}
+        app.kubernetes.io/component: backup-db
+    spec:
+      {{- include "common.images.pullSecrets" ( dict "images" (list .Values.postgresql_backup.image) "global" .Values.global ) | nindent 6 }}
+      containers:
+        - name: postgres-backup
+          image: {{ include "common.images.image" ( dict "imageRoot" .Values.postgresql_backup.image "global" .Values.global ) }}
+          imagePullPolicy: {{ .Values.postgresql_backup.image.pullPolicy }}
+          env:
+            - name: PRESIGNED_URL
+              value: {{ .Values.postgresql_backup.presigned_url | quote }}
+            - name: POSTGRES_HOST
+              value: {{ include "digma.database.host" . | quote }}
+          command:
+            - /bin/sh
+            - -c
+            - |
+              presigned_url="$PRESIGNED_URL";
+              echo $(date +'%H:%M:%S') backup started now;
+              cd /;
+              backup_file='postgres-data.dump';
+              pg_dump -h $POSTGRES_HOST -U postgres -d digma_analytics -F c -f $backup_file;
+              apt update;
+              apt install -y curl;
+              file_size_bytes=$(stat -c %s $backup_file);  # Correct stat usage
+              file_size_mb=$(echo $file_size_bytes | awk '{printf "%.2f", $1 / (1024 * 1024)}');
+              echo File size: $file_size_mb MB;
+              echo $(date +'%H:%M:%S') uploading file..;
+              if [ -n "$presigned_url" ]; then
+                  curl -X PUT -T $backup_file "$presigned_url"
+              fi
+      restartPolicy: Never
+{{- end }}

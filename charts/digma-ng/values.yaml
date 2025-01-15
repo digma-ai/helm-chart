@@ -2276,6 +2276,23 @@ kafka:
       client: 9092
       controller: 9093
 
+postgresql_backup:
+  # -- postgresql backup enabled
+  # @section -- Postgresql-Backup parameters
+  enabled: false
+  pullSecrets: []
+  image:
+    registry: docker.io
+    repository: postgres
+    tag: 17.1
+    pullPolicy: IfNotPresent
+  # -- Url to upload the backup file, provided by Digma
+  # @section -- Postgresql-Backup parameters
+  presigned_url: ""
+  # -- Extra annotations for job
+  # @section -- Postgresql-Backup parameters
+  annotations: {}
+
 debug:
   enabled: false
   pullSecrets: []
