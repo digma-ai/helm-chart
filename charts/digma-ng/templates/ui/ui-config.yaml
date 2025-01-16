@@ -11,6 +11,7 @@ metadata:
   {{- end }}
 data:
   admin-env.js: |
+    window.areInsightSuggestionsEnabled = true;
     window.isJaegerEnabled = true;
     window.jaegerURL = "{{ include "digma.jaeger.publicBaseUrl" . }}";
     window.platform = "Web";
