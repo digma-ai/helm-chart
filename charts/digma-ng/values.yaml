@@ -1417,7 +1417,7 @@ metricsExporter:
   image:
     registry: docker.io
     repository: digmatic/k8s-metrics-exporter
-    tag: 0.0.11
+    tag: 0.0.12
     # -- image pull policy
     # @section -- MetricsExporter parameters
     pullPolicy: IfNotPresent
