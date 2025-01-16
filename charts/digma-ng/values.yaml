@@ -1304,7 +1304,7 @@ ai:
   image:
     registry: docker.io
     repository: digmatic/digma-ai
-    tag: 0.0.15
+    tag: 0.0.18
     # -- image pull policy
     # @section -- AI parameters
     pullPolicy: IfNotPresent
