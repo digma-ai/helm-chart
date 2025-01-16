@@ -1338,7 +1338,7 @@ ai:
     ports:
       # -- HTTP port listen to path: /analyze, health check at /health
       # @section -- AI parameters
-      http: 3000
+      http: 5056
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
   # -- Extra labels for pods
   # @section -- AI parameters

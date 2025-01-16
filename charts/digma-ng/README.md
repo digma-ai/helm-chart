@@ -1,6 +1,6 @@
 # digma-ng
 
-![Version: 1.0.270](https://img.shields.io/badge/Version-1.0.270-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.186](https://img.shields.io/badge/AppVersion-0.3.186-informational?style=flat-square)
+![Version: 1.0.270](https://img.shields.io/badge/Version-1.0.270-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.187-alpha.3](https://img.shields.io/badge/AppVersion-0.3.187--alpha.3-informational?style=flat-square)
 
 A Helm chart containing Digma's services
 
@@ -386,7 +386,7 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 | ai.replicas | int | `1` | Number of replicas to deploy |
 | ai.service.type | string | `"ClusterIP"` | service type |
 | ai.service.annotations | object | `{}` | Additional custom annotations for service |
-| ai.service.ports.http | int | `3000` | HTTP port listen to path: /analyze, health check at /health |
+| ai.service.ports.http | int | `5056` | HTTP port listen to path: /analyze, health check at /health |
 | ai.podLabels | object | `{}` | Extra labels for pods |
 | ai.podAnnotations | object | `{}` | Extra annotations for pods |
 | ai.nodeSelector | object | `{}` | Node labels for pods assignment |

@@ -15,6 +15,13 @@ Return the proper ai api fullname
 {{- end -}}
 
 {{/*
+Return the proper ai api url
+*/}}
+{{- define "digma.ai.url" -}}
+{{ printf "http://%s:%v" (include "digma.ai" .) .Values.ai.service.ports.http }}
+{{- end -}}
+
+{{/*
 Return the proper analytics api fullname
 */}}
 {{- define "digma.analytics-api" -}}
