@@ -1,6 +1,6 @@
 # digma-ng
 
-![Version: 1.0.267](https://img.shields.io/badge/Version-1.0.267-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.182](https://img.shields.io/badge/AppVersion-0.3.182-informational?style=flat-square)
+![Version: 1.0.269](https://img.shields.io/badge/Version-1.0.269-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.183](https://img.shields.io/badge/AppVersion-0.3.183-informational?style=flat-square)
 
 A Helm chart containing Digma's services
 
@@ -575,6 +575,14 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 | kafka.controller.nodeSelector | object | `{}` | Node labels for pods assignment |
 | kafka.controller.tolerations | string | `"{{ include \"common.tplvalues.render\" (dict \"value\" .Values.global.tolerations \"context\" $) }}"` | Tolerations for pods assignment |
 | kafka.controller.affinity | object | `{}` | Affinity for pods assignment |
+
+### Postgresql-Backup parameters
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| postgresql_backup.enabled | bool | `false` | postgresql backup enabled |
+| postgresql_backup.presigned_url | string | `""` | Url to upload the backup file, provided by Digma |
+| postgresql_backup.annotations | object | `{}` | Extra annotations for job |
 ## Requirements
 
 | Repository | Name | Version |

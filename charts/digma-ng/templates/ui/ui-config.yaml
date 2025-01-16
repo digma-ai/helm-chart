@@ -11,4 +11,10 @@ metadata:
   {{- end }}
 data:
   admin-env.js: |
-    window.jaegerUiUrl = {{ include "digma.jaeger.publicBaseUrl" . }};
+    window.isJaegerEnabled = true;
+    window.jaegerURL = "{{ include "digma.jaeger.publicBaseUrl" . }}";
+    window.platform = "Web";
+  ide-launcher-env.js: |
+    window.platform = "Web";
+  login-env.js: |
+    window.platform = "Web";
