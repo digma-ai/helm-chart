@@ -49,6 +49,16 @@ spec:
           containerPort: {{ .Values.ai.service.ports.http }}        
         env:
         {{- include "env.digma.app.common" . | nindent  8 }}
+        {{- if eq "true" (include "digma.observability.enabled" .) }}
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          value: {{ include "digma.otel-collector-df-grpc" .}}
+        - name: OTEL_EXPORTER_OTLP_INSECURE
+          value: "true"
+        - name: OTEL_EXPORTER_OTLP_PROTOCOL
+          value: "grpc"
+        - name: OTEL_RESOURCE_ATTRIBUTES
+          value: "digma.environment={{ .Values.observability.environmentName }},digma.environment.type=Public"
+        {{- end -}}
         {{- if .Values.ai.extraEnvVars }}
         {{- include "common.tplvalues.render" (dict "value" .Values.ai.extraEnvVars "context" $) | nindent 8 }}
         {{- end }}
