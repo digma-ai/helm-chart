@@ -1,6 +1,6 @@
 # digma-ng
 
-![Version: 1.0.270](https://img.shields.io/badge/Version-1.0.270-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.187-alpha.5](https://img.shields.io/badge/AppVersion-0.3.187--alpha.5-informational?style=flat-square)
+![Version: 1.0.270](https://img.shields.io/badge/Version-1.0.270-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.189-alpha.7](https://img.shields.io/badge/AppVersion-0.3.189--alpha.7-informational?style=flat-square)
 
 A Helm chart containing Digma's services
 
@@ -43,6 +43,27 @@ kubectl create namespace digma
 helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 
 ```
+
+## PostgreSQL Backup
+The Digma-ng Helm chart provides an optional PostgreSQL backup job for debugging and troubleshooting purposes. This guide explains how to enable and configure the backup feature.
+
+### Enabling the Backup Job
+To enable the PostgreSQL backup job, set the following values in your Helm deployment configuration:
+```
+postgresql_backup:
+  enabled: true
+  presigned_url: "<YOUR_PRESIGNED_URL>"
+```
+Required Parameters:
+	•	postgresql_backup.enabled: Set to true to enable the backup job.
+	•	postgresql_backup.presigned_url: The presigned URL provided by Digma for the S3 bucket.
+
+How It Works
+	•	When the backup job is enabled, a Kubernetes Job is created.
+	•	The job performs the following tasks:
+        1.	Connects to the PostgreSQL database.
+        2.	Creates a backup file.
+        3.	Uploads the backup file to the provided presigned S3 URL.
 ## Values
 
 ### Global Digma parameters
