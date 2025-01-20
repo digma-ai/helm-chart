@@ -43,13 +43,66 @@ kubectl create namespace digma
 helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 
 ```
+## Handle Zone-Specific Constraints
+Digma uses multiple StatefulSets.
+1. Enforce Zone-Affinity for StatefulSet Pods
+Ensure the StatefulSet pod remains in the same zone as its data by configuring node affinity.
+###  Affinity Example
+Here’s how to set node affinity for the StatefulSets in values.yaml:
+```yaml
+elasticsearch:
+  master:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: topology.kubernetes.io/zone
+                  operator: In
+                  values:
+                    - <zone>
+kafka:
+  controller:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: topology.kubernetes.io/zone
+                  operator: In
+                  values:
+                    - <zone>
+postgresql:
+  primary:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: topology.kubernetes.io/zone
+                  operator: In
+                  values:
+                    - <zone>
+redis:
+  master:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: topology.kubernetes.io/zone
+                  operator: In
+                  values:
+                    - <zone>
+```
+2. Use Multi-Zone Storage
 
 ## PostgreSQL Backup
 The Digma-ng Helm chart provides an optional PostgreSQL backup job for debugging and troubleshooting purposes. This guide explains how to enable and configure the backup feature.
 
 ### Enabling the Backup Job
 To enable the PostgreSQL backup job, set the following values in your Helm deployment configuration:
-```
+```yaml
 postgresql_backup:
   enabled: true
   presigned_url: "<YOUR_PRESIGNED_URL>"
