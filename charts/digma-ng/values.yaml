@@ -1229,7 +1229,7 @@ nginx:
     # @section -- UI parameters
     successThreshold: 1
 ui:
-  artifactsVersion: 5.1.1
+  artifactsVersion: 6.1.0
   service:
     # -- service type
     # @section -- UI parameters
@@ -1304,7 +1304,7 @@ ai:
   image:
     registry: docker.io
     repository: digmatic/digma-ai
-    tag: 0.0.18
+    tag: 0.0.19
     # -- image pull policy
     # @section -- AI parameters
     pullPolicy: IfNotPresent
@@ -1338,7 +1338,7 @@ ai:
     ports:
       # -- HTTP port listen to path: /analyze, health check at /health
       # @section -- AI parameters
-      http: 3000
+      http: 5056
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
   # -- Extra labels for pods
   # @section -- AI parameters
@@ -2224,10 +2224,10 @@ kafka:
     resources:
       requests:
         memory: 2Gi
-        cpu: 200m
+        cpu: 500m
       limits:
         memory: 3Gi
-        cpu: 1000m
+        cpu: 1.5
     # -- Additional configuration to be appended at the end of the generated Kafka configuration file.
     # @section -- Kafka parameters
     extraConfig: |

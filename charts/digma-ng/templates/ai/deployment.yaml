@@ -49,6 +49,8 @@ spec:
           containerPort: {{ .Values.ai.service.ports.http }}        
         env:
         {{- include "env.digma.app.common" . | nindent  8 }}
+        - name: PORT
+          value: {{ .Values.ai.service.ports.http | quote}}
         {{- if eq "true" (include "digma.observability.enabled" .) }}
         - name: OTEL_EXPORTER_OTLP_ENDPOINT
           value: {{ include "digma.otel-collector-df-grpc" .}}

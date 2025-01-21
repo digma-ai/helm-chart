@@ -1,16 +1,10 @@
 # digma-ng
 
-
-
-
-![Version: 1.0.270](https://img.shields.io/badge/Version-1.0.270-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.186](https://img.shields.io/badge/AppVersion-0.3.186-informational?style=flat-square) 
+![Version: 1.0.270](https://img.shields.io/badge/Version-1.0.270-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.189](https://img.shields.io/badge/AppVersion-0.3.189-informational?style=flat-square)
 
 A Helm chart containing Digma's services
 
 **Homepage:** <https://github.com/digma-ai/digma>
-
-
-
 
 ## License Key
 Digma will not function without a valid license key.
@@ -32,7 +26,6 @@ helm upgrade --install digma digma/digma-ng -n digma --set digma.licenseKey=$DIG
 
 This chart bootstraps a [Digma](https://digma.ai) deployment on a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
 
-
 ## Prerequisites
 
 - Kubernetes 1.23+
@@ -50,6 +43,81 @@ kubectl create namespace digma
 helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 
 ```
+## Handle Zone-Specific Constraints
+Digma uses multiple StatefulSets.
+1. ### Enforce Zone-Affinity for StatefulSet Pods
+   Ensure the StatefulSet pod remains in the same zone as its data by configuring node affinity.
+   ####  Affinity Example
+   Here’s how to set node affinity for the StatefulSets in values.yaml:
+    ```yaml
+    elasticsearch:
+      master:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+                - matchExpressions:
+                    - key: topology.kubernetes.io/zone
+                      operator: In
+                      values:
+                        - <zone>
+    kafka:
+      controller:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+                - matchExpressions:
+                    - key: topology.kubernetes.io/zone
+                      operator: In
+                      values:
+                        - <zone>
+    postgresql:
+      primary:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+                - matchExpressions:
+                    - key: topology.kubernetes.io/zone
+                      operator: In
+                      values:
+                        - <zone>
+    redis:
+      master:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+                - matchExpressions:
+                    - key: topology.kubernetes.io/zone
+                      operator: In
+                      values:
+                        - <zone>
+    ```
+2. ### Use Multi-Zone Storage
+   Use storage solutions that replicate data across zones
+
+## PostgreSQL Backup
+The Digma-ng Helm chart provides an optional PostgreSQL backup job for debugging and troubleshooting purposes. This guide explains how to enable and configure the backup feature.
+
+### Enabling the Backup Job
+To enable the PostgreSQL backup job, set the following values in your Helm deployment configuration:
+```yaml
+postgresql_backup:
+  enabled: true
+  presigned_url: "<YOUR_PRESIGNED_URL>"
+```
+Required Parameters:
+	•	postgresql_backup.enabled: Set to true to enable the backup job.
+	•	postgresql_backup.presigned_url: The presigned URL provided by Digma for the S3 bucket.
+
+How It Works
+	•	When the backup job is enabled, a Kubernetes Job is created.
+	•	The job performs the following tasks:
+        1.	Connects to the PostgreSQL database.
+        2.	Creates a backup file.
+        3.	Uploads the backup file to the provided presigned S3 URL.
 ## Values
 
 ### Global Digma parameters
@@ -393,7 +461,7 @@ helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 | ai.replicas | int | `1` | Number of replicas to deploy |
 | ai.service.type | string | `"ClusterIP"` | service type |
 | ai.service.annotations | object | `{}` | Additional custom annotations for service |
-| ai.service.ports.http | int | `3000` | HTTP port listen to path: /analyze, health check at /health |
+| ai.service.ports.http | int | `5056` | HTTP port listen to path: /analyze, health check at /health |
 | ai.podLabels | object | `{}` | Extra labels for pods |
 | ai.podAnnotations | object | `{}` | Extra annotations for pods |
 | ai.nodeSelector | object | `{}` | Node labels for pods assignment |
