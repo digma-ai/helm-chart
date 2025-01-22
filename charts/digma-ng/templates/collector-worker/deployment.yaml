@@ -53,7 +53,7 @@ spec:
         {{- include "env.postgres" . | nindent  8 }}
         {{- include "env.kafka" . | nindent  8 }}
         {{- include "env.jaeger" . | nindent  8 }}
-        {{- range $index, $element := .Values.collectorWorker.app.ignoreEndpoints }}
+        {{- range $index, $element := .Values.collectorWorker.app.extraIgnoreEndpoints }}
         - name: Filter__IgnoreEndpoints__{{$index}}__Route
           value: {{ $element.Route | quote }}
         - name: Filter__IgnoreEndpoints__{{$index}}__RouteRegex
