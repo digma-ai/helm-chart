@@ -194,6 +194,7 @@ How It Works
 | collectorWorker.tolerations | list | `[]` | Tolerations for pods assignment |
 | collectorWorker.affinity | object | `{}` | Affinity for pods assignment |
 | collectorWorker.extraEnvVars | list | `[]` | Array with extra environment variables to add |
+| collectorWorker.app.extraIgnoreEndpoints | list | `[]` | Array with extra ignore Endpoints variables to add |
 | collectorWorker.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
 | collectorWorker.livenessProbe.path | string | `"/healthz"` | Path for livenessProbe |
 | collectorWorker.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
