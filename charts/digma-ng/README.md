@@ -1,6 +1,6 @@
 # digma-ng
 
-![Version: 1.0.271](https://img.shields.io/badge/Version-1.0.271-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.190](https://img.shields.io/badge/AppVersion-0.3.190-informational?style=flat-square)
+![Version: 1.0.272](https://img.shields.io/badge/Version-1.0.272-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.195](https://img.shields.io/badge/AppVersion-0.3.195-informational?style=flat-square)
 
 A Helm chart containing Digma's services
 
@@ -242,6 +242,7 @@ How It Works
 | collectorWorker.tolerations | list | `[]` | Tolerations for pods assignment |
 | collectorWorker.affinity | object | `{}` | Affinity for pods assignment |
 | collectorWorker.extraEnvVars | list | `[]` | Array with extra environment variables to add |
+| collectorWorker.app.extraIgnoreEndpoints | list | `[]` | Array with extra ignore Endpoints variables to add |
 | collectorWorker.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
 | collectorWorker.livenessProbe.path | string | `"/healthz"` | Path for livenessProbe |
 | collectorWorker.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |

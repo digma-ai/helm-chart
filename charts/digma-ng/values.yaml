@@ -166,33 +166,21 @@ collectorWorker:
   affinity: {}
   ## e.g:
   ## extraEnvVars:
-  ##   - name: FOO
-  ##     value: "bar"
+  ##   - name: DEBUG_PIPELINE
+  ##     value: "span:"
   # -- Array with extra environment variables to add
   # @section -- CollectorWorker parameters
   extraEnvVars: []
   app:
-    ignoreEndpoints:
-      - Route: /healthz
-        RouteRegex: ""
-        Method: GET
-        Service: '*'
-      - Route: /readiness
-        RouteRegex: ""
-        Method: GET
-        Service: '*'
-      - Route: /health
-        RouteRegex: ""
-        Method: GET
-        Service: '*'
-      - Route: /healthcheck
-        RouteRegex: ""
-        Method: GET
-        Service: '*'
-      - Route: /metrics
-        RouteRegex: ""
-        Method: GET
-        Service: '*'
+    ## e.g:
+    ## extraIgnoreEndpoints:
+    ## - Route: /healthz
+    ##   RouteRegex: ""
+    ##   Method: GET
+    ##   Service: '*'
+    # -- Array with extra ignore Endpoints variables to add
+    # @section -- CollectorWorker parameters
+    extraIgnoreEndpoints: []
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
   livenessProbe:
     # -- Enable livenessProbe
@@ -1229,7 +1217,7 @@ nginx:
     # @section -- UI parameters
     successThreshold: 1
 ui:
-  artifactsVersion: 6.1.0
+  artifactsVersion: 6.2.0
   service:
     # -- service type
     # @section -- UI parameters

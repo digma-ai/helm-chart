@@ -28,7 +28,6 @@ jobs:
           git checkout -b ${{ env.BRANCH_NAME }}
       - name: Run Python script
         run: |
-          python .github/scripts/version_updater.py "${{ github.event.inputs.app_version }}" 'charts/digma/Chart.yaml'
           python .github/scripts/version_updater.py "${{ github.event.inputs.app_version }}" 'charts/digma-ng/Chart.yaml'
           VERSION=$(curl -s https://api.github.com/repos/norwoodj/helm-docs/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
           mkdir tmp
