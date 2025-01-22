@@ -49,6 +49,54 @@ kubectl create namespace digma
 helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
 
 ```
+## Expose Digma Services
+The service(s) created by the deployment can be exposed within or outside the cluster using any of the following approaches:
+- **ClusterIP [Default]**: This exposes the service(s) on a cluster-internal IP address. This approach makes the corresponding service(s) reachable only from within the cluster. Set service.type=ClusterIP to choose this approach.
+- **Ingres**s: This requires an Ingress controller to be installed in the Kubernetes cluster. Set ingress.enabled=true to expose the corresponding service(s) through Ingress.
+- **NodePort**: This exposes the service(s) on each node's IP address at a static port (the NodePort). This approach makes the corresponding service(s) reachable from outside the cluster by requesting the static port using the node's IP address, such as NODE-IP:NODE-PORT. Set service.type=NodePort to choose this approach.
+- **LoadBalancer**: This exposes the service(s) externally using a cloud provider's load balancer. Set service.type=LoadBalancer to choose this approach.
+### Service-Specific Exposures
+#### Analytics API
+This endpoint needs to be accessible to the IDE plugin.
+```yaml
+analyticsApi:
+  service:
+    type: ClusterIP
+    ..
+  ingress:
+    enabled: false
+```
+#### Collector
+The application should be able to send observability data to the IP/DNS of this endpoint.
+```yaml
+collectorApi:
+  service:
+    type: ClusterIP
+    ..
+  ingress:
+    enabled: false
+```
+#### UI
+This endpoint serves the Digma web application as well as additional services.
+```yaml
+ui:
+  service:
+    type: ClusterIP
+    ..
+  ingress:
+    enabled: false
+```
+#### Jaeger
+Digma bundles its own Jaeger service that aggregates sample traces for various insights, performance metrics, and exceptions.
+```yaml
+jaeger:
+  service:
+    type: ClusterIP
+    ..
+  ingress:
+    enabled: false
+```
+
 ## Handle Zone-Specific Constraints
 Digma uses multiple StatefulSets.
 1. ### Enforce Zone-Affinity for StatefulSet Pods
