@@ -19,3 +19,6 @@ data:
     window.platform = "Web";
   login-env.js: |
     window.platform = "Web";
+    {{ if .Values.digma.sso.enabled }}
+    window.googleClientId = "{{ .Values.digma.sso.google.clientId }}";
+    {{- end }}

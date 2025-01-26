@@ -38,6 +38,20 @@ digma:
       # -- Email gateway URL
       # @section -- Global Digma parameters
       url:
+  sso:
+    # -- enable sso
+    # @section -- SSO
+    enabled: false
+    google:
+      # -- google clientId
+      # @section -- SSO
+      clientId:
+      # -- google secret
+      # @section -- SSO      
+      secret:
+      # -- google redirect uri
+      # @section -- SSO         
+      redirectUri:
   externals:
     postgresql:
       # -- Host of an external PostgreSQL instance to connect (only if postgresql.enabled=false)
@@ -1217,6 +1231,8 @@ nginx:
     # @section -- UI parameters
     successThreshold: 1
 ui:
+  # -- ui version
+  # @section -- UI parameters
   artifactsVersion: 6.4.1
   service:
     # -- service type

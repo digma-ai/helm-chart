@@ -199,6 +199,25 @@ How It Works
 | digma.externals.postgresql.password | string | `""` | Password of an external PostgreSQL instance to connect (only if postgresql.enabled=false) |
 | digma.externals.postgresql.port | int | `5432` | Port of an external PostgreSQL instance to connect (only if postgresql.enabled=false) |
 
+### SSO
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| digma.sso.enabled | bool | `false` | enable sso |
+| digma.sso.google.clientId | string | `nil` | google clientId |
+
+### SSO     
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| digma.sso.google.secret | string | `nil` | google secret |
+
+### SSO        
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| digma.sso.google.redirectUri | string | `nil` | google redirect uri |
+
 ### Observability parameters
 
 | Key | Type | Default | Description |
@@ -499,6 +518,7 @@ How It Works
 | nginx.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
 | nginx.readinessProbe.failureThreshold | int | `12` | Failure threshold for readinessProbe |
 | nginx.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
+| ui.artifactsVersion | string | `"6.4.1"` | ui version |
 | ui.service.type | string | `"ClusterIP"` | service type |
 | ui.service.annotations | object | `{}` | Additional custom annotations for service |
 | ui.service.ports.http | int | `80` | HTTP service port |
