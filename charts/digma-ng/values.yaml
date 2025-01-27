@@ -1230,7 +1230,7 @@ nginx:
 ui:
   # -- ui version
   # @section -- UI parameters
-  artifactsVersion: 6.4.1
+  artifactsVersion: 6.5.0
   service:
     # -- service type
     # @section -- UI parameters
