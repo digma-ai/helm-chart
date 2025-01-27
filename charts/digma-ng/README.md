@@ -2,9 +2,13 @@
 
 ![Version: 1.0.275](https://img.shields.io/badge/Version-1.0.275-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.199](https://img.shields.io/badge/AppVersion-0.3.199-informational?style=flat-square)
 
+
 A Helm chart containing Digma's services
 
 **Homepage:** <https://github.com/digma-ai/digma>
+
+
+
 
 ## License Key
 Digma will not function without a valid license key.
@@ -25,6 +29,7 @@ helm upgrade --install digma digma/digma-ng -n digma --set digma.licenseKey=$DIG
 ## Introduction
 
 This chart bootstraps a [Digma](https://digma.ai) deployment on a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
+
 
 ## Prerequisites
 
