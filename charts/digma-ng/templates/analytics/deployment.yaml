@@ -59,9 +59,7 @@ spec:
         - name: SSO__Google__ClientId
           value: {{ .Values.digma.sso.google.clientId | quote}}
         - name: SSO__Google__ClientSecret
-          value: {{ .Values.digma.sso.google.secret | quote}}
-        - name: SSO__Google__RedirectUri
-          value: {{ .Values.digma.sso.google.redirectUri | quote}}                    
+          value: {{ .Values.digma.sso.google.secret | quote}}                 
         {{- end }}
         - name: GlobalExceptionSettings__ExposeInternalDetails
           value: "true"

@@ -212,12 +212,6 @@ How It Works
 |-----|------|---------|-------------|
 | digma.sso.google.secret | string | `nil` | google secret |
 
-### SSO        
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| digma.sso.google.redirectUri | string | `nil` | google redirect uri |
-
 ### Observability parameters
 
 | Key | Type | Default | Description |
@@ -274,7 +268,7 @@ How It Works
 | collectorWorker.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
 | collectorWorker.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
 | collectorWorker.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
-| collectorWorker.readinessProbe.failureThreshold | int | `12` | Failure threshold for readinessProbe |
+| collectorWorker.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
 | collectorWorker.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 
 ### Otel Collector parameters
@@ -330,7 +324,7 @@ How It Works
 | otelCollector.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
 | otelCollector.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
 | otelCollector.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
-| otelCollector.readinessProbe.failureThreshold | int | `12` | Failure threshold for readinessProbe |
+| otelCollector.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
 | otelCollector.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 
 ### CollectorApi parameters
@@ -363,7 +357,7 @@ How It Works
 | collectorApi.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
 | collectorApi.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
 | collectorApi.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
-| collectorApi.readinessProbe.failureThreshold | int | `12` | Failure threshold for readinessProbe |
+| collectorApi.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
 | collectorApi.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 
 ### AnalyticsApi parameters
@@ -404,7 +398,7 @@ How It Works
 | analyticsApi.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
 | analyticsApi.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
 | analyticsApi.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
-| analyticsApi.readinessProbe.failureThreshold | int | `12` | Failure threshold for readinessProbe |
+| analyticsApi.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
 | analyticsApi.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 
 ### MeasurementAnalysis parameters
@@ -433,7 +427,7 @@ How It Works
 | measurementAnalysis.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
 | measurementAnalysis.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
 | measurementAnalysis.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
-| measurementAnalysis.readinessProbe.failureThreshold | int | `12` | Failure threshold for readinessProbe |
+| measurementAnalysis.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
 | measurementAnalysis.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 
 ### Scheduler parameters
@@ -462,7 +456,7 @@ How It Works
 | scheduler.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
 | scheduler.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
 | scheduler.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
-| scheduler.readinessProbe.failureThreshold | int | `12` | Failure threshold for readinessProbe |
+| scheduler.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
 | scheduler.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 
 ### PipelineWorker parameters
@@ -491,7 +485,7 @@ How It Works
 | pipelineWorker.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
 | pipelineWorker.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
 | pipelineWorker.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
-| pipelineWorker.readinessProbe.failureThreshold | int | `12` | Failure threshold for readinessProbe |
+| pipelineWorker.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
 | pipelineWorker.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 
 ### UI parameters
@@ -516,7 +510,7 @@ How It Works
 | nginx.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
 | nginx.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
 | nginx.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
-| nginx.readinessProbe.failureThreshold | int | `12` | Failure threshold for readinessProbe |
+| nginx.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
 | nginx.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 | ui.artifactsVersion | string | `"6.4.1"` | ui version |
 | ui.service.type | string | `"ClusterIP"` | service type |
@@ -560,7 +554,7 @@ How It Works
 | ai.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
 | ai.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
 | ai.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
-| ai.readinessProbe.failureThreshold | int | `12` | Failure threshold for readinessProbe |
+| ai.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
 | ai.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 
 ### MetricsExporter parameters
@@ -589,7 +583,7 @@ How It Works
 | metricsExporter.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
 | metricsExporter.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
 | metricsExporter.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
-| metricsExporter.readinessProbe.failureThreshold | int | `12` | Failure threshold for readinessProbe |
+| metricsExporter.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
 | metricsExporter.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 
 ### Otel CollectorDF parameters
@@ -622,7 +616,7 @@ How It Works
 | otelCollectorDf.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
 | otelCollectorDf.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
 | otelCollectorDf.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
-| otelCollectorDf.readinessProbe.failureThreshold | int | `12` | Failure threshold for readinessProbe |
+| otelCollectorDf.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
 | otelCollectorDf.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 
 ### Influxdb parameters
