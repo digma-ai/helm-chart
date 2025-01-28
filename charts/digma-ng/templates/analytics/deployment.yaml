@@ -55,6 +55,12 @@ spec:
         {{- if .Values.analyticsApi.extraEnvVars }}
         {{- include "common.tplvalues.render" (dict "value" .Values.analyticsApi.extraEnvVars "context" $) | nindent 8 }}
         {{- end }}
+        {{ if .Values.digma.sso.enabled }}
+        - name: SSO__Google__ClientId
+          value: {{ .Values.digma.sso.google.clientId | quote}}
+        - name: SSO__Google__ClientSecret
+          value: {{ .Values.digma.sso.google.secret | quote}}                 
+        {{- end }}
         - name: GlobalExceptionSettings__ExposeInternalDetails
           value: "true"
         - name: Analytics.Endpoints__Default__Secured
