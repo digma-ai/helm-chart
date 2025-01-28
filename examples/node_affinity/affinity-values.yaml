@@ -1,0 +1,55 @@
+elasticsearch:
+  master:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: topology.kubernetes.io/zone
+                  operator: In
+                  values:
+                    - <zone>
+kafka:
+  controller:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: topology.kubernetes.io/zone
+                  operator: In
+                  values:
+                    - <zone>
+postgresql:
+  primary:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: topology.kubernetes.io/zone
+                  operator: In
+                  values:
+                    - <zone>
+redis:
+  master:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: topology.kubernetes.io/zone
+                  operator: In
+                  values:
+                    - <zone>
+influxdb:
+  influxdb:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: topology.kubernetes.io/zone
+                  operator: In
+                  values:
+                    - <zone>
