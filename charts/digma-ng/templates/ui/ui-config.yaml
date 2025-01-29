@@ -14,6 +14,7 @@ data:
     window.areInsightSuggestionsEnabled = {{ .Values.ai.enabled }};
     window.isJaegerEnabled = true;
     window.jaegerURL = "{{ include "digma.jaeger.publicBaseUrl" . }}";
+    window.jaegerApiPath = "/jaeger/api";
     window.platform = "Web";
   ide-launcher-env.js: |
     window.platform = "Web";
