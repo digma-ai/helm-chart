@@ -849,7 +849,7 @@ measurementAnalysis:
       memory: 512Mi
       cpu: 500m
     limits:
-      memory: 768Mi
+      memory: 1024Mi
       cpu: 800m
   service:
     ports:
@@ -954,8 +954,8 @@ scheduler:
       memory: 300Mi
       cpu: 200m
     limits:
-      memory: 600Mi
-      cpu: 500m
+      memory: 1024Mi
+      cpu: 750m
   service:
     ports:
       # -- HTTP service port, health check at /healthz
@@ -1056,11 +1056,11 @@ pipelineWorker:
   replicas: '{{ index .Values.presets .Values.digma.deployment.size "pipelineWorker" "replicas" }}'
   resources:
     requests:
-      memory: 100Mi
-      cpu: 50m
-    limits:
-      memory: 400Mi
+      memory: 512Mi
       cpu: 500m
+    limits:
+      memory: 1024Mi
+      cpu: 750m
   service:
     ports:
       # -- HTTP service port, health check at /healthz
@@ -1230,7 +1230,7 @@ nginx:
 ui:
   # -- ui version
   # @section -- UI parameters
-  artifactsVersion: 6.8.2
+  artifactsVersion: 6.8.3
   service:
     # -- service type
     # @section -- UI parameters
@@ -1788,8 +1788,8 @@ postgresql:
         memory: 2048Mi
         cpu: 1.0
       limits:
-        memory: 3072Mi
-        cpu: 1.5
+        memory: 3300Mi
+        cpu: 2
     networkPolicy:
       enabled: false
     service:
@@ -2228,7 +2228,7 @@ kafka:
         cpu: 500m
       limits:
         memory: 3Gi
-        cpu: 1.5
+        cpu: 2
     # -- Additional configuration to be appended at the end of the generated Kafka configuration file.
     # @section -- Kafka parameters
     extraConfig: |
