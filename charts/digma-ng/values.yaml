@@ -1231,6 +1231,7 @@ ui:
   # -- ui version
   # @section -- UI parameters
   artifactsVersion: 6.8.3
+  sandboxEnabled: false
   service:
     # -- service type
     # @section -- UI parameters
@@ -1804,6 +1805,17 @@ postgresql:
       shared_buffers = '800MB'
       logging_collector = on
       log_directory ='log'
+      # log_min_duration_statement = 500 # Log queries that take longer than 500ms
+      shared_preload_libraries ='pg_stat_statements'
+      pg_stat_statements.max = 10000  # Max queries stored in memory
+      pg_stat_statements.track = all  # Track all queries
+      pg_stat_statements.track_utility = off  # Ignore utility commands (CREATE, DROP)
+      pg_stat_statements.save = on  # Preserve stats across restarts
+      pg_stat_statements.track_planning = off  # Avoid tracking query planning time
+    initdb:
+      scripts:
+        enable_pg_stat_statements.sql: |
+          CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
     extraEnvVars:
       - name: POSTGRESQL_MAX_CONNECTIONS
         value: "400"
