@@ -15,6 +15,7 @@ data:
     window.isJaegerEnabled = true;
     window.jaegerURL = "{{ include "digma.jaeger.publicBaseUrl" . }}";
     window.jaegerApiPath = "/jaeger/api";
+    window.isSandboxModeEnabled = {{ .Values.ui.sandboxEnabled }};
     window.platform = "Web";
   ide-launcher-env.js: |
     window.platform = "Web";
