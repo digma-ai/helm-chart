@@ -512,7 +512,7 @@ How It Works
 | nginx.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
 | nginx.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
 | nginx.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
-| ui.artifactsVersion | string | `"6.11.0"` | ui version |
+| ui.artifactsVersion | string | `"6.12.0"` | ui version |
 | ui.service.type | string | `"ClusterIP"` | service type |
 | ui.service.annotations | object | `{}` | Additional custom annotations for service |
 | ui.service.ports.http | int | `80` | HTTP service port |
