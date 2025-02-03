@@ -17,10 +17,13 @@ data:
     window.jaegerApiPath = "/jaeger/api";
     window.isSandboxModeEnabled = {{ .Values.ui.sandboxEnabled }};
     window.platform = "Web";
+    window.theme = "dark-jetbrains";
   ide-launcher-env.js: |
     window.platform = "Web";
+    window.theme = "dark-jetbrains";
   login-env.js: |
     window.platform = "Web";
+    window.theme = "dark-jetbrains";
     {{ if .Values.digma.sso.enabled }}
     window.googleClientId = "{{ .Values.digma.sso.google.clientId }}";
     {{- end }}
