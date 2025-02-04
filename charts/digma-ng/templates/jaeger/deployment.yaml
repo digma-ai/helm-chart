@@ -47,6 +47,7 @@ spec:
         resources: {{- toYaml .Values.jaeger.resources | nindent 12 }}
         args:
         - "--query.additional-headers=Access-Control-Allow-Origin: *"  # to enable CORS
+        - "--query.base-path=/jaeger"
         {{- range .Values.jaeger.args }}
         - {{ . }}
         {{- end }}

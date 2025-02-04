@@ -13,7 +13,7 @@ data:
   admin-env.js: |
     window.areInsightSuggestionsEnabled = {{ .Values.ai.enabled }};
     window.isJaegerEnabled = true;
-    window.jaegerURL = "{{ include "digma.jaeger.publicBaseUrl" . }}";
+    window.jaegerURL = "/jaeger";
     window.jaegerApiPath = "/jaeger/api";
     window.isSandboxModeEnabled = {{ .Values.ui.sandboxEnabled }};
     window.platform = "Web";
