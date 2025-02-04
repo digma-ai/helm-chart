@@ -31,6 +31,6 @@ data:
     window.theme = "dark-jetbrains";
     window.postHogApiKey = "phc_5sy6Kuv1EYJ9GAdWPeGl7gx31RAw7BR7NHnOuLCUQZK";
     window.postHogHost = "https://us.i.posthog.com";
-    {{ if .Values.digma.sso.enabled }}
-    window.googleClientId = "{{ .Values.digma.sso.google.clientId }}";
+    {{ if .Values.digma.socialLogin.enabled }}
+    window.googleClientId = "{{ .Values.digma.socialLogin.google.clientId }}";
     {{- end }}
