@@ -199,18 +199,18 @@ How It Works
 | digma.externals.postgresql.password | string | `""` | Password of an external PostgreSQL instance to connect (only if postgresql.enabled=false) |
 | digma.externals.postgresql.port | int | `5432` | Port of an external PostgreSQL instance to connect (only if postgresql.enabled=false) |
 
-### SSO
+### Social Login
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| digma.sso.enabled | bool | `false` | enable sso |
-| digma.sso.google.clientId | string | `nil` | google clientId |
+| digma.socialLogin.enabled | bool | `false` | enable social login |
+| digma.socialLogin.google.clientId | string | `nil` | google clientId |
 
-### SSO     
+### Social Login     
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| digma.sso.google.secret | string | `nil` | google secret |
+| digma.socialLogin.google.secret | string | `nil` | google secret |
 
 ### Observability parameters
 

@@ -38,16 +38,16 @@ digma:
       # -- Email gateway URL
       # @section -- Global Digma parameters
       url:
-  sso:
-    # -- enable sso
-    # @section -- SSO
+  socialLogin:
+    # -- enable social login
+    # @section -- Social Login
     enabled: false
     google:
       # -- google clientId
-      # @section -- SSO
+      # @section -- Social Login
       clientId:
       # -- google secret
-      # @section -- SSO      
+      # @section -- Social Login      
       secret:
   externals:
     postgresql:
