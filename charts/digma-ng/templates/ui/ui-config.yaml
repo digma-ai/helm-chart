@@ -20,6 +20,7 @@ data:
     window.theme = "dark-jetbrains";
     window.postHogApiKey = "phc_5sy6Kuv1EYJ9GAdWPeGl7gx31RAw7BR7NHnOuLCUQZK";
     window.postHogHost = "https://us.i.posthog.com";
+    window.productFruitsWorkspaceCode = "GBNh54uJtBaeWuOq";
   ide-launcher-env.js: |
     window.platform = "Web";
     window.theme = "dark-jetbrains";
