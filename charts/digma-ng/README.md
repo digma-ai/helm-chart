@@ -1,6 +1,6 @@
 # digma-ng
 
-![Version: 1.0.285](https://img.shields.io/badge/Version-1.0.285-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.220](https://img.shields.io/badge/AppVersion-0.3.220-informational?style=flat-square)
+![Version: 1.0.286](https://img.shields.io/badge/Version-1.0.286-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.220](https://img.shields.io/badge/AppVersion-0.3.220-informational?style=flat-square)
 
 A Helm chart containing Digma's services
 
