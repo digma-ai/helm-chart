@@ -48,6 +48,7 @@ spec:
         args:
         - "--query.additional-headers=Access-Control-Allow-Origin: *"  # to enable CORS
         - "--query.base-path=/jaeger"
+        - "--es.max-span-age=336h0m0s"
         {{- range .Values.jaeger.args }}
         - {{ . }}
         {{- end }}
