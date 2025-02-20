@@ -1,6 +1,6 @@
 # digma-ng
 
-![Version: 1.0.286](https://img.shields.io/badge/Version-1.0.286-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.220](https://img.shields.io/badge/AppVersion-0.3.220-informational?style=flat-square)
+![Version: 1.0.287](https://img.shields.io/badge/Version-1.0.287-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.225](https://img.shields.io/badge/AppVersion-0.3.225-informational?style=flat-square)
 
 A Helm chart containing Digma's services
 
@@ -512,7 +512,7 @@ How It Works
 | nginx.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
 | nginx.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
 | nginx.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
-| ui.artifactsVersion | string | `"6.13.0"` | ui version |
+| ui.artifactsVersion | string | `"7.1.1"` | ui version |
 | ui.service.type | string | `"ClusterIP"` | service type |
 | ui.service.annotations | object | `{}` | Additional custom annotations for service |
 | ui.service.ports.http | int | `80` | HTTP service port |
