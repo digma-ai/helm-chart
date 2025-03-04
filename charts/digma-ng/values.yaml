@@ -1230,7 +1230,7 @@ nginx:
 ui:
   # -- ui version
   # @section -- UI parameters
-  artifactsVersion: 8.0.0
+  artifactsVersion: 9.0.1
   sandboxEnabled: false
   service:
     # -- service type
@@ -2186,7 +2186,7 @@ prometheus:
       enabled: true
       accessModes:
         - ReadWriteOnce
-      size: 20Gi
+      size: 40Gi
     # -- Prometheus deployment strategy type. Is a deployment resource therefore, Strategy type should be set to Recreate to avoid dead locks
     # @section -- Prometheus parameters
     updateStrategy:
