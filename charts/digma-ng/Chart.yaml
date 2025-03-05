@@ -1,7 +1,7 @@
 annotations:
   category: Application
 apiVersion: v2
-appVersion: 0.3.237
+appVersion: 0.3.238
 dependencies:
 - name: kafka
   repository: oci://registry-1.docker.io/bitnamicharts
@@ -22,9 +22,6 @@ dependencies:
   repository: oci://registry-1.docker.io/bitnamicharts
   alias: elasticsearchlogs
   condition: elasticsearchlogs.enabled
-- name: influxdb
-  repository: oci://registry-1.docker.io/bitnamicharts
-  version: 6.3.22
 - name: redis
   repository: oci://registry-1.docker.io/bitnamicharts
   version: 20.3.0
@@ -41,4 +38,4 @@ description: A Helm chart containing Digma's services
 home: https://github.com/digma-ai/digma
 icon: https://digma.ai/wp-content/uploads/2024/02/logo-alt-1.svg
 type: application
-version: 1.0.293
+version: 1.0.294

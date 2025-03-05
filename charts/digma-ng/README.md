@@ -1,6 +1,6 @@
 # digma-ng
 
-![Version: 1.0.293](https://img.shields.io/badge/Version-1.0.293-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.237](https://img.shields.io/badge/AppVersion-0.3.237-informational?style=flat-square)
+![Version: 1.0.294](https://img.shields.io/badge/Version-1.0.294-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.238](https://img.shields.io/badge/AppVersion-0.3.238-informational?style=flat-square)
 
 A Helm chart containing Digma's services
 
@@ -133,17 +133,6 @@ Digma uses multiple StatefulSets.
                         - <zone>
     redis:
       master:
-        affinity:
-          nodeAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-              nodeSelectorTerms:
-                - matchExpressions:
-                    - key: topology.kubernetes.io/zone
-                      operator: In
-                      values:
-                        - <zone>
-    influxdb:
-      influxdb:
         affinity:
           nodeAffinity:
             requiredDuringSchedulingIgnoredDuringExecution:
@@ -632,17 +621,6 @@ How It Works
 | otelCollectorDf.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
 | otelCollectorDf.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 
-### Influxdb parameters
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| influxdb.influxdb.updateStrategy.type | string | `"Recreate"` | Influxdb deployment strategy type. Is a deployment resource therefore, Strategy type should be set to Recreate to avoid dead locks |
-| influxdb.influxdb.podLabels | object | `{}` | Extra labels for pods |
-| influxdb.influxdb.podAnnotations | object | `{}` | Extra annotations for pods |
-| influxdb.influxdb.nodeSelector | object | `{}` | Node labels for pods assignment |
-| influxdb.influxdb.tolerations | string | `"{{ include \"common.tplvalues.render\" (dict \"value\" .Values.global.tolerations \"context\" $) }}"` | Tolerations for pods assignment |
-| influxdb.influxdb.affinity | object | `{}` | Affinity for pods assignment |
-
 ### Postgresql parameters
 
 | Key | Type | Default | Description |
@@ -753,7 +731,6 @@ How It Works
 | oci://registry-1.docker.io/bitnamicharts | elasticsearch | 21.4.1 |
 | oci://registry-1.docker.io/bitnamicharts | elasticsearchlogs(elasticsearch) | 21.4.1 |
 | oci://registry-1.docker.io/bitnamicharts | grafana | 11.3.26 |
-| oci://registry-1.docker.io/bitnamicharts | influxdb | 6.3.22 |
 | oci://registry-1.docker.io/bitnamicharts | kafka | 31.0.0 |
 | oci://registry-1.docker.io/bitnamicharts | postgresql | 16.2.1 |
 | oci://registry-1.docker.io/bitnamicharts | prometheus | 1.3.28 |

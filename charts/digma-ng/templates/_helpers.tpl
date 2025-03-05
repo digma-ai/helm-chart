@@ -232,21 +232,6 @@ Return the Database Password
 {{- end -}}
 
 {{/*
-Return the proper influx fullname
-*/}}
-{{- define "digma.influx.fullname" -}}
-{{- include "common.names.dependency.fullname" (dict "chartName" "influxdb" "chartValues" .Values.influxdb "context" $) -}}
-{{- end -}}
-
-{{/*
-Return influx connectivity env
-*/}}
-{{- define "env.influx" -}}
-- name: influx2__Url
-  value: {{ printf "http://%s:%v" (include "digma.influx.fullname" .) .Values.influxdb.influxdb.service.ports.http }}
-{{- end -}}
-
-{{/*
 Return the proper redis fullname
 */}}
 {{- define "digma.redis.fullname" -}}
