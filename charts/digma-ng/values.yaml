@@ -241,17 +241,14 @@ otelCollector:
   receivers:
     datadog:
       # -- Enable/disable the Datadog receiver
-      # -- Cannot be enabled when otelCollector.datadog.ingress.enabled is true
       # @section -- Otel Collector parameters
       enabled: false
     otelHttp:
       # -- Enable/disable the OTLP HTTP receiver
-      # -- Cannot be enabled when otelCollector.http.ingress.enabled is true
       # @section -- Otel Collector parameters
       enabled: true
     otelGRPC:
       # -- Enable/disable the OTLP GRPC receiver
-      # -- Cannot be enabled when otelCollector.grpc.ingress.enabled is true
       # @section -- Otel Collector parameters
       enabled: true
   # --telemetry data that should be sampled and sent to the backend
@@ -314,9 +311,9 @@ otelCollector:
         trace_statements:
           - context: span
             statements:
-              - if attributes["_dd.git.commit.sha"] != nil then set(resource["scm.commit.id"], attributes["_dd.git.commit.sha"]) end
-              - if attributes["digma.environment"] != nil then set(resource["digma.environment"], attributes["digma.environment"]) end
-              - if attributes["digma.environment.type"] != nil then set(resource["digma.environment.type"], attributes["digma.environment.type"]) end
+              - set(resource.attributes["scm.commit.id"], attributes["_dd.git.commit.sha"]) where attributes["_dd.git.commit.sha"] != nil
+              - set(resource.attributes["digma.environment"], attributes["digma.environment"]) where attributes["digma.environment"] != nil
+              - set(resource.attributes["digma.environment.type"], attributes["digma.environment.type"]) where attributes["digma.environment.type"] != nil
     exporters:
       logging:
         loglevel: debug

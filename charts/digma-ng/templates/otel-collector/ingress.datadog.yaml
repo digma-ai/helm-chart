@@ -25,7 +25,7 @@ spec:
           {{- if eq "true" (include "common.ingress.supportsPathType" .) }}
           pathType: {{ .Values.otelCollector.datadog.ingress.pathType }}
           {{- end }}
-          backend: {{- include "common.ingress.backend" (dict "serviceName" (include "digma.otel-collector" $) "servicePort" "http" "context" $)  | nindent 14 }}
+          backend: {{- include "common.ingress.backend" (dict "serviceName" (include "digma.otel-collector" $) "servicePort" "datadog" "context" $)  | nindent 14 }}
     {{- end }}
     {{- if .Values.otelCollector.datadog.ingress.extraRules }}
     {{- include "common.tplvalues.render" (dict "value" .Values.otelCollector.datadog.ingress.extraRules "context" $) | nindent 4 }}
