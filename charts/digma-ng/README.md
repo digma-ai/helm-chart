@@ -275,6 +275,9 @@ How It Works
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| otelCollector.receivers.datadog.enabled | bool | `false` | Cannot be enabled when otelCollector.datadog.ingress.enabled is true |
+| otelCollector.receivers.otelHttp.enabled | bool | `true` | Cannot be enabled when otelCollector.http.ingress.enabled is true |
+| otelCollector.receivers.otelGRPC.enabled | bool | `true` | Cannot be enabled when otelCollector.grpc.ingress.enabled is true |
 | otelCollector.samplingPercentage | int | `100` | telemetry data that should be sampled and sent to the backend |
 | otelCollector.existingConfigmap | string | `""` | The name of an existing ConfigMap with your custom configuration |
 | otelCollector.existingConfigmapKey | string | `""` | The name of the key with the config file |
@@ -283,13 +286,14 @@ How It Works
 | otelCollector.image.tag | string | `"0.103.0"` | image tag |
 | otelCollector.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
 | otelCollector.image.pullSecrets | list | `[]` | image pull secrets |
-| otelCollector.configuration | string | `"extensions:\n  health_check:\n    endpoint: \"0.0.0.0:{{ .Values.otelCollector.service.ports.health }}\"\nreceivers:\n  otlp/grpc:\n    protocols:\n      grpc:\n        endpoint: 0.0.0.0:{{ .Values.otelCollector.service.ports.grpc }}\n  otlp/http:\n    protocols:\n      http:\n        endpoint: 0.0.0.0:{{ .Values.otelCollector.service.ports.http }}\nprocessors:\n  batch:\n    timeout: 1000ms\n    send_batch_size: 500\n    send_batch_max_size: 500\n  probabilistic_sampler:\n    sampling_percentage: {{ .Values.otelCollector.samplingPercentage }}\nexporters:\n  logging:\n    loglevel: debug\n  otlphttp:\n    endpoint: http://{{ include \"digma.collector-api\" . }}:{{ .Values.collectorApi.service.ports.http }}\n    compression: gzip\n    tls:\n      insecure: true\n    sending_queue:\n      enabled: true\n      num_consumers: 100\n      queue_size: 1000\n  otlp:\n    endpoint: {{ include \"digma.collector-api\" . }}:{{ .Values.collectorApi.service.ports.grpc }}\n    tls:\n      insecure: true\n    sending_queue:\n      enabled: true\n      num_consumers: 100\n      queue_size: 1000\nservice:\n  extensions: [health_check]\n  pipelines:\n    traces/1:\n      receivers: [otlp/http]\n      processors: [probabilistic_sampler, batch]\n      exporters: [otlphttp]\n    traces/2:\n      receivers: [otlp/grpc]\n      processors: [probabilistic_sampler, batch]\n      exporters: [otlphttp]\n"` | This content will be stored in the the config.yaml file and the content can be a template. |
+| otelCollector.configuration | string | `"extensions:\n  health_check:\n    endpoint: \"0.0.0.0:{{ .Values.otelCollector.service.ports.health }}\"\nreceivers:\n  otlp/grpc:\n    protocols:\n      grpc:\n        endpoint: 0.0.0.0:{{ .Values.otelCollector.service.ports.grpc }}\n  otlp/http:\n    protocols:\n      http:\n        endpoint: 0.0.0.0:{{ .Values.otelCollector.service.ports.http }}\n  datadog:\n    endpoint: 0.0.0.0:{{ .Values.otelCollector.service.ports.datadog }}\nprocessors:\n  batch:\n    timeout: 1000ms\n    send_batch_size: 500\n    send_batch_max_size: 500\n  probabilistic_sampler:\n    sampling_percentage: {{ .Values.otelCollector.samplingPercentage }}\n  transform:\n    trace_statements:\n      - context: span\n        statements:\n          - if attributes[\"_dd.git.commit.sha\"] != nil then set(resource[\"scm.commit.id\"], attributes[\"_dd.git.commit.sha\"]) end\n          - if attributes[\"digma.environment\"] != nil then set(resource[\"digma.environment\"], attributes[\"digma.environment\"]) end\n          - if attributes[\"digma.environment.type\"] != nil then set(resource[\"digma.environment.type\"], attributes[\"digma.environment.type\"]) end\nexporters:\n  logging:\n    loglevel: debug\n  otlphttp:\n    endpoint: http://{{ include \"digma.collector-api\" . }}:{{ .Values.collectorApi.service.ports.http }}\n    compression: gzip\n    tls:\n      insecure: true\n    sending_queue:\n      enabled: true\n      num_consumers: 100\n      queue_size: 1000\n  otlp:\n    endpoint: {{ include \"digma.collector-api\" . }}:{{ .Values.collectorApi.service.ports.grpc }}\n    tls:\n      insecure: true\n    sending_queue:\n      enabled: true\n      num_consumers: 100\n      queue_size: 1000\nservice:\n  extensions: [health_check]\n  pipelines:\n    traces/1:\n      receivers: [otlp/http]\n      processors: [probabilistic_sampler, batch]\n      exporters: [otlphttp]\n    traces/2:\n      receivers: [otlp/grpc]\n      processors: [probabilistic_sampler, batch]\n      exporters: [otlphttp]\n    traces/datadog:\n      receivers: [datadog]\n      processors: [probabilistic_sampler, transform, batch]\n      exporters: [otlphttp]\n"` | This content will be stored in the the config.yaml file and the content can be a template. |
 | otelCollector.replicas | int | `1` | Number of replicas to deploy |
 | otelCollector.service.type | string | `"ClusterIP"` | service type |
 | otelCollector.service.annotations | object | `{}` | Additional custom annotations for service |
 | otelCollector.service.ports.health | int | `13133` | health check service port |
 | otelCollector.service.ports.grpc | int | `4317` | gRPC port |
 | otelCollector.service.ports.http | int | `4318` | HTTP port listen to path: /v1/traces |
+| otelCollector.service.ports.datadog | int | `8126` | Datadog port |
 | otelCollector.podLabels | object | `{}` | Extra labels for pods |
 | otelCollector.podAnnotations | object | `{}` | Extra annotations for pods |
 | otelCollector.nodeSelector | object | `{}` | Node labels for pods assignment |
@@ -313,6 +317,15 @@ How It Works
 | otelCollector.http.ingress.annotations | string | `nil` | Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations. |
 | otelCollector.http.ingress.extraPaths | list | `[]` | Any additional paths that may need to be added to the ingress under the main host |
 | otelCollector.http.ingress.extraRules | list | `[]` | Additional rules to be covered with this ingress record |
+| otelCollector.datadog.ingress.enabled | bool | `false` | Enable ingress |
+| otelCollector.datadog.ingress.pathType | string | `"ImplementationSpecific"` | Ingress path type |
+| otelCollector.datadog.ingress.apiVersion | string | `""` | Force Ingress API version (automatically detected if not set) |
+| otelCollector.datadog.ingress.hostname | string | `nil` | Default host for the ingress record |
+| otelCollector.datadog.ingress.ingressClassName | string | `nil` | IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+) |
+| otelCollector.datadog.ingress.path | string | `"/"` | The Path to otelCollector. You may need to set this to '/*' in order to use this with ALB ingress controllers. |
+| otelCollector.datadog.ingress.annotations | string | `nil` | Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations. |
+| otelCollector.datadog.ingress.extraPaths | list | `[]` | Any additional paths that may need to be added to the ingress under the main host |
+| otelCollector.datadog.ingress.extraRules | list | `[]` | Additional rules to be covered with this ingress record |
 | otelCollector.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
 | otelCollector.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
 | otelCollector.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
