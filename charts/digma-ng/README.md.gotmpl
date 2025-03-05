@@ -148,17 +148,6 @@ Digma uses multiple StatefulSets.
                       operator: In
                       values:
                         - <zone>
-    influxdb:
-      influxdb:
-        affinity:
-          nodeAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-              nodeSelectorTerms:
-                - matchExpressions:
-                    - key: topology.kubernetes.io/zone
-                      operator: In
-                      values:
-                        - <zone>
     ```
 2. ### Use Multi-Zone Storage
    Use storage solutions that replicate data across zones
