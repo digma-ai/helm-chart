@@ -17,13 +17,18 @@ spec:
   - name: health
     protocol: TCP
     port: {{ .Values.otelCollector.service.ports.health }}
-  {{- if .Values.otelCollector.service.ports.http }}
+  {{- if .Values.otelCollector.receivers.otelHttp.enabled }}
   - name: http
     protocol: TCP
     port: {{ .Values.otelCollector.service.ports.http }}
   {{- end }}
-  {{- if .Values.otelCollector.service.ports.grpc }}
+  {{- if .Values.otelCollector.receivers.otelGRPC.enabled }}
   - name: grpc
     protocol: TCP
     port: {{ .Values.otelCollector.service.ports.grpc }}
+  {{- end }}
+  {{- if .Values.otelCollector.receivers.datadog.enabled }}
+  - name: datadog
+    protocol: TCP
+    port: {{ .Values.otelCollector.service.ports.datadog }}
   {{- end }}

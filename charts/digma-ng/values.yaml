@@ -238,6 +238,19 @@ collectorWorker:
     # @section -- CollectorWorker parameters
     successThreshold: 1
 otelCollector:
+  receivers:
+    datadog:
+      # -- Enable/disable the Datadog receiver
+      # @section -- Otel Collector parameters
+      enabled: false
+    otelHttp:
+      # -- Enable/disable the OTLP HTTP receiver
+      # @section -- Otel Collector parameters
+      enabled: true
+    otelGRPC:
+      # -- Enable/disable the OTLP GRPC receiver
+      # @section -- Otel Collector parameters
+      enabled: true
   # --telemetry data that should be sampled and sent to the backend
   # @section -- Otel Collector parameters
   samplingPercentage: 100
@@ -285,6 +298,8 @@ otelCollector:
         protocols:
           http:
             endpoint: 0.0.0.0:{{ .Values.otelCollector.service.ports.http }}
+      datadog:
+        endpoint: 0.0.0.0:{{ .Values.otelCollector.service.ports.datadog }}
     processors:
       batch:
         timeout: 1000ms
@@ -292,6 +307,13 @@ otelCollector:
         send_batch_max_size: 500
       probabilistic_sampler:
         sampling_percentage: {{ .Values.otelCollector.samplingPercentage }}
+      transform:
+        trace_statements:
+          - context: span
+            statements:
+              - set(resource.attributes["scm.commit.id"], attributes["_dd.git.commit.sha"]) where attributes["_dd.git.commit.sha"] != nil
+              - set(resource.attributes["digma.environment"], attributes["digma.environment"]) where attributes["digma.environment"] != nil
+              - set(resource.attributes["digma.environment.type"], attributes["digma.environment.type"]) where attributes["digma.environment.type"] != nil
     exporters:
       logging:
         loglevel: debug
@@ -323,6 +345,10 @@ otelCollector:
           receivers: [otlp/grpc]
           processors: [probabilistic_sampler, batch]
           exporters: [otlphttp]
+        traces/datadog:
+          receivers: [datadog]
+          processors: [probabilistic_sampler, transform, batch]
+          exporters: [otlphttp]
   # -- Number of replicas to deploy
   # @section -- Otel Collector parameters
   replicas: 1
@@ -350,6 +376,9 @@ otelCollector:
       # -- HTTP port listen to path: /v1/traces
       # @section -- Otel Collector parameters
       http: 4318
+      # -- Datadog port
+      # @section -- Otel Collector parameters
+      datadog: 8126
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
   # -- Extra labels for pods
   # @section -- Otel Collector parameters
@@ -371,6 +400,8 @@ otelCollector:
   # -- Affinity for pods assignment
   # @section -- Otel Collector parameters
   affinity: {}
+  ## otelCollector gRPC ingress parameters
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
   grpc:
     ingress:
       # -- Enable ingress
@@ -431,6 +462,65 @@ otelCollector:
   ## otelCollector HTTP ingress parameters
   ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
   http:
+    ingress:
+      # -- Enable ingress
+      # @section -- Otel Collector parameters
+      enabled: false
+      # --  Ingress path type
+      # @section -- Otel Collector parameters
+      pathType: ImplementationSpecific
+      # --  Force Ingress API version (automatically detected if not set)
+      # @section -- Otel Collector parameters
+      apiVersion: ""
+      # --  Default host for the ingress record
+      # @section -- Otel Collector parameters
+      hostname:
+      ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
+      ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
+      # --  IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
+      # @section -- Otel Collector parameters
+      ingressClassName:
+      # --  The Path to otelCollector. You may need to set this to '/*' in order to use this with ALB ingress controllers.
+      # @section -- Otel Collector parameters
+      path: /
+      ## For a full list of possible ingress annotations, please see
+      ## ref: https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/nginx-configuration/annotations.md
+      ## Use this parameter to set the required annotations for cert-manager, see
+      ## ref: https://cert-manager.io/docs/usage/ingress/#supported-annotations
+      ##
+      ## e.g:
+      ## annotations:
+      ##   kubernetes.io/ingress.class: nginx
+      ##   cert-manager.io/cluster-issuer: cluster-issuer-name
+      # --  Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
+      # @section -- Otel Collector parameters
+      annotations:
+      ## For example: The ALB ingress controller requires a special rule for handling SSL redirection.
+      ## extraPaths:
+      ## - path: /*
+      ##   backend:
+      ##     serviceName: ssl-redirect
+      ##     servicePort: use-annotation
+      # --  Any additional paths that may need to be added to the ingress under the main host
+      # @section -- Otel Collector parameters
+      extraPaths: []
+      ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-rules
+      ## e.g:
+      ## extraRules:
+      ## - host: example.local
+      ##     http:
+      ##       path: /
+      ##       backend:
+      ##         service:
+      ##           name: example-svc
+      ##           port:
+      ##             name: http
+      # --  Additional rules to be covered with this ingress record
+      # @section -- Otel Collector parameters
+      extraRules: []
+  ## otelCollector datadog ingress parameters
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
+  datadog:
     ingress:
       # -- Enable ingress
       # @section -- Otel Collector parameters

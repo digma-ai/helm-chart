@@ -1,0 +1,33 @@
+{{- if .Values.otelCollector.datadog.ingress.enabled }}
+apiVersion: {{ include "common.capabilities.ingress.apiVersion" . }}
+kind: Ingress
+metadata:
+  name: {{ include "digma.otel-collector" . }}.datadog
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: otel-collector.datadog
+  {{- if or .Values.otelCollector.datadog.ingress.annotations .Values.commonAnnotations }}
+  {{- $annotations := include "common.tplvalues.merge" ( dict "values" ( list .Values.otelCollector.datadog.ingress.annotations .Values.commonAnnotations ) "context" . ) }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if and .Values.otelCollector.datadog.ingress.ingressClassName (include "common.ingress.supportsIngressClassname" .) }}
+  ingressClassName: {{ .Values.otelCollector.datadog.ingress.ingressClassName | quote }}
+  {{- end }}
+  rules:
+    {{- if .Values.otelCollector.datadog.ingress.hostname }}
+    - host: {{ tpl .Values.otelCollector.datadog.ingress.hostname $ | quote }}
+      http:
+        paths:
+          {{- if .Values.otelCollector.datadog.ingress.extraPaths }}
+          {{- toYaml .Values.otelCollector.datadog.ingress.extraPaths | nindent 10 }}
+          {{- end }}
+        - path: {{ default "/" .Values.otelCollector.datadog.ingress.path }}
+          {{- if eq "true" (include "common.ingress.supportsPathType" .) }}
+          pathType: {{ .Values.otelCollector.datadog.ingress.pathType }}
+          {{- end }}
+          backend: {{- include "common.ingress.backend" (dict "serviceName" (include "digma.otel-collector" $) "servicePort" "datadog" "context" $)  | nindent 14 }}
+    {{- end }}
+    {{- if .Values.otelCollector.datadog.ingress.extraRules }}
+    {{- include "common.tplvalues.render" (dict "value" .Values.otelCollector.datadog.ingress.extraRules "context" $) | nindent 4 }}
+    {{- end }}
+{{- end }}

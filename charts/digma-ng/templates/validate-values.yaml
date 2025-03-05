@@ -2,6 +2,17 @@
 {{ fail "Installation failed: 'observability.useLocal' is true while 'observability.otlp.remoteEndpoint' is set. This combination is not allowed." }}
 {{- end }}
 
+{{- if and .Values.otelCollector.datadog.ingress.enabled (eq .Values.otelCollector.receivers.datadog.enabled false) }}
+{{ fail "Installation failed: 'otelCollector.datadog.ingress.enabled' cannot be true when 'otelCollector.receivers.datadog.enabled' is false." }}
+{{- end }}
+
+{{- if and .Values.otelCollector.http.ingress.enabled (eq .Values.otelCollector.receivers.otelHttp.enabled false) }}
+{{ fail "Installation failed: 'otelCollector.http.ingress.enabled' cannot be true when 'otelCollector.receivers.otelHttp.enabled' is false." }}
+{{- end }}
+
+{{- if and .Values.otelCollector.grpc.ingress.enabled (eq .Values.otelCollector.receivers.otelGRPC.enabled false) }}
+{{ fail "Installation failed: 'otelCollector.grpc.ingress.enabled' cannot be true when 'otelCollector.receivers.otelGRPC.enabled' is false." }}
+{{- end }}
 
 {{- $globalTolerations := default (list) .Values.global.tolerations -}}
 
