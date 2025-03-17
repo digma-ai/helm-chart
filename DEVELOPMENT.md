@@ -24,15 +24,15 @@ brew install norwoodj/tap/helm-docs
 #### Windows with Scoop
 
 1. Install scoop from Powershell
-```bash
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
-```
+    ```bash
+    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+    Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
+    ```
 2. Install helm-docs
-```bash
-scoop install helm-docs
-```
+    ```bash
+    scoop install helm-docs
+    ```
 3. Generate docs
-```bash
+    ```bash
    helm-docs --chart-search-root 'charts/digma-ng' -s file --ignore-non-descriptions
 ```
