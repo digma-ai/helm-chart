@@ -25,6 +25,7 @@ spec:
         {{- if .Values.nginx.podAnnotations }}
         {{- include "common.tplvalues.render" (dict "value" .Values.nginx.podAnnotations "context" .) | nindent 8 }}
         {{- end }}
+        checksum/config: {{ include (print $.Template.BasePath "/nginx/config.yaml") . | sha256sum }}
     spec:
       {{- include "common.images.pullSecrets" ( dict "images" (list .Values.nginx.image) "global" .Values.global) | nindent 6 }}
       {{- if .Values.nginx.affinity }}
