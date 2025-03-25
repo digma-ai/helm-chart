@@ -1320,7 +1320,7 @@ nginx:
 ui:
   # -- ui version
   # @section -- UI parameters
-  artifactsVersion: 9.0.1
+  artifactsVersion: 9.1.1
   sandboxEnabled: false
   service:
     # -- service type
