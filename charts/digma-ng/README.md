@@ -1,10 +1,16 @@
 # digma-ng
 
-![Version: 1.0.301](https://img.shields.io/badge/Version-1.0.301-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.251](https://img.shields.io/badge/AppVersion-0.3.251-informational?style=flat-square)
+
+
+
+![Version: 1.0.302](https://img.shields.io/badge/Version-1.0.302-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.251](https://img.shields.io/badge/AppVersion-0.3.251-informational?style=flat-square) 
 
 A Helm chart containing Digma's services
 
 **Homepage:** <https://github.com/digma-ai/digma>
+
+
+
 
 ## License Key
 Digma will not function without a valid license key.
@@ -25,6 +31,7 @@ helm upgrade --install digma digma/digma-ng -n digma --set digma.licenseKey=$DIG
 ## Introduction
 
 This chart bootstraps a [Digma](https://digma.ai) deployment on a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
+
 
 ## Prerequisites
 
@@ -723,10 +730,33 @@ How It Works
 | postgresql_backup.enabled | bool | `false` | postgresql backup enabled |
 | postgresql_backup.presigned_url | string | `""` | Url to upload the backup file, provided by Digma |
 | postgresql_backup.annotations | object | `{}` | Extra annotations for job |
+
+### ClickHouse parameters
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| clickhouse.enabled | bool | `true` | Enable ClickHouse deployment |
+| clickhouse.architecture | string | `"standalone"` | ClickHouse architecture. Allowed values: standalone or replication |
+| clickhouse.shards | int | `1` | Number of shards |
+| clickhouse.replicaCount | int | `1` | Number of replicas per shard |
+| clickhouse.auth | object | `{"database":"clickhouse","password":"clickhouse","username":"clickhouse"}` | ClickHouse auth parameters |
+| clickhouse.auth.database | string | `"clickhouse"` | ClickHouse database to create |
+| clickhouse.auth.username | string | `"clickhouse"` | ClickHouse username |
+| clickhouse.auth.password | string | `"clickhouse"` | ClickHouse password |
+| clickhouse.service | object | `{"ports":{"http":8123,"native":9000},"type":"ClusterIP"}` | ClickHouse service parameters |
+| clickhouse.service.type | string | `"ClusterIP"` | ClickHouse service type |
+| clickhouse.service.ports | object | `{"http":8123,"native":9000}` | ClickHouse service ports |
+| clickhouse.resources | object | `{"limits":{"cpu":2,"memory":"3300Mi"},"requests":{"cpu":1,"memory":"2048Mi"}}` | ClickHouse resources |
+| clickhouse.persistence | object | `{"accessModes":["ReadWriteOnce"],"enabled":true,"size":"50Gi","storageClass":""}` | ClickHouse persistence parameters |
+| clickhouse.persistence.enabled | bool | `true` | Enable persistence using Persistent Volume Claims |
+| clickhouse.persistence.storageClass | string | `""` | Persistent Volume Storage Class |
+| clickhouse.persistence.accessModes | list | `["ReadWriteOnce"]` | Persistent Volume Access Modes |
+| clickhouse.persistence.size | string | `"50Gi"` | Persistent Volume Size |
 ## Requirements
 
 | Repository | Name | Version |
 |------------|------|---------|
+| oci://registry-1.docker.io/bitnamicharts | clickhouse | 8.0.7 |
 | oci://registry-1.docker.io/bitnamicharts | common | 2.x.x |
 | oci://registry-1.docker.io/bitnamicharts | elasticsearch | 21.4.1 |
 | oci://registry-1.docker.io/bitnamicharts | elasticsearchlogs(elasticsearch) | 21.4.1 |

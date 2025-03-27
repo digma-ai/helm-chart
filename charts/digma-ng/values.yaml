@@ -2401,3 +2401,64 @@ presets:
       replicas: 4
     pipelineWorker:
       replicas: 4
+clickhouse:
+  # -- Enable ClickHouse deployment
+  # @section -- ClickHouse parameters
+  enabled: true
+  # -- ClickHouse architecture. Allowed values: standalone or replication
+  # @section -- ClickHouse parameters
+  architecture: standalone
+  # -- Number of shards
+  # @section -- ClickHouse parameters
+  shards: 1
+  # -- Number of replicas per shard
+  # @section -- ClickHouse parameters
+  replicaCount: 1
+  # -- ClickHouse auth parameters
+  # @section -- ClickHouse parameters
+  auth:
+    # -- ClickHouse database to create
+    # @section -- ClickHouse parameters
+    database: clickhouse
+    # -- ClickHouse username
+    # @section -- ClickHouse parameters
+    username: clickhouse
+    # -- ClickHouse password
+    # @section -- ClickHouse parameters
+    password: clickhouse
+  # -- ClickHouse service parameters
+  # @section -- ClickHouse parameters
+  service:
+    # -- ClickHouse service type
+    # @section -- ClickHouse parameters
+    type: ClusterIP
+    # -- ClickHouse service ports
+    # @section -- ClickHouse parameters
+    ports:
+      http: 8123
+      native: 9000
+  # -- ClickHouse resources
+  # @section -- ClickHouse parameters
+  resources:
+    requests:
+      memory: 2048Mi
+      cpu: 1
+    limits:
+      memory: 3300Mi
+      cpu: 2
+  # -- ClickHouse persistence parameters
+  # @section -- ClickHouse parameters
+  persistence:
+    # -- Enable persistence using Persistent Volume Claims
+    # @section -- ClickHouse parameters
+    enabled: true
+    # -- Persistent Volume Storage Class
+    # @section -- ClickHouse parameters
+    storageClass: ""
+    # -- Persistent Volume Access Modes
+    # @section -- ClickHouse parameters
+    accessModes:
+      - ReadWriteOnce
+    # -- Persistent Volume Size
+    # @section -- ClickHouse parameters
+    size: 50Gi
