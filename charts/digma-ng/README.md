@@ -730,29 +730,6 @@ How It Works
 | postgresql_backup.enabled | bool | `false` | postgresql backup enabled |
 | postgresql_backup.presigned_url | string | `""` | Url to upload the backup file, provided by Digma |
 | postgresql_backup.annotations | object | `{}` | Extra annotations for job |
-
-### ClickHouse parameters
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| clickhouse.enabled | bool | `false` | Enable ClickHouse deployment |
-| clickhouse.shards | int | `1` | Number of shards |
-| clickhouse.replicaCount | int | `1` | Number of replicas per shard |
-| clickhouse.auth | object | `{"database":"clickhouse","password":"clickhouse","username":"clickhouse"}` | ClickHouse auth parameters |
-| clickhouse.auth.database | string | `"clickhouse"` | ClickHouse database to create |
-| clickhouse.auth.username | string | `"clickhouse"` | ClickHouse username |
-| clickhouse.auth.password | string | `"clickhouse"` | ClickHouse password |
-| clickhouse.service | object | `{"ports":{"http":8123,"native":9000},"type":"ClusterIP"}` | ClickHouse service parameters |
-| clickhouse.service.type | string | `"ClusterIP"` | ClickHouse service type |
-| clickhouse.service.ports | object | `{"http":8123,"native":9000}` | ClickHouse service ports |
-| clickhouse.resources | object | `{"limits":{"cpu":1,"memory":"1048Mi"},"requests":{"cpu":"500m","memory":"500Mi"}}` | ClickHouse resources |
-| clickhouse.persistence | object | `{"accessModes":["ReadWriteOnce"],"enabled":true,"size":"50Gi","storageClass":""}` | ClickHouse persistence parameters |
-| clickhouse.persistence.enabled | bool | `true` | Enable persistence using Persistent Volume Claims |
-| clickhouse.persistence.storageClass | string | `""` | Persistent Volume Storage Class |
-| clickhouse.persistence.accessModes | list | `["ReadWriteOnce"]` | Persistent Volume Access Modes |
-| clickhouse.persistence.size | string | `"50Gi"` | Persistent Volume Size |
-| clickhouse.zookeeper | object | `{"enabled":false}` | Zookeeper configuration for ClickHouse |
-| clickhouse.zookeeper.enabled | bool | `false` | Deploy Zookeeper subchart for ClickHouse |
 ## Requirements
 
 | Repository | Name | Version |
