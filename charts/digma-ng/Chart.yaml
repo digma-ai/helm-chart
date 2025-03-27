@@ -28,6 +28,10 @@ dependencies:
 - name: postgresql
   repository: oci://registry-1.docker.io/bitnamicharts
   version: 16.2.1
+- name: clickhouse
+  repository: oci://registry-1.docker.io/bitnamicharts
+  version: 8.0.7
+  condition: clickhouse.enabled
 - name: common
   repository: oci://registry-1.docker.io/bitnamicharts
   version: 2.x.x
@@ -38,4 +42,4 @@ description: A Helm chart containing Digma's services
 home: https://github.com/digma-ai/digma
 icon: https://digma.ai/wp-content/uploads/2024/02/logo-alt-1.svg
 type: application
-version: 1.0.301
+version: 1.0.302

@@ -20,7 +20,7 @@ digma:
     scheduledTimeUtc:
     # -- UI external service URL (automatically detected if not set)
     # @section -- Global Digma parameters
-    uiExternalBaseUrl:
+    uiExternalBaseUrl: 
     recipients:
       # -- email recipients, list of recipients separated by semicolons (;)
       # @section -- Global Digma parameters
@@ -2401,3 +2401,31 @@ presets:
       replicas: 4
     pipelineWorker:
       replicas: 4
+clickhouse:
+  enabled: false
+  shards: 1
+  replicaCount: 1
+  auth:
+    database: clickhouse
+    username: clickhouse
+    password: clickhouse
+  service:
+    type: ClusterIP
+    ports:
+      http: 8123
+      native: 9000
+  resources:
+    requests:
+      memory: 500Mi
+      cpu: 500m
+    limits:
+      memory: 1048Mi
+      cpu: 1
+  persistence:
+    enabled: true
+    storageClass: ""
+    accessModes:
+      - ReadWriteOnce
+    size: 50Gi
+  zookeeper:
+    enabled: false
