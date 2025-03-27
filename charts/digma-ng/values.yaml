@@ -145,10 +145,10 @@ collectorWorker:
   resources:
     requests:
       memory: 1024Mi
-      cpu: 500m
+      cpu: 1.0
     limits:
-      memory: 2048Mi
-      cpu: 1
+      memory: 1536Mi
+      cpu: 1.5
   service:
     ports:
       # -- HTTP service port, health check at /healthz
