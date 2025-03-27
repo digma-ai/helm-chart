@@ -1,7 +1,7 @@
 annotations:
   category: Application
 apiVersion: v2
-appVersion: 0.3.251
+appVersion: 0.3.252
 dependencies:
 - name: kafka
   repository: oci://registry-1.docker.io/bitnamicharts
@@ -31,6 +31,7 @@ dependencies:
 - name: clickhouse
   repository: oci://registry-1.docker.io/bitnamicharts
   version: 8.0.7
+  condition: clickhouse.enabled
 - name: common
   repository: oci://registry-1.docker.io/bitnamicharts
   version: 2.x.x

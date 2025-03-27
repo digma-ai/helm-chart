@@ -20,7 +20,7 @@ digma:
     scheduledTimeUtc:
     # -- UI external service URL (automatically detected if not set)
     # @section -- Global Digma parameters
-    uiExternalBaseUrl:
+    uiExternalBaseUrl: 
     recipients:
       # -- email recipients, list of recipients separated by semicolons (;)
       # @section -- Global Digma parameters
@@ -145,10 +145,10 @@ collectorWorker:
   resources:
     requests:
       memory: 1024Mi
-      cpu: 1.0
+      cpu: 500m
     limits:
-      memory: 1536Mi
-      cpu: 1.5
+      memory: 2048Mi
+      cpu: 1
   service:
     ports:
       # -- HTTP service port, health check at /healthz
@@ -2404,10 +2404,7 @@ presets:
 clickhouse:
   # -- Enable ClickHouse deployment
   # @section -- ClickHouse parameters
-  enabled: true
-  # -- ClickHouse architecture. Allowed values: standalone or replication
-  # @section -- ClickHouse parameters
-  architecture: standalone
+  enabled: false
   # -- Number of shards
   # @section -- ClickHouse parameters
   shards: 1
@@ -2441,11 +2438,11 @@ clickhouse:
   # @section -- ClickHouse parameters
   resources:
     requests:
-      memory: 2048Mi
-      cpu: 1
+      memory: 500Mi
+      cpu: 500m
     limits:
-      memory: 3300Mi
-      cpu: 2
+      memory: 1048Mi
+      cpu: 1
   # -- ClickHouse persistence parameters
   # @section -- ClickHouse parameters
   persistence:
@@ -2462,3 +2459,9 @@ clickhouse:
     # -- Persistent Volume Size
     # @section -- ClickHouse parameters
     size: 50Gi
+  # -- Zookeeper configuration for ClickHouse
+  # @section -- ClickHouse parameters
+  zookeeper:
+    # -- Deploy Zookeeper subchart for ClickHouse
+    # @section -- ClickHouse parameters
+    enabled: false
