@@ -735,8 +735,7 @@ How It Works
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| clickhouse.enabled | bool | `true` | Enable ClickHouse deployment |
-| clickhouse.architecture | string | `"standalone"` | ClickHouse architecture. Allowed values: standalone or replication |
+| clickhouse.enabled | bool | `false` | Enable ClickHouse deployment |
 | clickhouse.shards | int | `1` | Number of shards |
 | clickhouse.replicaCount | int | `1` | Number of replicas per shard |
 | clickhouse.auth | object | `{"database":"clickhouse","password":"clickhouse","username":"clickhouse"}` | ClickHouse auth parameters |
@@ -746,12 +745,14 @@ How It Works
 | clickhouse.service | object | `{"ports":{"http":8123,"native":9000},"type":"ClusterIP"}` | ClickHouse service parameters |
 | clickhouse.service.type | string | `"ClusterIP"` | ClickHouse service type |
 | clickhouse.service.ports | object | `{"http":8123,"native":9000}` | ClickHouse service ports |
-| clickhouse.resources | object | `{"limits":{"cpu":2,"memory":"3300Mi"},"requests":{"cpu":1,"memory":"2048Mi"}}` | ClickHouse resources |
+| clickhouse.resources | object | `{"limits":{"cpu":1,"memory":"1048Mi"},"requests":{"cpu":"500m","memory":"500Mi"}}` | ClickHouse resources |
 | clickhouse.persistence | object | `{"accessModes":["ReadWriteOnce"],"enabled":true,"size":"50Gi","storageClass":""}` | ClickHouse persistence parameters |
 | clickhouse.persistence.enabled | bool | `true` | Enable persistence using Persistent Volume Claims |
 | clickhouse.persistence.storageClass | string | `""` | Persistent Volume Storage Class |
 | clickhouse.persistence.accessModes | list | `["ReadWriteOnce"]` | Persistent Volume Access Modes |
 | clickhouse.persistence.size | string | `"50Gi"` | Persistent Volume Size |
+| clickhouse.zookeeper | object | `{"enabled":false}` | Zookeeper configuration for ClickHouse |
+| clickhouse.zookeeper.enabled | bool | `false` | Deploy Zookeeper subchart for ClickHouse |
 ## Requirements
 
 | Repository | Name | Version |
