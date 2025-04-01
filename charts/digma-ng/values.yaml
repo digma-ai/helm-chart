@@ -1825,6 +1825,14 @@ postgresql:
         cpu: 2
     networkPolicy:
       enabled: false
+    livenessProbe:
+      failureThreshold: 10
+      initialDelaySeconds: 60
+      periodSeconds: 60
+    readinessProbe:
+      failureThreshold: 10
+      initialDelaySeconds: 60
+      periodSeconds: 60
     service:
       ports:
         postgresql: 5432
