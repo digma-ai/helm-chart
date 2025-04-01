@@ -165,6 +165,35 @@ Return the proper debug fullname
 {{- end -}}
 
 {{/*
+Return the proper clickhouse fullname
+*/}}
+{{- define "digma.clickhouse" -}}
+{{- include "common.names.dependency.fullname" (dict "chartName" "clickhouse" "chartValues" .Values.clickhouse "context" $) -}}
+{{- end -}}
+
+{{/*
+Return the proper clickhouse metrics enabled
+*/}}
+{{- define "digma.clickhouse.metrics.enabled" -}}
+{{- if and .Values.clickhouse.metrics.enabled .Values.clickhouse.enabled -}}
+true
+{{- else -}}
+false
+{{- end -}}
+{{- end -}}
+
+{{/*
+Return the proper clickhouse metrics url
+*/}}
+{{- define "digma.clickhouse.metrics.url" -}}
+{{- if eq (include "digma.clickhouse.metrics.enabled" .) "true" -}}
+{{ printf "%s:%v" (include "digma.clickhouse" .) .Values.clickhouse.containerPorts.metrics }}
+{{- else -}}
+{{- print "" -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Return the proper postgres fullname
 */}}
 {{- define "digma.postgresql" -}}
