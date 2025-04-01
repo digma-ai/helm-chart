@@ -40,15 +40,15 @@ digma:
       # -- Email gateway URL
       # @section -- Global Digma parameters
       url:
-  # -- Email gateway settings
+  # -- Email settings configuration
   # @section -- Global Digma parameters
-  emailGateway:
-    # -- Email gateway API key
-    # @section -- Global Digma parameters
-    apiKey:
+  emailSettings:
     # -- Email gateway URL
     # @section -- Global Digma parameters
     url:
+    # -- Email gateway API key
+    # @section -- Global Digma parameters
+    apiKey:
   # The base URL for the UI service. This is used for email links and other UI-related functionality.
   # If not set, it will default to the ingress hostname.
   uiExternalBaseUrl: ""

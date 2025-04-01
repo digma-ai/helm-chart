@@ -522,7 +522,7 @@ Return remote endpoint url
 Return email gateway configuration environment variables
 */}}
 {{- define "env.digma.emailGateway" -}}
-{{- $emailGatewayUrl := .Values.digma.emailGateway.url }}
+{{- $emailGatewayUrl := .Values.digma.emailSettings.url }}
 {{- if not $emailGatewayUrl -}}
 {{- $emailGatewayUrl = .Values.digma.report.emailGateway.url }}
 {{- end }}
@@ -530,7 +530,7 @@ Return email gateway configuration environment variables
 - name: "EmailGateway__Url"
   value: {{ $emailGatewayUrl | quote}}
 {{- end }}
-{{- $emailGatewayApiKey := .Values.digma.emailGateway.apiKey }}
+{{- $emailGatewayApiKey := .Values.digma.emailSettings.apiKey }}
 {{- if not $emailGatewayApiKey -}}
 {{- $emailGatewayApiKey = .Values.digma.report.emailGateway.apiKey }}
 {{- end }}
