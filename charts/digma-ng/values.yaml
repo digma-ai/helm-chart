@@ -31,13 +31,18 @@ digma:
       # -- hidden from other recipients, list of recipients separated by semicolons (;)
       # @section -- Global Digma parameters
       bcc:
-    emailGateway:
-      # -- Email gateway email api key
-      # @section -- Global Digma parameters
-      apiKey:
-      # -- Email gateway URL
-      # @section -- Global Digma parameters
-      url:
+  # -- Email gateway settings
+  # @section -- Global Digma parameters
+  emailGateway:
+    # -- Email gateway URL
+    # @section -- Global Digma parameters
+    url:
+    # -- Email gateway API key
+    # @section -- Global Digma parameters
+    apiKey:
+  # The base URL for the UI service. This is used for email links and other UI-related functionality.
+  # If not set, it will default to the ingress hostname.
+  uiExternalBaseUrl: ""
   socialLogin:
     # -- enable social login
     # @section -- Social Login
