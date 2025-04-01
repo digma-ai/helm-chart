@@ -1320,7 +1320,7 @@ nginx:
 ui:
   # -- ui version
   # @section -- UI parameters
-  artifactsVersion: 9.1.1
+  artifactsVersion: 11.1.0
   sandboxEnabled: false
   service:
     # -- service type
@@ -1674,6 +1674,15 @@ otelCollectorDf:
               static_configs:
                 - targets: [{{ include "digma.postgresql.metrics.url" . }}]
       {{ end }}
+      {{ if eq (include "digma.clickhouse.metrics.enabled" .) "true" }}
+      prometheus/clickhouse:
+        config:
+          scrape_configs:
+            - job_name: k8s-metrics
+              scrape_interval: 5s
+              static_configs:
+                - targets: [{{ include "digma.clickhouse.metrics.url" . }}]
+      {{ end }}
     processors:
       batch:
       attributes/add_source_env:
@@ -1698,7 +1707,7 @@ otelCollectorDf:
       pipelines:
         {{- if eq .Values.observability.useLocal true }}
         metrics:
-          receivers: [otlp, kafkametrics, prometheus/k8s_metrics{{- if eq (include "digma.redis.metrics.enabled" .) "true" -}}, prometheus/redis {{- end }}{{- if eq (include "digma.postgresql.metrics.enabled" .) "true" -}}, prometheus/postgresql {{- end }}]
+          receivers: [otlp, kafkametrics, prometheus/k8s_metrics{{- if eq (include "digma.redis.metrics.enabled" .) "true" -}}, prometheus/redis {{- end }}{{- if eq (include "digma.postgresql.metrics.enabled" .) "true" -}}, prometheus/postgresql {{- end }}{{- if eq (include "digma.clickhouse.metrics.enabled" .) "true" -}}, prometheus/clickhouse {{- end }}]
           processors: [attributes/add_source_env, batch]
           exporters: [prometheus]
         {{- else }}
@@ -1707,7 +1716,7 @@ otelCollectorDf:
           processors: [batch]
           exporters: [otlp/remote]
         metrics:
-          receivers: [otlp, kafkametrics, prometheus/k8s_metrics{{- if eq (include "digma.redis.metrics.enabled" .) "true" -}}, prometheus/redis {{- end }}{{- if eq (include "digma.postgresql.metrics.enabled" .) "true" -}}, prometheus/postgresql {{- end }}]
+          receivers: [otlp, kafkametrics, prometheus/k8s_metrics{{- if eq (include "digma.redis.metrics.enabled" .) "true" -}}, prometheus/redis {{- end }}{{- if eq (include "digma.postgresql.metrics.enabled" .) "true" -}}, prometheus/postgresql {{- end }}{{- if eq (include "digma.clickhouse.metrics.enabled" .) "true" -}}, prometheus/clickhouse {{- end }}]
           processors: [attributes/add_source_env, batch]
           exporters: [otlp/remote]
         logs:
@@ -2424,11 +2433,11 @@ clickhouse:
       native: 9000
   resources:
     requests:
-      memory: 2Gi
-      cpu: 500m
-    limits:
       memory: 4Gi
       cpu: 2
+    limits:
+      memory: 8Gi
+      cpu: 4
   persistence:
     enabled: true
     storageClass: ""
@@ -2437,3 +2446,5 @@ clickhouse:
     size: 50Gi
   zookeeper:
     enabled: false
+  metrics:
+    enabled: true
