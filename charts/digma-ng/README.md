@@ -1,10 +1,16 @@
 # digma-ng
 
-![Version: 1.0.307](https://img.shields.io/badge/Version-1.0.307-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.260](https://img.shields.io/badge/AppVersion-0.3.260-informational?style=flat-square)
+
+
+
+![Version: 1.0.308](https://img.shields.io/badge/Version-1.0.308-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.260](https://img.shields.io/badge/AppVersion-0.3.260-informational?style=flat-square) 
 
 A Helm chart containing Digma's services
 
 **Homepage:** <https://github.com/digma-ai/digma>
+
+
+
 
 ## License Key
 Digma will not function without a valid license key.
@@ -25,6 +31,7 @@ helm upgrade --install digma digma/digma-ng -n digma --set digma.licenseKey=$DIG
 ## Introduction
 
 This chart bootstraps a [Digma](https://digma.ai) deployment on a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
+
 
 ## Prerequisites
 
@@ -181,8 +188,12 @@ How It Works
 | digma.report.recipients.to | string | `nil` | email recipients, list of recipients separated by semicolons (;) |
 | digma.report.recipients.cc | string | `nil` | report email additional recipients, list of recipients separated by semicolons (;) |
 | digma.report.recipients.bcc | string | `nil` | hidden from other recipients, list of recipients separated by semicolons (;) |
-| digma.report.emailGateway.apiKey | string | `nil` | Email gateway email api key |
+| digma.report.emailGateway | object | `{"apiKey":null,"url":null}` | Email gateway settings (legacy) |
+| digma.report.emailGateway.apiKey | string | `nil` | Email gateway API key |
 | digma.report.emailGateway.url | string | `nil` | Email gateway URL |
+| digma.emailSettings | object | `{"apiKey":null,"url":null}` | Email settings configuration |
+| digma.emailSettings.url | string | `nil` | Email gateway URL |
+| digma.emailSettings.apiKey | string | `nil` | Email gateway API key |
 | digma.externals.postgresql.host | string | `""` | Host of an external PostgreSQL instance to connect (only if postgresql.enabled=false) |
 | digma.externals.postgresql.user | string | `""` | User of an external PostgreSQL instance to connect (only if postgresql.enabled=false) |
 | digma.externals.postgresql.password | string | `""` | Password of an external PostgreSQL instance to connect (only if postgresql.enabled=false) |
