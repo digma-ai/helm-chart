@@ -94,11 +94,12 @@ Return the proper ui fullname
 {{- end -}}
 
 {{/*
-Return the proper ui service external url
+Return the UI service base URL
 */}}
-{{- define "digma.report.uiServiceBaseUrl" -}}
-{{- if not (empty (default "" .Values.digma.report.uiExternalBaseUrl)) -}}
-{{.Values.digma.report.uiExternalBaseUrl}}
+{{- define "digma.uiServiceBaseUrl" -}}
+{{- $uiExternalBaseUrl := .Values.digma.uiExternalBaseUrl | default .Values.digma.report.uiExternalBaseUrl }}
+{{- if not (empty (default "" $uiExternalBaseUrl)) -}}
+{{$uiExternalBaseUrl}}
 {{- else }}
 {{- if and .Values.ui.ingress.enabled (and .Values.ui.ingress.hostname (ne .Values.ui.ingress.hostname "")) }}
 {{- printf "https://%s" .Values.ui.ingress.hostname -}}
@@ -516,3 +517,47 @@ Return remote endpoint url
   value: {{ quote .Values.observability.otlp.exportLogs }}
   {{- end -}}
 {{- end -}}
+
+{{/*
+Return email gateway configuration environment variables
+*/}}
+{{- define "env.digma.emailGateway" -}}
+{{- $emailGatewayUrl := .Values.digma.emailSettings.url }}
+{{- if not $emailGatewayUrl -}}
+{{- $emailGatewayUrl = .Values.digma.report.emailGateway.url }}
+{{- end }}
+{{- if $emailGatewayUrl }}
+- name: "EmailGateway__Url"
+  value: {{ $emailGatewayUrl | quote}}
+{{- end }}
+{{- $emailGatewayApiKey := .Values.digma.emailSettings.apiKey }}
+{{- if not $emailGatewayApiKey -}}
+{{- $emailGatewayApiKey = .Values.digma.report.emailGateway.apiKey }}
+{{- end }}
+{{- if $emailGatewayApiKey }}
+- name: "EmailGateway__ApiKey"
+  value: {{ $emailGatewayApiKey | quote}}
+{{- end }}
+{{- end }}
+
+{{/*
+Return UI service base URL environment variable for analytics service
+*/}}
+{{- define "env.digma.analytics.uiServiceBaseUrl" -}}
+{{- $uiServiceBaseUrl := include "digma.uiServiceBaseUrl" . }}
+{{- if ne $uiServiceBaseUrl "" }}
+- name: "DigmaIdentityConfig__UIServiceBaseUrl"
+  value: {{ $uiServiceBaseUrl | quote}}
+{{- end }}
+{{- end }}
+
+{{/*
+Return UI service base URL environment variable for scheduler service
+*/}}
+{{- define "env.digma.scheduler.uiServiceBaseUrl" -}}
+{{- $uiServiceBaseUrl := include "digma.uiServiceBaseUrl" . }}
+{{- if ne $uiServiceBaseUrl "" }}
+- name: "EmailReport__UIServiceBaseUrl"
+  value: {{ $uiServiceBaseUrl | quote}}
+{{- end }}
+{{- end }}

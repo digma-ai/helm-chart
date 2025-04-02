@@ -56,36 +56,25 @@ spec:
         {{- include "common.tplvalues.render" (dict "value" .Values.scheduler.extraEnvVars "context" $) | nindent 8 }}
         {{- end }}
         {{- if .Values.digma.report.enabled }}
-          {{- if .Values.digma.report.emailGateway.url }}
-        - name: "EmailGateway__Url"
-          value: {{ .Values.digma.report.emailGateway.url | quote}}
-          {{- end }}
-          {{- if .Values.digma.report.emailGateway.apiKey }}
-        - name: "EmailGateway__ApiKey"
-          value: {{ .Values.digma.report.emailGateway.apiKey | quote}}
-          {{- end }}
-          {{- if .Values.digma.report.recipients.to }}
+        {{- include "env.digma.emailGateway" . | nindent 8 }}
+        {{- if .Values.digma.report.recipients.to }}
         - name: "EmailReport__Recipients__To"
           value: {{ .Values.digma.report.recipients.to | quote}}
-          {{- end }}      
-          {{- if .Values.digma.report.recipients.cc }}
+        {{- end }}
+        {{- if .Values.digma.report.recipients.cc }}
         - name: "EmailReport__Recipients__Cc"
           value: {{ .Values.digma.report.recipients.cc | quote}}
-          {{- end }} 
-          {{- if .Values.digma.report.recipients.bcc }}
+        {{- end }}
+        {{- if .Values.digma.report.recipients.bcc }}
         - name: "EmailReport__Recipients__Bcc"
           value: {{ .Values.digma.report.recipients.bcc | quote}}
-          {{- end }}
-          {{- if .Values.digma.report.scheduledTimeUtc }}
+        {{- end }}
+        {{- if .Values.digma.report.scheduledTimeUtc }}
         - name: "EmailReport__ScheduledTime"
           value: {{ .Values.digma.report.scheduledTimeUtc | quote}}
-          {{- end }}
-          {{- $uiServiceBaseUrl := include "digma.report.uiServiceBaseUrl" . }}
-          {{- if ne $uiServiceBaseUrl "" }}
-        - name: "EmailReport__UIServiceBaseUrl"
-          value: {{ $uiServiceBaseUrl | quote}}
-          {{- end }}
-        {{- end }} 
+        {{- end }}
+        {{- include "env.digma.scheduler.uiServiceBaseUrl" . | nindent 8 }}
+        {{- end }}
         {{- if not .Values.diagnosticMode.enabled }}
         {{- if .Values.scheduler.livenessProbe.enabled }}
         livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit (omit .Values.scheduler.livenessProbe "enabled") "path") "context" $) | nindent 10 }}
