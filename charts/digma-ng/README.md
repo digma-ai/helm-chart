@@ -203,10 +203,10 @@ How It Works
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| digma.auth.emailVerificationEnabled | bool | `false` | enable email verification for new users. If enabled, emailSettings.url must be set |
-| digma.auth.email | string | `nil` | admin user email (must be provided together with password) |
-| digma.auth.password | string | `nil` | admin user password (must be provided together with email) |
-| digma.auth.allowedEmailDomains | string | `nil` | comma-separated or semicolon-separated list of allowed email domains for user registration |
+| digma.auth.emailVerificationEnabled | bool | `false` | Enable email verification for new users. If enabled, emailSettings.url must be set |
+| digma.auth.email | string | `nil` | Admin user email (must be provided together with password) |
+| digma.auth.password | string | `nil` | Admin user password (must be provided together with email) |
+| digma.auth.allowedEmailDomains | string | `nil` | Comma-separated or semicolon-separated list of allowed email domains for user registration |
 
 ### Social Login
 
