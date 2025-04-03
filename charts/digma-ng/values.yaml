@@ -16,7 +16,7 @@ digma:
     # @section -- Authentication
     emailVerificationEnabled: false
     # -- admin user email (must be provided together with password)
-    # @section -- Authentication 
+    # @section -- Authentication
     email:
     # -- admin user password (must be provided together with email)
     # @section -- Authentication
