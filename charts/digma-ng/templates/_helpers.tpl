@@ -566,18 +566,18 @@ Return UI service base URL environment variable for scheduler service
 Return all auth environment variables
 */}}
 {{- define "env.auth.all" -}}
-- name: Auth_EmailVerificationEnabled
+- name: Auth__EmailVerificationEnabled
   value: {{ .Values.digma.auth.emailVerificationEnabled | quote }}
 {{- if .Values.digma.auth.email }}
-- name: Auth_Email
+- name: Auth__Email
   value: {{ .Values.digma.auth.email | quote }}
 {{- end }}
 {{- if .Values.digma.auth.password }}
-- name: Auth_Password
+- name: Auth__Password
   value: {{ .Values.digma.auth.password | quote }}
 {{- end }}
 {{- if .Values.digma.auth.allowedEmailDomains }}
-- name: Auth_AllowedEmailDomains
+- name: Auth__AllowedEmailDomains
   value: {{ .Values.digma.auth.allowedEmailDomains | quote }}
 {{- end }}
 {{- end -}}
