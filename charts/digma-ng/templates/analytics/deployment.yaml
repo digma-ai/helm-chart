@@ -75,7 +75,8 @@ spec:
           value: {{ include "digma.ai.url" . | quote }}
         {{- end }}
         {{- include "env.digma.emailGateway" . | nindent 8 }}
-        {{- include "env.digma.analytics.uiServiceBaseUrl" . | nindent 8 }}  
+        {{- include "env.digma.analytics.uiServiceBaseUrl" . | nindent 8 }}
+        {{- include "env.auth.all" . | indent 8 }}  
         {{- if not .Values.diagnosticMode.enabled }}
         {{- if .Values.analyticsApi.livenessProbe.enabled }}
         livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit (omit .Values.analyticsApi.livenessProbe "enabled") "path") "context" $) | nindent 10 }}

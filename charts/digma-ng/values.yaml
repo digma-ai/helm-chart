@@ -9,6 +9,21 @@ digma:
   # -- a digma license to use,If you've signed up for a free Digma account you should have received a Digma license to use. You can use this [link](https://digma.ai/sign-up/) to sign up
   # @section -- Global Digma parameters
   licenseKey:
+  ## Authentication parameters
+  ## 
+  auth:
+    # -- enable email verification for new users. If enabled, emailSettings.url must be set
+    # @section -- Authentication
+    emailVerificationEnabled: false
+    # -- admin user email (must be provided together with password)
+    # @section -- Authentication 
+    email:
+    # -- admin user password (must be provided together with email)
+    # @section -- Authentication
+    password:
+    # -- list of allowed email domains for registration
+    # @section -- Authentication
+    allowedEmailDomains:  
   ## daily issues report parameters
   ## 
   report:
