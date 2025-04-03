@@ -21,7 +21,7 @@ digma:
     # -- admin user password (must be provided together with email)
     # @section -- Authentication
     password:
-    # -- list of allowed email domains for registration
+    # -- comma-separated or semicolon-separated list of allowed email domains for user registration
     # @section -- Authentication
     allowedEmailDomains:  
   ## daily issues report parameters
