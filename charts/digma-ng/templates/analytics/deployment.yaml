@@ -51,6 +51,7 @@ spec:
         {{- include "env.redis" . | nindent  8 }}
         {{- include "env.kafka" . | nindent  8 }}
         {{- include "env.postgres" . | nindent  8 }}
+        {{- include "env.clickhouse" . | nindent  8 }}
         {{- if .Values.analyticsApi.extraEnvVars }}
         {{- include "common.tplvalues.render" (dict "value" .Values.analyticsApi.extraEnvVars "context" $) | nindent 8 }}
         {{- end }}

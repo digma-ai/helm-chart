@@ -278,6 +278,16 @@ Return redis connectivity env
   value: {{ (include "digma.redis.host" .) }}
 {{- end -}}
 
+{{/*
+Return clickhouse connectivity env
+*/}}
+{{- define "env.clickhouse" -}}
+{{- if .Values.clickhouse.enabled -}}
+- name: ConnectionStrings__ClickHouse
+  value:  {{ printf "Host=%s;Protocol=http;Port=%s;Database=clickhouse;Username=%s;Password=%s" ( include "digma.clickhouse" . ) ( .Values.clickhouse.service.ports.http ) ( .Values.clickhouse.auth.username ) ( .Values.clickhouse.auth.password )}}
+{{- end -}}
+{{- end -}}
+
 
 {{/*
 Return the proper redis host

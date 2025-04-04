@@ -2452,7 +2452,6 @@ clickhouse:
   shards: 1
   replicaCount: 1
   auth:
-    database: clickhouse
     username: clickhouse
     password: clickhouse
   service:
