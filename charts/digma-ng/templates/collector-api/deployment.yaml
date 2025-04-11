@@ -53,6 +53,7 @@ spec:
         env:
         {{- include "env.digma.app.common" . | nindent  8 }}
         {{- include "env.postgres" . | nindent  8 }}
+        {{- include "env.clickhouse" . | nindent  8 }}
         {{- include "env.redis" . | nindent  8 }}
         {{- include "env.kafka" . | nindent  8 }}
         {{- include "env.jaeger" . | nindent  8 }}
