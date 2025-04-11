@@ -1,16 +1,12 @@
 # digma-ng
 
 
-
-
 ![Version: 1.0.312](https://img.shields.io/badge/Version-1.0.312-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.274](https://img.shields.io/badge/AppVersion-0.3.274-informational?style=flat-square) 
+
 
 A Helm chart containing Digma's services
 
 **Homepage:** <https://github.com/digma-ai/digma>
-
-
-
 
 ## License Key
 Digma will not function without a valid license key.
@@ -31,7 +27,6 @@ helm upgrade --install digma digma/digma-ng -n digma --set digma.licenseKey=$DIG
 ## Introduction
 
 This chart bootstraps a [Digma](https://digma.ai) deployment on a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
-
 
 ## Prerequisites
 
@@ -534,7 +529,7 @@ How It Works
 | nginx.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
 | nginx.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
 | nginx.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
-| ui.artifactsVersion | string | `"11.3.0"` | ui version |
+| ui.artifactsVersion | string | `"11.6.1"` | ui version |
 | ui.service.type | string | `"ClusterIP"` | service type |
 | ui.service.annotations | object | `{}` | Additional custom annotations for service |
 | ui.service.ports.http | int | `80` | HTTP service port |
