@@ -284,7 +284,7 @@ Return clickhouse connectivity env
 {{- define "env.clickhouse" -}}
 {{- if .Values.clickhouse.enabled -}}
 - name: ConnectionStrings__ClickHouse
-  value:  {{ printf "Host=%s;Protocol=http;Port=%s;Database=clickhouse;Username=%s;Password=%s" ( include "digma.clickhouse" . ) ( .Values.clickhouse.service.ports.http ) ( .Values.clickhouse.auth.username ) ( .Values.clickhouse.auth.password )}}
+  value:  {{ printf "Host=%s;Protocol=http;Port=%d;Database=clickhouse;Username=%s;Password=%s" ( include "digma.clickhouse" . ) (int .Values.clickhouse.service.ports.http ) ( .Values.clickhouse.auth.username ) ( .Values.clickhouse.auth.password )}}
 {{- end -}}
 {{- end -}}
 
