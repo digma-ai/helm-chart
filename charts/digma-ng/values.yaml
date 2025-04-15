@@ -24,6 +24,9 @@ digma:
     # -- Comma-separated or semicolon-separated list of allowed email domains for user registration
     # @section -- Authentication
     allowedEmailDomains:  
+    # -- Setting auth cookie secure flag. Set to false if ui is accessed via http
+    # @section -- Authentication
+    securedCookie: false
   ## daily issues report parameters
   ## 
   report:

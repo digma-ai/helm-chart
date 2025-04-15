@@ -590,7 +590,7 @@ Return all auth environment variables
 - name: Auth__AllowedEmailDomains
   value: {{ .Values.digma.auth.allowedEmailDomains | quote }}
 {{- end }}
-{{- if .Values.digma.auth.securedCookie }}
+{{- if hasKey .Values.digma.auth "securedCookie" }}
 - name: Auth__SecuredCookie
   value: {{ .Values.digma.auth.securedCookie | quote }}
 {{- end }}
