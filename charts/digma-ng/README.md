@@ -207,7 +207,7 @@ How It Works
 | digma.auth.email | string | `nil` | Admin user email (must be provided together with password) |
 | digma.auth.password | string | `nil` | Admin user password (must be provided together with email) |
 | digma.auth.allowedEmailDomains | string | `nil` | Comma-separated or semicolon-separated list of allowed email domains for user registration |
-| digma.auth.securedCookie | string | `nil` | Setting auth cookie secure flag. Set to false if ui is accessed via http |
+| digma.auth.securedCookie | bool | `true` | Setting auth cookie secure flag. Set to false if ui is accessed via http |
 
 ### Social Login
 

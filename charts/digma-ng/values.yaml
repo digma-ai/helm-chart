@@ -26,7 +26,7 @@ digma:
     allowedEmailDomains:  
     # -- Setting auth cookie secure flag. Set to false if ui is accessed via http
     # @section -- Authentication
-    securedCookie:
+    securedCookie: true
   ## daily issues report parameters
   ## 
   report:
