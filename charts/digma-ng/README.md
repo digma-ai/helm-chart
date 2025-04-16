@@ -1,10 +1,16 @@
 # digma-ng
 
-![Version: 1.0.317](https://img.shields.io/badge/Version-1.0.317-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.275](https://img.shields.io/badge/AppVersion-0.3.275-informational?style=flat-square)
+
+
+
+![Version: 1.0.317](https://img.shields.io/badge/Version-1.0.317-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.276](https://img.shields.io/badge/AppVersion-0.3.276-informational?style=flat-square) 
 
 A Helm chart containing Digma's services
 
 **Homepage:** <https://github.com/digma-ai/digma>
+
+
+
 
 ## License Key
 Digma will not function without a valid license key.
@@ -25,6 +31,7 @@ helm upgrade --install digma digma/digma-ng -n digma --set digma.licenseKey=$DIG
 ## Introduction
 
 This chart bootstraps a [Digma](https://digma.ai) deployment on a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
+
 
 ## Prerequisites
 
@@ -200,6 +207,7 @@ How It Works
 | digma.auth.email | string | `nil` | Admin user email (must be provided together with password) |
 | digma.auth.password | string | `nil` | Admin user password (must be provided together with email) |
 | digma.auth.allowedEmailDomains | string | `nil` | Comma-separated or semicolon-separated list of allowed email domains for user registration |
+| digma.auth.securedCookie | bool | `true` | Setting auth cookie secure flag. Set to false if ui is accessed via http |
 
 ### Social Login
 
