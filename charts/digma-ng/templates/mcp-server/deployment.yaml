@@ -1,0 +1,76 @@
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ include "digma.mcp-server" . }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: mcp-server
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.mcpServer.podLabels .Values.commonLabels ) "context" . ) }}
+  replicas: {{ include "replicas.value" (dict "value" .Values.mcpServer.replicas "context" .) }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 6 }}
+      app.kubernetes.io/component: mcp-server
+  template:
+    metadata:
+      labels: 
+        {{- include "common.labels.standard" ( dict "customLabels" $podLabels "context" $ ) | nindent 8 }}
+        app.kubernetes.io/component: mcp-server
+      annotations:
+        {{- if .Values.commonAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.mcpServer.podAnnotations }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.mcpServer.podAnnotations "context" .) | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- include "common.images.pullSecrets" ( dict "images" (list .Values.mcpServer.image) "global" .Values.global) | nindent 6 }}
+      {{- if .Values.mcpServer.affinity }}
+      affinity: {{- include "common.tplvalues.render" ( dict "value" .Values.mcpServer.affinity "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.mcpServer.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.mcpServer.nodeSelector "context" .) | nindent 8 }}
+      {{- end }}
+      {{- $mergedTolerations := (concat .Values.global.tolerations .Values.mcpServer.tolerations) -}}
+      {{- if $mergedTolerations }}
+      tolerations: 
+      {{- toYaml $mergedTolerations | nindent 6 -}}
+      {{- end }}
+      containers:
+        - name: mcp-server
+          image: {{ include "common.images.image" (dict "imageRoot" .Values.mcpServer.image "global" .Values.global) }}
+          imagePullPolicy: {{ .Values.mcpServer.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.mcpServer.service.ports.http }}
+          resources:
+            {{- toYaml .Values.mcpServer.resources | nindent 12 }}
+          {{- if .Values.mcpServer.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.mcpServer.livenessProbe.path }}
+              port: http
+            initialDelaySeconds: {{ .Values.mcpServer.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.mcpServer.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.mcpServer.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.mcpServer.livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values.mcpServer.livenessProbe.successThreshold }}
+          {{- end }}
+          {{- if .Values.mcpServer.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.mcpServer.readinessProbe.path }}
+              port: http
+            initialDelaySeconds: {{ .Values.mcpServer.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.mcpServer.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.mcpServer.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.mcpServer.readinessProbe.failureThreshold }}
+            successThreshold: {{ .Values.mcpServer.readinessProbe.successThreshold }}
+          {{- end }}
+          env:
+            {{- include "common.tplvalues.render" (dict "value" .Values.mcpServer.env "context" $) | nindent 12 }}
+            {{- if .Values.mcpServer.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.mcpServer.extraEnvVars "context" $) | nindent 12 }}
+            {{- end }}

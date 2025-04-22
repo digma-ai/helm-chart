@@ -1,0 +1,42 @@
+{{- if .Values.mcpServer.ingress.enabled }}
+apiVersion: {{ include "common.capabilities.ingress.apiVersion" . }}
+kind: Ingress
+metadata:
+  name: {{ include "digma.mcp-server" . }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: mcp-server
+  {{- if or .Values.mcpServer.ingress.annotations .Values.commonAnnotations }}
+  {{- $annotations := include "common.tplvalues.merge" ( dict "values" ( list .Values.mcpServer.ingress.annotations .Values.commonAnnotations ) "context" . ) }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if and .Values.mcpServer.ingress.ingressClassName (include "common.ingress.supportsIngressClassname" .) }}
+  ingressClassName: {{ .Values.mcpServer.ingress.ingressClassName | quote }}
+  {{- end }}
+  rules:
+    {{- if .Values.mcpServer.ingress.hostname }}
+    - host: {{ tpl .Values.mcpServer.ingress.hostname $ | quote }}
+      http:
+        paths:
+          {{- if .Values.mcpServer.ingress.extraPaths }}
+          {{- toYaml .Values.mcpServer.ingress.extraPaths | nindent 10 }}
+          {{- end }}
+          - path: {{ default "/" .Values.mcpServer.ingress.path }}
+            {{- if eq "true" (include "common.ingress.supportsPathType" .) }}
+            pathType: {{ .Values.mcpServer.ingress.pathType }}
+            {{- end }}
+            backend: {{- include "common.ingress.backend" (dict "serviceName" (include "digma.mcp-server" $) "servicePort" "http" "context" $)  | nindent 14 }}
+    {{- end }}
+    {{- if .Values.mcpServer.ingress.extraRules }}
+    {{- include "common.tplvalues.render" (dict "value" .Values.mcpServer.ingress.extraRules "context" $) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.mcpServer.ingress.tls .Values.mcpServer.ingress.extraTls }}
+  tls:
+    {{- if .Values.mcpServer.ingress.tls }}
+    {{- include "common.tplvalues.render" (dict "value" .Values.mcpServer.ingress.tls "context" $) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.mcpServer.ingress.extraTls }}
+    {{- include "common.tplvalues.render" (dict "value" .Values.mcpServer.ingress.extraTls "context" $) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+{{- end }}
