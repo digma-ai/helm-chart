@@ -1,0 +1,22 @@
+{{- if .Values.scheduler.pdb.create }}
+apiVersion: {{ include "common.capabilities.policy.apiVersion" . }}
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "digma.scheduler" . }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: analytics-api
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.scheduler.pdb.minAvailable }}
+  minAvailable: {{ .Values.scheduler.pdb.minAvailable }}
+  {{- end }}
+  {{- if or .Values.scheduler.pdb.maxUnavailable ( not .Values.scheduler.pdb.minAvailable ) }}
+  maxUnavailable: {{ .Values.scheduler.pdb.maxUnavailable | default 1 }}
+  {{- end }}
+  {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.scheduler.podLabels .Values.commonLabels ) "context" . ) }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 6 }}
+      app.kubernetes.io/component: scheduler
+{{- end }}

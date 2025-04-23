@@ -1,0 +1,22 @@
+{{- if .Values.analyticsApi.pdb.create }}
+apiVersion: {{ include "common.capabilities.policy.apiVersion" . }}
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "digma.analytics-api" . }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: analytics-api
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.analyticsApi.pdb.minAvailable }}
+  minAvailable: {{ .Values.analyticsApi.pdb.minAvailable }}
+  {{- end }}
+  {{- if or .Values.analyticsApi.pdb.maxUnavailable ( not .Values.analyticsApi.pdb.minAvailable ) }}
+  maxUnavailable: {{ .Values.analyticsApi.pdb.maxUnavailable | default 1 }}
+  {{- end }}
+  {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.analyticsApi.podLabels .Values.commonLabels ) "context" . ) }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 6 }}
+      app.kubernetes.io/component: analytics-api
+{{- end }}

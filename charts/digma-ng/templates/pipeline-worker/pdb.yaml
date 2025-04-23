@@ -1,0 +1,22 @@
+{{- if .Values.pipelineWorker.pdb.create }}
+apiVersion: {{ include "common.capabilities.policy.apiVersion" . }}
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "digma.pipeline-worker" . }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: analytics-api
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.pipelineWorker.pdb.minAvailable }}
+  minAvailable: {{ .Values.pipelineWorker.pdb.minAvailable }}
+  {{- end }}
+  {{- if or .Values.pipelineWorker.pdb.maxUnavailable ( not .Values.pipelineWorker.pdb.minAvailable ) }}
+  maxUnavailable: {{ .Values.pipelineWorker.pdb.maxUnavailable | default 1 }}
+  {{- end }}
+  {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.pipelineWorker.podLabels .Values.commonLabels ) "context" . ) }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 6 }}
+      app.kubernetes.io/component: pipeline-worker
+{{- end }}

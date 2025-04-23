@@ -1,0 +1,22 @@
+{{- if .Values.collectorWorker.pdb.create }}
+apiVersion: {{ include "common.capabilities.policy.apiVersion" . }}
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "digma.collector-worker" . }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: analytics-api
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.collectorWorker.pdb.minAvailable }}
+  minAvailable: {{ .Values.collectorWorker.pdb.minAvailable }}
+  {{- end }}
+  {{- if or .Values.collectorWorker.pdb.maxUnavailable ( not .Values.collectorWorker.pdb.minAvailable ) }}
+  maxUnavailable: {{ .Values.collectorWorker.pdb.maxUnavailable | default 1 }}
+  {{- end }}
+  {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.collectorWorker.podLabels .Values.commonLabels ) "context" . ) }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 6 }}
+      app.kubernetes.io/component: collector-worker
+{{- end }}

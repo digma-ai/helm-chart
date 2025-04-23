@@ -1,10 +1,16 @@
 # digma-ng
 
-![Version: 1.0.320](https://img.shields.io/badge/Version-1.0.320-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.280](https://img.shields.io/badge/AppVersion-0.3.280-informational?style=flat-square)
+
+
+
+![Version: 1.0.320](https://img.shields.io/badge/Version-1.0.320-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.283-alpha.1](https://img.shields.io/badge/AppVersion-0.3.283--alpha.1-informational?style=flat-square) 
 
 A Helm chart containing Digma's services
 
 **Homepage:** <https://github.com/digma-ai/digma>
+
+
+
 
 ## License Key
 Digma will not function without a valid license key.
@@ -25,6 +31,7 @@ helm upgrade --install digma digma/digma-ng -n digma --set digma.licenseKey=$DIG
 ## Introduction
 
 This chart bootstraps a [Digma](https://digma.ai) deployment on a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
+
 
 ## Prerequisites
 
@@ -273,6 +280,9 @@ How It Works
 | collectorWorker.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
 | collectorWorker.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
 | collectorWorker.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
+| collectorWorker.pdb.create | bool | `false` | Enable PodDisruptionBudget |
+| collectorWorker.pdb.minAvailable | string | `""` | Set PodDisruptionBudget minAvailable |
+| collectorWorker.pdb.maxUnavailable | string | `""` | Set PodDisruptionBudget minAvailable |
 
 ### Otel Collector parameters
 
@@ -342,6 +352,9 @@ How It Works
 | otelCollector.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
 | otelCollector.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
 | otelCollector.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
+| otelCollector.pdb.create | bool | `false` | Enable PodDisruptionBudget |
+| otelCollector.pdb.minAvailable | string | `""` | Set PodDisruptionBudget minAvailable |
+| otelCollector.pdb.maxUnavailable | string | `""` | Set PodDisruptionBudget minAvailable |
 
 ### CollectorApi parameters
 
@@ -375,6 +388,9 @@ How It Works
 | collectorApi.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
 | collectorApi.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
 | collectorApi.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
+| collectorApi.pdb.create | bool | `false` | Enable PodDisruptionBudget |
+| collectorApi.pdb.minAvailable | string | `""` | Set PodDisruptionBudget minAvailable |
+| collectorApi.pdb.maxUnavailable | string | `""` | Set PodDisruptionBudget minAvailable |
 
 ### AnalyticsApi parameters
 
@@ -416,6 +432,9 @@ How It Works
 | analyticsApi.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
 | analyticsApi.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
 | analyticsApi.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
+| analyticsApi.pdb.create | bool | `false` | Enable PodDisruptionBudget |
+| analyticsApi.pdb.minAvailable | string | `""` | Set PodDisruptionBudget minAvailable |
+| analyticsApi.pdb.maxUnavailable | string | `""` | Set PodDisruptionBudget minAvailable |
 
 ### MeasurementAnalysis parameters
 
@@ -445,6 +464,9 @@ How It Works
 | measurementAnalysis.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
 | measurementAnalysis.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
 | measurementAnalysis.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
+| measurementAnalysis.pdb.create | bool | `false` | Enable PodDisruptionBudget |
+| measurementAnalysis.pdb.minAvailable | string | `""` | Set PodDisruptionBudget minAvailable |
+| measurementAnalysis.pdb.maxUnavailable | string | `""` | Set PodDisruptionBudget minAvailable |
 
 ### Scheduler parameters
 
@@ -474,6 +496,9 @@ How It Works
 | scheduler.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
 | scheduler.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
 | scheduler.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
+| scheduler.pdb.create | bool | `false` | Enable PodDisruptionBudget |
+| scheduler.pdb.minAvailable | string | `""` | Set PodDisruptionBudget minAvailable |
+| scheduler.pdb.maxUnavailable | string | `""` | Set PodDisruptionBudget minAvailable |
 
 ### PipelineWorker parameters
 
@@ -503,6 +528,9 @@ How It Works
 | pipelineWorker.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
 | pipelineWorker.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
 | pipelineWorker.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
+| pipelineWorker.pdb.create | bool | `false` | Enable PodDisruptionBudget |
+| pipelineWorker.pdb.minAvailable | string | `""` | Set PodDisruptionBudget minAvailable |
+| pipelineWorker.pdb.maxUnavailable | string | `""` | Set PodDisruptionBudget minAvailable |
 
 ### UI parameters
 
@@ -528,6 +556,9 @@ How It Works
 | nginx.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
 | nginx.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
 | nginx.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
+| nginx.pdb.create | bool | `false` | Enable PodDisruptionBudget |
+| nginx.pdb.minAvailable | string | `""` | Set PodDisruptionBudget minAvailable |
+| nginx.pdb.maxUnavailable | string | `""` | Set PodDisruptionBudget minAvailable |
 | ui.artifactsVersion | string | `"11.6.1"` | ui version |
 | ui.service.type | string | `"ClusterIP"` | service type |
 | ui.service.annotations | object | `{}` | Additional custom annotations for service |
@@ -558,6 +589,9 @@ How It Works
 | ai.tolerations | list | `[]` | Tolerations for pods assignment |
 | ai.affinity | object | `{}` | Affinity for pods assignment |
 | ai.extraEnvVars | list | `[]` | Array with extra environment variables to add |
+| ai.pdb.create | bool | `false` | Enable PodDisruptionBudget |
+| ai.pdb.minAvailable | string | `""` | Set PodDisruptionBudget minAvailable |
+| ai.pdb.maxUnavailable | string | `""` | Set PodDisruptionBudget minAvailable |
 | ai.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
 | ai.livenessProbe.path | string | `"/health"` | Path for livenessProbe |
 | ai.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
@@ -634,6 +668,9 @@ How It Works
 | otelCollectorDf.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
 | otelCollectorDf.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
 | otelCollectorDf.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
+| otelCollectorDf.pdb.create | bool | `false` | Enable PodDisruptionBudget |
+| otelCollectorDf.pdb.minAvailable | string | `""` | Set PodDisruptionBudget minAvailable |
+| otelCollectorDf.pdb.maxUnavailable | string | `""` | Set PodDisruptionBudget minAvailable |
 
 ### Postgresql parameters
 
@@ -644,6 +681,9 @@ How It Works
 | postgresql.primary.nodeSelector | object | `{}` | Node labels for pods assignment |
 | postgresql.primary.tolerations | string | `"{{ include \"common.tplvalues.render\" (dict \"value\" .Values.global.tolerations \"context\" $) }}"` | Tolerations for pods assignment |
 | postgresql.primary.affinity | object | `{}` | Affinity for pods assignment |
+| postgresql.primary.pdb.create | bool | `true` | Enable PodDisruptionBudget |
+| postgresql.primary.pdb.minAvailable | string | `""` | Set PodDisruptionBudget minAvailable |
+| postgresql.primary.pdb.maxUnavailable | string | `""` | Set PodDisruptionBudget minAvailable |
 | postgresql.metrics.enabled | bool | `true` | Start a prometheus exporter |
 
 ### Redis parameters
@@ -656,6 +696,9 @@ How It Works
 | redis.master.nodeSelector | object | `{}` | Node labels for pods assignment |
 | redis.master.tolerations | list | `[]` | Tolerations for pods assignment |
 | redis.master.affinity | object | `{}` | Affinity for pods assignment |
+| redis.master.pdb.create | bool | `true` | Enable PodDisruptionBudget |
+| redis.master.pdb.minAvailable | string | `""` | Set PodDisruptionBudget minAvailable |
+| redis.master.pdb.maxUnavailable | string | `""` | Set PodDisruptionBudget minAvailable |
 
 ### Jaeger parameters
 
@@ -686,6 +729,9 @@ How It Works
 | jaeger.ingress.annotations | string | `nil` | Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations. |
 | jaeger.ingress.extraPaths | list | `[]` | Any additional paths that may need to be added to the ingress under the main host |
 | jaeger.ingress.extraRules | list | `[]` | Additional rules to be covered with this ingress record |
+| jaeger.pdb.create | bool | `false` | Enable PodDisruptionBudget |
+| jaeger.pdb.minAvailable | string | `""` | Set PodDisruptionBudget minAvailable |
+| jaeger.pdb.maxUnavailable | string | `""` | Set PodDisruptionBudget minAvailable |
 
 ### Elasticsearch parameters
 
@@ -696,6 +742,9 @@ How It Works
 | elasticsearch.master.nodeSelector | object | `{}` | Node labels for pods assignment |
 | elasticsearch.master.tolerations | string | `"{{ include \"common.tplvalues.render\" (dict \"value\" .Values.global.tolerations \"context\" $) }}"` | Tolerations for pods assignment |
 | elasticsearch.master.affinity | object | `{}` | Affinity for pods assignment |
+| elasticsearch.master.pdb.create | bool | `true` | Enable PodDisruptionBudget |
+| elasticsearch.master.pdb.minAvailable | string | `""` | Set PodDisruptionBudget minAvailable |
+| elasticsearch.master.pdb.maxUnavailable | string | `""` | Set PodDisruptionBudget minAvailable |
 
 ### Grafana parameters
 
@@ -717,6 +766,9 @@ How It Works
 | prometheus.server.nodeSelector | object | `{}` | Node labels for pods assignment |
 | prometheus.server.tolerations | list | `[]` | Tolerations for pods assignment |
 | prometheus.server.affinity | object | `{}` | Affinity for pods assignment |
+| prometheus.server.pdb.create | bool | `true` | Enable PodDisruptionBudget |
+| prometheus.server.pdb.minAvailable | string | `""` | Set PodDisruptionBudget minAvailable |
+| prometheus.server.pdb.maxUnavailable | string | `""` | Set PodDisruptionBudget minAvailable |
 
 ### Kafka parameters
 
@@ -729,6 +781,9 @@ How It Works
 | kafka.controller.nodeSelector | object | `{}` | Node labels for pods assignment |
 | kafka.controller.tolerations | string | `"{{ include \"common.tplvalues.render\" (dict \"value\" .Values.global.tolerations \"context\" $) }}"` | Tolerations for pods assignment |
 | kafka.controller.affinity | object | `{}` | Affinity for pods assignment |
+| kafka.controller.pdb.create | bool | `true` | Enable PodDisruptionBudget |
+| kafka.controller.pdb.minAvailable | string | `""` | Set PodDisruptionBudget minAvailable |
+| kafka.controller.pdb.maxUnavailable | string | `""` | Set PodDisruptionBudget minAvailable |
 
 ### Postgresql-Backup parameters
 

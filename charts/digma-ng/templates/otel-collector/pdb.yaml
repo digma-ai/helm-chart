@@ -1,0 +1,22 @@
+{{- if .Values.otelCollector.pdb.create }}
+apiVersion: {{ include "common.capabilities.policy.apiVersion" . }}
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "digma.otel-collector" . }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: analytics-api
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.otelCollector.pdb.minAvailable }}
+  minAvailable: {{ .Values.otelCollector.pdb.minAvailable }}
+  {{- end }}
+  {{- if or .Values.otelCollector.pdb.maxUnavailable ( not .Values.otelCollector.pdb.minAvailable ) }}
+  maxUnavailable: {{ .Values.otelCollector.pdb.maxUnavailable | default 1 }}
+  {{- end }}
+  {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.otelCollector.podLabels .Values.commonLabels ) "context" . ) }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 6 }}
+      app.kubernetes.io/component: otel-collector
+{{- end }}
