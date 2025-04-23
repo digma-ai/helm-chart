@@ -47,30 +47,12 @@ spec:
               containerPort: {{ .Values.mcpServer.service.ports.http }}
           resources:
             {{- toYaml .Values.mcpServer.resources | nindent 12 }}
-          {{- if .Values.mcpServer.livenessProbe.enabled }}
-          livenessProbe:
-            httpGet:
-              path: {{ .Values.mcpServer.livenessProbe.path }}
-              port: http
-            initialDelaySeconds: {{ .Values.mcpServer.livenessProbe.initialDelaySeconds }}
-            periodSeconds: {{ .Values.mcpServer.livenessProbe.periodSeconds }}
-            timeoutSeconds: {{ .Values.mcpServer.livenessProbe.timeoutSeconds }}
-            failureThreshold: {{ .Values.mcpServer.livenessProbe.failureThreshold }}
-            successThreshold: {{ .Values.mcpServer.livenessProbe.successThreshold }}
-          {{- end }}
-          {{- if .Values.mcpServer.readinessProbe.enabled }}
-          readinessProbe:
-            httpGet:
-              path: {{ .Values.mcpServer.readinessProbe.path }}
-              port: http
-            initialDelaySeconds: {{ .Values.mcpServer.readinessProbe.initialDelaySeconds }}
-            periodSeconds: {{ .Values.mcpServer.readinessProbe.periodSeconds }}
-            timeoutSeconds: {{ .Values.mcpServer.readinessProbe.timeoutSeconds }}
-            failureThreshold: {{ .Values.mcpServer.readinessProbe.failureThreshold }}
-            successThreshold: {{ .Values.mcpServer.readinessProbe.successThreshold }}
-          {{- end }}
           env:
-            {{- include "common.tplvalues.render" (dict "value" .Values.mcpServer.env "context" $) | nindent 12 }}
-            {{- if .Values.mcpServer.extraEnvVars }}
-            {{- include "common.tplvalues.render" (dict "value" .Values.mcpServer.extraEnvVars "context" $) | nindent 12 }}
-            {{- end }}
+            - name: Auth__Token
+              value: {{ .Values.digma.accessToken | quote }}
+            - name: Auth__UserName
+              value: {{ .Values.digma.auth.email | quote }}
+            - name: Auth__Password
+              value: {{ .Values.digma.auth.password | quote }}
+            - name: Digma__AnalyticsApi
+              value: http://{{(include "digma.analytics-api" $)}}:{{ .Values.analyticsApi.service.ports.http }} 

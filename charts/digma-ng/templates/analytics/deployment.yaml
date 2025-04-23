@@ -66,7 +66,7 @@ spec:
         - name: Analytics.Endpoints__Default__Secured
           value: {{ include "digma.analytics-api.secured" . | quote}}
         - name: CollectorUrl
-          value: http://{{(include "digma.collector-api" $)}}:{{ .Values.collectorApi.service.ports.internal }}
+          value: http://{{(include "digma.collector-api" $)}}:{{ .Values.collectorApi.service.ports.internal }} 
         {{- if .Values.digma.accessToken }}
         - name: AccessToken
           value: {{ .Values.digma.accessToken | quote }}

@@ -2484,7 +2484,7 @@ mcpServer:
   image:
     registry: docker.io
     repository: digmatic/digma-sse-server
-    tag: preview
+    tag: latest
     pullPolicy: IfNotPresent
   replicas: 1
   resources:
@@ -2497,7 +2497,7 @@ mcpServer:
   service:
     type: ClusterIP
     ports:
-      http: 8080
+      http: 5194
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
   # -- Extra labels for pods
   podLabels: {}
@@ -2521,34 +2521,3 @@ mcpServer:
   # -- Array with extra environment variables to add
   extraEnvVars: []
   env: []
-  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
-  livenessProbe:
-    # -- Enable livenessProbe
-    enabled: true
-    # -- Path for livenessProbe
-    path: /healthz
-    # -- Initial delay seconds for livenessProbe
-    initialDelaySeconds: 30
-    # -- Period seconds for livenessProbe
-    periodSeconds: 10
-    # -- Timeout seconds for livenessProbe
-    timeoutSeconds: 5
-    # -- Failure threshold for livenessProbe
-    failureThreshold: 3
-    # -- Success threshold for livenessProbe
-    successThreshold: 1
-  readinessProbe:
-    # -- Enable readinessProbe
-    enabled: true
-    # -- Path for readinessProbe
-    path: /healthz
-    # -- Initial delay seconds for readinessProbe
-    initialDelaySeconds: 30
-    # -- Period seconds for readinessProbe
-    periodSeconds: 10
-    # -- Timeout seconds for readinessProbe
-    timeoutSeconds: 5
-    # -- Failure threshold for readinessProbe
-    failureThreshold: 3
-    # -- Success threshold for readinessProbe
-    successThreshold: 1
