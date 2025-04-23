@@ -660,7 +660,7 @@ otelCollector:
     successThreshold: 1
   ## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb
   # -- Pod Disruption Budget configuration
-  # @section -- Otel CollectorDF parameters
+  # @section -- Otel Collector parameters
   pdb:
     create: false
     minAvailable: ""

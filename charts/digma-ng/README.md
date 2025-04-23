@@ -350,41 +350,7 @@ How It Works
 | otelCollector.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
 | otelCollector.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
 | otelCollector.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
-
-### Otel CollectorDF parameters
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
 | otelCollector.pdb | object | `{"create":false,"maxUnavailable":"","minAvailable":""}` | Pod Disruption Budget configuration |
-| otelCollectorDf.image.registry | string | `"docker.io"` | image registry |
-| otelCollectorDf.image.repository | string | `"otel/opentelemetry-collector-contrib"` | image repository |
-| otelCollectorDf.image.tag | string | `"0.103.0"` | image tag |
-| otelCollectorDf.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
-| otelCollectorDf.image.pullSecrets | list | `[]` | image pull secrets |
-| otelCollectorDf.replicas | int | `1` | Number of replicas to deploy |
-| otelCollectorDf.service.annotations | object | `{}` | Additional custom annotations for service |
-| otelCollectorDf.service.ports.health | int | `13133` | health check service port |
-| otelCollectorDf.service.ports.grpc | int | `4317` | HTTP gRPC service port |
-| otelCollectorDf.service.ports.prometheus_scraper | int | `8889` | prometheus scraper service port |
-| otelCollectorDf.podLabels | object | `{}` | Extra labels for pods |
-| otelCollectorDf.podAnnotations | object | `{}` | Extra annotations for pods |
-| otelCollectorDf.nodeSelector | object | `{}` | Node labels for pods assignment |
-| otelCollectorDf.tolerations | list | `[]` | Tolerations for pods assignment |
-| otelCollectorDf.affinity | object | `{}` | Affinity for pods assignment |
-| otelCollectorDf.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
-| otelCollectorDf.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
-| otelCollectorDf.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
-| otelCollectorDf.livenessProbe.timeoutSeconds | int | `10` | Timeout seconds for livenessProbe |
-| otelCollectorDf.livenessProbe.failureThreshold | int | `6` | Failure threshold for livenessProbe |
-| otelCollectorDf.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
-| otelCollectorDf.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
-| otelCollectorDf.readinessProbe.path | string | `"/"` | Path for readinessProbe |
-| otelCollectorDf.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
-| otelCollectorDf.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
-| otelCollectorDf.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
-| otelCollectorDf.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
-| otelCollectorDf.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
-| otelCollectorDf.pdb | object | `{"create":false,"maxUnavailable":"","minAvailable":""}` | Pod Disruption Budget configuration |
 
 ### CollectorApi parameters
 
@@ -651,6 +617,40 @@ How It Works
 | metricsExporter.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
 | metricsExporter.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
 | metricsExporter.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
+
+### Otel CollectorDF parameters
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| otelCollectorDf.image.registry | string | `"docker.io"` | image registry |
+| otelCollectorDf.image.repository | string | `"otel/opentelemetry-collector-contrib"` | image repository |
+| otelCollectorDf.image.tag | string | `"0.103.0"` | image tag |
+| otelCollectorDf.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
+| otelCollectorDf.image.pullSecrets | list | `[]` | image pull secrets |
+| otelCollectorDf.replicas | int | `1` | Number of replicas to deploy |
+| otelCollectorDf.service.annotations | object | `{}` | Additional custom annotations for service |
+| otelCollectorDf.service.ports.health | int | `13133` | health check service port |
+| otelCollectorDf.service.ports.grpc | int | `4317` | HTTP gRPC service port |
+| otelCollectorDf.service.ports.prometheus_scraper | int | `8889` | prometheus scraper service port |
+| otelCollectorDf.podLabels | object | `{}` | Extra labels for pods |
+| otelCollectorDf.podAnnotations | object | `{}` | Extra annotations for pods |
+| otelCollectorDf.nodeSelector | object | `{}` | Node labels for pods assignment |
+| otelCollectorDf.tolerations | list | `[]` | Tolerations for pods assignment |
+| otelCollectorDf.affinity | object | `{}` | Affinity for pods assignment |
+| otelCollectorDf.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
+| otelCollectorDf.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
+| otelCollectorDf.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
+| otelCollectorDf.livenessProbe.timeoutSeconds | int | `10` | Timeout seconds for livenessProbe |
+| otelCollectorDf.livenessProbe.failureThreshold | int | `6` | Failure threshold for livenessProbe |
+| otelCollectorDf.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
+| otelCollectorDf.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
+| otelCollectorDf.readinessProbe.path | string | `"/"` | Path for readinessProbe |
+| otelCollectorDf.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
+| otelCollectorDf.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
+| otelCollectorDf.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
+| otelCollectorDf.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
+| otelCollectorDf.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
+| otelCollectorDf.pdb | object | `{"create":false,"maxUnavailable":"","minAvailable":""}` | Pod Disruption Budget configuration |
 
 ### Postgresql parameters
 
