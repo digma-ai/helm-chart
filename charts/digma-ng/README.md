@@ -1,10 +1,16 @@
 # digma-ng
 
-![Version: 1.0.320](https://img.shields.io/badge/Version-1.0.320-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.280](https://img.shields.io/badge/AppVersion-0.3.280-informational?style=flat-square)
+
+
+
+![Version: 1.0.320](https://img.shields.io/badge/Version-1.0.320-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.280](https://img.shields.io/badge/AppVersion-0.3.280-informational?style=flat-square) 
 
 A Helm chart containing Digma's services
 
 **Homepage:** <https://github.com/digma-ai/digma>
+
+
+
 
 ## License Key
 Digma will not function without a valid license key.
@@ -25,6 +31,7 @@ helm upgrade --install digma digma/digma-ng -n digma --set digma.licenseKey=$DIG
 ## Introduction
 
 This chart bootstraps a [Digma](https://digma.ai) deployment on a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
+
 
 ## Prerequisites
 
@@ -273,6 +280,7 @@ How It Works
 | collectorWorker.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
 | collectorWorker.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
 | collectorWorker.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
+| collectorWorker.pdb | object | `{"create":false,"maxUnavailable":"","minAvailable":""}` | Pod Disruption Budget configuration |
 
 ### Otel Collector parameters
 
@@ -343,6 +351,41 @@ How It Works
 | otelCollector.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
 | otelCollector.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 
+### Otel CollectorDF parameters
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| otelCollector.pdb | object | `{"create":false,"maxUnavailable":"","minAvailable":""}` | Pod Disruption Budget configuration |
+| otelCollectorDf.image.registry | string | `"docker.io"` | image registry |
+| otelCollectorDf.image.repository | string | `"otel/opentelemetry-collector-contrib"` | image repository |
+| otelCollectorDf.image.tag | string | `"0.103.0"` | image tag |
+| otelCollectorDf.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
+| otelCollectorDf.image.pullSecrets | list | `[]` | image pull secrets |
+| otelCollectorDf.replicas | int | `1` | Number of replicas to deploy |
+| otelCollectorDf.service.annotations | object | `{}` | Additional custom annotations for service |
+| otelCollectorDf.service.ports.health | int | `13133` | health check service port |
+| otelCollectorDf.service.ports.grpc | int | `4317` | HTTP gRPC service port |
+| otelCollectorDf.service.ports.prometheus_scraper | int | `8889` | prometheus scraper service port |
+| otelCollectorDf.podLabels | object | `{}` | Extra labels for pods |
+| otelCollectorDf.podAnnotations | object | `{}` | Extra annotations for pods |
+| otelCollectorDf.nodeSelector | object | `{}` | Node labels for pods assignment |
+| otelCollectorDf.tolerations | list | `[]` | Tolerations for pods assignment |
+| otelCollectorDf.affinity | object | `{}` | Affinity for pods assignment |
+| otelCollectorDf.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
+| otelCollectorDf.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
+| otelCollectorDf.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
+| otelCollectorDf.livenessProbe.timeoutSeconds | int | `10` | Timeout seconds for livenessProbe |
+| otelCollectorDf.livenessProbe.failureThreshold | int | `6` | Failure threshold for livenessProbe |
+| otelCollectorDf.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
+| otelCollectorDf.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
+| otelCollectorDf.readinessProbe.path | string | `"/"` | Path for readinessProbe |
+| otelCollectorDf.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
+| otelCollectorDf.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
+| otelCollectorDf.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
+| otelCollectorDf.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
+| otelCollectorDf.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
+| otelCollectorDf.pdb | object | `{"create":false,"maxUnavailable":"","minAvailable":""}` | Pod Disruption Budget configuration |
+
 ### CollectorApi parameters
 
 | Key | Type | Default | Description |
@@ -375,6 +418,7 @@ How It Works
 | collectorApi.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
 | collectorApi.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
 | collectorApi.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
+| collectorApi.pdb | object | `{"create":false,"maxUnavailable":"","minAvailable":""}` | Pod Disruption Budget configuration |
 
 ### AnalyticsApi parameters
 
@@ -416,6 +460,7 @@ How It Works
 | analyticsApi.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
 | analyticsApi.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
 | analyticsApi.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
+| analyticsApi.pdb | object | `{"create":false,"maxUnavailable":"","minAvailable":""}` | Pod Disruption Budget configuration |
 
 ### MeasurementAnalysis parameters
 
@@ -445,6 +490,7 @@ How It Works
 | measurementAnalysis.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
 | measurementAnalysis.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
 | measurementAnalysis.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
+| measurementAnalysis.pdb | object | `{"create":false,"maxUnavailable":"","minAvailable":""}` | Pod Disruption Budget configuration |
 
 ### Scheduler parameters
 
@@ -474,6 +520,7 @@ How It Works
 | scheduler.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
 | scheduler.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
 | scheduler.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
+| scheduler.pdb | object | `{"create":false,"maxUnavailable":"","minAvailable":""}` | Pod Disruption Budget configuration |
 
 ### PipelineWorker parameters
 
@@ -503,6 +550,7 @@ How It Works
 | pipelineWorker.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
 | pipelineWorker.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
 | pipelineWorker.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
+| pipelineWorker.pdb | object | `{"create":false,"maxUnavailable":"","minAvailable":""}` | Pod Disruption Budget configuration |
 
 ### UI parameters
 
@@ -528,6 +576,7 @@ How It Works
 | nginx.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
 | nginx.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
 | nginx.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
+| nginx.pdb | object | `{"create":false,"maxUnavailable":"","minAvailable":""}` | Pod Disruption Budget configuration |
 | ui.artifactsVersion | string | `"11.6.1"` | ui version |
 | ui.service.type | string | `"ClusterIP"` | service type |
 | ui.service.annotations | object | `{}` | Additional custom annotations for service |
@@ -558,6 +607,7 @@ How It Works
 | ai.tolerations | list | `[]` | Tolerations for pods assignment |
 | ai.affinity | object | `{}` | Affinity for pods assignment |
 | ai.extraEnvVars | list | `[]` | Array with extra environment variables to add |
+| ai.pdb | object | `{"create":false,"maxUnavailable":"","minAvailable":""}` | Pod Disruption Budget configuration |
 | ai.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
 | ai.livenessProbe.path | string | `"/health"` | Path for livenessProbe |
 | ai.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
@@ -602,39 +652,6 @@ How It Works
 | metricsExporter.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
 | metricsExporter.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 
-### Otel CollectorDF parameters
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| otelCollectorDf.image.registry | string | `"docker.io"` | image registry |
-| otelCollectorDf.image.repository | string | `"otel/opentelemetry-collector-contrib"` | image repository |
-| otelCollectorDf.image.tag | string | `"0.103.0"` | image tag |
-| otelCollectorDf.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
-| otelCollectorDf.image.pullSecrets | list | `[]` | image pull secrets |
-| otelCollectorDf.replicas | int | `1` | Number of replicas to deploy |
-| otelCollectorDf.service.annotations | object | `{}` | Additional custom annotations for service |
-| otelCollectorDf.service.ports.health | int | `13133` | health check service port |
-| otelCollectorDf.service.ports.grpc | int | `4317` | HTTP gRPC service port |
-| otelCollectorDf.service.ports.prometheus_scraper | int | `8889` | prometheus scraper service port |
-| otelCollectorDf.podLabels | object | `{}` | Extra labels for pods |
-| otelCollectorDf.podAnnotations | object | `{}` | Extra annotations for pods |
-| otelCollectorDf.nodeSelector | object | `{}` | Node labels for pods assignment |
-| otelCollectorDf.tolerations | list | `[]` | Tolerations for pods assignment |
-| otelCollectorDf.affinity | object | `{}` | Affinity for pods assignment |
-| otelCollectorDf.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
-| otelCollectorDf.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
-| otelCollectorDf.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
-| otelCollectorDf.livenessProbe.timeoutSeconds | int | `10` | Timeout seconds for livenessProbe |
-| otelCollectorDf.livenessProbe.failureThreshold | int | `6` | Failure threshold for livenessProbe |
-| otelCollectorDf.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
-| otelCollectorDf.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
-| otelCollectorDf.readinessProbe.path | string | `"/"` | Path for readinessProbe |
-| otelCollectorDf.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
-| otelCollectorDf.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
-| otelCollectorDf.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
-| otelCollectorDf.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
-| otelCollectorDf.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
-
 ### Postgresql parameters
 
 | Key | Type | Default | Description |
@@ -644,6 +661,7 @@ How It Works
 | postgresql.primary.nodeSelector | object | `{}` | Node labels for pods assignment |
 | postgresql.primary.tolerations | string | `"{{ include \"common.tplvalues.render\" (dict \"value\" .Values.global.tolerations \"context\" $) }}"` | Tolerations for pods assignment |
 | postgresql.primary.affinity | object | `{}` | Affinity for pods assignment |
+| postgresql.primary.pdb | object | `{"create":true,"maxUnavailable":"","minAvailable":""}` | Pod Disruption Budget configuration |
 | postgresql.metrics.enabled | bool | `true` | Start a prometheus exporter |
 
 ### Redis parameters
@@ -656,6 +674,7 @@ How It Works
 | redis.master.nodeSelector | object | `{}` | Node labels for pods assignment |
 | redis.master.tolerations | list | `[]` | Tolerations for pods assignment |
 | redis.master.affinity | object | `{}` | Affinity for pods assignment |
+| redis.master.pdb | object | `{"create":true,"maxUnavailable":"","minAvailable":""}` | Pod Disruption Budget configuration # |
 
 ### Jaeger parameters
 
@@ -686,6 +705,7 @@ How It Works
 | jaeger.ingress.annotations | string | `nil` | Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations. |
 | jaeger.ingress.extraPaths | list | `[]` | Any additional paths that may need to be added to the ingress under the main host |
 | jaeger.ingress.extraRules | list | `[]` | Additional rules to be covered with this ingress record |
+| jaeger.pdb | object | `{"create":false,"maxUnavailable":"","minAvailable":""}` | Pod Disruption Budget configuration |
 
 ### Elasticsearch parameters
 
@@ -696,6 +716,7 @@ How It Works
 | elasticsearch.master.nodeSelector | object | `{}` | Node labels for pods assignment |
 | elasticsearch.master.tolerations | string | `"{{ include \"common.tplvalues.render\" (dict \"value\" .Values.global.tolerations \"context\" $) }}"` | Tolerations for pods assignment |
 | elasticsearch.master.affinity | object | `{}` | Affinity for pods assignment |
+| elasticsearch.master.pdb | object | `{"create":true,"maxUnavailable":"","minAvailable":""}` | Pod Disruption Budget configuration |
 
 ### Grafana parameters
 
@@ -717,6 +738,7 @@ How It Works
 | prometheus.server.nodeSelector | object | `{}` | Node labels for pods assignment |
 | prometheus.server.tolerations | list | `[]` | Tolerations for pods assignment |
 | prometheus.server.affinity | object | `{}` | Affinity for pods assignment |
+| prometheus.server.pdb | object | `{"create":true,"maxUnavailable":"","minAvailable":""}` | Pod Disruption Budget configuration |
 
 ### Kafka parameters
 
@@ -729,6 +751,7 @@ How It Works
 | kafka.controller.nodeSelector | object | `{}` | Node labels for pods assignment |
 | kafka.controller.tolerations | string | `"{{ include \"common.tplvalues.render\" (dict \"value\" .Values.global.tolerations \"context\" $) }}"` | Tolerations for pods assignment |
 | kafka.controller.affinity | object | `{}` | Affinity for pods assignment |
+| kafka.controller.pdb | object | `{"create":true,"maxUnavailable":"","minAvailable":""}` | Kafka Pod Disruption Budget |
 
 ### Postgresql-Backup parameters
 

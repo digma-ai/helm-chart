@@ -1,0 +1,22 @@
+{{- if .Values.jaeger.pdb.create }}
+apiVersion: {{ include "common.capabilities.policy.apiVersion" . }}
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "digma.jaeger" . }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: analytics-api
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.jaeger.pdb.minAvailable }}
+  minAvailable: {{ .Values.jaeger.pdb.minAvailable }}
+  {{- end }}
+  {{- if or .Values.jaeger.pdb.maxUnavailable ( not .Values.jaeger.pdb.minAvailable ) }}
+  maxUnavailable: {{ .Values.jaeger.pdb.maxUnavailable | default 1 }}
+  {{- end }}
+  {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.jaeger.podLabels .Values.commonLabels ) "context" . ) }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 6 }}
+      app.kubernetes.io/component: jaeger
+{{- end }}
