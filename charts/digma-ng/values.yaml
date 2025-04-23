@@ -269,12 +269,15 @@ collectorWorker:
     # -- Success threshold for readinessProbe
     # @section -- CollectorWorker parameters
     successThreshold: 1
-  ## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb
-  # -- Pod Disruption Budget configuration
-  # @section -- CollectorWorker parameters
   pdb:
+    # -- Enable PodDisruptionBudget
+    # @section -- CollectorWorker parameters
     create: false
+    # -- Set PodDisruptionBudget minAvailable
+    # @section -- CollectorWorker parameters
     minAvailable: ""
+    # -- Set PodDisruptionBudget minAvailable
+    # @section -- CollectorWorker parameters
     maxUnavailable: ""
 otelCollector:
   receivers:
@@ -658,12 +661,15 @@ otelCollector:
     # -- Success threshold for readinessProbe
     # @section -- Otel Collector parameters
     successThreshold: 1
-  ## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb
-  # -- Pod Disruption Budget configuration
-  # @section -- Otel Collector parameters
   pdb:
+    # -- Enable PodDisruptionBudget
+    # @section -- Otel Collector parameters
     create: false
+    # -- Set PodDisruptionBudget minAvailable
+    # @section -- Otel Collector parameters
     minAvailable: ""
+    # -- Set PodDisruptionBudget minAvailable
+    # @section -- Otel Collector parameters
     maxUnavailable: ""
 collectorApi:
   image:
@@ -783,12 +789,15 @@ collectorApi:
     # -- Success threshold for readinessProbe
     # @section -- CollectorApi parameters
     successThreshold: 1  
-  ## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb
-  # -- Pod Disruption Budget configuration
-  # @section -- CollectorApi parameters
   pdb:
+    # -- Enable PodDisruptionBudget
+    # @section -- CollectorApi parameters
     create: false
+    # -- Set PodDisruptionBudget minAvailable
+    # @section -- CollectorApi parameters
     minAvailable: ""
+    # -- Set PodDisruptionBudget minAvailable
+    # @section -- CollectorApi parameters
     maxUnavailable: ""
 analyticsApi:
   # -- Indicates whether the analytics API uses a secured HTTPS connection. will be set to false when ingress is enabled
@@ -962,12 +971,15 @@ analyticsApi:
     # -- Success threshold for readinessProbe
     # @section -- AnalyticsApi parameters
     successThreshold: 1
-  ## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb
-  # -- Pod Disruption Budget configuration
-  # @section -- AnalyticsApi parameters
   pdb:
+    # -- Enable PodDisruptionBudget
+    # @section -- AnalyticsApi parameters
     create: false
+    # -- Set PodDisruptionBudget minAvailable
+    # @section -- AnalyticsApi parameters
     minAvailable: ""
+    # -- Set PodDisruptionBudget minAvailable
+    # @section -- AnalyticsApi parameters
     maxUnavailable: ""
 measurementAnalysis:
   env:
@@ -1079,12 +1091,15 @@ measurementAnalysis:
     # -- Success threshold for readinessProbe
     # @section -- MeasurementAnalysis parameters
     successThreshold: 1
-  ## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb
-  # -- Pod Disruption Budget configuration
-  # @section -- MeasurementAnalysis parameters
   pdb:
+    # -- Enable PodDisruptionBudget
+    # @section -- MeasurementAnalysis parameters
     create: false
+    # -- Set PodDisruptionBudget minAvailable
+    # @section -- MeasurementAnalysis parameters
     minAvailable: ""
+    # -- Set PodDisruptionBudget minAvailable
+    # @section -- MeasurementAnalysis parameters
     maxUnavailable: ""
 scheduler:
   image:
@@ -1191,12 +1206,15 @@ scheduler:
     # -- Success threshold for readinessProbe
     # @section -- Scheduler parameters
     successThreshold: 1
-  ## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb
-  # -- Pod Disruption Budget configuration
-  # @section -- Scheduler parameters
   pdb:
+    # -- Enable PodDisruptionBudget
+    # @section -- Scheduler parameters
     create: false
+    # -- Set PodDisruptionBudget minAvailable
+    # @section -- Scheduler parameters
     minAvailable: ""
+    # -- Set PodDisruptionBudget minAvailable
+    # @section -- Scheduler parameters
     maxUnavailable: ""
 pipelineWorker:
   image:
@@ -1303,12 +1321,15 @@ pipelineWorker:
     # -- Success threshold for readinessProbe
     # @section -- PipelineWorker parameters
     successThreshold: 1
-  ## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb
-  # -- Pod Disruption Budget configuration
-  # @section -- PipelineWorker parameters
   pdb:
+    # -- Enable PodDisruptionBudget
+    # @section -- PipelineWorker parameters
     create: false
+    # -- Set PodDisruptionBudget minAvailable
+    # @section -- PipelineWorker parameters
     minAvailable: ""
+    # -- Set PodDisruptionBudget minAvailable
+    # @section -- PipelineWorker parameters
     maxUnavailable: ""
 nginx:
   image:
@@ -1398,12 +1419,15 @@ nginx:
     # -- Success threshold for readinessProbe
     # @section -- UI parameters
     successThreshold: 1
-  ## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb
-  # -- Pod Disruption Budget configuration
-  # @section -- UI parameters
   pdb:
+    # -- Enable PodDisruptionBudget
+    # @section -- UI parameters
     create: false
+    # -- Set PodDisruptionBudget minAvailable
+    # @section -- UI parameters
     minAvailable: ""
+    # -- Set PodDisruptionBudget minAvailable
+    # @section -- UI parameters
     maxUnavailable: ""
 ui:
   # -- ui version
@@ -1547,12 +1571,15 @@ ai:
   # -- Array with extra environment variables to add
   # @section -- AI parameters
   extraEnvVars: []
-  ## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb
-  # -- Pod Disruption Budget configuration
-  # @section -- AI parameters
   pdb:
+    # -- Enable PodDisruptionBudget
+    # @section -- AI parameters
     create: false
+    # -- Set PodDisruptionBudget minAvailable
+    # @section -- AI parameters
     minAvailable: ""
+    # -- Set PodDisruptionBudget minAvailable
+    # @section -- AI parameters
     maxUnavailable: ""
 
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
@@ -1906,12 +1933,15 @@ otelCollectorDf:
     # -- Success threshold for readinessProbe
     # @section -- Otel CollectorDF parameters
     successThreshold: 1
-  ## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb
-  # -- Pod Disruption Budget configuration
-  # @section -- Otel CollectorDF parameters
   pdb:
+    # -- Enable PodDisruptionBudget
+    # @section -- Otel CollectorDF parameters
     create: false
+    # -- Set PodDisruptionBudget minAvailable
+    # @section -- Otel CollectorDF parameters
     minAvailable: ""
+    # -- Set PodDisruptionBudget minAvailable
+    # @section -- Otel CollectorDF parameters
     maxUnavailable: ""
 ## postgresql
 ## ref: https://github.com/bitnami/charts/blob/main/bitnami/postgresql/values.yaml
@@ -1991,12 +2021,15 @@ postgresql:
     # -- Affinity for pods assignment
     # @section -- Postgresql parameters
     affinity: {}
-    ## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb
-    # -- Pod Disruption Budget configuration
-    # @section -- Postgresql parameters
     pdb:
+      # -- Enable PodDisruptionBudget
+      # @section -- Postgresql parameters
       create: true
+      # -- Set PodDisruptionBudget minAvailable
+      # @section -- Postgresql parameters
       minAvailable: ""
+      # -- Set PodDisruptionBudget minAvailable
+      # @section -- Postgresql parameters
       maxUnavailable: ""
   metrics:
     ## ref: https://github.com/bitnami/charts/tree/main/bitnami/postgresql
@@ -2068,13 +2101,15 @@ redis:
     # -- Affinity for pods assignment
     # @section -- Redis parameters
     affinity: {}
-    ## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb
-    # -- Pod Disruption Budget configuration
-    # @section -- Redis parameters
-    ##
     pdb:
+      # -- Enable PodDisruptionBudget
+      # @section -- Redis parameters
       create: true
+      # -- Set PodDisruptionBudget minAvailable
+      # @section -- Redis parameters
       minAvailable: ""
+      # -- Set PodDisruptionBudget minAvailable
+      # @section -- Redis parameters
       maxUnavailable: ""
 ## jaeger
 ## ref: https://github.com/bitnami/charts/blob/main/bitnami/jaeger/values.yaml
@@ -2212,12 +2247,15 @@ jaeger:
     # @section -- Jaeger parameters
     extraRules: []
   args: []
-  ## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb
-  # -- Pod Disruption Budget configuration
-  # @section -- Jaeger parameters
   pdb:
+    # -- Enable PodDisruptionBudget
+    # @section -- Jaeger parameters
     create: false
+    # -- Set PodDisruptionBudget minAvailable
+    # @section -- Jaeger parameters
     minAvailable: ""
+    # -- Set PodDisruptionBudget minAvailable
+    # @section -- Jaeger parameters
     maxUnavailable: ""
 ## elasticsearch
 ## ref: https://github.com/bitnami/charts/blob/main/bitnami/elasticsearch/values.yaml
@@ -2276,12 +2314,15 @@ elasticsearch:
     # -- Affinity for pods assignment
     # @section -- Elasticsearch parameters
     affinity: {}
-    ## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb
-    # -- Pod Disruption Budget configuration
-    # @section -- Elasticsearch parameters
     pdb:
+      # -- Enable PodDisruptionBudget
+      # @section -- Elasticsearch parameters
       create: true
+      # -- Set PodDisruptionBudget minAvailable
+      # @section -- Elasticsearch parameters
       minAvailable: ""
+      # -- Set PodDisruptionBudget minAvailable
+      # @section -- Elasticsearch parameters
       maxUnavailable: ""
   coordinating:
     replicaCount: 0
@@ -2403,12 +2444,15 @@ prometheus:
     # -- Affinity for pods assignment
     # @section -- Prometheus parameters
     affinity: {}
-    ## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb
-    # -- Pod Disruption Budget configuration
-    # @section -- Prometheus parameters
     pdb:
+      # -- Enable PodDisruptionBudget
+      # @section -- Prometheus parameters
       create: true
+      # -- Set PodDisruptionBudget minAvailable
+      # @section -- Prometheus parameters
       minAvailable: ""
+      # -- Set PodDisruptionBudget minAvailable
+      # @section -- Prometheus parameters
       maxUnavailable: ""
 
 ## kafka
@@ -2462,12 +2506,15 @@ kafka:
       accessModes:
         - ReadWriteOnce
       size: 80Gi
-    ## ref: https://kubernetes.io/docs/concepts/workloads/pods/disruptions/
-    # -- Kafka Pod Disruption Budget
-    # @section -- Kafka parameters
     pdb:
+      # -- Enable PodDisruptionBudget
+      # @section -- Kafka parameters
       create: true
+      # -- Set PodDisruptionBudget minAvailable
+      # @section -- Kafka parameters
       minAvailable: ""
+      # -- Set PodDisruptionBudget minAvailable
+      # @section -- Kafka parameters
       maxUnavailable: ""
   listeners:
     client:
