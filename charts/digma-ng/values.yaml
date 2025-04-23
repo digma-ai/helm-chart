@@ -2486,7 +2486,7 @@ mcpServer:
     repository: digmatic/digma-sse-server
     tag: preview
     pullPolicy: IfNotPresent
-  replicas: '{{ index .Values.presets .Values.digma.deployment.size "mcpServer" "replicas" }}'
+  replicas: 1
   resources:
     requests:
       memory: 512Mi
@@ -2552,24 +2552,3 @@ mcpServer:
     failureThreshold: 3
     # -- Success threshold for readinessProbe
     successThreshold: 1
-  ingress:
-    # -- Enable ingress
-    enabled: false
-    # -- Ingress hostname
-    hostname: ""
-    # -- Ingress path
-    path: /
-    # -- Ingress path type
-    pathType: ImplementationSpecific
-    # -- Ingress annotations
-    annotations: {}
-    # -- Ingress class name
-    ingressClassName: ""
-    # -- Extra paths to prepend to every host configuration
-    extraPaths: []
-    # -- Extra rules to add to the ingress
-    extraRules: []
-    # -- TLS configuration for the ingress
-    tls: []
-    # -- Extra TLS configuration for the ingress
-    extraTls: []
