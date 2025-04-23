@@ -2479,3 +2479,45 @@ clickhouse:
     enabled: false
   metrics:
     enabled: true
+mcpServer:
+  enabled: true
+  image:
+    registry: docker.io
+    repository: digmatic/digma-sse-server
+    tag: latest
+    pullPolicy: IfNotPresent
+  replicas: 1
+  resources:
+    requests:
+      memory: 512Mi
+      cpu: 0.5
+    limits:
+      memory: 1024Mi
+      cpu: 1.0
+  service:
+    type: ClusterIP
+    ports:
+      http: 5194
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  # -- Extra labels for pods
+  podLabels: {}
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  # -- Extra annotations for pods
+  podAnnotations: {}
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  # -- Node labels for pods assignment
+  nodeSelector: {}
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  # -- Tolerations for pods assignment
+  tolerations: []
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
+  # -- Affinity for pods assignment
+  affinity: {}
+  ## e.g:
+  ## extraEnvVars:
+  ##   - name: DEBUG
+  ##     value: "true"
+  # -- Array with extra environment variables to add
+  extraEnvVars: []
+  env: []

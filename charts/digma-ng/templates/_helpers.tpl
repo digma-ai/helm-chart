@@ -331,6 +331,13 @@ Return the proper jaeger fullname
 {{- end -}}
 
 {{/*
+Return the proper mcp-server fullname
+*/}}
+{{- define "digma.mcp-server" -}}
+  {{- printf "%s-mcp-server" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+{{- end -}}
+
+{{/*
 Return the proper jaeger-ui fullname
 */}}
 {{- define "digma.jaeger.ui" -}}
