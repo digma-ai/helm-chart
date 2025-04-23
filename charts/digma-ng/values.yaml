@@ -2520,7 +2520,7 @@ mcpServer:
   ##     value: "true"
   # -- Array with extra environment variables to add
   extraEnvVars: []
-  env: {}
+  env: []
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
   livenessProbe:
     # -- Enable livenessProbe
