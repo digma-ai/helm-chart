@@ -681,7 +681,7 @@ How It Works
 | postgresql.primary.nodeSelector | object | `{}` | Node labels for pods assignment |
 | postgresql.primary.tolerations | string | `"{{ include \"common.tplvalues.render\" (dict \"value\" .Values.global.tolerations \"context\" $) }}"` | Tolerations for pods assignment |
 | postgresql.primary.affinity | object | `{}` | Affinity for pods assignment |
-| postgresql.primary.pdb.create | bool | `true` | Enable PodDisruptionBudget |
+| postgresql.primary.pdb.create | bool | `false` | Enable PodDisruptionBudget |
 | postgresql.primary.pdb.minAvailable | string | `""` | Set PodDisruptionBudget minAvailable |
 | postgresql.primary.pdb.maxUnavailable | string | `""` | Set PodDisruptionBudget minAvailable |
 | postgresql.metrics.enabled | bool | `true` | Start a prometheus exporter |
@@ -696,7 +696,7 @@ How It Works
 | redis.master.nodeSelector | object | `{}` | Node labels for pods assignment |
 | redis.master.tolerations | list | `[]` | Tolerations for pods assignment |
 | redis.master.affinity | object | `{}` | Affinity for pods assignment |
-| redis.master.pdb.create | bool | `true` | Enable PodDisruptionBudget |
+| redis.master.pdb.create | bool | `false` | Enable PodDisruptionBudget |
 | redis.master.pdb.minAvailable | string | `""` | Set PodDisruptionBudget minAvailable |
 | redis.master.pdb.maxUnavailable | string | `""` | Set PodDisruptionBudget minAvailable |
 
@@ -742,7 +742,7 @@ How It Works
 | elasticsearch.master.nodeSelector | object | `{}` | Node labels for pods assignment |
 | elasticsearch.master.tolerations | string | `"{{ include \"common.tplvalues.render\" (dict \"value\" .Values.global.tolerations \"context\" $) }}"` | Tolerations for pods assignment |
 | elasticsearch.master.affinity | object | `{}` | Affinity for pods assignment |
-| elasticsearch.master.pdb.create | bool | `true` | Enable PodDisruptionBudget |
+| elasticsearch.master.pdb.create | bool | `false` | Enable PodDisruptionBudget |
 | elasticsearch.master.pdb.minAvailable | string | `""` | Set PodDisruptionBudget minAvailable |
 | elasticsearch.master.pdb.maxUnavailable | string | `""` | Set PodDisruptionBudget minAvailable |
 
@@ -766,7 +766,7 @@ How It Works
 | prometheus.server.nodeSelector | object | `{}` | Node labels for pods assignment |
 | prometheus.server.tolerations | list | `[]` | Tolerations for pods assignment |
 | prometheus.server.affinity | object | `{}` | Affinity for pods assignment |
-| prometheus.server.pdb.create | bool | `true` | Enable PodDisruptionBudget |
+| prometheus.server.pdb.create | bool | `false` | Enable PodDisruptionBudget |
 | prometheus.server.pdb.minAvailable | string | `""` | Set PodDisruptionBudget minAvailable |
 | prometheus.server.pdb.maxUnavailable | string | `""` | Set PodDisruptionBudget minAvailable |
 
@@ -781,7 +781,7 @@ How It Works
 | kafka.controller.nodeSelector | object | `{}` | Node labels for pods assignment |
 | kafka.controller.tolerations | string | `"{{ include \"common.tplvalues.render\" (dict \"value\" .Values.global.tolerations \"context\" $) }}"` | Tolerations for pods assignment |
 | kafka.controller.affinity | object | `{}` | Affinity for pods assignment |
-| kafka.controller.pdb.create | bool | `true` | Enable PodDisruptionBudget |
+| kafka.controller.pdb.create | bool | `false` | Enable PodDisruptionBudget |
 | kafka.controller.pdb.minAvailable | string | `""` | Set PodDisruptionBudget minAvailable |
 | kafka.controller.pdb.maxUnavailable | string | `""` | Set PodDisruptionBudget minAvailable |
 
