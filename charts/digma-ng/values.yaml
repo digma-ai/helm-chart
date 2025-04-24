@@ -2024,7 +2024,7 @@ postgresql:
     pdb:
       # -- Enable PodDisruptionBudget
       # @section -- Postgresql parameters
-      create: true
+      create: false
       # -- Set PodDisruptionBudget minAvailable
       # @section -- Postgresql parameters
       minAvailable: ""
@@ -2104,7 +2104,7 @@ redis:
     pdb:
       # -- Enable PodDisruptionBudget
       # @section -- Redis parameters
-      create: true
+      create: false
       # -- Set PodDisruptionBudget minAvailable
       # @section -- Redis parameters
       minAvailable: ""
@@ -2317,7 +2317,7 @@ elasticsearch:
     pdb:
       # -- Enable PodDisruptionBudget
       # @section -- Elasticsearch parameters
-      create: true
+      create: false
       # -- Set PodDisruptionBudget minAvailable
       # @section -- Elasticsearch parameters
       minAvailable: ""
@@ -2447,7 +2447,7 @@ prometheus:
     pdb:
       # -- Enable PodDisruptionBudget
       # @section -- Prometheus parameters
-      create: true
+      create: false
       # -- Set PodDisruptionBudget minAvailable
       # @section -- Prometheus parameters
       minAvailable: ""
@@ -2509,13 +2509,16 @@ kafka:
     pdb:
       # -- Enable PodDisruptionBudget
       # @section -- Kafka parameters
-      create: true
+      create: false
       # -- Set PodDisruptionBudget minAvailable
       # @section -- Kafka parameters
       minAvailable: ""
       # -- Set PodDisruptionBudget minAvailable
       # @section -- Kafka parameters
       maxUnavailable: ""
+  broker:
+    pdb:
+      create: false
   listeners:
     client:
       protocol: PLAINTEXT
@@ -2640,6 +2643,6 @@ clickhouse:
   metrics:
     enabled: true
   pdb:
-    create: true
+    create: false
     minAvailable: ""
     maxUnavailable: ""
