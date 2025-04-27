@@ -66,7 +66,7 @@ spec:
           - name: app-volume
             mountPath: /app
           - name: ui-envs-volume
-            mountPath: /config/ui/envs
+            mountPath: /config/ui/envs             
       containers:
       - name: nginx
         image: {{ include "common.images.image" (dict "imageRoot" .Values.nginx.image "global" .Values.global "chart" .Chart) }}
@@ -77,6 +77,17 @@ spec:
           containerPort: {{ .Values.ui.service.ports.http }}
         - name: jaeger
           containerPort: {{ .Values.jaeger.service.ports.http_ui }}
+        env:
+        - name: POSTHOG_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "digma.ui.secretName" . }}
+              key: {{ include "digma.ui.postHogApiKey.secretKeyName" . }}
+        - name: PRODUCT_FRUITS_WORKSPACE_CODE
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "digma.ui.secretName" . }}
+              key: {{ include "digma.ui.productFruitsWorkspaceCode.secretKeyName" . }}     
         volumeMounts:
           - name: conf-volume
             mountPath: /etc/nginx/nginx.conf

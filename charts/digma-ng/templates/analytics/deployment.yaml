@@ -59,7 +59,10 @@ spec:
         - name: SocialLogin__Google__ClientId
           value: {{ .Values.digma.socialLogin.google.clientId | quote}}
         - name: SocialLogin__Google__ClientSecret
-          value: {{ .Values.digma.socialLogin.google.secret | quote}}
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "digma.analytics-api.secretName" . }}
+              key: {{ include "digma.analytics-api.socialLoginGoogleSecret.secretKeyName" . }}
         {{- end }}
         - name: GlobalExceptionSettings__ExposeInternalDetails
           value: "true"
@@ -69,7 +72,10 @@ spec:
           value: http://{{(include "digma.collector-api" $)}}:{{ .Values.collectorApi.service.ports.internal }}
         {{- if .Values.digma.accessToken }}
         - name: AccessToken
-          value: {{ .Values.digma.accessToken | quote }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "digma.analytics-api.secretName" . }}
+              key: {{ include "digma.analytics-api.accessToken.secretKeyName" . }}
         {{- end }}
         {{- if .Values.ai.enabled }}
         - name: AI__Url

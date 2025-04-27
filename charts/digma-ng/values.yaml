@@ -1433,6 +1433,8 @@ ui:
   # -- ui version
   # @section -- UI parameters
   artifactsVersion: 11.6.1
+  postHogApiKey: phc_5sy6Kuv1EYJ9GAdWPeGl7gx31RAw7BR7NHnOuLCUQZK
+  productFruitsWorkspaceCode: GBNh54uJtBaeWuOq
   sandboxEnabled: false
   service:
     # -- service type
@@ -2586,7 +2588,7 @@ debug:
       ##
       pullPolicy: IfNotPresent
     port: 8082
-    env: #todo shay
+    env:
       - name: PGADMIN_DEFAULT_EMAIL
         value: admin@admin.com
       - name: PGADMIN_DEFAULT_PASSWORD
