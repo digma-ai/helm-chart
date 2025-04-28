@@ -8,6 +8,52 @@
 {{- end -}}
 
 {{/*
+Create the name of the member global Secret to use.
+*/}}
+{{- define "digma.global.secretName" -}}
+{{ include "common.secrets.name" (dict "defaultNameSuffix" "global-secret" "context" $) }}
+{{- end -}}
+
+{{/*
+Create the key of the apiKey secret key name to use.
+*/}}
+{{- define "digma.emailSettingsApiKey.secretKeyName" -}}
+{{ include "common.secrets.key" (dict "key" "emailSettingsApiKey") }}
+{{- end -}}
+
+{{/*
+Create the key of the licenseKey secret key name to use.
+*/}}
+{{- define "digma.licenseKey.secretKeyName" -}}
+{{ include "common.secrets.key" (dict "key" "licenseKey") }}
+{{- end -}}
+
+
+{{/*
+Create the key of the postgresqlPassword secret key name to use.
+*/}}
+{{- define "digma.postgresqlPassword.secretKeyName" -}}
+{{ include "common.secrets.key" (dict "key" "postgresqlPassword") }}
+{{- end -}}
+
+
+
+{{/*
+Return the emailSettings apiKey using fallback so support backward compatibility
+*/}}
+{{- define "digma.emailSettings.apiKey" -}}
+{{- $emailGatewayApiKey := .Values.digma.emailSettings.apiKey }}
+{{- if not $emailGatewayApiKey -}}
+{{- $emailGatewayApiKey = .Values.digma.report.emailGateway.apiKey }}
+{{- end -}}
+{{- if $emailGatewayApiKey -}}
+{{- printf "%s" $emailGatewayApiKey -}}
+{{- end -}}
+{{- end -}}
+
+
+
+{{/*
 Return the proper ai api fullname
 */}}
 {{- define "digma.ai" -}}
@@ -51,6 +97,35 @@ http
 {{- end -}}
 
 {{/*
+Create the name of the member analytics-api secret to use.
+*/}}
+{{- define "digma.analytics-api.secretName" -}}
+{{- include "digma.analytics-api" . -}}
+{{- end -}}
+
+{{/*
+Create the key of the authPassword key name to use.
+*/}}
+{{- define "digma.analytics-api.authPassword.secretKeyName" -}}
+{{ include "common.secrets.key" (dict "key" "authPassword") }}
+{{- end -}}
+
+
+{{/*
+Create the key of the accessToken secret key name to use.
+*/}}
+{{- define "digma.analytics-api.accessToken.secretKeyName" -}}
+{{ include "common.secrets.key" (dict "key" "accessToken") }}
+{{- end -}}
+
+{{/*
+Create the key of the socialLoginGoogleSecret key name to use.
+*/}}
+{{- define "digma.analytics-api.socialLoginGoogleSecret.secretKeyName" -}}
+{{ include "common.secrets.key" (dict "key" "socialLoginGoogleSecret") }}
+{{- end -}}
+
+
 Return the proper collector api fullname
 */}}
 {{- define "digma.collector-api" -}}
@@ -91,6 +166,27 @@ Return the proper ui fullname
 */}}
 {{- define "digma.ui" -}}
   {{- printf "%s-ui" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+{{- end -}}
+
+{{/*
+Return the proper ui.secretName fullname
+*/}}
+{{- define "digma.ui.secretName" -}}
+  {{- printf "%s-ui" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+{{- end -}}
+
+{{/*
+Create the key of the postHogApiKey secret key name to use.
+*/}}
+{{- define "digma.ui.postHogApiKey.secretKeyName" -}}
+{{ include "common.secrets.key" (dict "key" "postHogApiKey") }}
+{{- end -}}
+
+{{/*
+Create the key of the productFruitsWorkspaceCode secret key name to use.
+*/}}
+{{- define "digma.ui.productFruitsWorkspaceCode.secretKeyName" -}}
+{{ include "common.secrets.key" (dict "key" "productFruitsWorkspaceCode") }}
 {{- end -}}
 
 {{/*
@@ -230,7 +326,12 @@ Return postgres connectivity env
 */}}
 {{- define "env.postgres" -}}
 - name: ConnectionStrings__Postgres
-  value:  {{ printf "Server=%s;Port=%v;Database=digma_analytics;User Id=%s;Password=%s;Include Error Detail=true;" ( include "digma.database.host" . ) ( include "digma.database.port" . ) ( include "digma.database.user" . ) ( include "digma.database.password" . )}}
+  value:  {{ printf "Server=%s;Port=%v;Database=digma_analytics;User Id=%s;Password=$(POSTGRES_PASSWORD);Include Error Detail=true;" ( include "digma.database.host" . ) ( include "digma.database.port" . ) ( include "digma.database.user" . ) }}
+- name: POSTGRES_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "digma.global.secretName" . }}
+      key: {{ include "digma.postgresqlPassword.secretKeyName" . }}
 {{- end -}}
 
 {{/*
@@ -258,7 +359,7 @@ Return the Database User
 Return the Database Password
 */}}
 {{- define "digma.database.password" -}}
-{{- ternary .Values.postgresql.auth.username .Values.digma.externals.postgresql.user .Values.postgresql.enabled -}}
+{{- ternary .Values.postgresql.auth.password .Values.digma.externals.postgresql.password .Values.postgresql.enabled -}}
 {{- end -}}
 
 {{/*
@@ -503,7 +604,10 @@ Return remote endpoint url
 - name: IsCentralize
   value: "true"
 - name: DIGMA_LICENSE_KEY
-  value: {{ required "A valid .Values.digma.licenseKey entry is required. If you've signed up for a free Digma account you should have received a Digma license to use. check https://docs.digma.ai/digma-developer-guide/installation/central-on-prem-install" .Values.digma.licenseKey }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "digma.global.secretName" . }}
+      key: {{ include "digma.licenseKey.secretKeyName" . }}
 - name: ApplicationVersion
   value: {{.Chart.AppVersion}}
 - name: ChartVersion
@@ -540,13 +644,13 @@ Return email gateway configuration environment variables
 - name: "EmailGateway__Url"
   value: {{ $emailGatewayUrl | quote}}
 {{- end }}
-{{- $emailGatewayApiKey := .Values.digma.emailSettings.apiKey }}
-{{- if not $emailGatewayApiKey -}}
-{{- $emailGatewayApiKey = .Values.digma.report.emailGateway.apiKey }}
-{{- end }}
-{{- if $emailGatewayApiKey }}
+
+{{- if include "digma.emailSettings.apiKey" . }}
 - name: "EmailGateway__ApiKey"
-  value: {{ $emailGatewayApiKey | quote}}
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "digma.global.secretName" . }}
+      key: {{ include "digma.emailSettingsApiKey.secretKeyName" . }}
 {{- end }}
 {{- end }}
 
@@ -584,7 +688,10 @@ Return all auth environment variables
 {{- end }}
 {{- if .Values.digma.auth.password }}
 - name: Auth__Password
-  value: {{ .Values.digma.auth.password | quote }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "digma.analytics-api.secretName" . }}
+      key: {{ include "digma.analytics-api.authPassword.secretKeyName" . }}
 {{- end }}
 {{- if .Values.digma.auth.allowedEmailDomains }}
 - name: Auth__AllowedEmailDomains
