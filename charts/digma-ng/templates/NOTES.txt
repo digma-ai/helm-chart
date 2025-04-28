@@ -4,8 +4,15 @@ APP VERSION: {{ .Chart.AppVersion }}
 
 ** Please be patient while the chart is being deployed **
 
-DIGMA API:
+{{- "\n" -}}
+
 {{- if .Values.analyticsApi.ingress.enabled }}
+  {{- if .Values.digma.mcp.enabled }}
+MCP: (Treat your MCP server URL like a secret!!)
+URL: https://{{ .Values.analyticsApi.ingress.hostname }}/mcp/{{ .Values.digma.accessToken }}/sse
+  {{- end }}
+
+API:
 URL: https://{{ .Values.analyticsApi.ingress.hostname }}
 {{- else }}
 {{- if contains "NodePort" .Values.analyticsApi.service.type }}

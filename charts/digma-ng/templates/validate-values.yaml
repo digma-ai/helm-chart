@@ -43,3 +43,7 @@
 {{ fail "auth.email and auth.password must be provided together" -}}
 {{- end -}}
 {{- end -}} 
+
+{{- if and .Values.digma.mcp.enabled (or (not .Values.digma.auth.email) (not .Values.digma.accessToken)) -}}
+{{- fail "When digma.mcp.enabled is true, both digma.auth.email and digma.accessToken must be set." -}}
+{{- end -}} 

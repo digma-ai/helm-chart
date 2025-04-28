@@ -1,6 +1,6 @@
 # digma-ng
 
-![Version: 1.0.321](https://img.shields.io/badge/Version-1.0.321-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.285](https://img.shields.io/badge/AppVersion-0.3.285-informational?style=flat-square)
+![Version: 1.0.322](https://img.shields.io/badge/Version-1.0.322-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.287](https://img.shields.io/badge/AppVersion-0.3.287-informational?style=flat-square)
 
 A Helm chart containing Digma's services
 
@@ -214,6 +214,12 @@ How It Works
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | digma.socialLogin.google.secret | string | `nil` | google secret |
+
+### MCP parameters
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| digma.mcp.enabled | bool | `false` | enable mcp |
 
 ### Observability parameters
 

@@ -86,6 +86,8 @@ spec:
         {{- include "env.auth.all" . | nindent 8 }}
         - name: Elastic__Uri
           value: {{ include "digma.elasticsearch.url" . }}
+        - name: MCP__Enabled
+          value: {{  .Values.digma.mcp.enabled | quote }}
         {{- if not .Values.diagnosticMode.enabled }}
         {{- if .Values.analyticsApi.livenessProbe.enabled }}
         livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit (omit .Values.analyticsApi.livenessProbe "enabled") "path") "context" $) | nindent 10 }}
