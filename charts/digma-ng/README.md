@@ -552,7 +552,7 @@ How It Works
 | nginx.pdb.create | bool | `false` | Enable PodDisruptionBudget |
 | nginx.pdb.minAvailable | string | `""` | Set PodDisruptionBudget minAvailable |
 | nginx.pdb.maxUnavailable | string | `""` | Set PodDisruptionBudget minAvailable |
-| ui.artifactsVersion | string | `"11.6.1"` | ui version |
+| ui.artifactsVersion | string | `"11.9.1"` | ui version |
 | ui.service.type | string | `"ClusterIP"` | service type |
 | ui.service.annotations | object | `{}` | Additional custom annotations for service |
 | ui.service.ports.http | int | `80` | HTTP service port |
