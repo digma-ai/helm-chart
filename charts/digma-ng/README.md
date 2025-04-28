@@ -215,6 +215,12 @@ How It Works
 |-----|------|---------|-------------|
 | digma.socialLogin.google.secret | string | `nil` | google secret |
 
+### MCP parameters
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| digma.mcp.enabled | bool | `false` | enable mcp |
+
 ### Observability parameters
 
 | Key | Type | Default | Description |

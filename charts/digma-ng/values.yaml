@@ -81,6 +81,10 @@ digma:
       # -- google secret
       # @section -- Social Login      
       secret:
+  mcp:
+    # -- enable mcp
+    # @section -- MCP parameters
+    enabled: false
   externals:
     postgresql:
       # -- Host of an external PostgreSQL instance to connect (only if postgresql.enabled=false)
