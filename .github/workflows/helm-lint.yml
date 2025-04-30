@@ -41,6 +41,7 @@ jobs:
           helm lint ./charts/digma-ng \
             --set digma.licenseKey="dummy-license-key" \
             --set digma.auth.email="ci@example.invalid" \
+            --set digma.auth.password="dummy-pass" \
             --set digma.accessToken="dummy-token"
 
       - name: Validate Kubernetes Manifests
@@ -50,6 +51,7 @@ jobs:
           helm template my-release ./charts/digma-ng \
             --set digma.licenseKey="dummy-license-key" \
             --set digma.auth.email="ci@example.invalid" \
+            --set digma.auth.password="dummy-pass" \
             --set digma.accessToken="dummy-token" \
           > output.yaml
           kubeconform -strict output.yaml
