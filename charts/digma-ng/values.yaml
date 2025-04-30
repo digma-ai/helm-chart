@@ -84,7 +84,7 @@ digma:
   mcp:
     # -- enable mcp
     # @section -- MCP parameters
-    enabled: false
+    enabled: true
   externals:
     postgresql:
       # -- Host of an external PostgreSQL instance to connect (only if postgresql.enabled=false)
