@@ -1634,6 +1634,9 @@ ai:
     # @section -- AI parameters
     successThreshold: 1
 metricsExporter:
+  # -- Enable k8s metrics exporter
+  # @section -- MetricsExporter parameters
+  enabled: true
   image:
     registry: docker.io
     repository: digmatic/k8s-metrics-exporter
