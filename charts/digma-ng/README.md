@@ -3,7 +3,7 @@
 
 
 
-![Version: 1.0.323](https://img.shields.io/badge/Version-1.0.323-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.290](https://img.shields.io/badge/AppVersion-0.3.290-informational?style=flat-square) 
+![Version: 1.0.324](https://img.shields.io/badge/Version-1.0.324-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.290](https://img.shields.io/badge/AppVersion-0.3.290-informational?style=flat-square) 
 
 A Helm chart containing Digma's services
 
@@ -617,6 +617,7 @@ How It Works
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| metricsExporter.enabled | bool | `true` | Enable k8s metrics exporter |
 | metricsExporter.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
 | metricsExporter.image.pullSecrets | list | `[]` | image pull secrets |
 | metricsExporter.replicas | int | `1` | Number of replicas to deploy |
