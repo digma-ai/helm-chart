@@ -145,6 +145,30 @@ Digma uses multiple StatefulSets.
     ```
 2. ### Use Multi-Zone Storage
    Use storage solutions that replicate data across zones
+## Digma AI
+
+Digma includes a built-in integration with [Anthropic](https://www.anthropic.com/) to enhance **query observability** and **developer experience** through intelligent suggestions.
+
+### 🚀 Enabling the AI Feature
+
+To activate Anthropic-based suggestions in Digma, add the following configuration:
+
+```yaml
+ai:
+  enabled: true
+  extraEnvVars:
+    - name: API_KEY
+      value: <your-anthropic-api-key>
+    # - name: ANTHROPIC_BASE_URL
+    #   value: <custom-anthropic-base-url>
+```
+
+The following environment variables can be configured to control the Anthropic integration:
+
+| Variable Name            | Description                                                                 | Required | Default                         |
+|--------------------------|-----------------------------------------------------------------------------|----------|---------------------------------|
+| `API_KEY`                | The API key issued by Anthropic for accessing Claude and related services.  | ✅       | —                               |
+| `ANTHROPIC_BASE_URL`     | Base URL for the Anthropic API. Override when using a proxy or gateway.     | ⛔       | `https://api.anthropic.com`     |
 
 ## PostgreSQL Backup
 The Digma-ng Helm chart provides an optional PostgreSQL backup job for debugging and troubleshooting purposes. This guide explains how to enable and configure the backup feature.
