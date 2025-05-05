@@ -360,6 +360,7 @@ otelCollector:
               - set(resource.attributes["scm.commit.id"], attributes["_dd.git.commit.sha"]) where attributes["_dd.git.commit.sha"] != nil
               - set(resource.attributes["digma.environment"], attributes["digma.environment"]) where attributes["digma.environment"] != nil
               - set(resource.attributes["digma.environment.type"], attributes["digma.environment.type"]) where attributes["digma.environment.type"] != nil
+              - set(resource.attributes["service.name"], attributes["_dd.base_service"]) where attributes["_dd.base_service"] != nil
               - set(attributes["db.statement"], attributes["sql.query"]) where attributes["sql.query"] != nil
               - set(attributes["db.system"], attributes["db.type"]) where attributes["db.type"] != nil
     exporters:
