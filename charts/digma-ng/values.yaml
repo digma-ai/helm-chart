@@ -362,9 +362,6 @@ otelCollector:
               - set(resource.attributes["digma.environment.type"], attributes["digma.environment.type"]) where attributes["digma.environment.type"] != nil
               - set(attributes["db.statement"], attributes["sql.query"]) where attributes["sql.query"] != nil
               - set(attributes["db.system"], attributes["db.type"]) where attributes["db.type"] != nil
-              - set(attributes["exception.message"], attributes["error.message"]) where attributes["error.message"] != nil
-              - set(attributes["exception.stacktrace"], attributes["error.stack"]) where attributes["error.stack"] != nil
-              - set(attributes["exception.type"], attributes["error.type"]) where attributes["error.type"] != nil
     exporters:
       logging:
         loglevel: debug
