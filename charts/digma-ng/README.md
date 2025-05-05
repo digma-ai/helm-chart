@@ -1,10 +1,16 @@
 # digma-ng
 
-![Version: 1.0.328](https://img.shields.io/badge/Version-1.0.328-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.292](https://img.shields.io/badge/AppVersion-0.3.292-informational?style=flat-square)
+
+
+
+![Version: 1.0.328](https://img.shields.io/badge/Version-1.0.328-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.292](https://img.shields.io/badge/AppVersion-0.3.292-informational?style=flat-square) 
 
 A Helm chart containing Digma's services
 
 **Homepage:** <https://github.com/digma-ai/digma>
+
+
+
 
 ## License Key
 Digma will not function without a valid license key.
@@ -25,6 +31,7 @@ helm upgrade --install digma digma/digma-ng -n digma --set digma.licenseKey=$DIG
 ## Introduction
 
 This chart bootstraps a [Digma](https://digma.ai) deployment on a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
+
 
 ## Prerequisites
 
@@ -169,6 +176,8 @@ The following environment variables can be configured to control the Anthropic i
 |--------------------------|-----------------------------------------------------------------------------|----------|---------------------------------|
 | `API_KEY`                | The API key issued by Anthropic for accessing Claude and related services.  | ✅       | —                               |
 | `ANTHROPIC_BASE_URL`     | Base URL for the Anthropic API. Override when using a proxy or gateway.     | ⛔       | `https://api.anthropic.com`     |
+
+
 
 ## PostgreSQL Backup
 The Digma-ng Helm chart provides an optional PostgreSQL backup job for debugging and troubleshooting purposes. This guide explains how to enable and configure the backup feature.
@@ -582,7 +591,7 @@ How It Works
 | nginx.pdb.create | bool | `false` | Enable PodDisruptionBudget |
 | nginx.pdb.minAvailable | string | `""` | Set PodDisruptionBudget minAvailable |
 | nginx.pdb.maxUnavailable | string | `""` | Set PodDisruptionBudget minAvailable |
-| ui.artifactsVersion | string | `"12.0.2"` | ui version |
+| ui.artifactsVersion | string | `"12.0.3"` | ui version |
 | ui.service.type | string | `"ClusterIP"` | service type |
 | ui.service.annotations | object | `{}` | Additional custom annotations for service |
 | ui.service.ports.http | int | `80` | HTTP service port |
