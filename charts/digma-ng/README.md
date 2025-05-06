@@ -1,6 +1,6 @@
 # digma-ng
 
-![Version: 1.0.329](https://img.shields.io/badge/Version-1.0.329-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.293](https://img.shields.io/badge/AppVersion-0.3.293-informational?style=flat-square)
+![Version: 1.0.329](https://img.shields.io/badge/Version-1.0.329-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.294](https://img.shields.io/badge/AppVersion-0.3.294-informational?style=flat-square)
 
 A Helm chart containing Digma's services
 
@@ -222,7 +222,7 @@ How It Works
 |-----|------|---------|-------------|
 | digma.auth.emailVerificationEnabled | bool | `false` | Enable email verification for new users. If enabled, emailSettings.url must be set |
 | digma.auth.email | string | `nil` | Admin user email (must be provided together with password) |
-| digma.auth.password | string | `nil` | Admin user password (must be provided together with email) |
+| digma.auth.password | string | `nil` | Admin user password (must be provided together with email), requires a minimum length of 6 characters and at least one non-alphanumeric character. |
 | digma.auth.allowedEmailDomains | string | `nil` | Comma-separated or semicolon-separated list of allowed email domains for user registration |
 | digma.auth.securedCookie | bool | `true` | Setting auth cookie secure flag. Set to false if ui is accessed via http |
 
