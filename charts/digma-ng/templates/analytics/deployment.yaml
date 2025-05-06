@@ -84,7 +84,7 @@ spec:
         {{- include "env.digma.emailGateway" . | nindent 8 }}
         {{- include "env.digma.analytics.uiServiceBaseUrl" . | nindent 8 }}
         {{- include "env.auth.all" . | nindent 8 }}
-        - name: Elastic__Uri
+        - name: ElasticSearch__Uri
           value: {{ include "digma.elasticsearch.url" . }}
         - name: MCP__Enabled
           value: {{  .Values.digma.mcp.enabled | quote }}

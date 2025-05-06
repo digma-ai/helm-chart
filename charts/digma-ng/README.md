@@ -1,16 +1,10 @@
 # digma-ng
+![Version: 1.0.329](https://img.shields.io/badge/Version-1.0.329-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.294](https://img.shields.io/badge/AppVersion-0.3.294-informational?style=flat-square)
 
-
-
-
-![Version: 1.0.329](https://img.shields.io/badge/Version-1.0.329-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.293](https://img.shields.io/badge/AppVersion-0.3.293-informational?style=flat-square) 
 
 A Helm chart containing Digma's services
 
 **Homepage:** <https://github.com/digma-ai/digma>
-
-
-
 
 ## License Key
 Digma will not function without a valid license key.
@@ -31,7 +25,6 @@ helm upgrade --install digma digma/digma-ng -n digma --set digma.licenseKey=$DIG
 ## Introduction
 
 This chart bootstraps a [Digma](https://digma.ai) deployment on a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
-
 
 ## Prerequisites
 
@@ -177,8 +170,6 @@ The following environment variables can be configured to control the Anthropic i
 | `API_KEY`                | The API key issued by Anthropic for accessing Claude and related services.  | ✅       | —                               |
 | `ANTHROPIC_BASE_URL`     | Base URL for the Anthropic API. Override when using a proxy or gateway.     | ⛔       | `https://api.anthropic.com`     |
 
-
-
 ## PostgreSQL Backup
 The Digma-ng Helm chart provides an optional PostgreSQL backup job for debugging and troubleshooting purposes. This guide explains how to enable and configure the backup feature.
 
@@ -231,7 +222,7 @@ How It Works
 |-----|------|---------|-------------|
 | digma.auth.emailVerificationEnabled | bool | `false` | Enable email verification for new users. If enabled, emailSettings.url must be set |
 | digma.auth.email | string | `nil` | Admin user email (must be provided together with password) |
-| digma.auth.password | string | `nil` | Admin user password (must be provided together with email) |
+| digma.auth.password | string | `nil` | Admin user password (must be provided together with email), requires a minimum length of 6 characters and at least one non-alphanumeric character. |
 | digma.auth.allowedEmailDomains | string | `nil` | Comma-separated or semicolon-separated list of allowed email domains for user registration |
 | digma.auth.securedCookie | bool | `true` | Setting auth cookie secure flag. Set to false if ui is accessed via http |
 
