@@ -1,6 +1,6 @@
 # digma-ng
-![Version: 1.0.329](https://img.shields.io/badge/Version-1.0.329-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.294](https://img.shields.io/badge/AppVersion-0.3.294-informational?style=flat-square)
 
+![Version: 1.0.330](https://img.shields.io/badge/Version-1.0.330-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.294](https://img.shields.io/badge/AppVersion-0.3.294-informational?style=flat-square)
 
 A Helm chart containing Digma's services
 
@@ -582,7 +582,7 @@ How It Works
 | nginx.pdb.create | bool | `false` | Enable PodDisruptionBudget |
 | nginx.pdb.minAvailable | string | `""` | Set PodDisruptionBudget minAvailable |
 | nginx.pdb.maxUnavailable | string | `""` | Set PodDisruptionBudget minAvailable |
-| ui.artifactsVersion | string | `"12.0.3"` | ui version |
+| ui.artifactsVersion | string | `"12.0.4"` | ui version |
 | ui.service.type | string | `"ClusterIP"` | service type |
 | ui.service.annotations | object | `{}` | Additional custom annotations for service |
 | ui.service.ports.http | int | `80` | HTTP service port |

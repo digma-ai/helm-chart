@@ -1439,7 +1439,7 @@ nginx:
 ui:
   # -- ui version
   # @section -- UI parameters
-  artifactsVersion: 12.0.3
+  artifactsVersion: 12.0.4
   postHogApiKey: phc_5sy6Kuv1EYJ9GAdWPeGl7gx31RAw7BR7NHnOuLCUQZK
   productFruitsWorkspaceCode: GBNh54uJtBaeWuOq
   sandboxEnabled: false
