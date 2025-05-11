@@ -8,35 +8,44 @@
 {{- end -}}
 
 {{/*
-Create the name of the member global Secret to use.
+Return true if a secret object should be created
 */}}
-{{- define "digma.global.secretName" -}}
-{{ include "common.secrets.name" (dict "defaultNameSuffix" "global-secret" "context" $) }}
+{{- define "digma.createSecret" -}}
+{{- if not .Values.digma.existingSecret -}}
+    {{- true -}}
+{{- end -}}
 {{- end -}}
 
 {{/*
-Create the key of the apiKey secret key name to use.
+Usage:
+  metadata:
+    annotations:
+      {{- include "digma.secretChecksumAnnotation" . | nindent 8 }}
 */}}
-{{- define "digma.emailSettingsApiKey.secretKeyName" -}}
-{{ include "common.secrets.key" (dict "key" "emailSettingsApiKey") }}
+{{- define "digma.secretChecksumAnnotation" -}}
+{{- if (include "digma.createSecret" .) -}}
+checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+{{- else -}}
+{{- $existingSecret := .Values.digma.existingSecret }}
+{{- $secret := (lookup "v1" "Secret" .Release.Namespace $existingSecret) }}
+{{- if not $secret -}}
+  {{- fail (printf "Secret '%s' not found in namespace '%s'" $existingSecret .Release.Namespace) }}
+{{- end -}}
+{{- $checksum := sha256sum (toYaml $secret.data) }}
+checksum/{{ $existingSecret }}: "{{ $checksum }}"
+{{- end -}}
 {{- end -}}
 
 {{/*
-Create the key of the licenseKey secret key name to use.
+Get the secret.
 */}}
-{{- define "digma.licenseKey.secretKeyName" -}}
-{{ include "common.secrets.key" (dict "key" "licenseKey") }}
+{{- define "digma.secretName" -}}
+{{- if .Values.digma.existingSecret -}}
+{{- printf "%s" (tpl .Values.digma.existingSecret $) -}}
+{{- else -}}
+{{- printf "%s" (include "common.names.fullname" .) -}}
 {{- end -}}
-
-
-{{/*
-Create the key of the postgresqlPassword secret key name to use.
-*/}}
-{{- define "digma.postgresqlPassword.secretKeyName" -}}
-{{ include "common.secrets.key" (dict "key" "postgresqlPassword") }}
 {{- end -}}
-
-
 
 {{/*
 Return the emailSettings apiKey using fallback so support backward compatibility
@@ -96,36 +105,8 @@ http
 {{- end -}}
 {{- end -}}
 
-{{/*
-Create the name of the member analytics-api secret to use.
-*/}}
-{{- define "digma.analytics-api.secretName" -}}
-{{- include "digma.analytics-api" . -}}
-{{- end -}}
 
 {{/*
-Create the key of the authPassword key name to use.
-*/}}
-{{- define "digma.analytics-api.authPassword.secretKeyName" -}}
-{{ include "common.secrets.key" (dict "key" "authPassword") }}
-{{- end -}}
-
-
-{{/*
-Create the key of the accessToken secret key name to use.
-*/}}
-{{- define "digma.analytics-api.accessToken.secretKeyName" -}}
-{{ include "common.secrets.key" (dict "key" "accessToken") }}
-{{- end -}}
-
-{{/*
-Create the key of the socialLoginGoogleSecret key name to use.
-*/}}
-{{- define "digma.analytics-api.socialLoginGoogleSecret.secretKeyName" -}}
-{{ include "common.secrets.key" (dict "key" "socialLoginGoogleSecret") }}
-{{- end -}}
-
-
 Return the proper collector api fullname
 */}}
 {{- define "digma.collector-api" -}}
@@ -168,26 +149,6 @@ Return the proper ui fullname
   {{- printf "%s-ui" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
 {{- end -}}
 
-{{/*
-Return the proper ui.secretName fullname
-*/}}
-{{- define "digma.ui.secretName" -}}
-  {{- printf "%s-ui" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
-{{- end -}}
-
-{{/*
-Create the key of the postHogApiKey secret key name to use.
-*/}}
-{{- define "digma.ui.postHogApiKey.secretKeyName" -}}
-{{ include "common.secrets.key" (dict "key" "postHogApiKey") }}
-{{- end -}}
-
-{{/*
-Create the key of the productFruitsWorkspaceCode secret key name to use.
-*/}}
-{{- define "digma.ui.productFruitsWorkspaceCode.secretKeyName" -}}
-{{ include "common.secrets.key" (dict "key" "productFruitsWorkspaceCode") }}
-{{- end -}}
 
 {{/*
 Return the UI service base URL
@@ -330,8 +291,8 @@ Return postgres connectivity env
 - name: POSTGRES_PASSWORD
   valueFrom:
     secretKeyRef:
-      name: {{ include "digma.global.secretName" . }}
-      key: {{ include "digma.postgresqlPassword.secretKeyName" . }}
+      name: {{ include "digma.database.password.secretName" . }}
+      key: {{ include "digma.database.password.secretKey" . }}
 {{- end -}}
 
 {{/*
@@ -355,12 +316,30 @@ Return the Database User
 {{- ternary .Values.postgresql.auth.username .Values.digma.externals.postgresql.user .Values.postgresql.enabled -}}
 {{- end -}}
 
+
+
 {{/*
-Return the Database Password
+Return the Database Password Secret Name
 */}}
-{{- define "digma.database.password" -}}
-{{- ternary .Values.postgresql.auth.password .Values.digma.externals.postgresql.password .Values.postgresql.enabled -}}
-{{- end -}}
+{{- define "digma.database.password.secretName" -}}
+{{- if .Values.postgresql.enabled -}}
+  {{- include "postgresql.v1.secretName" .Subcharts.postgresql -}}
+{{- else -}}
+  {{- include "digma.secretName" . -}}
+{{- end }}
+{{- end }}
+
+{{/*
+Return the Database Password Secret Key
+*/}}
+{{- define "digma.database.password.secretKey" -}}
+{{- if .Values.postgresql.enabled -}}
+  {{ include "postgresql.v1.adminPasswordKey" .Subcharts.postgresql }}
+{{- else -}}
+  postgres-password
+{{- end }}
+{{- end }}
+
 
 {{/*
 Return the proper redis fullname
@@ -606,8 +585,8 @@ Return remote endpoint url
 - name: DIGMA_LICENSE_KEY
   valueFrom:
     secretKeyRef:
-      name: {{ include "digma.global.secretName" . }}
-      key: {{ include "digma.licenseKey.secretKeyName" . }}
+      name: {{ include "digma.secretName" . }}
+      key: license-key
 - name: ApplicationVersion
   value: {{.Chart.AppVersion}}
 - name: ChartVersion
@@ -649,8 +628,8 @@ Return email gateway configuration environment variables
 - name: "EmailGateway__ApiKey"
   valueFrom:
     secretKeyRef:
-      name: {{ include "digma.global.secretName" . }}
-      key: {{ include "digma.emailSettingsApiKey.secretKeyName" . }}
+      name: {{ include "digma.secretName" . }}
+      key: email-settings-api-key
 {{- end }}
 {{- end }}
 
@@ -686,12 +665,12 @@ Return all auth environment variables
 - name: Auth__Email
   value: {{ .Values.digma.auth.email | quote }}
 {{- end }}
-{{- if .Values.digma.auth.password }}
+{{- if include "common.secrets.lookup" (dict "secret" (include "digma.secretName" .) "key" "auth-password" "context" $) }}
 - name: Auth__Password
   valueFrom:
     secretKeyRef:
-      name: {{ include "digma.analytics-api.secretName" . }}
-      key: {{ include "digma.analytics-api.authPassword.secretKeyName" . }}
+      name: {{ include "digma.secretName" . }}
+      key: auth-password
 {{- end }}
 {{- if .Values.digma.auth.allowedEmailDomains }}
 - name: Auth__AllowedEmailDomains

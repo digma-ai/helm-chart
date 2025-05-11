@@ -1,3 +1,64 @@
+{{- $accessTokenExists := false -}}
+{{- $authPasswordExists := false -}}
+{{- $emailApiKeyExists := false -}}
+{{- $externalPostgresqlPasswordExists := false -}}
+{{- $socialLoginGoogleSecretExists := false -}}
+
+{{- if .Values.digma.existingSecret -}}
+{{- if not (include "common.secrets.lookup" (dict "secret" .Values.digma.existingSecret "key" "license-key" "context" $)) -}}
+{{ fail "Key 'license-key' not found in existing secret" }}
+{{- end -}}
+
+{{- if (include "common.secrets.lookup" (dict "secret" .Values.digma.existingSecret "key" "access-token" "context" $)) -}}
+{{- $accessTokenExists = true -}}
+{{- end -}}
+
+{{- if (include "common.secrets.lookup" (dict "secret" .Values.digma.existingSecret "key" "auth-password" "context" $)) -}}
+{{- $authPasswordExists = true -}}
+{{- end -}}
+
+{{- if (include "common.secrets.lookup" (dict "secret" .Values.digma.existingSecret "key" "email-settings-api-key" "context" $)) -}}
+{{- $emailApiKeyExists = true -}}
+{{- end -}}
+
+{{- if (include "common.secrets.lookup" (dict "secret" .Values.digma.existingSecret "key" "external-postgresql-password" "context" $)) -}}
+{{- $externalPostgresqlPasswordExists = true -}}
+{{- end -}}
+
+{{- if (include "common.secrets.lookup" (dict "secret" .Values.digma.existingSecret "key" "social-login-google-secret" "context" $)) -}}
+{{- $socialLoginGoogleSecretExists = true -}}
+{{- end -}}
+
+
+{{- else -}}
+{{- if not (default "" .Values.digma.licenseKey) -}}
+{{ fail "digma.licenseKey is not set" }}
+{{- end -}}
+
+{{- if (default "" .Values.digma.accessToken) -}}
+{{- $accessTokenExists = true -}}
+{{- end -}}
+
+{{- if (default "" .Values.digma.auth.password) -}}
+{{- $authPasswordExists = true -}}
+{{- end -}}
+
+{{- if (default "" (include "digma.emailSettings.apiKey" .)) }}
+{{- $emailApiKeyExists = true -}}
+{{- end -}}
+
+{{- if (default "" .Values.digma.externals.postgresql.password) }}
+{{- $externalPostgresqlPasswordExists = true -}}
+{{- end -}}
+
+{{- if (default "" .Values.digma.socialLogin.google.secret) }}
+{{- $socialLoginGoogleSecretExists = true -}}
+{{- end -}}
+
+
+{{- end -}}
+
+
 {{- if and (eq .Values.observability.useLocal true)  (not (empty .Values.observability.otlp.remoteEndpoint)) }}
 {{ fail "Installation failed: 'observability.useLocal' is true while 'observability.otlp.remoteEndpoint' is set. This combination is not allowed." }}
 {{- end }}
@@ -32,18 +93,26 @@
 {{ fail "emailSettings.url must be set when emailVerificationEnabled is true" -}}
 {{- end -}}
 {{- end -}}
-{{- if or .Values.digma.emailSettings.url .Values.digma.emailSettings.apiKey -}}
-{{- if not (and .Values.digma.emailSettings.url .Values.digma.emailSettings.apiKey) -}}
-{{ fail "emailSettings.url and emailSettings.apiKey must be provided together" -}}
+{{- if or .Values.digma.emailSettings.url $emailApiKeyExists -}}
+{{- if not (and .Values.digma.emailSettings.url $emailApiKeyExists) -}}
+{{ fail "emailSettings.url and emailSettings.apiKey must be provided together, if existingSecret is set, make sure to set email-settings-api-key in the existing secret" -}}
 {{- end -}}
 {{- end -}}
 
-{{- if or .Values.digma.auth.email .Values.digma.auth.password -}}
-{{- if not (and .Values.digma.auth.email .Values.digma.auth.password) -}}
-{{ fail "auth.email and auth.password must be provided together" -}}
+{{- if or .Values.digma.auth.email $authPasswordExists -}}
+{{- if not (and .Values.digma.auth.email $authPasswordExists) -}}
+{{ fail "auth.email and auth.password must be provided together, if existingSecret is set, make sure to set auth-password in the existing secret" -}}
 {{- end -}}
 {{- end -}} 
 
-{{- if and .Values.digma.mcp.enabled (or (not .Values.digma.auth.email) (not .Values.digma.accessToken)) -}}
+{{- if and .Values.digma.mcp.enabled (or (not .Values.digma.auth.email) (not $accessTokenExists)) -}}
 {{- fail "When digma.mcp.enabled is true, both digma.auth.email and digma.accessToken must be set." -}}
 {{- end -}} 
+
+{{- if and (not .Values.postgresql.enabled) (not $externalPostgresqlPasswordExists) -}}
+{{- fail "When postgresql.enabled is false, digma.externals.postgresql.password must be set. if existingSecret is set, make sure to set external-postgresql-password in the existing secret" -}}
+{{- end -}}
+
+{{- if and ( .Values.digma.socialLogin.enabled) (not $socialLoginGoogleSecretExists) -}}
+{{- fail "When digma.socialLogin.enabled is true, digma.socialLogin.google.secret must be set. if existingSecret is set, make sure to set social-login-google-secret in the existing secret" -}}
+{{- end -}}

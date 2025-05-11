@@ -1,7 +1,7 @@
 annotations:
   category: Application
 apiVersion: v2
-appVersion: 0.3.296
+appVersion: 0.3.298-alpha.1
 dependencies:
 - name: kafka
   repository: oci://registry-1.docker.io/bitnamicharts

@@ -1,6 +1,6 @@
 # digma-ng
 
-![Version: 1.0.332](https://img.shields.io/badge/Version-1.0.332-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.296](https://img.shields.io/badge/AppVersion-0.3.296-informational?style=flat-square)
+![Version: 1.0.332](https://img.shields.io/badge/Version-1.0.332-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.298-alpha.1](https://img.shields.io/badge/AppVersion-0.3.298--alpha.1-informational?style=flat-square)
 
 A Helm chart containing Digma's services
 
@@ -199,6 +199,7 @@ How It Works
 | digma.deployment.size | string | `"medium"` | adjusts the deployment to efficiently handle different scales of workload, and can be either small, medium, or large. |
 | digma.accessToken | string | `nil` | access token for plugin authentication, and set the same one in the IDE plugin settings. |
 | digma.licenseKey | string | `nil` | a digma license to use,If you've signed up for a free Digma account you should have received a Digma license to use. You can use this [link](https://digma.ai/sign-up/) to sign up |
+| digma.existingSecret | string | `""` | The name of an existing secret NOTE: expected keys: [`license-key` (mandatory), `access-token` , `auth-password`, `email-settings-api-key`, `external-postgresql-password`, `social-login-google-secret`, `postHog-api-key`, `product-fruits-workspace-code`], When it's set, the previous values are ignored |
 | digma.report.enabled | bool | `false` | daily issues report enabled |
 | digma.report.scheduledTimeUtc | string | `nil` | scheduled time of the report, HH:mm:ss (24-hour format) |
 | digma.report.uiExternalBaseUrl | string | `nil` | UI external service URL (automatically detected if not set) |
@@ -700,6 +701,7 @@ How It Works
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| postgresql.auth.existingSecret | string | `""` | Name of existing secret to use for PostgreSQL credentials (overrides `auth.existingSecret`). |
 | postgresql.primary.podLabels | object | `{}` | Extra labels for pods |
 | postgresql.primary.podAnnotations | object | `{}` | Extra annotations for pods |
 | postgresql.primary.nodeSelector | object | `{}` | Node labels for pods assignment |

@@ -19,6 +19,7 @@ spec:
         {{- include "common.labels.standard" ( dict "customLabels" $podLabels "context" $ ) | nindent 8 }}
         app.kubernetes.io/component: nginx
       annotations:
+        {{- include "digma.secretChecksumAnnotation" . | nindent 8 }}
         {{- if .Values.commonAnnotations }}
         {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
         {{- end }}
@@ -78,16 +79,20 @@ spec:
         - name: jaeger
           containerPort: {{ .Values.jaeger.service.ports.http_ui }}
         env:
+        {{- if include "common.secrets.lookup" (dict "secret" (include "digma.secretName" .) "key" "postHog-api-key" "context" $) }}
         - name: POSTHOG_API_KEY
           valueFrom:
             secretKeyRef:
-              name: {{ include "digma.ui.secretName" . }}
-              key: {{ include "digma.ui.postHogApiKey.secretKeyName" . }}
+              name: {{ include "digma.secretName" . }}
+              key: postHog-api-key
+        {{- end }}
+        {{- if include "common.secrets.lookup" (dict "secret" (include "digma.secretName" .) "key" "product-fruits-workspace-code" "context" $) }}
         - name: PRODUCT_FRUITS_WORKSPACE_CODE
           valueFrom:
             secretKeyRef:
-              name: {{ include "digma.ui.secretName" . }}
-              key: {{ include "digma.ui.productFruitsWorkspaceCode.secretKeyName" . }}     
+              name: {{ include "digma.secretName" . }}
+              key: product-fruits-workspace-code
+        {{- end }} 
         volumeMounts:
           - name: conf-volume
             mountPath: /etc/nginx/nginx.conf
