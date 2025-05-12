@@ -9,9 +9,6 @@ digma:
   # -- a digma license to use,If you've signed up for a free Digma account you should have received a Digma license to use. You can use this [link](https://digma.ai/sign-up/) to sign up
   # @section -- Global Digma parameters
   licenseKey:
-  # -- The name of an existing secret NOTE: expected keys: [`license-key` (mandatory), `access-token` , `auth-password`, `email-settings-api-key`, `external-postgresql-password`, `social-login-google-secret`, `postHog-api-key`, `product-fruits-workspace-code`], When it's set, the previous values are ignored
-  # @section -- Global Digma parameters
-  existingSecret: ""
 
   ## Authentication parameters
   ## 
@@ -139,6 +136,9 @@ global:
   # -- Global Docker registry secret names as an array
   # @section -- Global Docker image parameters
   imagePullSecrets: []
+    # -- The name of an existing secret NOTE: expected keys: [`license-key` (mandatory), `access-token` , `auth-password`, `email-settings-api-key`, `external-postgresql-password`, `social-login-google-secret`, `postHog-api-key`, `product-fruits-workspace-code`], When it's set, the previous values are ignored
+  # @section -- Global Digma parameters
+  existingSecret: ""
 
 # -- kubeVersion Override Kubernetes version
 # @section -- Common parameters
@@ -1971,7 +1971,7 @@ postgresql:
     password: postgres
     # --  Name of existing secret to use for PostgreSQL credentials (overrides `auth.existingSecret`).
     # @section -- Postgresql parameters
-    existingSecret: ""
+    existingSecret: '{{ .Values.global.existingSecret }}'
     enablePostgresUser: false
   architecture: standalone
   containerPorts:

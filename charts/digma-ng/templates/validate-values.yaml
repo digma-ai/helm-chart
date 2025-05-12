@@ -1,118 +1,161 @@
+{{- $licenseKeyExists := false -}}
+{{- $missingLicenseKeyMessage := "" -}}
 {{- $accessTokenExists := false -}}
+{{- $missingAccessTokenMessage := "" -}}
 {{- $authPasswordExists := false -}}
+{{- $missingAuthPasswordMessage := "" -}}
 {{- $emailApiKeyExists := false -}}
+{{- $missingEmailApiKeyMessage := "" -}}
 {{- $externalPostgresqlPasswordExists := false -}}
+{{- $missingExternalPostgresqlPasswordMessage := "" -}}
 {{- $socialLoginGoogleSecretExists := false -}}
+{{- $missingSocialLoginGoogleSecretMessage := "" -}}
 
-{{- if .Values.digma.existingSecret -}}
-{{- if not (include "common.secrets.lookup" (dict "secret" .Values.digma.existingSecret "key" "license-key" "context" $)) -}}
-{{ fail "Key 'license-key' not found in existing secret" }}
-{{- end -}}
+{{- $existingSecret := .Values.global.existingSecret }}
 
-{{- if (include "common.secrets.lookup" (dict "secret" .Values.digma.existingSecret "key" "access-token" "context" $)) -}}
-{{- $accessTokenExists = true -}}
-{{- end -}}
+{{- if $existingSecret -}}
+    {{- $secret := (lookup "v1" "Secret" .Release.Namespace $existingSecret) }}
+    {{- if not $secret -}}
+        {{- fail (printf "Secret '%s' not found in namespace '%s'. Please ensure the secret exists and contains the required keys: license-key (mandatory), access-token (mandatory), auth-password, email-settings-api-key, external-postgresql-password, social-login-google-secret, postHog-api-key, product-fruits-workspace-code" .Values.global.existingSecret .Release.Namespace) }}
+    {{- end -}}
 
-{{- if (include "common.secrets.lookup" (dict "secret" .Values.digma.existingSecret "key" "auth-password" "context" $)) -}}
-{{- $authPasswordExists = true -}}
-{{- end -}}
+    {{- if (include "common.secrets.lookup" (dict "secret" $existingSecret "key" "license-key" "context" $)) -}}
+        {{- $licenseKeyExists = true -}}
+    {{- else -}}
+        {{- $missingLicenseKeyMessage = printf "Key '%s' not found in '%s' secret" "license-key" $existingSecret -}}
+    {{- end -}}
 
-{{- if (include "common.secrets.lookup" (dict "secret" .Values.digma.existingSecret "key" "email-settings-api-key" "context" $)) -}}
-{{- $emailApiKeyExists = true -}}
-{{- end -}}
+    {{- if (include "common.secrets.lookup" (dict "secret" $existingSecret "key" "access-token" "context" $)) -}}
+        {{- $accessTokenExists = true -}}
+    {{- else -}}
+        {{- $missingAccessTokenMessage = printf "Key '%s' not found in '%s' secret" "access-token" $existingSecret -}}
+    {{- end -}}
 
-{{- if (include "common.secrets.lookup" (dict "secret" .Values.digma.existingSecret "key" "external-postgresql-password" "context" $)) -}}
-{{- $externalPostgresqlPasswordExists = true -}}
-{{- end -}}
+    {{- if (include "common.secrets.lookup" (dict "secret" $existingSecret "key" "auth-password" "context" $)) -}}
+        {{- $authPasswordExists = true -}}
+    {{- else -}}
+        {{- $missingAuthPasswordMessage = printf "Key '%s' not found in '%s' secret" "auth-password" $existingSecret -}}
+    {{- end -}}
 
-{{- if (include "common.secrets.lookup" (dict "secret" .Values.digma.existingSecret "key" "social-login-google-secret" "context" $)) -}}
-{{- $socialLoginGoogleSecretExists = true -}}
-{{- end -}}
+    {{- if (include "common.secrets.lookup" (dict "secret" $existingSecret "key" "email-settings-api-key" "context" $)) -}}
+        {{- $emailApiKeyExists = true -}}
+    {{- else -}}
+        {{- $missingEmailApiKeyMessage = printf "Key '%s' not found in '%s' secret" "email-settings-api-key" $existingSecret -}}
+    {{- end -}}
+
+    {{- if (include "common.secrets.lookup" (dict "secret" $existingSecret "key" "external-postgresql-password" "context" $)) -}}
+        {{- $externalPostgresqlPasswordExists = true -}}
+    {{- else -}}
+        {{- $missingExternalPostgresqlPasswordMessage = printf "Key '%s' not found in '%s' secret" "external-postgresql-password" $existingSecret -}}
+    {{- end -}}
+
+    {{- if (include "common.secrets.lookup" (dict "secret" $existingSecret "key" "social-login-google-secret" "context" $)) -}}
+        {{- $socialLoginGoogleSecretExists = true -}}
+    {{- else -}}
+        {{- $missingSocialLoginGoogleSecretMessage = printf "Key '%s' not found in '%s' secret" "social-login-google-secret" $existingSecret -}}
+    {{- end -}}
 
 
 {{- else -}}
-{{- if not (default "" .Values.digma.licenseKey) -}}
-{{ fail "digma.licenseKey is not set" }}
+    {{- if (default "" .Values.digma.licenseKey) -}}
+        {{- $licenseKeyExists = true -}}
+    {{- else -}}
+        {{- $missingLicenseKeyMessage = printf "Value '%s' not found in values file" "digma.licenseKey" -}}
+    {{- end -}}
+
+    {{- if (default "" .Values.digma.accessToken) -}}
+        {{- $accessTokenExists = true -}}
+    {{- else -}}
+        {{- $missingAccessTokenMessage = printf "Value '%s' not found in values file" "digma.accessToken" -}}
+    {{- end -}}
+
+    {{- if (default "" .Values.digma.auth.password) -}}
+        {{- $authPasswordExists = true -}}
+    {{- else -}}
+        {{- $missingAuthPasswordMessage = printf "Value '%s' not found in values file" "digma.auth.password" -}}
+    {{- end -}}
+
+    {{- if (default "" (include "digma.emailSettings.apiKey" .)) }}
+        {{- $emailApiKeyExists = true -}}
+    {{- else -}}
+        {{- $missingEmailApiKeyMessage = printf "Value '%s' not found in values file" "digma.emailSettings.apiKey" -}}
+    {{- end -}}
+
+    {{- if (default "" .Values.digma.externals.postgresql.password) }}
+        {{- $externalPostgresqlPasswordExists = true -}}
+    {{- else -}}
+        {{- $missingExternalPostgresqlPasswordMessage = printf "Value '%s' not found in values file" "digma.externals.postgresql.password" -}}
+    {{- end -}}
+
+    {{- if (default "" .Values.digma.socialLogin.google.secret) }}
+        {{- $socialLoginGoogleSecretExists = true -}}
+    {{- else -}}
+        {{- $missingSocialLoginGoogleSecretMessage = printf "Value '%s' not found in values file" "digma.socialLogin.google.secret" -}}
+    {{- end -}}
+
 {{- end -}}
 
-{{- if (default "" .Values.digma.accessToken) -}}
-{{- $accessTokenExists = true -}}
+{{- if not $licenseKeyExists -}}
+    {{ fail $missingLicenseKeyMessage }}
 {{- end -}}
 
-{{- if (default "" .Values.digma.auth.password) -}}
-{{- $authPasswordExists = true -}}
+{{- if not $accessTokenExists -}}
+    {{ fail $missingAccessTokenMessage }}
 {{- end -}}
-
-{{- if (default "" (include "digma.emailSettings.apiKey" .)) }}
-{{- $emailApiKeyExists = true -}}
-{{- end -}}
-
-{{- if (default "" .Values.digma.externals.postgresql.password) }}
-{{- $externalPostgresqlPasswordExists = true -}}
-{{- end -}}
-
-{{- if (default "" .Values.digma.socialLogin.google.secret) }}
-{{- $socialLoginGoogleSecretExists = true -}}
-{{- end -}}
-
-
-{{- end -}}
-
 
 {{- if and (eq .Values.observability.useLocal true)  (not (empty .Values.observability.otlp.remoteEndpoint)) }}
-{{ fail "Installation failed: 'observability.useLocal' is true while 'observability.otlp.remoteEndpoint' is set. This combination is not allowed." }}
+    {{ fail "Installation failed: 'observability.useLocal' is true while 'observability.otlp.remoteEndpoint' is set. This combination is not allowed." }}
 {{- end }}
 
 {{- if and .Values.otelCollector.datadog.ingress.enabled (eq .Values.otelCollector.receivers.datadog.enabled false) }}
-{{ fail "Installation failed: 'otelCollector.datadog.ingress.enabled' cannot be true when 'otelCollector.receivers.datadog.enabled' is false." }}
+    {{ fail "Installation failed: 'otelCollector.datadog.ingress.enabled' cannot be true when 'otelCollector.receivers.datadog.enabled' is false." }}
 {{- end }}
 
 {{- if and .Values.otelCollector.http.ingress.enabled (eq .Values.otelCollector.receivers.otelHttp.enabled false) }}
-{{ fail "Installation failed: 'otelCollector.http.ingress.enabled' cannot be true when 'otelCollector.receivers.otelHttp.enabled' is false." }}
+    {{ fail "Installation failed: 'otelCollector.http.ingress.enabled' cannot be true when 'otelCollector.receivers.otelHttp.enabled' is false." }}
 {{- end }}
 
 {{- if and .Values.otelCollector.grpc.ingress.enabled (eq .Values.otelCollector.receivers.otelGRPC.enabled false) }}
-{{ fail "Installation failed: 'otelCollector.grpc.ingress.enabled' cannot be true when 'otelCollector.receivers.otelGRPC.enabled' is false." }}
+    {{ fail "Installation failed: 'otelCollector.grpc.ingress.enabled' cannot be true when 'otelCollector.receivers.otelGRPC.enabled' is false." }}
 {{- end }}
 
 {{- $globalTolerations := default (list) .Values.global.tolerations -}}
 
 {{- $prometheusTolerations := default (list) .Values.prometheus.server.tolerations -}}
 {{- if and (not (empty $globalTolerations)) (empty $prometheusTolerations) ( .Values.observability.useLocal) }}
-{{ fail "global tolerations are set, but prometheus.server.tolerations are empty." }}
+    {{ fail "global tolerations are set, but prometheus.server.tolerations are empty." }}
 {{- end }}
 
 
 {{- $redisTolerations := default (list) .Values.redis.master.tolerations -}}
 {{- if and (not (empty $globalTolerations)) (empty $redisTolerations) }}
-{{ fail "global tolerations are set, but redis.master.tolerations are empty." }}
+    {{ fail "global tolerations are set, but redis.master.tolerations are empty." }}
 {{- end }}
 
-{{- if .Values.digma.auth.emailVerificationEnabled -}}
-{{- if not .Values.digma.emailSettings.url -}}
-{{ fail "emailSettings.url must be set when emailVerificationEnabled is true" -}}
+{{- if and .Values.digma.auth.emailVerificationEnabled (not .Values.digma.emailSettings.url) -}}
+    {{ fail (printf "emailSettings.url must be set when emailVerificationEnabled is true. %s" $missingEmailApiKeyMessage) -}}
 {{- end -}}
-{{- end -}}
+
 {{- if or .Values.digma.emailSettings.url $emailApiKeyExists -}}
-{{- if not (and .Values.digma.emailSettings.url $emailApiKeyExists) -}}
-{{ fail "emailSettings.url and emailSettings.apiKey must be provided together, if existingSecret is set, make sure to set email-settings-api-key in the existing secret" -}}
-{{- end -}}
+    {{- if not (and .Values.digma.emailSettings.url $emailApiKeyExists) -}}
+        {{ fail (printf "emailSettings.url and emailSettings.apiKey must be provided together. %s" $missingEmailApiKeyMessage) -}}
+    {{- end -}}
 {{- end -}}
 
 {{- if or .Values.digma.auth.email $authPasswordExists -}}
-{{- if not (and .Values.digma.auth.email $authPasswordExists) -}}
-{{ fail "auth.email and auth.password must be provided together, if existingSecret is set, make sure to set auth-password in the existing secret" -}}
-{{- end -}}
+    {{- if not (and .Values.digma.auth.email $authPasswordExists) -}}
+        {{ fail (printf "auth.email and auth.password must be provided together. %s" $missingAuthPasswordMessage) -}}
+    {{- end -}}
 {{- end -}} 
 
-{{- if and .Values.digma.mcp.enabled (or (not .Values.digma.auth.email) (not $accessTokenExists)) -}}
-{{- fail "When digma.mcp.enabled is true, both digma.auth.email and digma.accessToken must be set." -}}
+{{- if and .Values.digma.mcp.enabled (not .Values.digma.auth.email) -}}
+    {{- fail "When digma.mcp.enabled is true, digma.auth.email must be set." -}}
 {{- end -}} 
 
 {{- if and (not .Values.postgresql.enabled) (not $externalPostgresqlPasswordExists) -}}
-{{- fail "When postgresql.enabled is false, digma.externals.postgresql.password must be set. if existingSecret is set, make sure to set external-postgresql-password in the existing secret" -}}
+    {{- fail (printf "When postgresql.enabled is false, digma.externals.postgresql.password must be set. %s" $missingExternalPostgresqlPasswordMessage) -}}
 {{- end -}}
 
 {{- if and ( .Values.digma.socialLogin.enabled) (not $socialLoginGoogleSecretExists) -}}
-{{- fail "When digma.socialLogin.enabled is true, digma.socialLogin.google.secret must be set. if existingSecret is set, make sure to set social-login-google-secret in the existing secret" -}}
+    {{- fail (printf "When digma.socialLogin.enabled is true, digma.socialLogin.google.secret must be set. %s" $missingSocialLoginGoogleSecretMessage) -}}
 {{- end -}}

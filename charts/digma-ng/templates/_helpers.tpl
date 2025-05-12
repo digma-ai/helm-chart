@@ -11,7 +11,7 @@
 Return true if a secret object should be created
 */}}
 {{- define "digma.createSecret" -}}
-{{- if not .Values.digma.existingSecret -}}
+{{- if not .Values.global.existingSecret -}}
     {{- true -}}
 {{- end -}}
 {{- end -}}
@@ -26,7 +26,7 @@ Usage:
 {{- if (include "digma.createSecret" .) -}}
 checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
 {{- else -}}
-{{- $existingSecret := .Values.digma.existingSecret }}
+{{- $existingSecret := .Values.global.existingSecret }}
 {{- $secret := (lookup "v1" "Secret" .Release.Namespace $existingSecret) }}
 {{- if not $secret -}}
   {{- fail (printf "Secret '%s' not found in namespace '%s'" $existingSecret .Release.Namespace) }}
@@ -40,8 +40,8 @@ checksum/{{ $existingSecret }}: "{{ $checksum }}"
 Get the secret.
 */}}
 {{- define "digma.secretName" -}}
-{{- if .Values.digma.existingSecret -}}
-{{- printf "%s" (tpl .Values.digma.existingSecret $) -}}
+{{- if .Values.global.existingSecret -}}
+{{- printf "%s" (tpl .Values.global.existingSecret $) -}}
 {{- else -}}
 {{- printf "%s" (include "common.names.fullname" .) -}}
 {{- end -}}

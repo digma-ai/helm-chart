@@ -13,6 +13,52 @@ You can obtain a license key by signing up for a free account using this [link](
 ## Applying the License Key
 To apply the license key, set the digma.licenseKey value in your Helm chart to the key provided by Digma.
 
+## Using an Existing Secret
+Instead of providing individual values in the Helm chart, you can use an existing Kubernetes secret that contains all the required credentials. This is useful for managing sensitive data separately from your Helm values.
+
+### Creating the Secret
+Create a file named `secret.yaml` with the following content:
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: digma-secrets
+  namespace: digma
+type: Opaque
+stringData:
+  license-key: your-license-key                           # [Mandatory]: Your Digma license key
+  access-token: your-access-token                         # [Mandatory]: Access token for plugin and MCP authentication
+  auth-password: your-admin-password                      # [Optional] Required when: 1) auth.email is set, or 2) MCP is enabled. Will be used to create an admin user with the specified pwd
+  email-settings-api-key: your-email-api-key              # [Optional] Required when emailSettings.url is set. Used for email notifications
+  postgres-password: your-postgres-password               # [Optional] Required when postgresql.enabled is true. Used to connect to the internal PostgreSQL instance
+  social-login-google-secret: your-google-secret          # [Optional] Required when digma.socialLogin.enabled is true. Used for Google OAuth authentication
+  postHog-api-key: your-posthog-key                       # [Optional] Required when using PostHog analytics. Used for user behavior tracking
+  product-fruits-workspace-code: your-workspace-code      # [Optional] Required when using Product Fruits for in-app guidance
+  # external-postgresql-password: your-postgres-password  # [Optional] Required when postgresql.enabled is false. Used to connect to external PostgreSQL instance
+```
+
+Then apply it using kubectl:
+```console
+kubectl apply -f secret.yaml
+```
+
+### Using the Secret in Helm
+To use the existing secret, set the `global.existingSecret` value in your Helm values:
+
+```yaml
+digma:
+  existingSecret: "digma-secrets"  # Name of your existing secret
+postgresql:
+  auth:
+    existingSecret: digma-secrets
+```
+
+When using an existing secret, the chart will:
+1. Skip creating a new secret
+2. Use the values from your existing secret
+3. Add a checksum annotation to deployments to trigger rolling updates when the secret changes
+
 ## TL;DR
 ```console
 helm repo add digma https://digma-ai.github.io/helm-chart/
@@ -96,7 +142,7 @@ Digma uses multiple StatefulSets.
 1. ### Enforce Zone-Affinity for StatefulSet Pods
    Ensure the StatefulSet pod remains in the same zone as its data by configuring node affinity.
    ####  Affinity Example
-   Here’s how to set node affinity for the StatefulSets in values.yaml:
+   Here's how to set node affinity for the StatefulSets in values.yaml:
     ```yaml
     elasticsearch:
       master:
@@ -199,7 +245,6 @@ How It Works
 | digma.deployment.size | string | `"medium"` | adjusts the deployment to efficiently handle different scales of workload, and can be either small, medium, or large. |
 | digma.accessToken | string | `nil` | access token for plugin authentication, and set the same one in the IDE plugin settings. |
 | digma.licenseKey | string | `nil` | a digma license to use,If you've signed up for a free Digma account you should have received a Digma license to use. You can use this [link](https://digma.ai/sign-up/) to sign up |
-| digma.existingSecret | string | `""` | The name of an existing secret NOTE: expected keys: [`license-key` (mandatory), `access-token` , `auth-password`, `email-settings-api-key`, `external-postgresql-password`, `social-login-google-secret`, `postHog-api-key`, `product-fruits-workspace-code`], When it's set, the previous values are ignored |
 | digma.report.enabled | bool | `false` | daily issues report enabled |
 | digma.report.scheduledTimeUtc | string | `nil` | scheduled time of the report, HH:mm:ss (24-hour format) |
 | digma.report.uiExternalBaseUrl | string | `nil` | UI external service URL (automatically detected if not set) |
@@ -216,6 +261,7 @@ How It Works
 | digma.externals.postgresql.user | string | `""` | User of an external PostgreSQL instance to connect (only if postgresql.enabled=false) |
 | digma.externals.postgresql.password | string | `""` | Password of an external PostgreSQL instance to connect (only if postgresql.enabled=false) |
 | digma.externals.postgresql.port | int | `5432` | Port of an external PostgreSQL instance to connect (only if postgresql.enabled=false) |
+| global.existingSecret | string | `""` | The name of an existing secret NOTE: expected keys: [`license-key` (mandatory), `access-token` , `auth-password`, `email-settings-api-key`, `external-postgresql-password`, `social-login-google-secret`, `postHog-api-key`, `product-fruits-workspace-code`], When it's set, the previous values are ignored |
 
 ### Authentication
 
@@ -701,7 +747,7 @@ How It Works
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| postgresql.auth.existingSecret | string | `""` | Name of existing secret to use for PostgreSQL credentials (overrides `auth.existingSecret`). |
+| postgresql.auth.existingSecret | string | `"{{ .Values.global.existingSecret }}"` | Name of existing secret to use for PostgreSQL credentials (overrides `auth.existingSecret`). |
 | postgresql.primary.podLabels | object | `{}` | Extra labels for pods |
 | postgresql.primary.podAnnotations | object | `{}` | Extra annotations for pods |
 | postgresql.primary.nodeSelector | object | `{}` | Node labels for pods assignment |
