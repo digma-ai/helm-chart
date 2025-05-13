@@ -161,17 +161,29 @@ ai:
       value: <API_KEY>
     - name: VENDOR
       value: <VENDOR> # [Required] Possible Options: [Claude,OpenAi,Grok,Gemini]
+    - name: URL
+      value: <URL>    # [Optional] AI provider url, Default will be used if not set. Override this value if you are using a custom endpoint
     - name: MODEL
       value: <MODEL>  # [Optional] Default will be used if not set
 ```
 
 The following environment variables can be configured to control the AI integration:
 
-| Variable Name            | Description                                                                          | Required | Default                                |
-|--------------------------|--------------------------------------------------------------------------------------|----------|----------------------------------------|
-| `API_KEY`                | The API key issued by the selected vendor for access.                                | ✅       | —                                      |
-| `VENDOR`                 | Vendor to use for the AI integration. Possible Options: [Claude,OpenAi,Grok,Gemini]  | ✅       | —                                      |
-| `MODEL`                  | Model to use for the AI integration.                                                 |          | default will be used for each vendor   |
+| Variable Name            | Description                                                                          | Required | Default                                   |
+|--------------------------|--------------------------------------------------------------------------------------|----------|-------------------------------------------|
+| `API_KEY`                | The API key issued by the selected vendor for access.                                | ✅       | —                                         |
+| `VENDOR`                 | Vendor to use for the AI integration. Possible Options: [Claude,OpenAi,Grok,Gemini]  | ✅       | —                                         |
+| `URL`                    | URL of the AI provider, anthropic/openai based on the selected vendor.               | ❌       | AI provider default endpoint will be used |
+| `MODEL`                  | Model to use for the AI integration. See default models in table below.              | ❌       | default will be used for each vendor      |
+
+Default Models by Vendor:
+
+| Vendor    | Default Model               |
+|-----------|----------------------------|
+| Claude    | claude-3-5-sonnet-latest   |
+| OpenAi    | gpt-4                      |
+| Grok      | grok-1                     |
+| Gemini    | gemini-2.0-flash           |
 
 ## PostgreSQL Backup
 The Digma-ng Helm chart provides an optional PostgreSQL backup job for debugging and troubleshooting purposes. This guide explains how to enable and configure the backup feature.
