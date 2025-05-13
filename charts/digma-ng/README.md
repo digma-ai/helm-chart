@@ -1,16 +1,10 @@
 # digma-ng
 
-
-
-
-![Version: 1.0.337](https://img.shields.io/badge/Version-1.0.337-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.303](https://img.shields.io/badge/AppVersion-0.3.303-informational?style=flat-square) 
+![Version: 1.0.338](https://img.shields.io/badge/Version-1.0.338-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.303](https://img.shields.io/badge/AppVersion-0.3.303-informational?style=flat-square)
 
 A Helm chart containing Digma's services
 
 **Homepage:** <https://github.com/digma-ai/digma>
-
-
-
 
 ## License Key
 Digma will not function without a valid license key.
@@ -31,7 +25,6 @@ helm upgrade --install digma digma/digma-ng -n digma --set digma.licenseKey=$DIG
 ## Introduction
 
 This chart bootstraps a [Digma](https://digma.ai) deployment on a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
-
 
 ## Prerequisites
 
@@ -179,8 +172,6 @@ The following environment variables can be configured to control the AI integrat
 | `API_KEY`                | The API key issued by the selected vendor for access.                                | ✅       | —                                      |
 | `VENDOR`                 | Vendor to use for the AI integration. Possible Options: [Claude,OpenAi,Grok,Gemini]  | ✅       | —                                      |
 | `MODEL`                  | Model to use for the AI integration.                                                 |          | default will be used for each vendor   |
-
-
 
 ## PostgreSQL Backup
 The Digma-ng Helm chart provides an optional PostgreSQL backup job for debugging and troubleshooting purposes. This guide explains how to enable and configure the backup feature.
