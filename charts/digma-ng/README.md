@@ -147,7 +147,7 @@ Digma uses multiple StatefulSets.
    Use storage solutions that replicate data across zones
 ## Digma AI
 
-Digma includes a built-in integration with [Anthropic](https://www.anthropic.com/) and [OpenAI] (https://platform.openai.com/docs/api-reference) to enhance **query observability** and **developer experience** through intelligent suggestions.
+Digma includes a built-in integration with [Anthropic](https://www.anthropic.com/) and [OpenAI](https://platform.openai.com/docs/api-reference) to enhance **query observability** and **developer experience** through intelligent suggestions.
 
 ### 🚀 Enabling the AI Feature
 
