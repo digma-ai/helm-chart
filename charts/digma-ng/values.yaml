@@ -136,7 +136,7 @@ global:
   # -- Global Docker registry secret names as an array
   # @section -- Global Docker image parameters
   imagePullSecrets: []
-    # -- The name of an existing secret NOTE: expected keys: [`license-key` (mandatory), `access-token` , `auth-password`, `email-settings-api-key`, `external-postgresql-password`, `social-login-google-secret`, `postHog-api-key`, `product-fruits-workspace-code`], When it's set, the previous values are ignored
+    # -- The name of an existing secret NOTE: expected keys: [`license-key` (mandatory), `access-token` , `auth-password`, `email-settings-api-key`, `postgresql-password`, `social-login-google-secret`, `postHog-api-key`, `product-fruits-workspace-code`], When it's set, the previous values are ignored
   # @section -- Global Digma parameters
   existingSecret: ""
 

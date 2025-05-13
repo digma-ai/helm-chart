@@ -6,8 +6,8 @@
 {{- $missingAuthPasswordMessage := "" -}}
 {{- $emailApiKeyExists := false -}}
 {{- $missingEmailApiKeyMessage := "" -}}
-{{- $externalPostgresqlPasswordExists := false -}}
-{{- $missingExternalPostgresqlPasswordMessage := "" -}}
+{{- $postgresqlPasswordExists := false -}}
+{{- $missingPostgresqlPasswordMessage := "" -}}
 {{- $socialLoginGoogleSecretExists := false -}}
 {{- $missingSocialLoginGoogleSecretMessage := "" -}}
 
@@ -16,7 +16,7 @@
 {{- if $existingSecret -}}
     {{- $secret := (lookup "v1" "Secret" .Release.Namespace $existingSecret) }}
     {{- if not $secret -}}
-        {{- fail (printf "Secret '%s' not found in namespace '%s'. Please ensure the secret exists and contains the required keys: license-key (mandatory), access-token (mandatory), auth-password, email-settings-api-key, external-postgresql-password, social-login-google-secret, postHog-api-key, product-fruits-workspace-code" .Values.global.existingSecret .Release.Namespace) }}
+        {{- fail (printf "Secret '%s' not found in namespace '%s'. Please ensure the secret exists and contains the required keys: license-key (mandatory), access-token (mandatory), postgres-password (mandatory), auth-password, email-settings-api-key, social-login-google-secret, postHog-api-key, product-fruits-workspace-code" .Values.global.existingSecret .Release.Namespace) }}
     {{- end -}}
 
     {{- if (include "common.secrets.lookup" (dict "secret" $existingSecret "key" "license-key" "context" $)) -}}
@@ -43,10 +43,10 @@
         {{- $missingEmailApiKeyMessage = printf "Key '%s' not found in '%s' secret" "email-settings-api-key" $existingSecret -}}
     {{- end -}}
 
-    {{- if (include "common.secrets.lookup" (dict "secret" $existingSecret "key" "external-postgresql-password" "context" $)) -}}
-        {{- $externalPostgresqlPasswordExists = true -}}
+    {{- if (include "common.secrets.lookup" (dict "secret" $existingSecret "key" "postgres-password" "context" $)) -}}
+        {{- $postgresqlPasswordExists = true -}}
     {{- else -}}
-        {{- $missingExternalPostgresqlPasswordMessage = printf "Key '%s' not found in '%s' secret" "external-postgresql-password" $existingSecret -}}
+        {{- $missingPostgresqlPasswordMessage = printf "Key '%s' not found in '%s' secret" "postgres-password" $existingSecret -}}
     {{- end -}}
 
     {{- if (include "common.secrets.lookup" (dict "secret" $existingSecret "key" "social-login-google-secret" "context" $)) -}}
@@ -81,10 +81,18 @@
         {{- $missingEmailApiKeyMessage = printf "Value '%s' not found in values file" "digma.emailSettings.apiKey" -}}
     {{- end -}}
 
-    {{- if (default "" .Values.digma.externals.postgresql.password) }}
-        {{- $externalPostgresqlPasswordExists = true -}}
+    {{- if .Values.postgresql.enabled -}}
+        {{- if (default "" .Values.postgresql.auth.password) -}}
+            {{- $postgresqlPasswordExists = true -}}
+        {{- else -}}
+            {{- $missingPostgresqlPasswordMessage = printf "Value '%s' not found in values file" "postgresql.auth.password" -}}
+        {{- end -}}
     {{- else -}}
-        {{- $missingExternalPostgresqlPasswordMessage = printf "Value '%s' not found in values file" "digma.externals.postgresql.password" -}}
+        {{- if (default "" .Values.digma.externals.postgresql.password) -}}
+            {{- $postgresqlPasswordExists = true -}}
+        {{- else -}}
+            {{- $missingPostgresqlPasswordMessage = printf "Value '%s' not found in values file" "digma.externals.postgresql.password" -}}
+        {{- end -}}
     {{- end -}}
 
     {{- if (default "" .Values.digma.socialLogin.google.secret) }}
@@ -152,10 +160,11 @@
     {{- fail "When digma.mcp.enabled is true, digma.auth.email must be set." -}}
 {{- end -}} 
 
-{{- if and (not .Values.postgresql.enabled) (not $externalPostgresqlPasswordExists) -}}
-    {{- fail (printf "When postgresql.enabled is false, digma.externals.postgresql.password must be set. %s" $missingExternalPostgresqlPasswordMessage) -}}
-{{- end -}}
 
 {{- if and ( .Values.digma.socialLogin.enabled) (not $socialLoginGoogleSecretExists) -}}
     {{- fail (printf "When digma.socialLogin.enabled is true, digma.socialLogin.google.secret must be set. %s" $missingSocialLoginGoogleSecretMessage) -}}
+{{- end -}}
+
+{{- if not $postgresqlPasswordExists -}}
+    {{ fail $missingPostgresqlPasswordMessage }}
 {{- end -}}

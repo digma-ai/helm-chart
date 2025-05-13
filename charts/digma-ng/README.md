@@ -27,15 +27,14 @@ metadata:
   namespace: digma
 type: Opaque
 stringData:
-  license-key: your-license-key                           # [Mandatory]: Your Digma license key
-  access-token: your-access-token                         # [Mandatory]: Access token for plugin and MCP authentication
+  license-key: your-license-key                           # [Mandatory] Your Digma license key
+  access-token: your-access-token                         # [Mandatory] Access token for plugin and MCP authentication
+  postgres-password: your-postgres-password               # [Mandatory] Used to configured/connect to PostgreSQL instance
   auth-password: your-admin-password                      # [Optional] Required when: 1) auth.email is set, or 2) MCP is enabled. Will be used to create an admin user with the specified pwd
   email-settings-api-key: your-email-api-key              # [Optional] Required when emailSettings.url is set. Used for email notifications
-  postgres-password: your-postgres-password               # [Optional] Required when postgresql.enabled is true. Used to connect to the internal PostgreSQL instance
   social-login-google-secret: your-google-secret          # [Optional] Required when digma.socialLogin.enabled is true. Used for Google OAuth authentication
   postHog-api-key: your-posthog-key                       # [Optional] Required when using PostHog analytics. Used for user behavior tracking
   product-fruits-workspace-code: your-workspace-code      # [Optional] Required when using Product Fruits for in-app guidance
-  # external-postgresql-password: your-postgres-password  # [Optional] Required when postgresql.enabled is false. Used to connect to external PostgreSQL instance
 ```
 
 Then apply it using kubectl:
@@ -261,7 +260,7 @@ How It Works
 | digma.externals.postgresql.user | string | `""` | User of an external PostgreSQL instance to connect (only if postgresql.enabled=false) |
 | digma.externals.postgresql.password | string | `""` | Password of an external PostgreSQL instance to connect (only if postgresql.enabled=false) |
 | digma.externals.postgresql.port | int | `5432` | Port of an external PostgreSQL instance to connect (only if postgresql.enabled=false) |
-| global.existingSecret | string | `""` | The name of an existing secret NOTE: expected keys: [`license-key` (mandatory), `access-token` , `auth-password`, `email-settings-api-key`, `external-postgresql-password`, `social-login-google-secret`, `postHog-api-key`, `product-fruits-workspace-code`], When it's set, the previous values are ignored |
+| global.existingSecret | string | `""` | The name of an existing secret NOTE: expected keys: [`license-key` (mandatory), `access-token` , `auth-password`, `email-settings-api-key`, `postgresql-password`, `social-login-google-secret`, `postHog-api-key`, `product-fruits-workspace-code`], When it's set, the previous values are ignored |
 
 ### Authentication
 
