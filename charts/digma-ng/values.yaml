@@ -1444,7 +1444,7 @@ nginx:
 ui:
   # -- ui version
   # @section -- UI parameters
-  artifactsVersion: 12.0.4
+  artifactsVersion: 14.0.0
   postHogApiKey: phc_5sy6Kuv1EYJ9GAdWPeGl7gx31RAw7BR7NHnOuLCUQZK
   productFruitsWorkspaceCode: GBNh54uJtBaeWuOq
   sandboxEnabled: false
@@ -1522,7 +1522,7 @@ ai:
   image:
     registry: docker.io
     repository: digmatic/digma-ai
-    tag: 0.0.20
+    tag: 0.0.21
     # -- image pull policy
     # @section -- AI parameters
     pullPolicy: IfNotPresent
@@ -1580,8 +1580,10 @@ ai:
   affinity: {}
   ## e.g:
   ## extraEnvVars:
-  ##   - name: FOO
-  ##     value: "bar"
+  ##   - name: API_KEY
+  ##     value: <API_KEY>
+  ##   - name: VENDOR
+  ##     value: <Claude/OpenAi/Grok,Gemini>
   # -- Array with extra environment variables to add
   # @section -- AI parameters
   extraEnvVars: []

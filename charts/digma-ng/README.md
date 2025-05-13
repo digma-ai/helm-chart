@@ -1,6 +1,6 @@
 # digma-ng
 
-![Version: 1.0.332](https://img.shields.io/badge/Version-1.0.332-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.298-alpha.1](https://img.shields.io/badge/AppVersion-0.3.298--alpha.1-informational?style=flat-square)
+![Version: 1.0.338](https://img.shields.io/badge/Version-1.0.338-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.303](https://img.shields.io/badge/AppVersion-0.3.303-informational?style=flat-square)
 
 A Helm chart containing Digma's services
 
@@ -192,7 +192,7 @@ Digma uses multiple StatefulSets.
    Use storage solutions that replicate data across zones
 ## Digma AI
 
-Digma includes a built-in integration with [Anthropic](https://www.anthropic.com/) to enhance **query observability** and **developer experience** through intelligent suggestions.
+Digma includes a built-in integration with [Anthropic](https://www.anthropic.com/) and [OpenAI](https://platform.openai.com/docs/api-reference) to enhance **query observability** and **developer experience** through intelligent suggestions.
 
 ### 🚀 Enabling the AI Feature
 
@@ -202,18 +202,33 @@ To activate Anthropic-based suggestions in Digma, add the following configuratio
 ai:
   enabled: true
   extraEnvVars:
-    - name: API_KEY
-      value: <your-anthropic-api-key>
-    # - name: ANTHROPIC_BASE_URL
-    #   value: <custom-anthropic-base-url>
+    - name: API_KEY   # [Required]
+      value: <API_KEY>
+    - name: VENDOR
+      value: <VENDOR> # [Required] Possible Options: [Claude,OpenAi,Grok,Gemini]
+    - name: URL
+      value: <URL>    # [Optional] AI provider url, Default will be used if not set. Override this value if you are using a custom endpoint
+    - name: MODEL
+      value: <MODEL>  # [Optional] Default will be used if not set
 ```
 
-The following environment variables can be configured to control the Anthropic integration:
+The following environment variables can be configured to control the AI integration:
 
-| Variable Name            | Description                                                                 | Required | Default                         |
-|--------------------------|-----------------------------------------------------------------------------|----------|---------------------------------|
-| `API_KEY`                | The API key issued by Anthropic for accessing Claude and related services.  | ✅       | —                               |
-| `ANTHROPIC_BASE_URL`     | Base URL for the Anthropic API. Override when using a proxy or gateway.     | ⛔       | `https://api.anthropic.com`     |
+| Variable Name            | Description                                                                          | Required | Default                                   |
+|--------------------------|--------------------------------------------------------------------------------------|----------|-------------------------------------------|
+| `API_KEY`                | The API key issued by the selected vendor for access.                                | ✅       | —                                         |
+| `VENDOR`                 | Vendor to use for the AI integration. Possible Options: [Claude,OpenAi,Grok,Gemini]  | ✅       | —                                         |
+| `URL`                    | URL of the AI provider, anthropic/openai based on the selected vendor.               | ❌       | AI provider default endpoint will be used |
+| `MODEL`                  | Model to use for the AI integration. See default models in table below.              | ❌       | default will be used for each vendor      |
+
+Default Models by Vendor:
+
+| Vendor    | Default Model               |
+|-----------|----------------------------|
+| Claude    | claude-3-5-sonnet-latest   |
+| OpenAi    | gpt-4                      |
+| Grok      | grok-1                     |
+| Gemini    | gemini-2.0-flash           |
 
 ## PostgreSQL Backup
 The Digma-ng Helm chart provides an optional PostgreSQL backup job for debugging and troubleshooting purposes. This guide explains how to enable and configure the backup feature.
@@ -628,7 +643,7 @@ How It Works
 | nginx.pdb.create | bool | `false` | Enable PodDisruptionBudget |
 | nginx.pdb.minAvailable | string | `""` | Set PodDisruptionBudget minAvailable |
 | nginx.pdb.maxUnavailable | string | `""` | Set PodDisruptionBudget minAvailable |
-| ui.artifactsVersion | string | `"12.0.4"` | ui version |
+| ui.artifactsVersion | string | `"14.0.0"` | ui version |
 | ui.service.type | string | `"ClusterIP"` | service type |
 | ui.service.annotations | object | `{}` | Additional custom annotations for service |
 | ui.service.ports.http | int | `80` | HTTP service port |
