@@ -1971,10 +1971,12 @@ postgresql:
     database: postgres
     username: postgres
     password: postgres
+    #postgresPassword: postgres
+    enablePostgresUser: true
     # --  Name of existing secret to use for PostgreSQL credentials (overrides `auth.existingSecret`).
     # @section -- Postgresql parameters
-    existingSecret: '{{ .Values.global.existingSecret }}'
-    enablePostgresUser: false
+    #existingSecret:
+
   architecture: standalone
   containerPorts:
     postgresql: 5432

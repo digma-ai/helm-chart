@@ -1,6 +1,6 @@
 # digma-ng
 
-![Version: 1.0.338](https://img.shields.io/badge/Version-1.0.338-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.303](https://img.shields.io/badge/AppVersion-0.3.303-informational?style=flat-square)
+![Version: 1.0.338](https://img.shields.io/badge/Version-1.0.338-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.308-alpha.1](https://img.shields.io/badge/AppVersion-0.3.308--alpha.1-informational?style=flat-square)
 
 A Helm chart containing Digma's services
 
@@ -761,7 +761,6 @@ How It Works
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| postgresql.auth.existingSecret | string | `"{{ .Values.global.existingSecret }}"` | Name of existing secret to use for PostgreSQL credentials (overrides `auth.existingSecret`). |
 | postgresql.primary.podLabels | object | `{}` | Extra labels for pods |
 | postgresql.primary.podAnnotations | object | `{}` | Extra annotations for pods |
 | postgresql.primary.nodeSelector | object | `{}` | Node labels for pods assignment |

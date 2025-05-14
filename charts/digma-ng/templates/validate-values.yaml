@@ -6,8 +6,6 @@
 {{- $missingAuthPasswordMessage := "" -}}
 {{- $emailApiKeyExists := false -}}
 {{- $missingEmailApiKeyMessage := "" -}}
-{{- $postgresqlPasswordExists := false -}}
-{{- $missingPostgresqlPasswordMessage := "" -}}
 {{- $socialLoginGoogleSecretExists := false -}}
 {{- $missingSocialLoginGoogleSecretMessage := "" -}}
 
@@ -43,11 +41,6 @@
         {{- $missingEmailApiKeyMessage = printf "Key '%s' not found in '%s' secret" "email-settings-api-key" $existingSecret -}}
     {{- end -}}
 
-    {{- if (include "common.secrets.lookup" (dict "secret" $existingSecret "key" "postgres-password" "context" $)) -}}
-        {{- $postgresqlPasswordExists = true -}}
-    {{- else -}}
-        {{- $missingPostgresqlPasswordMessage = printf "Key '%s' not found in '%s' secret" "postgres-password" $existingSecret -}}
-    {{- end -}}
 
     {{- if (include "common.secrets.lookup" (dict "secret" $existingSecret "key" "social-login-google-secret" "context" $)) -}}
         {{- $socialLoginGoogleSecretExists = true -}}
@@ -57,50 +50,36 @@
 
 
 {{- else -}}
-    {{- if (default "" .Values.digma.licenseKey) -}}
+    {{- if .Values.digma.licenseKey -}}
         {{- $licenseKeyExists = true -}}
     {{- else -}}
         {{- $missingLicenseKeyMessage = printf "Value '%s' not found in values file" "digma.licenseKey" -}}
     {{- end -}}
 
-    {{- if (default "" .Values.digma.accessToken) -}}
+    {{- if .Values.digma.accessToken -}}
         {{- $accessTokenExists = true -}}
     {{- else -}}
         {{- $missingAccessTokenMessage = printf "Value '%s' not found in values file" "digma.accessToken" -}}
     {{- end -}}
 
-    {{- if (default "" .Values.digma.auth.password) -}}
+    {{- if .Values.digma.auth.password -}}
         {{- $authPasswordExists = true -}}
     {{- else -}}
         {{- $missingAuthPasswordMessage = printf "Value '%s' not found in values file" "digma.auth.password" -}}
     {{- end -}}
 
-    {{- if (default "" (include "digma.emailSettings.apiKey" .)) }}
+    {{- if include "digma.emailSettings.apiKey" . }}
         {{- $emailApiKeyExists = true -}}
     {{- else -}}
         {{- $missingEmailApiKeyMessage = printf "Value '%s' not found in values file" "digma.emailSettings.apiKey" -}}
     {{- end -}}
 
-    {{- if .Values.postgresql.enabled -}}
-        {{- if (default "" .Values.postgresql.auth.password) -}}
-            {{- $postgresqlPasswordExists = true -}}
-        {{- else -}}
-            {{- $missingPostgresqlPasswordMessage = printf "Value '%s' not found in values file" "postgresql.auth.password" -}}
-        {{- end -}}
-    {{- else -}}
-        {{- if (default "" .Values.digma.externals.postgresql.password) -}}
-            {{- $postgresqlPasswordExists = true -}}
-        {{- else -}}
-            {{- $missingPostgresqlPasswordMessage = printf "Value '%s' not found in values file" "digma.externals.postgresql.password" -}}
-        {{- end -}}
-    {{- end -}}
 
-    {{- if (default "" .Values.digma.socialLogin.google.secret) }}
+    {{- if .Values.digma.socialLogin.google.secret }}
         {{- $socialLoginGoogleSecretExists = true -}}
     {{- else -}}
         {{- $missingSocialLoginGoogleSecretMessage = printf "Value '%s' not found in values file" "digma.socialLogin.google.secret" -}}
     {{- end -}}
-
 {{- end -}}
 
 {{- if not $licenseKeyExists -}}
@@ -141,12 +120,12 @@
 {{- end }}
 
 {{- if and .Values.digma.auth.emailVerificationEnabled (not .Values.digma.emailSettings.url) -}}
-    {{ fail (printf "emailSettings.url must be set when emailVerificationEnabled is true. %s" $missingEmailApiKeyMessage) -}}
+    {{ fail (printf "emailSettings.url must be set when emailVerificationEnabled is true. %s" $missingEmailApiKeyMessage) }}
 {{- end -}}
 
 {{- if or .Values.digma.emailSettings.url $emailApiKeyExists -}}
     {{- if not (and .Values.digma.emailSettings.url $emailApiKeyExists) -}}
-        {{ fail (printf "emailSettings.url and emailSettings.apiKey must be provided together. %s" $missingEmailApiKeyMessage) -}}
+        {{ fail (printf "emailSettings.url and emailSettings.apiKey must be provided together. %s" $missingEmailApiKeyMessage) }}
     {{- end -}}
 {{- end -}}
 
@@ -157,14 +136,10 @@
 {{- end -}} 
 
 {{- if and .Values.digma.mcp.enabled (not .Values.digma.auth.email) -}}
-    {{- fail "When digma.mcp.enabled is true, digma.auth.email must be set." -}}
+    {{ fail "When digma.mcp.enabled is true, digma.auth.email must be set." }}
 {{- end -}} 
 
 
-{{- if and ( .Values.digma.socialLogin.enabled) (not $socialLoginGoogleSecretExists) -}}
-    {{- fail (printf "When digma.socialLogin.enabled is true, digma.socialLogin.google.secret must be set. %s" $missingSocialLoginGoogleSecretMessage) -}}
-{{- end -}}
-
-{{- if not $postgresqlPasswordExists -}}
-    {{ fail $missingPostgresqlPasswordMessage }}
+{{- if and .Values.digma.socialLogin.enabled (not $socialLoginGoogleSecretExists) -}}
+    {{ fail (printf "When digma.socialLogin.enabled is true, digma.socialLogin.google.secret must be set. %s" $missingSocialLoginGoogleSecretMessage) }}
 {{- end -}}

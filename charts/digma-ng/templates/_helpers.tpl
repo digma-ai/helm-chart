@@ -17,24 +17,42 @@ Return true if a secret object should be created
 {{- end -}}
 
 {{/*
+return the checksum of the secret resource where the postgres password is stored
+*/}}
+{{- define "postgres.secret.checksum" -}}
+{{- $postgresSecret := (lookup "v1" "Secret" .Release.Namespace (include "digma.database.password.secretName" .)) }}
+{{- if not $postgresSecret -}}
+{{ printf "%s" ( randAlphaNum 10 ) }}
+{{- else -}}
+{{ printf "%s" (sha256sum (toYaml $postgresSecret.data)) }}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Usage:
   metadata:
     annotations:
       {{- include "digma.secretChecksumAnnotation" . | nindent 8 }}
 */}}
 {{- define "digma.secretChecksumAnnotation" -}}
-{{- if (include "digma.createSecret" .) -}}
+  {{- if (include "digma.createSecret" .) }}
 checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
-{{- else -}}
-{{- $existingSecret := .Values.global.existingSecret }}
-{{- $secret := (lookup "v1" "Secret" .Release.Namespace $existingSecret) }}
-{{- if not $secret -}}
-  {{- fail (printf "Secret '%s' not found in namespace '%s'" $existingSecret .Release.Namespace) }}
-{{- end -}}
-{{- $checksum := sha256sum (toYaml $secret.data) }}
+checksum/postgres: {{ include "postgres.secret.checksum" . }}
+  {{- else }}
+    {{- $existingSecret := .Values.global.existingSecret }}
+    {{- $secret := (lookup "v1" "Secret" .Release.Namespace $existingSecret) }}
+    {{- if not $secret }}
+      {{- fail (printf "Secret '%s' not found in namespace '%s'" $existingSecret .Release.Namespace) }}
+    {{- end }}
+
+    {{- if ne $existingSecret (include "digma.database.password.secretName" .) }}
+checksum/postgres: {{ include "postgres.secret.checksum" . }}
+    {{- end }}
+
+  {{- $checksum := sha256sum (toYaml $secret.data) }}
 checksum/{{ $existingSecret }}: "{{ $checksum }}"
-{{- end -}}
-{{- end -}}
+  {{- end }}
+{{- end }}
 
 {{/*
 Get the secret.
@@ -329,14 +347,19 @@ Return the Database Password Secret Name
 {{- end }}
 {{- end }}
 
+
 {{/*
 Return the Database Password Secret Key
 */}}
 {{- define "digma.database.password.secretKey" -}}
 {{- if .Values.postgresql.enabled -}}
-  {{ include "postgresql.v1.adminPasswordKey" .Subcharts.postgresql }}
-{{- else -}}
-  postgres-password
+  {{- if or (empty .Values.postgresql.auth.username) (eq .Values.postgresql.auth.username "postgres") }}
+{{- coalesce .Values.postgresql.auth.secretKeys.adminPasswordKey "postgres-password" }}
+  {{- else }}
+{{- coalesce .Values.postgresql.auth.secretKeys.userPasswordKey "password" }}
+  {{- end }}
+{{- else }}
+postgres-user-password
 {{- end }}
 {{- end }}
 
