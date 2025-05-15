@@ -18,23 +18,23 @@ data:
     window.isSandboxModeEnabled = {{ .Values.ui.sandboxEnabled }};
     window.platform = "Web";
     window.theme = "dark-jetbrains";
-    window.postHogApiKey = "$(POSTHOG_API_KEY)";
+    window.postHogApiKey = "${POSTHOG_API_KEY}";
     window.postHogHost = "https://us.i.posthog.com";
     window.productFruitsWorkspaceCode = "${PRODUCT_FRUITS_WORKSPACE_CODE}";
   email-confirmation-env.js: |
     window.platform = "Web";
     window.theme = "dark-jetbrains";
-    window.postHogApiKey =  "$(POSTHOG_API_KEY)";
+    window.postHogApiKey =  "${POSTHOG_API_KEY}";
     window.postHogHost = "https://us.i.posthog.com";
   ide-launcher-env.js: |
     window.platform = "Web";
     window.theme = "dark-jetbrains";
-    window.postHogApiKey =  "$(POSTHOG_API_KEY)";
+    window.postHogApiKey =  "${POSTHOG_API_KEY}";
     window.postHogHost = "https://us.i.posthog.com";
   login-env.js: |
     window.platform = "Web";
     window.theme = "dark-jetbrains";
-    window.postHogApiKey =  "$(POSTHOG_API_KEY)";
+    window.postHogApiKey =  "${POSTHOG_API_KEY}";
     window.postHogHost = "https://us.i.posthog.com";
     {{ if .Values.digma.socialLogin.enabled }}
     window.googleClientId = "{{ .Values.digma.socialLogin.google.clientId }}";

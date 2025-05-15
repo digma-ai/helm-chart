@@ -326,7 +326,7 @@ Return postgres connectivity env
 */}}
 {{- define "env.postgres" -}}
 - name: ConnectionStrings__Postgres
-  value:  {{ printf "Server=%s;Port=%v;Database=digma_analytics;User Id=%s;Password=$(POSTGRES_PASSWORD);Include Error Detail=true;" ( include "digma.database.host" . ) ( include "digma.database.port" . ) ( include "digma.database.user" . ) }}
+  value:  {{ printf "Server=%s;Port=%v;Database=digma_analytics;User Id=%s;Password=${POSTGRES_PASSWORD};Include Error Detail=true;" ( include "digma.database.host" . ) ( include "digma.database.port" . ) ( include "digma.database.user" . ) }}
 - name: POSTGRES_PASSWORD
   valueFrom:
     secretKeyRef:

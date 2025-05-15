@@ -50,11 +50,58 @@ spec:
             name: {{ include "digma.ui" . }}
       initContainers:
       - name: copy-nginx-config
-        image: busybox:latest #bitnami/nginx:latest
+        image: busybox:latest
+        env:
+        - name: POSTHOG_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "digma.ui.secretName" . }}
+              key: {{ include "digma.ui.postHogApiKey.secretKeyName" . }}
+        - name: PRODUCT_FRUITS_WORKSPACE_CODE
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "digma.ui.secretName" . }}
+              key: {{ include "digma.ui.productFruitsWorkspaceCode.secretKeyName" . }}  
         command:
           - /bin/sh
           - -c
           - |
+            # Helper function to substitute environment variables
+            substitute_env_vars() {
+              file="$1"
+              temp_file="${file}.tmp"
+              
+              # Check if input file exists
+              if [ ! -f "$file" ]; then
+                  echo "Error: Input file '$file' does not exist"
+                  return 1
+              fi
+              
+              # Create or truncate temp file
+              > "$temp_file"
+              
+              # Process the file line by line
+              while IFS= read -r line || [ -n "$line" ]; do
+                  # Replace all ${VAR} patterns in the line
+                  while echo "$line" | grep -q '\${[^}]*}'; do
+                      var=$(echo "$line" | sed -n 's/.*\${\([^}]*\)}.*/\1/p')
+                      val=$(printenv "$var")
+                      if [ -n "$val" ]; then
+                          # Escape special characters in the value
+                          escaped_val=$(printf '%s\n' "$val" | sed 's/[\\/&]/\\&/g')
+                          line=$(echo "$line" | sed "s/\${$var}/$escaped_val/g")
+                      else
+                          # If variable not found, break to avoid infinite loop
+                          break
+                      fi
+                  done
+                  echo "$line" >> "$temp_file"
+              done < "$file"
+              
+              # Move temp file to original file
+              mv "$temp_file" "$file"
+            }
+
             wget -O /tmp/digma-ui.zip "https://github.com/digma-ai/digma-ui/releases/download/v{{.Values.ui.artifactsVersion}}/dist-web-v{{.Values.ui.artifactsVersion}}.zip" &&
             unzip -o /tmp/digma-ui.zip -d /app &&
             rm /tmp/digma-ui.zip &&
@@ -62,6 +109,11 @@ spec:
             cp /config/ui/envs/email-confirmation-env.js /app/email-confirmation/env.js;
             cp /config/ui/envs/ide-launcher-env.js /app/ide-launcher/env.js;
             cp /config/ui/envs/login-env.js /app/login/env.js;
+
+            substitute_env_vars /app/admin/env.js;
+            substitute_env_vars /app/email-confirmation/env.js;
+            substitute_env_vars /app/ide-launcher/env.js;
+            substitute_env_vars /app/login/env.js;
         volumeMounts:
           - name: app-volume
             mountPath: /app
@@ -76,18 +128,7 @@ spec:
         - name: ui
           containerPort: {{ .Values.ui.service.ports.http }}
         - name: jaeger
-          containerPort: {{ .Values.jaeger.service.ports.http_ui }}
-        env:
-        - name: POSTHOG_API_KEY
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "digma.ui.secretName" . }}
-              key: {{ include "digma.ui.postHogApiKey.secretKeyName" . }}
-        - name: PRODUCT_FRUITS_WORKSPACE_CODE
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "digma.ui.secretName" . }}
-              key: {{ include "digma.ui.productFruitsWorkspaceCode.secretKeyName" . }}     
+          containerPort: {{ .Values.jaeger.service.ports.http_ui }}   
         volumeMounts:
           - name: conf-volume
             mountPath: /etc/nginx/nginx.conf
