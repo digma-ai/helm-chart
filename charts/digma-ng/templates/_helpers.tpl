@@ -633,6 +633,13 @@ Return remote endpoint url
 {{- end -}}
 
 {{/*
+Return jaeger trace url
+*/}}
+{{- define "env.jaeger.trace.url" -}}
+- name: "JaegerTraceUrl__TraceUrl"
+  value: {{ printf "%s/trace" (include "digma.jaeger.publicBaseUrl" .) }}
+{{- end }}
+
 Return email gateway configuration environment variables
 */}}
 {{- define "env.digma.emailGateway" -}}
