@@ -363,6 +363,7 @@ otelCollector:
               - set(resource.attributes["service.name"], attributes["_dd.base_service"]) where attributes["_dd.base_service"] != nil
               - set(attributes["db.statement"], attributes["sql.query"]) where attributes["sql.query"] != nil
               - set(attributes["db.system"], attributes["db.type"]) where attributes["db.type"] != nil
+              - set(attributes["db.name"], attributes["db.instance"]) where attributes["db.instance"] != nil
     exporters:
       logging:
         loglevel: debug
