@@ -645,6 +645,40 @@ How It Works
 | ai.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
 | ai.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 
+### Agentic parameters
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| agentic.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
+| agentic.image.pullSecrets | list | `[]` | image pull secrets |
+| agentic.replicas | int | `1` | Number of replicas to deploy |
+| agentic.service.type | string | `"ClusterIP"` | service type |
+| agentic.service.annotations | object | `{}` | Additional custom annotations for service |
+| agentic.service.ports.http | int | `8000` | HTTP port listen to path: /analyze, health check at /health |
+| agentic.podLabels | object | `{}` | Extra labels for pods |
+| agentic.podAnnotations | object | `{}` | Extra annotations for pods |
+| agentic.nodeSelector | object | `{}` | Node labels for pods assignment |
+| agentic.tolerations | list | `[]` | Tolerations for pods assignment |
+| agentic.affinity | object | `{}` | Affinity for pods assignment |
+| agentic.extraEnvVars | list | `[]` | Array with extra environment variables to add |
+| agentic.pdb.create | bool | `false` | Enable PodDisruptionBudget |
+| agentic.pdb.minAvailable | string | `""` | Set PodDisruptionBudget minAvailable |
+| agentic.pdb.maxUnavailable | string | `""` | Set PodDisruptionBudget minAvailable |
+| agentic.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
+| agentic.livenessProbe.path | string | `"/health"` | Path for livenessProbe |
+| agentic.livenessProbe.initialDelaySeconds | int | `120` | Initial delay seconds for livenessProbe |
+| agentic.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
+| agentic.livenessProbe.timeoutSeconds | int | `10` | Timeout seconds for livenessProbe |
+| agentic.livenessProbe.failureThreshold | int | `6` | Failure threshold for livenessProbe |
+| agentic.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
+| agentic.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
+| agentic.readinessProbe.path | string | `"/health"` | Path for readinessProbe |
+| agentic.readinessProbe.initialDelaySeconds | int | `20` | Initial delay seconds for readinessProbe |
+| agentic.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
+| agentic.readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
+| agentic.readinessProbe.failureThreshold | int | `24` | Failure threshold for readinessProbe |
+| agentic.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
+
 ### MetricsExporter parameters
 
 | Key | Type | Default | Description |

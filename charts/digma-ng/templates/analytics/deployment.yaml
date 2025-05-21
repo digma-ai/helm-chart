@@ -81,6 +81,10 @@ spec:
         - name: AI__Url
           value: {{ include "digma.ai.url" . | quote }}
         {{- end }}
+        {{- if .Values.agentic.enabled }}
+        - name: Agentic__Url
+          value: {{ include "digma.agentic.url" . | quote }}
+        {{- end }}
         {{- include "env.digma.emailGateway" . | nindent 8 }}
         {{- include "env.digma.analytics.uiServiceBaseUrl" . | nindent 8 }}
         {{- include "env.jaeger.trace.url" . | nindent 8 }}

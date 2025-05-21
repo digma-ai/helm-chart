@@ -1,0 +1,84 @@
+{{ if .Values.agentic.enabled }}
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ include "digma.agentic" . }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: agentic
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.agentic.podLabels .Values.commonLabels ) "context" . ) }}
+  replicas: {{ include "replicas.value" (dict "value" .Values.agentic.replicas "context" .) }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 6 }}
+      app.kubernetes.io/component: agentic
+  template:
+    metadata:
+      labels:
+        {{- include "common.labels.standard" ( dict "customLabels" $podLabels "context" $ ) | nindent 8 }}
+        app.kubernetes.io/component: agentic
+      annotations:
+        {{- if .Values.commonAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.agentic.podAnnotations }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.agentic.podAnnotations "context" .) | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- include "common.images.pullSecrets" ( dict "images" (list .Values.agentic.image) "global" .Values.global) | nindent 6 }}
+      {{- if .Values.agentic.affinity }}
+      affinity: {{- include "common.tplvalues.render" ( dict "value" .Values.agentic.affinity "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.agentic.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.agentic.nodeSelector "context" .) | nindent 8 }}
+      {{- end }}
+      {{- $mergedTolerations := (concat .Values.global.tolerations .Values.agentic.tolerations) -}}
+      {{- if $mergedTolerations }}
+      tolerations: 
+      {{- toYaml $mergedTolerations | nindent 6 -}}
+      {{- end }}
+      containers:
+      - name: digma-agentic
+        image: {{ include "common.images.image" (dict "imageRoot" .Values.agentic.image "global" .Values.global) }}
+        imagePullPolicy: {{ .Values.agentic.image.pullPolicy }}
+        resources: {{- toYaml .Values.agentic.resources | nindent 12 }}
+        ports:
+        - name: http
+          containerPort: {{ .Values.agentic.service.ports.http }}        
+        env:
+        {{- include "env.digma.app.common" . | nindent  8 }}
+        - name: PORT
+          value: {{ .Values.agentic.service.ports.http | quote}}
+        - name: POSTGRES_USER
+          value: {{ include "digma.database.user" . | quote}}
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "digma.global.secretName" . }}
+              key: {{ include "digma.postgresqlPassword.secretKeyName" . }}
+        - name: POSTGRES_HOST
+          value: {{ include "digma.database.host" . | quote}}
+        - name: POSTGRES_PORT
+          value: {{ include "digma.database.port" . | quote}}    
+        {{- if .Values.agentic.extraEnvVars }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.agentic.extraEnvVars "context" $) | nindent 8 }}
+        {{- end }}
+        {{- if not .Values.diagnosticMode.enabled }}
+        {{- if .Values.agentic.livenessProbe.enabled }}
+        livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit (omit .Values.agentic.livenessProbe "enabled") "path") "context" $) | nindent 10 }}
+          httpGet:
+            path: {{ .Values.agentic.livenessProbe.path }}
+            port: http
+            scheme: HTTP
+        {{- end }}
+        {{- if .Values.agentic.readinessProbe.enabled }}
+        readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit (omit .Values.agentic.readinessProbe "enabled") "path") "context" $) | nindent 10 }}
+          httpGet:
+            path: {{ .Values.agentic.readinessProbe.path }}
+            port: http
+            scheme: HTTP
+        {{- end }}          
+        {{- end }}
+{{- end }}
