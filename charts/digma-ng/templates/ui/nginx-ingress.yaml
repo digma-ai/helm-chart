@@ -30,15 +30,10 @@ spec:
     {{- if .Values.ui.ingress.extraRules }}
     {{- include "common.tplvalues.render" (dict "value" .Values.ui.ingress.extraRules "context" $) | nindent 4 }}
     {{- end }}
-  {{- if or .Values.ui.ingress.tls .Values.ui.ingress.extraTls }}
+  {{- if .Values.ui.ingress.tls }}
   tls:
-    {{- if .Values.ui.ingress.tls }}
     - hosts:
         - {{ .Values.ui.ingress.hostname | quote }}
-      secretName: {{ printf "%s-tls" .Values.ingress.hostname }}
-    {{- end }}
-    {{- if .Values.ui.ingress.extraTls }}
-    {{- include "common.tplvalues.render" (dict "value" .Values.ui.ingress.extraTls "context" $) | nindent 4 }}
-    {{- end }}
+      secretName: {{ printf "%s-tls" .Values.ui.ingress.hostname }}
   {{- end }}
 {{- end }}
