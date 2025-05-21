@@ -1639,6 +1639,133 @@ ai:
     # -- Success threshold for readinessProbe
     # @section -- AI parameters
     successThreshold: 1
+agentic:
+  enabled: false
+  image:
+    registry: docker.io
+    repository: digmatic/digma-agentic
+    tag: 0.0.2
+    # -- image pull policy
+    # @section -- Agentic parameters
+    pullPolicy: IfNotPresent
+    ## Optionally specify an array of imagePullSecrets.
+    ## Secrets must be manually created in the namespace.
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+    ## e.g:
+    ## pullSecrets:
+    ##   - myRegistryKeySecretName
+    ##
+    # -- image pull secrets
+    # @section -- Agentic parameters
+    pullSecrets: []
+  # -- Number of replicas to deploy
+  # @section -- Agentic parameters
+  replicas: 1
+  resources:
+    requests:
+      memory: 512Mi
+      cpu: 500m
+    limits:
+      memory: 768Mi
+      cpu: 750m
+  service:
+    # -- service type
+    # @section -- Agentic parameters
+    type: ClusterIP
+    # -- Additional custom annotations for service
+    # @section -- Agentic parameters
+    annotations: {}
+    ports:
+      # -- HTTP port listen to path: /analyze, health check at /health
+      # @section -- Agentic parameters
+      http: 8000
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  # -- Extra labels for pods
+  # @section -- Agentic parameters
+  podLabels: {}
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  # -- Extra annotations for pods
+  # @section -- Agentic parameters
+  podAnnotations: {}
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  # -- Node labels for pods assignment
+  # @section -- Agentic parameters
+  nodeSelector: {}
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  # -- Tolerations for pods assignment
+  # @section -- Agentic parameters
+  tolerations: []
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
+  # -- Affinity for pods assignment
+  # @section -- Agentic parameters
+  affinity: {}
+  ## e.g:
+  ## extraEnvVars:
+  ##   - name: API_KEY
+  ##     value: <API_KEY>
+  ##   - name: VENDOR
+  ##     value: <Claude/OpenAi/Grok,Gemini>
+  # -- Array with extra environment variables to add
+  # @section -- Agentic parameters
+  extraEnvVars: []
+  pdb:
+    # -- Enable PodDisruptionBudget
+    # @section -- Agentic parameters
+    create: false
+    # -- Set PodDisruptionBudget minAvailable
+    # @section -- Agentic parameters
+    minAvailable: ""
+    # -- Set PodDisruptionBudget minAvailable
+    # @section -- Agentic parameters
+    maxUnavailable: ""
+
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  livenessProbe:
+    # -- Enable livenessProbe
+    # @section -- Agentic parameters
+    enabled: true
+    # -- Path for livenessProbe
+    # @section -- Agentic parameters
+    path: /health
+    # -- Initial delay seconds for livenessProbe
+    # @section -- Agentic parameters
+    initialDelaySeconds: 120
+    # -- Period seconds for livenessProbe
+    # @section -- Agentic parameters
+    periodSeconds: 10
+    # -- Timeout seconds for livenessProbe
+    # @section -- Agentic parameters
+    timeoutSeconds: 10
+    # -- Failure threshold for livenessProbe
+    # @section -- Agentic parameters
+    failureThreshold: 6
+    # -- Success threshold for livenessProbe
+    # @section -- Agentic parameters
+    successThreshold: 1
+  readinessProbe:
+    # -- Enable readinessProbe
+    # @section -- Agentic parameters
+    enabled: true
+    # -- Path for readinessProbe
+    # @section -- Agentic parameters
+    path: /health
+    # -- Initial delay seconds for readinessProbe
+    # @section -- Agentic parameters
+    initialDelaySeconds: 20
+    # -- Period seconds for readinessProbe
+    # @section -- Agentic parameters
+    periodSeconds: 10
+    # -- Timeout seconds for readinessProbe
+    # @section -- Agentic parameters
+    timeoutSeconds: 10
+    # -- Failure threshold for readinessProbe
+    # @section -- Agentic parameters
+    failureThreshold: 24
+    # -- Success threshold for readinessProbe
+    # @section -- Agentic parameters
+    successThreshold: 1
+
 metricsExporter:
   # -- Enable k8s metrics exporter
   # @section -- MetricsExporter parameters

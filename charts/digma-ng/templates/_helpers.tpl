@@ -52,6 +52,20 @@ Return the emailSettings apiKey using fallback so support backward compatibility
 {{- end -}}
 
 
+{{/*
+Return the proper agentic api fullname
+*/}}
+{{- define "digma.agentic" -}}
+  {{- printf "%s-agentic" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+{{- end -}}
+
+{{/*
+Return the proper agentic api url
+*/}}
+{{- define "digma.agentic.url" -}}
+{{ printf "http://%s:%v" (include "digma.agentic" .) .Values.agentic.service.ports.http }}
+{{- end -}}
+
 
 {{/*
 Return the proper ai api fullname
