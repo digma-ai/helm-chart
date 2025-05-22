@@ -1,6 +1,6 @@
 {{- define "replicas.value" -}}
 {{- $value := .value -}}
-{{- if (typeOf $value | eq "float64") -}}
+{{- if or (typeOf $value | eq "float64") (typeOf $value | eq "int") (typeOf $value | eq "json.Number") -}}
 {{ $value }}
 {{- else -}}
 {{ tpl $value .context }}
