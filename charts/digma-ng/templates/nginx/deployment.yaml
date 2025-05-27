@@ -112,6 +112,7 @@ spec:
             cp /config/ui/envs/login-env.js /app/login/env.js;
 
             substitute_env_vars /app/admin/env.js;
+            substitute_env_vars /app/agentic/env.js
             substitute_env_vars /app/email-confirmation/env.js;
             substitute_env_vars /app/ide-launcher/env.js;
             substitute_env_vars /app/login/env.js;
