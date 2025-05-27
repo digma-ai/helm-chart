@@ -21,6 +21,12 @@ data:
     window.postHogApiKey = "${POSTHOG_API_KEY}";
     window.postHogHost = "https://us.i.posthog.com";
     window.productFruitsWorkspaceCode = "${PRODUCT_FRUITS_WORKSPACE_CODE}";
+  agentic-env.js: |
+    window.platform = "Web";
+    window.theme = "dark-jetbrains";
+    window.postHogApiKey = "${POSTHOG_API_KEY}";
+    window.postHogHost = "https://us.i.posthog.com";
+    window.productFruitsWorkspaceCode = "${PRODUCT_FRUITS_WORKSPACE_CODE}";
   email-confirmation-env.js: |
     window.platform = "Web";
     window.theme = "dark-jetbrains";
