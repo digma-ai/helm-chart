@@ -102,9 +102,6 @@ spec:
               mv "$temp_file" "$file"
             }
 
-            wget -O /tmp/digma-ui.zip "https://github.com/digma-ai/digma-ui/releases/download/v{{.Values.ui.artifactsVersion}}/dist-web-v{{.Values.ui.artifactsVersion}}.zip" &&
-            unzip -o /tmp/digma-ui.zip -d /app &&
-            rm /tmp/digma-ui.zip &&
             cp /config/ui/envs/admin-env.js /app/admin/env.js;
             cp /config/ui/envs/agentic-env.js /app/agentic/env.js;
             cp /config/ui/envs/email-confirmation-env.js /app/email-confirmation/env.js;

@@ -1342,8 +1342,8 @@ pipelineWorker:
 nginx:
   image:
     registry: docker.io
-    repository: nginx
-    tag: 1.27.3
+    repository: digmaai/digma-ui
+    tag: {{.Values.ui.artifactsVersion}}
     # -- image pull policy
     # @section -- UI parameters
     pullPolicy: IfNotPresent
@@ -1518,7 +1518,7 @@ ai:
   image:
     registry: docker.io
     repository: digmatic/digma-ai
-    tag: 0.0.27
+    tag: 0.0.22
     # -- image pull policy
     # @section -- AI parameters
     pullPolicy: IfNotPresent
