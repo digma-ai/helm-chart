@@ -1343,7 +1343,7 @@ nginx:
   image:
     registry: docker.io
     repository: digmaai/digma-ui
-    tag: {{.Values.ui.artifactsVersion}}
+    tag: '{{.Values.ui.artifactsVersion}}'
     # -- image pull policy
     # @section -- UI parameters
     pullPolicy: IfNotPresent
