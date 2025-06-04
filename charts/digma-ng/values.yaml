@@ -1342,7 +1342,7 @@ pipelineWorker:
 nginx:
   image:
     registry: docker.io
-    repository: digmaai/digma-ui
+    repository: digmatic/digma-ui
     tag: '{{.Values.ui.artifactsVersion}}'
     # -- image pull policy
     # @section -- UI parameters
