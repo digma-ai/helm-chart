@@ -103,7 +103,12 @@ spec:
             }
 
             # Create subdirectories and copy env files to processed volume
-            mkdir -p /processed-envs/admin /processed-envs/agentic /processed-envs/email-confirmation /processed-envs/ide-launcher /processed-envs/login
+            mkdir -p \
+              /processed-envs/admin \
+              /processed-envs/agentic \
+              /processed-envs/email-confirmation \
+              /processed-envs/ide-launcher \
+              /processed-envs/login
 
             cp /config/ui/envs/admin-env.js /processed-envs/admin/env.js;
             cp /config/ui/envs/agentic-env.js /processed-envs/agentic/env.js;
