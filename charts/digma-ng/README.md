@@ -597,7 +597,7 @@ How It Works
 | nginx.pdb.create | bool | `false` | Enable PodDisruptionBudget |
 | nginx.pdb.minAvailable | string | `""` | Set PodDisruptionBudget minAvailable |
 | nginx.pdb.maxUnavailable | string | `""` | Set PodDisruptionBudget minAvailable |
-| ui.artifactsVersion | string | `"15.0.0"` | ui version |
+| ui.apps | list | `["admin","agentic","email-confirmation","ide-launcher","login"]` | List of UI applications/folders |
 | ui.service.type | string | `"ClusterIP"` | service type |
 | ui.service.annotations | object | `{}` | Additional custom annotations for service |
 | ui.service.ports.http | int | `80` | HTTP service port |

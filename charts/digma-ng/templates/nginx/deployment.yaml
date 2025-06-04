@@ -122,7 +122,7 @@ spec:
             mountPath: /config/ui/envs             
       containers:
       - name: nginx
-        image: {{ include "common.images.image" (dict "imageRoot" .Values.nginx.image "global" .Values.global "chart" .Chart) }}
+        image: {{ include "common.images.image" (dict "imageRoot" .Values.nginx.image ) }}
         imagePullPolicy: {{ .Values.nginx.image.pullPolicy }}
         resources: {{- toYaml .Values.nginx.resources | nindent 12 }}
         ports:
