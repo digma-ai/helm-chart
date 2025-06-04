@@ -103,24 +103,18 @@ spec:
             }
 
             # Create subdirectories and copy env files to processed volume
-            mkdir -p \
-              /processed-envs/admin \
-              /processed-envs/agentic \
-              /processed-envs/email-confirmation \
-              /processed-envs/ide-launcher \
-              /processed-envs/login
-
-            cp /config/ui/envs/admin-env.js /processed-envs/admin/env.js;
-            cp /config/ui/envs/agentic-env.js /processed-envs/agentic/env.js;
-            cp /config/ui/envs/email-confirmation-env.js /processed-envs/email-confirmation/env.js;
-            cp /config/ui/envs/ide-launcher-env.js /processed-envs/ide-launcher/env.js;
-            cp /config/ui/envs/login-env.js /processed-envs/login/env.js;
-
-            substitute_env_vars /processed-envs/admin/env.js;
-            substitute_env_vars /processed-envs/agentic/env.js;
-            substitute_env_vars /processed-envs/email-confirmation/env.js;
-            substitute_env_vars /processed-envs/ide-launcher/env.js;
-            substitute_env_vars /processed-envs/login/env.js;
+            ENV_FOLDERS="{{ join " " .Values.ui.apps }}"
+            
+            # Create all directories
+            for folder in $ENV_FOLDERS; do
+              mkdir -p "/processed-envs/$folder"
+            done
+            
+            # Copy and process env files
+            for folder in $ENV_FOLDERS; do
+              cp "/config/ui/envs/$folder-env.js" "/processed-envs/$folder/env.js"
+              substitute_env_vars "/processed-envs/$folder/env.js"
+            done
         volumeMounts:
           - name: processed-envs-volume
             mountPath: /processed-envs
@@ -140,21 +134,11 @@ spec:
           - name: conf-volume
             mountPath: /etc/nginx/nginx.conf
             subPath: nginx.conf
+          {{- range .Values.ui.apps }}
           - name: processed-envs-volume
-            mountPath: /app/admin/env.js
-            subPath: admin/env.js
-          - name: processed-envs-volume
-            mountPath: /app/agentic/env.js
-            subPath: agentic/env.js
-          - name: processed-envs-volume
-            mountPath: /app/email-confirmation/env.js
-            subPath: email-confirmation/env.js
-          - name: processed-envs-volume
-            mountPath: /app/ide-launcher/env.js
-            subPath: ide-launcher/env.js
-          - name: processed-envs-volume
-            mountPath: /app/login/env.js
-            subPath: login/env.js
+            mountPath: /app/{{ . }}/env.js
+            subPath: {{ . }}/env.js
+          {{- end }}
         {{- if not .Values.diagnosticMode.enabled }}
         {{- if .Values.nginx.livenessProbe.enabled }}
         livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.nginx.livenessProbe "enabled") "context" $) | nindent 10 }}
