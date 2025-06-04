@@ -43,11 +43,11 @@ spec:
         - name: conf-volume
           configMap:
             name: {{ include "digma.nginx" . }}
-        - name: app-volume
-          emptyDir: {}
         - name: ui-envs-volume
           configMap:
             name: {{ include "digma.ui" . }}
+        - name: processed-envs-volume
+          emptyDir: {}
       initContainers:
       - name: copy-nginx-config
         image: busybox:latest
@@ -102,28 +102,27 @@ spec:
               mv "$temp_file" "$file"
             }
 
-            wget -O /tmp/digma-ui.zip "https://github.com/digma-ai/digma-ui/releases/download/v{{.Values.ui.artifactsVersion}}/dist-web-v{{.Values.ui.artifactsVersion}}.zip" &&
-            unzip -o /tmp/digma-ui.zip -d /app &&
-            rm /tmp/digma-ui.zip &&
-            cp /config/ui/envs/admin-env.js /app/admin/env.js;
-            cp /config/ui/envs/agentic-env.js /app/agentic/env.js;
-            cp /config/ui/envs/email-confirmation-env.js /app/email-confirmation/env.js;
-            cp /config/ui/envs/ide-launcher-env.js /app/ide-launcher/env.js;
-            cp /config/ui/envs/login-env.js /app/login/env.js;
-
-            substitute_env_vars /app/admin/env.js;
-            substitute_env_vars /app/agentic/env.js
-            substitute_env_vars /app/email-confirmation/env.js;
-            substitute_env_vars /app/ide-launcher/env.js;
-            substitute_env_vars /app/login/env.js;
+            # Create subdirectories and copy env files to processed volume
+            ENV_FOLDERS="{{ join " " .Values.ui.apps }}"
+            
+            # Create all directories
+            for folder in $ENV_FOLDERS; do
+              mkdir -p "/processed-envs/$folder"
+            done
+            
+            # Copy and process env files
+            for folder in $ENV_FOLDERS; do
+              cp "/config/ui/envs/$folder-env.js" "/processed-envs/$folder/env.js"
+              substitute_env_vars "/processed-envs/$folder/env.js"
+            done
         volumeMounts:
-          - name: app-volume
-            mountPath: /app
+          - name: processed-envs-volume
+            mountPath: /processed-envs
           - name: ui-envs-volume
             mountPath: /config/ui/envs             
       containers:
       - name: nginx
-        image: {{ include "common.images.image" (dict "imageRoot" .Values.nginx.image "global" .Values.global "chart" .Chart) }}
+        image: {{ include "common.images.image" (dict "imageRoot" .Values.nginx.image ) }}
         imagePullPolicy: {{ .Values.nginx.image.pullPolicy }}
         resources: {{- toYaml .Values.nginx.resources | nindent 12 }}
         ports:
@@ -135,8 +134,11 @@ spec:
           - name: conf-volume
             mountPath: /etc/nginx/nginx.conf
             subPath: nginx.conf
-          - name: app-volume
-            mountPath: /app
+          {{- range .Values.ui.apps }}
+          - name: processed-envs-volume
+            mountPath: /app/{{ . }}/env.js
+            subPath: {{ . }}/env.js
+          {{- end }}
         {{- if not .Values.diagnosticMode.enabled }}
         {{- if .Values.nginx.livenessProbe.enabled }}
         livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.nginx.livenessProbe "enabled") "context" $) | nindent 10 }}

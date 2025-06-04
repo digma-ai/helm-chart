@@ -1342,8 +1342,8 @@ pipelineWorker:
 nginx:
   image:
     registry: docker.io
-    repository: nginx
-    tag: 1.27.3
+    repository: digmatic/digma-ui
+    tag: 15.0.0
     # -- image pull policy
     # @section -- UI parameters
     pullPolicy: IfNotPresent
@@ -1438,12 +1438,17 @@ nginx:
     # @section -- UI parameters
     maxUnavailable: ""
 ui:
-  # -- ui version
-  # @section -- UI parameters
-  artifactsVersion: 14.2.1
   postHogApiKey: phc_5sy6Kuv1EYJ9GAdWPeGl7gx31RAw7BR7NHnOuLCUQZK
   productFruitsWorkspaceCode: GBNh54uJtBaeWuOq
   sandboxEnabled: false
+  # -- List of UI applications/folders
+  # @section -- UI parameters
+  apps:
+    - admin
+    - agentic
+    - email-confirmation
+    - ide-launcher
+    - login
   service:
     # -- service type
     # @section -- UI parameters
