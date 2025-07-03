@@ -12,6 +12,7 @@ metadata:
 data:
   admin-env.js: |
     window.areInsightSuggestionsEnabled = {{ .Values.ai.enabled }};
+    window.isAgenticEnabled = {{ .Values.agentic.enabled }};
     window.isJaegerEnabled = true;
     window.jaegerURL = "/jaeger";
     window.jaegerApiPath = "/jaeger/api";
