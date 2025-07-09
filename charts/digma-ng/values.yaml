@@ -1343,7 +1343,7 @@ nginx:
   image:
     registry: docker.io
     repository: digmatic/digma-ui
-    tag: 16.1.0
+    tag: 16.3.2
     # -- image pull policy
     # @section -- UI parameters
     pullPolicy: IfNotPresent
@@ -1649,7 +1649,7 @@ agentic:
   image:
     registry: docker.io
     repository: digmatic/digma-agentic
-    tag: 0.0.68
+    tag: 0.0.71
     # -- image pull policy
     # @section -- Agentic parameters
     pullPolicy: IfNotPresent
