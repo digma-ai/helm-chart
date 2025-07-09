@@ -2634,6 +2634,55 @@ entries:
   - annotations:
       category: Application
     apiVersion: v2
+    appVersion: 0.3.328
+    created: "2025-07-09T13:41:05.190999015Z"
+    dependencies:
+    - name: kafka
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 31.0.0
+    - condition: observability.useLocal
+      name: prometheus
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 1.3.28
+    - condition: observability.useLocal
+      name: grafana
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 11.3.26
+    - name: elasticsearch
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 21.4.1
+    - alias: elasticsearchlogs
+      condition: elasticsearchlogs.enabled
+      name: elasticsearch
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 21.4.1
+    - name: redis
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 20.3.0
+    - name: postgresql
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 16.2.1
+    - condition: clickhouse.enabled
+      name: clickhouse
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 8.0.7
+    - name: common
+      repository: oci://registry-1.docker.io/bitnamicharts
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    description: A Helm chart containing Digma's services
+    digest: b58dbf9d8e5da7664252d454e38fcace87e65d255af66e774efee3a09ce8aecb
+    home: https://github.com/digma-ai/digma
+    icon: https://digma.ai/wp-content/uploads/2024/02/logo-alt-1.svg
+    name: digma-ng
+    type: application
+    urls:
+    - https://github.com/digma-ai/helm-chart/releases/download/digma-ng-1.0.360/digma-ng-1.0.360.tgz
+    version: 1.0.360
+  - annotations:
+      category: Application
+    apiVersion: v2
     appVersion: 0.3.326
     created: "2025-07-02T15:17:01.537856471Z"
     dependencies:
@@ -7618,4 +7667,4 @@ entries:
     urls:
     - https://github.com/digma-ai/helm-chart/releases/download/sample-app-go-1.1.0/sample-app-go-1.1.0.tgz
     version: 1.1.0
-generated: "2025-07-02T15:17:01.538877112Z"
+generated: "2025-07-09T13:41:05.191585942Z"
