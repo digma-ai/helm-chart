@@ -1340,10 +1340,16 @@ pipelineWorker:
     # @section -- PipelineWorker parameters
     maxUnavailable: ""
 nginx:
+  commonHeaders:
+    X-Frame-Options: "DENY"
+    X-Content-Type-Options: "nosniff"
+    Referrer-Policy: "same-origin"
+    Content-Security-Policy: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.google.com https://*.posthog.com https://*.productfruits.com; connect-src 'self' http://localhost:* https://*.posthog.com https://*.productfruits.com https://productfruits.help/ wss://*.productfruits.com; worker-src 'self' blob: data:; img-src 'self' https://*.posthog.com https://*.productfruits.com data:; style-src 'self' 'unsafe-inline' https://*.posthog.com https://*.productfruits.com; font-src 'self' https://*.posthog.com; frame-src https://*.productfruits.com; media-src https://*.posthog.com blob:;"
+    Permissions-Policy: "accelerometer=(), ambient-light-sensor=(), attribution-reporting=(), autoplay=(), bluetooth=(), browsing-topics=(), camera=(), compute-pressure=(), cross-origin-isolated=(), deferred-fetch=(), deferred-fetch-minimal=(), display-capture=(), document-domain=(), encrypted-media=(), fullscreen=(), gamepad=(), geolocation=(), gyroscope=(), hid=(), identity-credentials-get=(), idle-detection=(), local-fonts=(), magnetometer=(), microphone=(), midi=(), otp-credentials=(), payment=(), picture-in-picture=(), publickey-credentials-create=(), publickey-credentials-get=(), screen-wake-lock=(), serial=(), speaker-selection=(), storage-access=(), usb=(), web-share=(), window-management=(), xr-spatial-tracking=()"
   image:
     registry: docker.io
     repository: digmatic/digma-ui
-    tag: 16.3.7
+    tag: 16.3.9
     # -- image pull policy
     # @section -- UI parameters
     pullPolicy: IfNotPresent
