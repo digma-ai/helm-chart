@@ -1,10 +1,16 @@
 # digma-ng
 
-![Version: 1.0.362](https://img.shields.io/badge/Version-1.0.362-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.334](https://img.shields.io/badge/AppVersion-0.3.334-informational?style=flat-square)
+
+
+
+![Version: 1.0.363](https://img.shields.io/badge/Version-1.0.363-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.335](https://img.shields.io/badge/AppVersion-0.3.335-informational?style=flat-square) 
 
 A Helm chart containing Digma's services
 
 **Homepage:** <https://github.com/digma-ai/digma>
+
+
+
 
 ## License Key
 Digma will not function without a valid license key.
@@ -25,6 +31,7 @@ helm upgrade --install digma digma/digma-ng -n digma --set digma.licenseKey=$DIG
 ## Introduction
 
 This chart bootstraps a [Digma](https://digma.ai) deployment on a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
+
 
 ## Prerequisites
 
@@ -184,6 +191,10 @@ Default Models by Vendor:
 | OpenAi    | gpt-4                      |
 | Grok      | grok-1                     |
 | Gemini    | gemini-2.0-flash           |
+
+
+
+
 
 ## PostgreSQL Backup
 The Digma-ng Helm chart provides an optional PostgreSQL backup job for debugging and troubleshooting purposes. This guide explains how to enable and configure the backup feature.
