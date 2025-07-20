@@ -39,6 +39,9 @@ spec:
       tolerations: 
       {{- toYaml $mergedTolerations | nindent 6 -}}
       {{- end }}
+      {{- if .Values.nginx.podSecurityContext.enabled }}
+      securityContext: {{- include "common.compatibility.renderSecurityContext" (dict "secContext" .Values.nginx.podSecurityContext "context" $) | nindent 8 }}
+      {{- end }}
       volumes:
         - name: conf-volume
           configMap:

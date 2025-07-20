@@ -38,6 +38,9 @@ spec:
       tolerations: 
       {{- toYaml $mergedTolerations | nindent 6 -}}
       {{- end }}
+      {{- if .Values.measurementAnalysis.podSecurityContext.enabled }}
+      securityContext: {{- include "common.compatibility.renderSecurityContext" (dict "secContext" .Values.measurementAnalysis.podSecurityContext "context" $) | nindent 8 }}
+      {{- end }}
       containers:
       - name: digma-measurement-analysis
         image: {{ include "common.images.image" (dict "imageRoot" .Values.measurementAnalysis.image "global" .Values.global "chart" .Chart) }}
