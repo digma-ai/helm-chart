@@ -38,6 +38,9 @@ spec:
       tolerations: 
       {{- toYaml $mergedTolerations | nindent 6 -}}
       {{- end }}
+      {{- if .Values.collectorWorker.podSecurityContext.enabled }}
+      securityContext: {{- include "common.compatibility.renderSecurityContext" (dict "secContext" .Values.collectorWorker.podSecurityContext "context" $) | nindent 8 }}
+      {{- end }}
       containers:
       - name: digma-collector-worker
         image: {{ include "common.images.image" (dict "imageRoot" .Values.collectorWorker.image "global" .Values.global "chart" .Chart) }}

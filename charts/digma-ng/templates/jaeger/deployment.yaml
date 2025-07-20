@@ -35,6 +35,9 @@ spec:
       tolerations: 
       {{- toYaml $mergedTolerations | nindent 6 -}}
       {{- end }}
+      {{- if .Values.jaeger.podSecurityContext.enabled }}
+      securityContext: {{- include "common.compatibility.renderSecurityContext" (dict "secContext" .Values.jaeger.podSecurityContext "context" $) | nindent 8 }}
+      {{- end }}
       initContainers:
         - name: wait-for-elasticsearch
           imagePullPolicy: Always

@@ -39,6 +39,9 @@ spec:
       tolerations: 
       {{- toYaml $mergedTolerations | nindent 6 -}}
       {{- end }}
+      {{- if .Values.agentic.podSecurityContext.enabled }}
+      securityContext: {{- include "common.compatibility.renderSecurityContext" (dict "secContext" .Values.agentic.podSecurityContext "context" $) | nindent 8 }}
+      {{- end }}
       containers:
       - name: digma-agentic
         image: {{ include "common.images.image" (dict "imageRoot" .Values.agentic.image "global" .Values.global) }}
