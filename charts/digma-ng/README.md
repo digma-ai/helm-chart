@@ -205,6 +205,42 @@ How It Works
         1.	Connects to the PostgreSQL database.
         2.	Creates a backup file.
         3.	Uploads the backup file to the provided presigned S3 URL.
+
+## ⚠️ Troubleshooting
+
+### Elasticsearch Kernel Requirements
+
+Elasticsearch requires certain **kernel parameters** to be set at the **host level** in order to function properly. If these values are not correctly configured in the underlying OS, the Elasticsearch containers may fail to start, displaying error messages related to system limits.
+
+📚 For more details, refer to the official Bitnami documentation: 
+➡️ [Bitnami Elasticsearch – Default Kernel Settings](https://github.com/bitnami/charts/tree/main/bitnami/elasticsearch#default-kernel-settings)
+
+---
+
+#### 🛡️ Security Tool Warnings
+
+Some **security scanners or admission controllers** (e.g., Kyverno, Gatekeeper, Pod Security Admission) may **warn or block** the deployment because the Elasticsearch chart includes an **init container** that requires elevated privileges to set `vm.max_map_count`. This is essential for Elasticsearch to operate, as it relies on memory-mapped files extensively.
+
+---
+
+#### ✅ Managed Kubernetes (EKS, AKS) — Safe to Skip Init Container
+
+In most managed Kubernetes environments like **EKS**, **AKS**, or **GKE**, the required kernel setting is **already applied** by default:
+vm.max_map_count = 262144
+
+You can verify this from any running non-Elasticsearch pod:
+
+```bash
+cat /proc/sys/vm/max_map_count
+```
+If the output is at least 262144, You can safely disable the init container by adding the following to your values.yaml:
+```yaml
+elasticsearch:
+  master:
+    podSecurityContext:
+      enabled: false
+```
+
 ## Values
 
 ### Global Digma parameters
