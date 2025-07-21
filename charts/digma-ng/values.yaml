@@ -185,6 +185,12 @@ collectorWorker:
     limits:
       memory: 1536Mi
       cpu: 1.5
+  # -- Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+  # @section -- CollectorWorker parameters
+  podSecurityContext:
+    enabled: true
+    runAsUser: 1654
+    runAsNonRoot: true 
   service:
     ports:
       # -- HTTP service port, health check at /healthz
@@ -409,6 +415,11 @@ otelCollector:
     limits:
       cpu: 750m
       memory: 1536Mi
+  # -- Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+  # @section -- Otel Collector parameters
+  podSecurityContext:
+    enabled: true
+    runAsNonRoot: true 
   service:
     # -- service type
     # @section -- Otel Collector parameters
@@ -706,6 +717,12 @@ collectorApi:
     limits:
       memory: 1024Mi
       cpu: 1.5
+  # -- Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+  # @section -- CollectorApi parameters
+  podSecurityContext:
+    enabled: true
+    runAsUser: 1654
+    runAsNonRoot: true 
   service:
     # -- service type
     # @section -- CollectorApi parameters
@@ -837,6 +854,12 @@ analyticsApi:
     limits:
       memory: 800Mi
       cpu: 800m
+  # -- Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+  # @section -- AnalyticsApi parameters
+  podSecurityContext:
+    enabled: true
+    runAsUser: 1654
+    runAsNonRoot: true 
   service:
     # -- service type
     # @section -- AnalyticsApi parameters
@@ -1021,6 +1044,12 @@ measurementAnalysis:
     limits:
       memory: 1024Mi
       cpu: 800m
+  # -- Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+  # @section -- MeasurementAnalysis parameters
+  podSecurityContext:
+    enabled: true
+    runAsUser: 1654
+    runAsNonRoot: true 
   service:
     ports:
       # -- HTTP service port, health check at /healthz
@@ -1136,6 +1165,12 @@ scheduler:
     limits:
       memory: 1024Mi
       cpu: 750m
+  # -- Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+  # @section -- Scheduler parameters
+  podSecurityContext:
+    enabled: true
+    runAsUser: 1654
+    runAsNonRoot: true 
   service:
     ports:
       # -- HTTP service port, health check at /healthz
@@ -1251,6 +1286,12 @@ pipelineWorker:
     limits:
       memory: 1024Mi
       cpu: 750m
+  # -- Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+  # @section -- PipelineWorker parameters
+  podSecurityContext:
+    enabled: true
+    runAsUser: 1654
+    runAsNonRoot: true 
   service:
     ports:
       # -- HTTP service port, health check at /healthz
@@ -1349,7 +1390,7 @@ nginx:
   image:
     registry: docker.io
     repository: digmatic/digma-ui
-    tag: 16.4.0
+    tag: 16.4.2
     # -- image pull policy
     # @section -- UI parameters
     pullPolicy: IfNotPresent
@@ -1373,6 +1414,12 @@ nginx:
     limits:
       memory: 200Mi
       cpu: 200m
+  # -- Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+  # @section -- UI parameters
+  podSecurityContext:
+    enabled: true
+    runAsUser: 1000
+    runAsNonRoot: true 
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
   # -- Extra labels for pods
   # @section -- UI parameters
@@ -1465,7 +1512,7 @@ ui:
     ports:
       # -- HTTP service port
       # @section -- UI parameters
-      http: 80
+      http: 8080
   ## ui ingress parameters
   ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
   ingress:
@@ -1679,6 +1726,12 @@ agentic:
     limits:
       memory: 768Mi
       cpu: 750m
+  # -- Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+  # @section -- Agentic parameters
+  podSecurityContext:
+    enabled: true  
+    runAsUser: 1000
+    runAsNonRoot: true  
   service:
     # -- service type
     # @section -- Agentic parameters
@@ -2009,6 +2062,11 @@ otelCollectorDf:
     limits:
       cpu: 750m
       memory: 1536Mi
+  # -- Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+  # @section -- Otel CollectorDF parameters
+  podSecurityContext:
+    enabled: true
+    runAsNonRoot: true 
   service:
     # -- Additional custom annotations for service
     # @section -- Otel CollectorDF parameters
@@ -2304,6 +2362,12 @@ jaeger:
     limits:
       memory: 768Mi
       cpu: 750m
+  # -- Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+  # @section -- Jaeger parameters
+  podSecurityContext:
+    enabled: true   
+    runAsUser: 1000
+    runAsNonRoot: true 
   ## jaeger service parameters
   ##
   service:

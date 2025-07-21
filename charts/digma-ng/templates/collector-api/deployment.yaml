@@ -15,7 +15,7 @@ spec:
       app.kubernetes.io/component: collector-api
   template:
     metadata:
-      labels: 
+      labels:
         {{- include "common.labels.standard" ( dict "customLabels" $podLabels "context" $ ) | nindent 8 }}
         app.kubernetes.io/component: collector-api
       annotations:
@@ -37,6 +37,9 @@ spec:
       {{- if $mergedTolerations }}
       tolerations: 
       {{- toYaml $mergedTolerations | nindent 6 -}}
+      {{- end }}
+      {{- if .Values.collectorApi.podSecurityContext.enabled }}
+      securityContext: {{- include "common.compatibility.renderSecurityContext" (dict "secContext" .Values.collectorApi.podSecurityContext "context" $) | nindent 8 }}
       {{- end }}
       containers:
       - name: digma-collector-api

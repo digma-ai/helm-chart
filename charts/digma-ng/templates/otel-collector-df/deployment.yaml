@@ -40,6 +40,9 @@ spec:
       tolerations: 
       {{- toYaml $mergedTolerations | nindent 6 -}}
       {{- end }}
+      {{- if .Values.otelCollectorDf.podSecurityContext.enabled }}
+      securityContext: {{- include "common.compatibility.renderSecurityContext" (dict "secContext" .Values.otelCollectorDf.podSecurityContext "context" $) | nindent 8 }}
+      {{- end }}
       containers:
       - name: otel-collector-df
         image: {{ include "common.images.image" ( dict "imageRoot" .Values.otelCollectorDf.image "global" .Values.global) }}

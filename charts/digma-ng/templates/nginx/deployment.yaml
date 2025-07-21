@@ -39,6 +39,9 @@ spec:
       tolerations: 
       {{- toYaml $mergedTolerations | nindent 6 -}}
       {{- end }}
+      {{- if .Values.nginx.podSecurityContext.enabled }}
+      securityContext: {{- include "common.compatibility.renderSecurityContext" (dict "secContext" .Values.nginx.podSecurityContext "context" $) | nindent 8 }}
+      {{- end }}
       volumes:
         - name: conf-volume
           configMap:
@@ -51,6 +54,13 @@ spec:
       initContainers:
       - name: copy-nginx-config
         image: busybox:latest
+        resources:
+          requests:
+            memory: 16Mi
+            cpu: 50m
+          limits:
+            memory: 64Mi
+            cpu: 100m
         env:
         - name: POSTHOG_API_KEY
           valueFrom:

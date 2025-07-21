@@ -35,11 +35,21 @@ spec:
       tolerations: 
       {{- toYaml $mergedTolerations | nindent 6 -}}
       {{- end }}
+      {{- if .Values.jaeger.podSecurityContext.enabled }}
+      securityContext: {{- include "common.compatibility.renderSecurityContext" (dict "secContext" .Values.jaeger.podSecurityContext "context" $) | nindent 8 }}
+      {{- end }}
       initContainers:
         - name: wait-for-elasticsearch
           imagePullPolicy: Always
           image: busybox:1.28
           command: [ 'sh', '-c', 'until nc -z {{include "digma.elasticsearch.fullname" .}} {{.Values.elasticsearch.service.ports.restAPI}}; do echo waiting for elasticsearch; sleep 5; done;' ]
+          resources:
+            requests:
+              memory: 16Mi
+              cpu: 50m
+            limits:
+              memory: 64Mi
+              cpu: 100m
       containers:
       - name: digma-jaeger
         image: {{ include "common.images.image" (dict "imageRoot" .Values.jaeger.image "global" .Values.global) }}

@@ -38,6 +38,9 @@ spec:
       tolerations: 
       {{- toYaml $mergedTolerations | nindent 6 -}}
       {{- end }}
+      {{- if .Values.scheduler.podSecurityContext.enabled }}
+      securityContext: {{- include "common.compatibility.renderSecurityContext" (dict "secContext" .Values.scheduler.podSecurityContext "context" $) | nindent 8 }}
+      {{- end }}
       containers:
       - name: digma-scheduler
         image: {{ include "common.images.image" (dict "imageRoot" .Values.scheduler.image "global" .Values.global "chart" .Chart) }}
