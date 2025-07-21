@@ -479,6 +479,10 @@ Return jaeger connectivity env
 {{- define "env.jaeger" -}}
 - name: Jaeger__OtlpUrl
   value: {{ printf "http://%s:%v" (include "digma.jaeger" .) .Values.jaeger.service.ports.grpc_internal }}
+- name: Jaeger__UiUrl
+  value: {{ printf "http://%s:%v/jaeger" (include "digma.jaeger" .) .Values.jaeger.service.ports.http_ui }}
+- name: Jaeger__PublicUrl
+  value: {{ printf "%s/jaeger" (include "digma.jaeger.publicBaseUrl" .) }}
 {{- end -}}
 
 {{/*
@@ -647,13 +651,6 @@ Return remote endpoint url
 {{- end -}}
 
 {{/*
-Return jaeger trace url
-*/}}
-{{- define "env.jaeger.trace.url" -}}
-- name: "JaegerTraceUrl__TraceUrl"
-  value: {{ printf "%s/trace" (include "digma.jaeger.publicBaseUrl" .) }}
-{{- end }}
-
 Return email gateway configuration environment variables
 */}}
 {{- define "env.digma.emailGateway" -}}

@@ -90,10 +90,8 @@ spec:
         {{- end }}
         {{- include "env.digma.emailGateway" . | nindent 8 }}
         {{- include "env.digma.analytics.uiServiceBaseUrl" . | nindent 8 }}
-        {{- include "env.jaeger.trace.url" . | nindent 8 }}
+        {{- include "env.jaeger" . | nindent 8 }}
         {{- include "env.auth.all" . | nindent 8 }}
-        - name: ElasticSearch__Uri
-          value: {{ include "digma.elasticsearch.url" . }}
         - name: MCP__Enabled
           value: {{  .Values.digma.mcp.enabled | quote }}
         {{- if not .Values.diagnosticMode.enabled }}
