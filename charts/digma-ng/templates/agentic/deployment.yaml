@@ -39,7 +39,7 @@ spec:
       tolerations: 
       {{- toYaml $mergedTolerations | nindent 6 -}}
       {{- end }}
-      {{- if .Values.agentic.podSecurityContext.enabled }}
+      {{- if .Values.agentic.podSecurityContext.enabled }} #
       securityContext: {{- include "common.compatibility.renderSecurityContext" (dict "secContext" .Values.agentic.podSecurityContext "context" $) | nindent 8 }}
       {{- end }}
       containers:
