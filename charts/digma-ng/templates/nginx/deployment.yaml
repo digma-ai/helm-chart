@@ -54,6 +54,13 @@ spec:
       initContainers:
       - name: copy-nginx-config
         image: busybox:latest
+        resources:
+          requests:
+            memory: 16Mi
+            cpu: 50m
+          limits:
+            memory: 64Mi
+            cpu: 100m
         env:
         - name: POSTHOG_API_KEY
           valueFrom:

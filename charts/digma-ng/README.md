@@ -1,6 +1,6 @@
 # digma-ng
 
-![Version: 1.0.364](https://img.shields.io/badge/Version-1.0.364-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.335](https://img.shields.io/badge/AppVersion-0.3.335-informational?style=flat-square)
+![Version: 1.0.365](https://img.shields.io/badge/Version-1.0.365-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.337](https://img.shields.io/badge/AppVersion-0.3.337-informational?style=flat-square)
 
 A Helm chart containing Digma's services
 
@@ -205,6 +205,42 @@ How It Works
         1.	Connects to the PostgreSQL database.
         2.	Creates a backup file.
         3.	Uploads the backup file to the provided presigned S3 URL.
+
+## ⚠️ Troubleshooting
+
+### Elasticsearch Kernel Requirements
+
+Elasticsearch requires certain **kernel parameters** to be set at the **host level** in order to function properly. If these values are not correctly configured in the underlying OS, the Elasticsearch containers may fail to start, displaying error messages related to system limits.
+
+📚 For more details, refer to the official Bitnami documentation: 
+➡️ [Bitnami Elasticsearch – Default Kernel Settings](https://github.com/bitnami/charts/tree/main/bitnami/elasticsearch#default-kernel-settings)
+
+---
+
+#### 🛡️ Security Tool Warnings
+
+Some **security scanners or admission controllers** (e.g., Kyverno, Gatekeeper, Pod Security Admission) may **warn or block** the deployment because the Elasticsearch chart includes an **init container** that requires elevated privileges to set `vm.max_map_count`. This is essential for Elasticsearch to operate, as it relies on memory-mapped files extensively.
+
+---
+
+#### ✅ Managed Kubernetes (EKS, AKS) — Safe to Skip Init Container
+
+In most managed Kubernetes environments like **EKS**, **AKS**, or **GKE**, the required kernel setting is **already applied** by default:
+vm.max_map_count = 262144
+
+You can verify this from any running non-Elasticsearch pod:
+
+```bash
+cat /proc/sys/vm/max_map_count
+```
+If the output is at least 262144, You can safely disable the init container by adding the following to your values.yaml:
+```yaml
+elasticsearch:
+  master:
+    podSecurityContext:
+      enabled: false
+```
+
 ## Values
 
 ### Global Digma parameters
@@ -296,7 +332,7 @@ How It Works
 | collectorWorker.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
 | collectorWorker.image.pullSecrets | list | `[]` | image pull secrets |
 | collectorWorker.replicas | string | `"{{ index .Values.presets .Values.digma.deployment.size \"collectorWorker\" \"replicas\" }}"` | replicas based on a given preset(.Values.digma.deployment.size) Number of replicas to deploy |
-| collectorWorker.podSecurityContext | object | `{"enabled":false,"runAsNonRoot":true}` | Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ |
+| collectorWorker.podSecurityContext | object | `{"enabled":true,"runAsNonRoot":true,"runAsUser":1654}` | Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ |
 | collectorWorker.service.ports.http | int | `5052` | HTTP service port, health check at /healthz |
 | collectorWorker.podLabels | object | `{}` | Extra labels for pods |
 | collectorWorker.podAnnotations | object | `{}` | Extra annotations for pods |
@@ -340,7 +376,7 @@ How It Works
 | otelCollector.image.pullSecrets | list | `[]` | image pull secrets |
 | otelCollector.configuration | string | `"extensions:\n  health_check:\n    endpoint: \"0.0.0.0:{{ .Values.otelCollector.service.ports.health }}\"\nreceivers:\n  otlp/grpc:\n    protocols:\n      grpc:\n        endpoint: 0.0.0.0:{{ .Values.otelCollector.service.ports.grpc }}\n  otlp/http:\n    protocols:\n      http:\n        endpoint: 0.0.0.0:{{ .Values.otelCollector.service.ports.http }}\n  datadog:\n    endpoint: 0.0.0.0:{{ .Values.otelCollector.service.ports.datadog }}\nprocessors:\n  batch:\n    timeout: 1000ms\n    send_batch_size: 500\n    send_batch_max_size: 500\n  probabilistic_sampler:\n    sampling_percentage: {{ .Values.otelCollector.samplingPercentage }}\n  transform:\n    trace_statements:\n      - context: span\n        statements:\n          - set(resource.attributes[\"scm.commit.id\"], attributes[\"_dd.git.commit.sha\"]) where attributes[\"_dd.git.commit.sha\"] != nil\n          - set(resource.attributes[\"digma.environment\"], attributes[\"digma.environment\"]) where attributes[\"digma.environment\"] != nil\n          - set(resource.attributes[\"digma.environment.type\"], attributes[\"digma.environment.type\"]) where attributes[\"digma.environment.type\"] != nil\n          - set(resource.attributes[\"service.name\"], attributes[\"_dd.base_service\"]) where attributes[\"_dd.base_service\"] != nil\n          - set(attributes[\"db.statement\"], attributes[\"sql.query\"]) where attributes[\"sql.query\"] != nil\n          - set(attributes[\"db.system\"], attributes[\"db.type\"]) where attributes[\"db.type\"] != nil\n          - set(attributes[\"db.name\"], attributes[\"db.instance\"]) where attributes[\"db.instance\"] != nil\nexporters:\n  logging:\n    loglevel: debug\n  otlphttp:\n    endpoint: http://{{ include \"digma.collector-api\" . }}:{{ .Values.collectorApi.service.ports.http }}\n    compression: gzip\n    tls:\n      insecure: true\n    sending_queue:\n      enabled: true\n      num_consumers: 100\n      queue_size: 1000\n  otlp:\n    endpoint: {{ include \"digma.collector-api\" . }}:{{ .Values.collectorApi.service.ports.grpc }}\n    tls:\n      insecure: true\n    sending_queue:\n      enabled: true\n      num_consumers: 100\n      queue_size: 1000\nservice:\n  extensions: [health_check]\n  pipelines:\n    traces/1:\n      receivers: [otlp/http]\n      processors: [probabilistic_sampler, batch]\n      exporters: [otlphttp]\n    traces/2:\n      receivers: [otlp/grpc]\n      processors: [probabilistic_sampler, batch]\n      exporters: [otlphttp]\n    traces/datadog:\n      receivers: [datadog]\n      processors: [probabilistic_sampler, transform, batch]\n      exporters: [otlphttp]\n"` | This content will be stored in the the config.yaml file and the content can be a template. |
 | otelCollector.replicas | int | `1` | Number of replicas to deploy |
-| otelCollector.podSecurityContext | object | `{"enabled":false,"runAsNonRoot":true}` | Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ |
+| otelCollector.podSecurityContext | object | `{"enabled":true,"runAsNonRoot":true}` | Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ |
 | otelCollector.service.type | string | `"ClusterIP"` | service type |
 | otelCollector.service.annotations | object | `{}` | Additional custom annotations for service |
 | otelCollector.service.ports.health | int | `13133` | health check service port |
@@ -403,7 +439,7 @@ How It Works
 | collectorApi.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
 | collectorApi.image.pullSecrets | list | `[]` | image pull secrets |
 | collectorApi.replicas | int | `2` | Number of replicas to deploy |
-| collectorApi.podSecurityContext | object | `{"enabled":false,"runAsNonRoot":true}` | Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ |
+| collectorApi.podSecurityContext | object | `{"enabled":true,"runAsNonRoot":true,"runAsUser":1654}` | Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ |
 | collectorApi.service.type | string | `"ClusterIP"` | service type |
 | collectorApi.service.annotations | object | `{}` | Additional custom annotations for service |
 | collectorApi.service.ports.internal | int | `5048` | internal service port |
@@ -441,7 +477,7 @@ How It Works
 | analyticsApi.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
 | analyticsApi.image.pullSecrets | list | `[]` | image pull secrets |
 | analyticsApi.replicas | int | `1` | Number of replicas to deploy |
-| analyticsApi.podSecurityContext | object | `{"enabled":false,"runAsNonRoot":true}` | Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ |
+| analyticsApi.podSecurityContext | object | `{"enabled":true,"runAsNonRoot":true,"runAsUser":1654}` | Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ |
 | analyticsApi.service.type | string | `"ClusterIP"` | service type |
 | analyticsApi.service.annotations | object | `{}` | Additional custom annotations for service |
 | analyticsApi.service.ports.http | int | `5051` | HTTP service port, health check at /healthz |
@@ -485,7 +521,7 @@ How It Works
 | measurementAnalysis.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
 | measurementAnalysis.image.pullSecrets | list | `[]` | image pull secrets |
 | measurementAnalysis.replicas | string | `"{{ index .Values.presets .Values.digma.deployment.size \"measurementAnalysis\" \"replicas\" }}"` | replicas based on a given preset(.Values.digma.deployment.size) Number of replicas to deploy |
-| measurementAnalysis.podSecurityContext | object | `{"enabled":false,"runAsNonRoot":true}` | Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ |
+| measurementAnalysis.podSecurityContext | object | `{"enabled":true,"runAsNonRoot":true,"runAsUser":1654}` | Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ |
 | measurementAnalysis.service.ports.http | int | `5054` | HTTP service port, health check at /healthz |
 | measurementAnalysis.podLabels | object | `{}` | Extra labels for pods |
 | measurementAnalysis.podAnnotations | object | `{}` | Extra annotations for pods |
@@ -518,7 +554,7 @@ How It Works
 | scheduler.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
 | scheduler.image.pullSecrets | list | `[]` | image pull secrets |
 | scheduler.replicas | int | `1` | Number of replicas to deploy |
-| scheduler.podSecurityContext | object | `{"enabled":false,"runAsNonRoot":true}` | Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ |
+| scheduler.podSecurityContext | object | `{"enabled":true,"runAsNonRoot":true,"runAsUser":1654}` | Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ |
 | scheduler.service.ports.http | int | `5053` | HTTP service port, health check at /healthz |
 | scheduler.podLabels | object | `{}` | Extra labels for pods |
 | scheduler.podAnnotations | object | `{}` | Extra annotations for pods |
@@ -551,7 +587,7 @@ How It Works
 | pipelineWorker.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
 | pipelineWorker.image.pullSecrets | list | `[]` | image pull secrets |
 | pipelineWorker.replicas | string | `"{{ index .Values.presets .Values.digma.deployment.size \"pipelineWorker\" \"replicas\" }}"` | replicas based on a given preset(.Values.digma.deployment.size) Number of replicas to deploy |
-| pipelineWorker.podSecurityContext | object | `{"enabled":false,"runAsNonRoot":true}` | Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ |
+| pipelineWorker.podSecurityContext | object | `{"enabled":true,"runAsNonRoot":true,"runAsUser":1654}` | Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ |
 | pipelineWorker.service.ports.http | int | `5055` | HTTP service port, health check at /healthz |
 | pipelineWorker.podLabels | object | `{}` | Extra labels for pods |
 | pipelineWorker.podAnnotations | object | `{}` | Extra annotations for pods |
@@ -584,7 +620,7 @@ How It Works
 | nginx.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
 | nginx.image.pullSecrets | list | `[]` | image pull secrets |
 | nginx.replicas | int | `1` | Number of replicas to deploy |
-| nginx.podSecurityContext | object | `{"enabled":false,"runAsNonRoot":true}` | Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ |
+| nginx.podSecurityContext | object | `{"enabled":true,"runAsNonRoot":true,"runAsUser":1000}` | Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ |
 | nginx.podLabels | object | `{}` | Extra labels for pods |
 | nginx.podAnnotations | object | `{}` | Extra annotations for pods |
 | nginx.nodeSelector | object | `{}` | Node labels for pods assignment |
@@ -608,7 +644,7 @@ How It Works
 | ui.apps | list | `["admin","agentic","email-confirmation","ide-launcher","login"]` | List of UI applications/folders |
 | ui.service.type | string | `"ClusterIP"` | service type |
 | ui.service.annotations | object | `{}` | Additional custom annotations for service |
-| ui.service.ports.http | int | `80` | HTTP service port |
+| ui.service.ports.http | int | `8080` | HTTP service port |
 | ui.ingress.enabled | bool | `false` | Enable ingress |
 | ui.ingress.pathType | string | `"ImplementationSpecific"` | Ingress path type |
 | ui.ingress.apiVersion | string | `""` | Force Ingress API version (automatically detected if not set) |
@@ -660,7 +696,7 @@ How It Works
 | agentic.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
 | agentic.image.pullSecrets | list | `[]` | image pull secrets |
 | agentic.replicas | int | `1` | Number of replicas to deploy |
-| agentic.podSecurityContext | object | `{"enabled":false,"runAsNonRoot":true}` | Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ |
+| agentic.podSecurityContext | object | `{"enabled":true,"runAsNonRoot":true,"runAsUser":1000}` | Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ |
 | agentic.service.type | string | `"ClusterIP"` | service type |
 | agentic.service.annotations | object | `{}` | Additional custom annotations for service |
 | agentic.service.ports.http | int | `8000` | HTTP port listen to path: /analyze, health check at /health |
@@ -728,7 +764,7 @@ How It Works
 | otelCollectorDf.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
 | otelCollectorDf.image.pullSecrets | list | `[]` | image pull secrets |
 | otelCollectorDf.replicas | int | `1` | Number of replicas to deploy |
-| otelCollectorDf.podSecurityContext | object | `{"enabled":false,"runAsNonRoot":true}` | Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ |
+| otelCollectorDf.podSecurityContext | object | `{"enabled":true,"runAsNonRoot":true}` | Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ |
 | otelCollectorDf.service.annotations | object | `{}` | Additional custom annotations for service |
 | otelCollectorDf.service.ports.health | int | `13133` | health check service port |
 | otelCollectorDf.service.ports.grpc | int | `4317` | HTTP gRPC service port |
@@ -794,7 +830,7 @@ How It Works
 | jaeger.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
 | jaeger.image.pullSecrets | list | `[]` | image pull secrets |
 | jaeger.replicas | int | `1` | Number of replicas to deploy |
-| jaeger.podSecurityContext | object | `{"enabled":false,"runAsNonRoot":true}` | Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ |
+| jaeger.podSecurityContext | object | `{"enabled":true,"runAsNonRoot":true,"runAsUser":1000}` | Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ |
 | jaeger.service.type | string | `"ClusterIP"` | service type |
 | jaeger.service.annotations | object | `{}` | Additional custom annotations for service |
 | jaeger.service.ports.http_ui | int | `16686` | UI HTTP service port |

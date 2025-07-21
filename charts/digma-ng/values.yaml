@@ -188,7 +188,8 @@ collectorWorker:
   # -- Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
   # @section -- CollectorWorker parameters
   podSecurityContext:
-    enabled: false          # needed for volume access
+    enabled: true
+    runAsUser: 1654
     runAsNonRoot: true 
   service:
     ports:
@@ -417,7 +418,7 @@ otelCollector:
   # -- Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
   # @section -- Otel Collector parameters
   podSecurityContext:
-    enabled: false          # needed for volume access
+    enabled: true
     runAsNonRoot: true 
   service:
     # -- service type
@@ -719,7 +720,8 @@ collectorApi:
   # -- Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
   # @section -- CollectorApi parameters
   podSecurityContext:
-    enabled: false          # needed for volume access
+    enabled: true
+    runAsUser: 1654
     runAsNonRoot: true 
   service:
     # -- service type
@@ -855,7 +857,8 @@ analyticsApi:
   # -- Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
   # @section -- AnalyticsApi parameters
   podSecurityContext:
-    enabled: false          # needed for volume access
+    enabled: true
+    runAsUser: 1654
     runAsNonRoot: true 
   service:
     # -- service type
@@ -1044,7 +1047,8 @@ measurementAnalysis:
   # -- Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
   # @section -- MeasurementAnalysis parameters
   podSecurityContext:
-    enabled: false          # needed for volume access
+    enabled: true
+    runAsUser: 1654
     runAsNonRoot: true 
   service:
     ports:
@@ -1164,7 +1168,8 @@ scheduler:
   # -- Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
   # @section -- Scheduler parameters
   podSecurityContext:
-    enabled: false          # needed for volume access
+    enabled: true
+    runAsUser: 1654
     runAsNonRoot: true 
   service:
     ports:
@@ -1284,7 +1289,8 @@ pipelineWorker:
   # -- Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
   # @section -- PipelineWorker parameters
   podSecurityContext:
-    enabled: false          # needed for volume access
+    enabled: true
+    runAsUser: 1654
     runAsNonRoot: true 
   service:
     ports:
@@ -1384,7 +1390,7 @@ nginx:
   image:
     registry: docker.io
     repository: digmatic/digma-ui
-    tag: 16.4.0
+    tag: 16.4.2
     # -- image pull policy
     # @section -- UI parameters
     pullPolicy: IfNotPresent
@@ -1411,7 +1417,8 @@ nginx:
   # -- Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
   # @section -- UI parameters
   podSecurityContext:
-    enabled: false          # needed for volume access
+    enabled: true
+    runAsUser: 1000
     runAsNonRoot: true 
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
   # -- Extra labels for pods
@@ -1505,7 +1512,7 @@ ui:
     ports:
       # -- HTTP service port
       # @section -- UI parameters
-      http: 80
+      http: 8080
   ## ui ingress parameters
   ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
   ingress:
@@ -1722,7 +1729,8 @@ agentic:
   # -- Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
   # @section -- Agentic parameters
   podSecurityContext:
-    enabled: false          # needed for volume access
+    enabled: true  
+    runAsUser: 1000
     runAsNonRoot: true  
   service:
     # -- service type
@@ -2057,7 +2065,7 @@ otelCollectorDf:
   # -- Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
   # @section -- Otel CollectorDF parameters
   podSecurityContext:
-    enabled: false          # needed for volume access
+    enabled: true
     runAsNonRoot: true 
   service:
     # -- Additional custom annotations for service
@@ -2357,7 +2365,8 @@ jaeger:
   # -- Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
   # @section -- Jaeger parameters
   podSecurityContext:
-    enabled: false          # needed for volume access
+    enabled: true   
+    runAsUser: 1000
     runAsNonRoot: true 
   ## jaeger service parameters
   ##
