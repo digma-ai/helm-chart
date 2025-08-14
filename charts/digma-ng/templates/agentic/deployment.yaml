@@ -52,6 +52,20 @@ spec:
           containerPort: {{ .Values.agentic.service.ports.http }}        
         env:
         {{- include "env.digma.app.common" . | nindent  8 }}
+        {{- if eq "true" (include "digma.observability.enabled" .) }}
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          value: {{ include "digma.otel-collector-df-grpc" .}}
+        - name: OTEL_TRACES_EXPORTER
+          value: {{ ternary "otlp" "none" .Values.observability.otlp.exportTraces }}
+        - name: OTEL_METRICS_EXPORTER
+          value: {{ ternary "otlp" "none" .Values.observability.otlp.exportMetrics }}
+        - name: OTEL_LOGS_EXPORTER
+          value: {{ ternary "otlp" "none" .Values.observability.otlp.exportLogs }}
+        - name: OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED
+          value: {{ ternary "true" "false" .Values.observability.otlp.exportLogs | quote }}
+        - name: OTEL_RESOURCE_ATTRIBUTES
+          value: {{ printf "digma.environment=%s,digma.environment.type=Public,paths.venv_root=/opt/venv,paths.this_package_root=/app/src,paths.working_directory=/app/src" (.Values.observability.environmentName) }}
+        {{- end }}
         - name: PORT
           value: {{ .Values.agentic.service.ports.http | quote}}
         - name: POSTGRES_USER
