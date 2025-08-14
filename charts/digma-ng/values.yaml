@@ -1702,7 +1702,7 @@ agentic:
   image:
     registry: docker.io
     repository: digmatic/digma-agentic
-    tag: 0.0.115
+    tag: 0.0.126
     # -- image pull policy
     # @section -- Agentic parameters
     pullPolicy: IfNotPresent
