@@ -1,0 +1,127 @@
+# KafkaNodePool for Brokers (KRaft mode - Strimzi 0.47.0)
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaNodePool
+metadata:
+  name: {{ include "common.names.fullname" . }}-brokers
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "common.labels.standard" . | nindent 4 }}
+    strimzi.io/cluster: {{ include "common.names.fullname" . }}-kafka
+  annotations: {}
+spec:
+  replicas: {{ .Values.kafka.broker.replicaCount | default 1 }}
+  roles:
+    - broker
+  storage:
+    type: persistent-claim
+    size: {{ .Values.kafka.controller.persistence.size | default "80Gi" }}
+    deleteClaim: false
+  resources:
+    requests:
+      memory: {{ .Values.kafka.controller.resources.requests.memory | default "2Gi" }}
+      cpu: {{ .Values.kafka.controller.resources.requests.cpu | default "500m" }}
+    limits:
+      memory: {{ .Values.kafka.controller.resources.limits.memory | default "3Gi" }}
+      cpu: {{ .Values.kafka.controller.resources.limits.cpu | default "2" }}
+  {{- if .Values.kafka.controller.jvmOptions }}
+  jvmOptions:
+    {{- toYaml .Values.kafka.controller.jvmOptions | nindent 4 }}
+  {{- end }}
+
+  template:
+    pod:
+      metadata:
+        labels:
+          {{- with .Values.kafka.broker.podLabels }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
+      {{- with .Values.kafka.broker.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+---
+# KafkaNodePool for Controllers (KRaft mode - Strimzi 0.47.0)
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaNodePool
+metadata:
+  name: {{ include "common.names.fullname" . }}-controllers
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "common.labels.standard" . | nindent 4 }}
+    strimzi.io/cluster: {{ include "common.names.fullname" . }}-kafka
+  annotations: {}
+spec:
+  replicas: 1
+  roles:
+    - controller
+  storage:
+    type: persistent-claim
+    size: 10Gi
+    deleteClaim: false
+  resources:
+    requests:
+      memory: 1Gi
+      cpu: 250m
+    limits:
+      memory: 2Gi
+      cpu: 500m
+  {{- if .Values.kafka.controller.jvmOptions }}
+  jvmOptions:
+    {{- toYaml .Values.kafka.controller.jvmOptions | nindent 4 }}
+  {{- end }}
+  template:
+    pod:
+      metadata:
+        labels:
+          {{- with .Values.kafka.controller.podLabels }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
+      {{- with .Values.kafka.controller.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+---
+# Main Kafka Resource (KRaft mode - Strimzi 0.47.0)
+apiVersion: kafka.strimzi.io/v1beta2
+kind: Kafka
+metadata:
+  name: {{ include "common.names.fullname" . }}-kafka
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: kafka
+  annotations:
+    strimzi.io/kraft: "enabled"
+    strimzi.io/node-pools: "enabled"
+spec:
+  kafka:
+    version: 4.0.0
+    metadataVersion: 4.0-IV2
+    listeners:
+      - name: plain
+        port: {{ .Values.kafka.service.ports.client | default 9092 }}
+        type: internal
+        tls: false
+    config:
+      # Single-replica KRaft configuration (matching Bitnami setup)
+      offsets.topic.replication.factor: {{ .Values.kafka.replication.factor | default 1 }}
+      transaction.state.log.replication.factor: {{ .Values.kafka.replication.factor | default 1 }}
+      default.replication.factor: {{ .Values.kafka.replication.factor | default 1 }}
+      min.insync.replicas: {{ .Values.kafka.replication.minInsyncReplicas | default 1 }}
+      # Log retention settings (matching Bitnami config)
+      log.retention.check.interval.ms: 120000
+      log.roll.ms: 120000
+      log.retention.ms: 600000
+      # Auto topic creation (verified Kafka property)
+      auto.create.topics.enable: true
+      # Network and performance settings (standard Kafka properties)
+      num.network.threads: 3
+      num.io.threads: 8
+      socket.send.buffer.bytes: 102400
+      socket.receive.buffer.bytes: 102400
+      socket.request.max.bytes: 104857600
+    {{- if .Values.kafka.controller.jvmOptions }}
+    jvmOptions:
+      {{- toYaml .Values.kafka.controller.jvmOptions | nindent 6 }}
+    {{- end }}
+

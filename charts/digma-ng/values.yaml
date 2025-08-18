@@ -2675,12 +2675,16 @@ prometheus:
 ## kafka
 ## ref: https://github.com/bitnami/charts/blob/main/bitnami/kafka/values.yaml
 ##
+# Strimzi Kafka Operator configuration
+# The Kafka cluster will be created using Strimzi Custom Resources
 kafka:
-  kraft:
-    clusterId: h4U35I9QRnGhbgsEQAlXAw
+  # -- Number of Kafka broker replicas
+  # @section -- Kafka parameters
+  broker:
+    replicaCount: 1  # Production: use 3+ for HA
+    podLabels: {}
+    tolerations: []
   controller:
-    # -- Number of Kafka controller-eligible nodes
-    # @section -- Kafka parameters
     replicaCount: 1
     resources:
       requests:
@@ -2689,32 +2693,28 @@ kafka:
       limits:
         memory: 3Gi
         cpu: 2
-    # -- Additional configuration to be appended at the end of the generated Kafka configuration file.
-    # @section -- Kafka parameters
-    extraConfig: |
-      offsets.topic.replication.factor=1
-      transaction.state.log.replication.factor=1
-      log.retention.check.interval.ms = 120000
-      log.roll.ms = 120000
-      log.retention.minutes = 10
-    ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+    # JVM Options for Kafka brokers (optional)
+    # Example:
+    # jvmOptions:
+    #   "-Xms": "1G"
+    #   "-Xmx": "2G"
+    #   "-XX":
+    #     UseG1GC: "true"
+    #     MaxGCPauseMillis: "20"
+    jvmOptions: {}
+
     # -- Extra labels for pods
     # @section -- Kafka parameters
     podLabels: {}
-    ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
     # -- Extra annotations for pods
     # @section -- Kafka parameters
     podAnnotations: {}
-    ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
     # -- Node labels for pods assignment
     # @section -- Kafka parameters
     nodeSelector: {}
-    ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
     # -- Tolerations for pods assignment
     # @section -- Kafka parameters
     tolerations: '{{ include "common.tplvalues.render" (dict "value" .Values.global.tolerations "context" $) }}'
-    ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
-    ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
     # -- Affinity for pods assignment
     # @section -- Kafka parameters
     affinity: {}
@@ -2723,6 +2723,9 @@ kafka:
       accessModes:
         - ReadWriteOnce
       size: 80Gi
+      # -- Storage class for Kafka persistent volumes
+      # @section -- Kafka parameters
+      storageClass: ""
     pdb:
       # -- Enable PodDisruptionBudget
       # @section -- Kafka parameters
@@ -2730,25 +2733,39 @@ kafka:
       # -- Set PodDisruptionBudget minAvailable
       # @section -- Kafka parameters
       minAvailable: ""
-      # -- Set PodDisruptionBudget minAvailable
+      # -- Set PodDisruptionBudget maxUnavailable
       # @section -- Kafka parameters
       maxUnavailable: ""
-  broker:
-    pdb:
-      create: false
-  listeners:
-    client:
-      protocol: PLAINTEXT
-    interbroker:
-      protocol: PLAINTEXT
-    external:
-      protocol: PLAINTEXT
-    controller:
-      protocol: PLAINTEXT
+  # Service ports configuration (maintained for compatibility)
   service:
     ports:
       client: 9092
       controller: 9093
+  
+  # Replication settings for single-node (matching Bitnami dev setup)
+  replication:
+    factor: 1  # Single replica setup
+    minInsyncReplicas: 1  # Single replica setup
+
+# Strimzi Kafka Operator configuration
+# The operator will be installed as a dependency
+strimzi-kafka-operator:
+  # Default replicas for the cluster operator
+  replicas: 1
+  # Namespaces to watch (empty = all namespaces)
+  watchNamespaces: []
+  # KRaft mode is default in Strimzi 0.47.0 (no feature gates needed)
+  # Operator resource limits
+  resources:
+    limits:
+      memory: 384Mi
+      cpu: 1000m
+    requests:
+      memory: 384Mi
+      cpu: 200m
+  # Enable leader election (recommended for production)
+  leaderElection:
+    enable: true
 
 postgresql_backup:
   # -- postgresql backup enabled
