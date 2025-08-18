@@ -2712,7 +2712,7 @@ kafka:
     nodeSelector: {}
     # -- Tolerations for pods assignment
     # @section -- Kafka parameters
-    tolerations: '{{ include "common.tplvalues.render" (dict "value" .Values.global.tolerations "context" $) }}'
+    tolerations: []
     # -- Affinity for pods assignment
     # @section -- Kafka parameters
     affinity: {}

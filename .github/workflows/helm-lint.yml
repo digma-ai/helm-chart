@@ -26,11 +26,12 @@ jobs:
           if [[ -n "$changed" ]]; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
-      - name: Install kubeconform
+      - name: Setup kubectl
         if: steps.list-changed.outputs.changed == 'true'
         run: |
-            curl -L https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz | tar xvzf - && \
-            sudo mv kubeconform /usr/local/bin/ 
+            curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+            chmod +x kubectl
+            sudo mv kubectl /usr/local/bin/ 
       - name: Helm dependency update
         if: steps.list-changed.outputs.changed == 'true'
         run: |
@@ -44,20 +45,26 @@ jobs:
             --set digma.auth.password="dummy-pass" \
             --set digma.accessToken="dummy-token"
 
+      - name: Create k8s Kind Cluster
+        if: steps.list-changed.outputs.changed == 'true'
+        uses: helm/kind-action@v1.8.0
+        with:
+          cluster_name: validation-cluster
+      - name: Install Strimzi CRDs
+        if: steps.list-changed.outputs.changed == 'true'
+        run: |
+          # Install Strimzi CRDs for proper validation
+          kubectl apply -f https://strimzi.io/install/latest?namespace=strimzi-system
       - name: Validate Kubernetes Manifests
         if: steps.list-changed.outputs.changed == 'true'
         run: |
           set -e
+          # Full validation with real Kubernetes cluster and CRDs
           helm template my-release ./charts/digma-ng \
             --set digma.licenseKey="dummy-license-key" \
             --set digma.auth.email="ci@example.invalid" \
             --set digma.auth.password="dummy-pass" \
             --set digma.accessToken="dummy-token" \
-          > output.yaml
-          kubeconform -strict output.yaml
-      # - name: Create k8s Kind Cluster # checking that resource dependencies are properly resolved (e.g., Secrets, ConfigMaps),close to real-world deployment.
-      #   uses: helm/kind-action@v1 
-      # - name: Dry Run Deployment
-      #   run: |
-      #     helm upgrade --install my-release ./charts/digma-ng --dry-run --debug --set digma.licenseKey="dummy-license-key"
+          | kubectl apply --dry-run=server -f -
+
 
