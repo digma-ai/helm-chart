@@ -54,6 +54,7 @@ jobs:
         if: steps.list-changed.outputs.changed == 'true'
         run: |
           # Install Strimzi CRDs for proper validation
+          kubectl create namespace strimzi-system
           kubectl apply -f https://strimzi.io/install/latest?namespace=strimzi-system
       - name: Validate Kubernetes Manifests
         if: steps.list-changed.outputs.changed == 'true'
