@@ -1,4 +1,4 @@
-# KafkaNodePool for Brokers (KRaft mode - Strimzi 0.47.0)
+# KafkaNodePool for Brokers
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaNodePool
 metadata:
@@ -40,7 +40,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
 ---
-# KafkaNodePool for Controllers (KRaft mode - Strimzi 0.47.0)
+# KafkaNodePool for Controllers
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaNodePool
 metadata:
@@ -81,7 +81,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
 ---
-# Main Kafka Resource (KRaft mode - Strimzi 0.47.0)
+# Main Kafka Resource
 apiVersion: kafka.strimzi.io/v1beta2
 kind: Kafka
 metadata:
@@ -103,18 +103,17 @@ spec:
         type: internal
         tls: false
     config:
-      # Single-replica KRaft configuration (matching Bitnami setup)
+      # Replication settings
       offsets.topic.replication.factor: {{ .Values.kafka.replication.factor | default 1 }}
       transaction.state.log.replication.factor: {{ .Values.kafka.replication.factor | default 1 }}
       default.replication.factor: {{ .Values.kafka.replication.factor | default 1 }}
       min.insync.replicas: {{ .Values.kafka.replication.minInsyncReplicas | default 1 }}
-      # Log retention settings (matching Bitnami config)
+      # Log retention settings
       log.retention.check.interval.ms: 120000
       log.roll.ms: 120000
       log.retention.ms: 600000
-      # Auto topic creation (verified Kafka property)
+      # Topic and performance settings
       auto.create.topics.enable: true
-      # Network and performance settings (standard Kafka properties)
       num.network.threads: 3
       num.io.threads: 8
       socket.send.buffer.bytes: 102400
