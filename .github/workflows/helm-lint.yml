@@ -51,7 +51,8 @@ jobs:
             --set digma.auth.password="dummy-pass" \
             --set digma.accessToken="dummy-token" \
           > output.yaml
-          kubeconform -strict output.yaml
+          # Validate standard K8s resources (skip CRDs and custom resources)
+          kubeconform -strict -skip CustomResourceDefinition,Kafka,KafkaNodePool output.yaml
       # - name: Create k8s Kind Cluster # checking that resource dependencies are properly resolved (e.g., Secrets, ConfigMaps),close to real-world deployment.
       #   uses: helm/kind-action@v1 
       # - name: Dry Run Deployment
