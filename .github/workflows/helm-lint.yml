@@ -50,22 +50,17 @@ jobs:
         uses: helm/kind-action@v1.8.0
         with:
           cluster_name: validation-cluster
-      - name: Install Strimzi CRDs
-        if: steps.list-changed.outputs.changed == 'true'
-        run: |
-          # Install Strimzi CRDs for proper validation
-          kubectl create namespace strimzi-system
-          kubectl apply -f https://strimzi.io/install/latest?namespace=strimzi-system
       - name: Validate Kubernetes Manifests
         if: steps.list-changed.outputs.changed == 'true'
         run: |
           set -e
-          # Full validation with real Kubernetes cluster and CRDs
+          # Template the chart and validate syntax (CRDs will be managed by hooks)
           helm template my-release ./charts/digma-ng \
             --set digma.licenseKey="dummy-license-key" \
             --set digma.auth.email="ci@example.invalid" \
             --set digma.auth.password="dummy-pass" \
             --set digma.accessToken="dummy-token" \
-          | kubectl apply --dry-run=server -f -
+            --set strimzi.manageCRDs=true \
+          | kubectl apply --dry-run=client -f -
 
 

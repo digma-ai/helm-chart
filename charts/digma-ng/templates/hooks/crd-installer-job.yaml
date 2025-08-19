@@ -1,0 +1,124 @@
+{{- if .Values.strimzi.manageCRDs -}}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "common.names.fullname" . }}-crd-installer
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: crd-installer
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  ttlSecondsAfterFinished: 300
+  template:
+    metadata:
+      labels:
+        {{- include "common.labels.standard" . | nindent 8 }}
+        app.kubernetes.io/component: crd-installer
+    spec:
+      serviceAccountName: {{ include "common.names.fullname" . }}-crd-installer
+      restartPolicy: Never
+      initContainers:
+      - name: download-crds
+        image: curlimages/curl:8.5.0
+        imagePullPolicy: IfNotPresent
+        command:
+        - /bin/sh
+        - -c
+        - |
+          {{- $strimziVersion := "" }}
+          {{- range .Chart.Dependencies }}
+            {{- if eq .Name "strimzi-kafka-operator" }}
+              {{- $strimziVersion = .Version }}
+            {{- end }}
+          {{- end }}
+          echo "Downloading Strimzi CRDs version {{ $strimziVersion }}..."
+          curl -L -o /shared/strimzi-crds.yaml \
+            "https://github.com/strimzi/strimzi-kafka-operator/releases/download/{{ $strimziVersion }}/strimzi-crds-{{ $strimziVersion }}.yaml"
+          
+          echo "Verifying download..."
+          if [ ! -f /shared/strimzi-crds.yaml ] || [ ! -s /shared/strimzi-crds.yaml ]; then
+            echo "ERROR: Failed to download CRDs or file is empty"
+            exit 1
+          fi
+          
+          echo "CRDs downloaded successfully"
+          wc -l /shared/strimzi-crds.yaml
+        volumeMounts:
+        - name: shared-volume
+          mountPath: /shared
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 65534
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+      containers:
+      - name: install-crds
+        image: bitnami/kubectl:1.28
+        imagePullPolicy: IfNotPresent
+        command:
+        - /bin/bash
+        - -c
+        - |
+          set -euo pipefail
+          
+          echo "=== Strimzi CRD Installer ==="
+          echo "Chart: {{ .Chart.Name }} {{ .Chart.Version }}"
+          echo "Release: {{ .Release.Name }}"
+          echo "Namespace: {{ .Release.Namespace }}"
+          echo "Strimzi Version: {{ $strimziVersion }}"
+          
+          echo "Checking if CRDs file exists..."
+          if [ ! -f /shared/strimzi-crds.yaml ]; then
+            echo "ERROR: CRDs file not found"
+            exit 1
+          fi
+          
+          echo "Validating CRDs..."
+          kubectl apply --dry-run=client -f /shared/strimzi-crds.yaml
+          
+          echo "Installing/Updating Strimzi CRDs..."
+          kubectl apply -f /shared/strimzi-crds.yaml
+          
+          echo "Verifying CRD installation..."
+          kubectl get crd -l app=strimzi --no-headers | wc -l
+          
+          echo "✅ Strimzi CRDs installed successfully"
+          
+          # Wait a moment for CRDs to be ready
+          echo "Waiting for CRDs to be established..."
+          for crd in kafkas.kafka.strimzi.io kafkanodepools.kafka.strimzi.io; do
+            echo "  Waiting for $crd..."
+            kubectl wait --for condition=established --timeout=60s crd/$crd
+          done
+          
+          echo "✅ All required CRDs are ready"
+        volumeMounts:
+        - name: shared-volume
+          mountPath: /shared
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 65534
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+        resources:
+          requests:
+            memory: 64Mi
+            cpu: 100m
+          limits:
+            memory: 128Mi
+            cpu: 200m
+      volumes:
+      - name: shared-volume
+        emptyDir: {}
+{{- end -}}
