@@ -2672,109 +2672,175 @@ prometheus:
       # @section -- Prometheus parameters
       maxUnavailable: ""
 
-## kafka
-## ref: https://github.com/bitnami/charts/blob/main/bitnami/kafka/values.yaml
+## Kafka Cluster Configuration (using Strimzi Custom Resources)
+## ref: https://strimzi.io/docs/operators/latest/configuring.html
 ##
-# Strimzi Kafka Operator configuration
-# The Kafka cluster will be created using Strimzi Custom Resources
-kafka:  
+kafka:
+  # -- Kafka broker configuration
+  # @section -- Kafka parameters
   broker:
-    replicaCount: 1  # Production: use 3+ for HA
+    # -- Number of Kafka broker replicas (use 3+ for production HA)
+    # @section -- Kafka parameters
+    replicaCount: 1
+    ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+    # -- Extra labels for broker pods
+    # @section -- Kafka parameters
     podLabels: {}
+    ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+    # -- Tolerations for broker pods assignment
+    # @section -- Kafka parameters
     tolerations: []
+    # -- Resource limits and requests for Kafka brokers
+    # @section -- Kafka parameters
     resources:
       requests:
+        # -- Memory request for broker pods
+        # @section -- Kafka parameters
         memory: 2Gi
+        # -- CPU request for broker pods
+        # @section -- Kafka parameters
         cpu: 500m
       limits:
+        # -- Memory limit for broker pods
+        # @section -- Kafka parameters
         memory: 3Gi
+        # -- CPU limit for broker pods
+        # @section -- Kafka parameters
         cpu: 2
-    # JVM Options for Kafka brokers (optional)
+    # -- JVM options for Kafka brokers (optional)
+    # @section -- Kafka parameters
     jvmOptions: {}
+    # -- Persistent storage configuration for brokers
+    # @section -- Kafka parameters
     persistence:
-      enabled: true
-      accessModes:
-        - ReadWriteOnce
+      # -- Storage size for broker persistent volumes
+      # @section -- Kafka parameters
       size: 80Gi
-      storageClass: ""
+  # -- Kafka controller configuration
+  # @section -- Kafka parameters
   controller:
+    # -- Number of Kafka controller replicas
+    # @section -- Kafka parameters
     replicaCount: 1
+    # -- Resource limits and requests for Kafka controllers
+    # @section -- Kafka parameters
     resources:
       requests:
+        # -- Memory request for controller pods
+        # @section -- Kafka parameters
         memory: 1Gi
+        # -- CPU request for controller pods
+        # @section -- Kafka parameters
         cpu: 250m
       limits:
+        # -- Memory limit for controller pods
+        # @section -- Kafka parameters
         memory: 2Gi
+        # -- CPU limit for controller pods
+        # @section -- Kafka parameters
         cpu: 500m
-    # JVM Options for Kafka controllers (optional)
-    # Example:
-    # jvmOptions:
-    #   "-Xms": "512M"
-    #   "-Xmx": "1G"
-    #   "-XX":
-    #     UseG1GC: "true"
-    #     MaxGCPauseMillis: "20"
+    # -- JVM options for Kafka controllers (optional)
+    # @section -- Kafka parameters
     jvmOptions: {}
+    # -- Persistent storage configuration for controllers
+    # @section -- Kafka parameters
     persistence:
-      enabled: true
+      # -- Storage size for controller persistent volumes
+      # @section -- Kafka parameters
       size: 10Gi
-      storageClass: ""
-
-    # -- Extra labels for pods
-    # @section -- Kafka parameters
     ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+    # -- Extra labels for controller pods
+    # @section -- Kafka parameters
     podLabels: {}
-    # -- Extra annotations for pods
-    # @section -- Kafka parameters
-    podAnnotations: {}
-    # -- Node labels for pods assignment
-    # @section -- Kafka parameters
-    ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
-    nodeSelector: {}
-    # -- Tolerations for pods assignment
-    # @section -- Kafka parameters
     ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
-    tolerations: []
-    # -- Affinity for pods assignment
+    # -- Tolerations for controller pods assignment
     # @section -- Kafka parameters
-    ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
-    ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
-    affinity: {}
-    pdb:
-      # -- Enable PodDisruptionBudget
-      # @section -- Kafka parameters
-      create: false
-      # -- Set PodDisruptionBudget minAvailable
-      # @section -- Kafka parameters
-      minAvailable: ""
-      # -- Set PodDisruptionBudget maxUnavailable
-      # @section -- Kafka parameters
-      maxUnavailable: ""
-  # Service ports configuration (maintained for compatibility)
+    tolerations: []
+  # -- Service ports configuration
+  # @section -- Kafka parameters
   service:
     ports:
+      # -- Kafka client port
+      # @section -- Kafka parameters
       client: 9092
-      controller: 9093
-  
-  # Replication settings
+  # -- Kafka replication settings
+  # @section -- Kafka parameters
   replication:
+    # -- Default replication factor for topics
+    # @section -- Kafka parameters
     factor: 1
+    # -- Minimum in-sync replicas for topics
+    # @section -- Kafka parameters
     minInsyncReplicas: 1
 
-# Strimzi Kafka Operator configuration
+## Strimzi Kafka Operator configuration
+## ref: https://strimzi.io/charts/
+##
 strimzi-kafka-operator:
+  # -- Number of operator replicas
+  # @section -- Strimzi Kafka Operator parameters
   replicas: 1
+  # -- List of namespaces to watch (empty = watch deployment namespace only)
+  # @section -- Strimzi Kafka Operator parameters
   watchNamespaces: []
+  # -- Resource limits and requests for the operator
+  # @section -- Strimzi Kafka Operator parameters
   resources:
     limits:
+      # -- Memory limit for operator
+      # @section -- Strimzi Kafka Operator parameters
       memory: 384Mi
+      # -- CPU limit for operator
+      # @section -- Strimzi Kafka Operator parameters
       cpu: 1000m
     requests:
+      # -- Memory request for operator
+      # @section -- Strimzi Kafka Operator parameters
       memory: 384Mi
+      # -- CPU request for operator
+      # @section -- Strimzi Kafka Operator parameters
       cpu: 200m
-  # Enable leader election (recommended for production)
+  # -- Leader election configuration (recommended for production)
+  # @section -- Strimzi Kafka Operator parameters
   leaderElection:
+    # -- Enable leader election
+    # @section -- Strimzi Kafka Operator parameters
     enable: true
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  # -- Extra labels for operator deployment
+  # @section -- Strimzi Kafka Operator parameters
+  labels: {}
+  # -- Extra annotations for operator deployment
+  # @section -- Strimzi Kafka Operator parameters
+  annotations: {}
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  # -- Node labels for pods assignment
+  # @section -- Strimzi Kafka Operator parameters
+  nodeSelector: {}
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  # -- Tolerations for pods assignment
+  # @section -- Strimzi Kafka Operator parameters
+  tolerations: []
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  # -- Affinity for pods assignment
+  # @section -- Strimzi Kafka Operator parameters
+  affinity: {}
+  ## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
+  # -- PodDisruptionBudget configuration
+  # @section -- Strimzi Kafka Operator parameters
+  podDisruptionBudget:
+    # -- Enable PodDisruptionBudget
+    # @section -- Strimzi Kafka Operator parameters
+    enabled: false
+    # -- Set PodDisruptionBudget minAvailable
+    # @section -- Strimzi Kafka Operator parameters
+    minAvailable: 1
+    # -- Set PodDisruptionBudget maxUnavailable
+    # @section -- Strimzi Kafka Operator parameters
+    maxUnavailable: ""
+    # -- Unhealthy pod eviction policy
+    # @section -- Strimzi Kafka Operator parameters
+    unhealthyPodEvictionPolicy: IfHealthyBudget
 
 postgresql_backup:
   # -- postgresql backup enabled
