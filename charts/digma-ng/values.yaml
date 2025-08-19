@@ -2745,12 +2745,6 @@ kafka:
     factor: 1
     minInsyncReplicas: 1
 
-# Strimzi CRD Management
-strimzi:
-  # Manage CRDs via Helm hooks (recommended)
-  manageCRDs: true
-  # NOTE: Strimzi version is automatically derived from Chart.yaml dependency
-
 # Strimzi Kafka Operator configuration
 strimzi-kafka-operator:
   replicas: 1
