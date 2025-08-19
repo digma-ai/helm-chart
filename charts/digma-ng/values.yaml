@@ -2722,18 +2722,23 @@ kafka:
 
     # -- Extra labels for pods
     # @section -- Kafka parameters
+    ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
     podLabels: {}
     # -- Extra annotations for pods
     # @section -- Kafka parameters
     podAnnotations: {}
     # -- Node labels for pods assignment
     # @section -- Kafka parameters
+    ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
     nodeSelector: {}
     # -- Tolerations for pods assignment
     # @section -- Kafka parameters
+    ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
     tolerations: []
     # -- Affinity for pods assignment
     # @section -- Kafka parameters
+    ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+    ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
     affinity: {}
     pdb:
       # -- Enable PodDisruptionBudget
