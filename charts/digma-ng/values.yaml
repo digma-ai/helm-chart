@@ -2676,6 +2676,15 @@ prometheus:
 ## ref: https://strimzi.io/docs/operators/latest/configuring.html
 ##
 kafka:
+  # -- Kafka version configuration
+  # @section -- Kafka parameters
+  version:
+    # -- Kafka version to deploy
+    # @section -- Kafka parameters
+    kafka: 4.0.0
+    # -- Kafka metadata version
+    # @section -- Kafka parameters
+    metadata: 4.0-IV2
   # -- Kafka broker configuration
   # @section -- Kafka parameters
   broker:
@@ -2690,6 +2699,18 @@ kafka:
     # -- Tolerations for broker pods assignment
     # @section -- Kafka parameters
     tolerations: []
+    ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+    # -- Extra annotations for broker pods
+    # @section -- Kafka parameters
+    podAnnotations: {}
+    ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+    # -- Node labels for broker pods assignment
+    # @section -- Kafka parameters
+    nodeSelector: {}
+    ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+    # -- Affinity for broker pods assignment
+    # @section -- Kafka parameters
+    affinity: {}
     # -- Resource limits and requests for Kafka brokers
     # @section -- Kafka parameters
     resources:
@@ -2716,6 +2737,12 @@ kafka:
       # -- Storage size for broker persistent volumes
       # @section -- Kafka parameters
       size: 80Gi
+      # -- Storage class for broker persistent volumes (leave empty for default)
+      # @section -- Kafka parameters
+      storageClass: ""
+      # -- Delete claim when the cluster is deleted (set true to avoid cluster ID conflicts on reinstall)
+      # @section -- Kafka parameters
+      deleteClaim: true
   # -- Kafka controller configuration
   # @section -- Kafka parameters
   controller:
@@ -2748,6 +2775,12 @@ kafka:
       # -- Storage size for controller persistent volumes
       # @section -- Kafka parameters
       size: 10Gi
+      # -- Storage class for controller persistent volumes (leave empty for default)
+      # @section -- Kafka parameters
+      storageClass: ""
+      # -- Delete claim when the cluster is deleted (set true to avoid cluster ID conflicts on reinstall)
+      # @section -- Kafka parameters
+      deleteClaim: true
     ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
     # -- Extra labels for controller pods
     # @section -- Kafka parameters
@@ -2756,6 +2789,18 @@ kafka:
     # -- Tolerations for controller pods assignment
     # @section -- Kafka parameters
     tolerations: []
+    ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+    # -- Extra annotations for controller pods
+    # @section -- Kafka parameters
+    podAnnotations: {}
+    ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+    # -- Node labels for controller pods assignment
+    # @section -- Kafka parameters
+    nodeSelector: {}
+    ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+    # -- Affinity for controller pods assignment
+    # @section -- Kafka parameters
+    affinity: {}
   # -- Service ports configuration
   # @section -- Kafka parameters
   service:
