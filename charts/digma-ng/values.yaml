@@ -2677,13 +2677,11 @@ prometheus:
 ##
 # Strimzi Kafka Operator configuration
 # The Kafka cluster will be created using Strimzi Custom Resources
-kafka:
+kafka:  
   broker:
     replicaCount: 1  # Production: use 3+ for HA
     podLabels: {}
     tolerations: []
-  controller:
-    replicaCount: 1
     resources:
       requests:
         memory: 2Gi
@@ -2692,14 +2690,35 @@ kafka:
         memory: 3Gi
         cpu: 2
     # JVM Options for Kafka brokers (optional)
+    jvmOptions: {}
+    persistence:
+      enabled: true
+      accessModes:
+        - ReadWriteOnce
+      size: 80Gi
+      storageClass: ""
+  controller:
+    replicaCount: 1
+    resources:
+      requests:
+        memory: 1Gi
+        cpu: 250m
+      limits:
+        memory: 2Gi
+        cpu: 500m
+    # JVM Options for Kafka controllers (optional)
     # Example:
     # jvmOptions:
-    #   "-Xms": "1G"
-    #   "-Xmx": "2G"
+    #   "-Xms": "512M"
+    #   "-Xmx": "1G"
     #   "-XX":
     #     UseG1GC: "true"
     #     MaxGCPauseMillis: "20"
     jvmOptions: {}
+    persistence:
+      enabled: true
+      size: 10Gi
+      storageClass: ""
 
     # -- Extra labels for pods
     # @section -- Kafka parameters
@@ -2716,14 +2735,6 @@ kafka:
     # -- Affinity for pods assignment
     # @section -- Kafka parameters
     affinity: {}
-    persistence:
-      enabled: true
-      accessModes:
-        - ReadWriteOnce
-      size: 80Gi
-      # -- Storage class for Kafka persistent volumes
-      # @section -- Kafka parameters
-      storageClass: ""
     pdb:
       # -- Enable PodDisruptionBudget
       # @section -- Kafka parameters
