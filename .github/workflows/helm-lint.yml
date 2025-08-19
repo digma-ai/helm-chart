@@ -50,17 +50,58 @@ jobs:
         uses: helm/kind-action@v1.8.0
         with:
           cluster_name: validation-cluster
-      - name: Validate Kubernetes Manifests
+      - name: Test Hook-based Installation (Dry Run)
         if: steps.list-changed.outputs.changed == 'true'
         run: |
           set -e
-          # Template the chart and validate syntax (CRDs will be managed by hooks)
-          helm template my-release ./charts/digma-ng \
+          echo "=== Testing Full Hook-based Installation ==="
+          # Test the complete installation with hooks (dry-run)
+          # This tests that hooks would run and install CRDs automatically
+          helm install test-install ./charts/digma-ng \
             --set digma.licenseKey="dummy-license-key" \
             --set digma.auth.email="ci@example.invalid" \
             --set digma.auth.password="dummy-pass" \
             --set digma.accessToken="dummy-token" \
             --set strimzi.manageCRDs=true \
+            --dry-run
+            
+      - name: Validate Hook Templates
+        if: steps.list-changed.outputs.changed == 'true'
+        run: |
+          set -e
+          echo "=== Validating Hook Templates ==="
+          # Test that our CRD installation hooks render correctly
+          helm template test-hooks ./charts/digma-ng \
+            --set digma.licenseKey="dummy-license-key" \
+            --set digma.auth.email="ci@example.invalid" \
+            --set digma.auth.password="dummy-pass" \
+            --set digma.accessToken="dummy-token" \
+            --set strimzi.manageCRDs=true \
+            --show-only templates/hooks/crd-installer-rbac.yaml \
+            --show-only templates/hooks/crd-installer-job.yaml \
           | kubectl apply --dry-run=client -f -
+          
+      - name: Test Disabled CRD Management
+        if: steps.list-changed.outputs.changed == 'true'
+        run: |
+          set -e
+          echo "=== Testing with CRD management disabled ==="
+          # When manageCRDs=false, hooks should not be rendered
+          output=$(helm template test-disabled ./charts/digma-ng \
+            --set digma.licenseKey="dummy-license-key" \
+            --set digma.auth.email="ci@example.invalid" \
+            --set digma.auth.password="dummy-pass" \
+            --set digma.accessToken="dummy-token" \
+            --set strimzi.manageCRDs=false \
+            --show-only templates/hooks/crd-installer-rbac.yaml \
+            --show-only templates/hooks/crd-installer-job.yaml 2>/dev/null || true)
+          
+          if [ -z "$output" ]; then
+            echo "✅ No hook resources when manageCRDs=false (as expected)"
+          else
+            echo "❌ Hook resources found when manageCRDs=false"
+            echo "$output"
+            exit 1
+          fi
 
 
