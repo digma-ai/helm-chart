@@ -1,7 +1,5 @@
 name: Lint Helm Charts
-
 on: [pull_request]
-
 jobs:
   lint-helm:
     runs-on: ubuntu-latest
@@ -26,16 +24,15 @@ jobs:
           if [[ -n "$changed" ]]; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
-      - name: Setup kubectl
+      - name: Install kubeconform
         if: steps.list-changed.outputs.changed == 'true'
         run: |
-            curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-            chmod +x kubectl
-            sudo mv kubectl /usr/local/bin/ 
+          curl -L https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz | tar xvzf - && \
+          sudo mv kubeconform /usr/local/bin/ 
       - name: Helm dependency update
         if: steps.list-changed.outputs.changed == 'true'
         run: |
-            helm dependency update ./charts/digma-ng
+          helm dependency update ./charts/digma-ng
       - name: Run Helm Lint
         if: steps.list-changed.outputs.changed == 'true'
         run: |
@@ -44,24 +41,19 @@ jobs:
             --set digma.auth.email="ci@example.invalid" \
             --set digma.auth.password="dummy-pass" \
             --set digma.accessToken="dummy-token"
-
-      - name: Create k8s Kind Cluster
-        if: steps.list-changed.outputs.changed == 'true'
-        uses: helm/kind-action@v1.8.0
-        with:
-          cluster_name: validation-cluster
-      - name: Test Chart Installation (Dry Run)
+      - name: Validate Kubernetes Manifests
         if: steps.list-changed.outputs.changed == 'true'
         run: |
           set -e
-          echo "=== Testing Chart Installation ==="
-          # Test the complete installation (dry-run)
-          # Strimzi CRDs will be installed automatically from dependency chart
-          helm install test-install ./charts/digma-ng \
+          helm template my-release ./charts/digma-ng \
             --set digma.licenseKey="dummy-license-key" \
             --set digma.auth.email="ci@example.invalid" \
             --set digma.auth.password="dummy-pass" \
             --set digma.accessToken="dummy-token" \
-            --dry-run
-
-
+          > output.yaml
+          kubeconform -strict output.yaml
+      # - name: Create k8s Kind Cluster # checking that resource dependencies are properly resolved (e.g., Secrets, ConfigMaps),close to real-world deployment.
+      #   uses: helm/kind-action@v1 
+      # - name: Dry Run Deployment
+      #   run: |
+      #     helm upgrade --install my-release ./charts/digma-ng --dry-run --debug --set digma.licenseKey="dummy-license-key"
