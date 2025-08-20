@@ -143,7 +143,7 @@ spec:
       log.roll.ms: 120000
       log.retention.ms: 600000
       # Topic and performance settings
-      auto.create.topics.enable: true
+      auto.create.topics.enable: false
       num.network.threads: 3
       num.io.threads: 8
       socket.send.buffer.bytes: 102400
