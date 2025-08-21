@@ -126,6 +126,8 @@ observability:
 ## Please, note that this will override the image parameters
 ##
 global:
+  security:
+    allowInsecureImages: true
   # -- Tolerations to add to all deployed objects, except prometheus and redis
   # @section -- Common parameters
   tolerations: []
@@ -2159,6 +2161,16 @@ otelCollectorDf:
 ##
 postgresql:
   enabled: true
+  image:
+    repository: bitnamilegacy/postgresql
+  volumePermissions:
+    image:
+      repository: bitnamilegacy/os-shell
+  metrics:
+    enabled: true
+    image:
+      registry: docker.io
+      repository: bitnamilegacy/postgres-exporter
   auth:
     database: postgres
     username: postgres
@@ -2256,9 +2268,21 @@ postgresql:
 ##
 redis:
   enabled: true
+  image:
+    repository: bitnamilegacy/redis
+  sentinel:
+    image:
+      repository: bitnamilegacy/redis-sentinel
+  volumePermissions:
+    image:
+      repository: bitnamilegacy/os-shell
+  sysctlImage:
+    repository: bitnamilegacy/os-shell
   auth:
     enabled: false
   metrics:
+    image:
+      repository: bitnamilegacy/redis-exporter
     ## ref: https://github.com/bitnami/charts/tree/main/bitnami/redis
     # -- Start a sidecar prometheus exporter to expose Redis® metrics
     # @section -- Redis parameters
@@ -2479,9 +2503,15 @@ jaeger:
 ##
 elasticsearch:
   enabled: true
-  clusterName: elastic
+  image:
+    repository: bitnamilegacy/elasticsearch
+  volumePermissions:
+    image:
+      repository: bitnamilegacy/os-shell
   sysctlImage:
     enabled: true
+    repository: bitnamilegacy/os-shell
+  clusterName: elastic
   security:
     enabled: false
     existingSecret: ""
@@ -2559,6 +2589,11 @@ elasticsearchlogs:
 ## ref: https://github.com/bitnami/charts/blob/main/bitnami/grafana/values.yaml
 ##
 grafana:
+  image:
+    repository: bitnamilegacy/grafana
+  volumePermissions:
+    image:
+      repository: bitnamilegacy/os-shell
   admin:
     user: admin
     password: JNeCDfQ$SYlp5T
@@ -2615,9 +2650,15 @@ grafana:
 ##
 prometheus:
   enabled: false
+  image:
+    repository: bitnamilegacy/prometheus
   alertmanager:
     enabled: false
+    image:
+      repository: bitnamilegacy/alertmanager
   server:
+    image:
+      repository: bitnamilegacy/prometheus
     existingConfigmap: '{{ .Release.Name }}-prometheus-server'
     existingConfigmapKey: prometheus.yaml
     persistence:
