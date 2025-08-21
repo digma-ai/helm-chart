@@ -905,59 +905,16 @@ elasticsearch:
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| kafka.broker | object | `{"jvmOptions":{},"persistence":{"size":"80Gi"},"podLabels":{},"replicaCount":1,"resources":{"limits":{"cpu":2,"memory":"3Gi"},"requests":{"cpu":"500m","memory":"2Gi"}},"tolerations":[]}` | Kafka broker configuration |
-| kafka.broker.replicaCount | int | `1` | Number of Kafka broker replicas (use 3+ for production HA) |
-| kafka.broker.podLabels | object | `{}` | Extra labels for broker pods |
-| kafka.broker.tolerations | list | `[]` | Tolerations for broker pods assignment |
-| kafka.broker.resources | object | `{"limits":{"cpu":2,"memory":"3Gi"},"requests":{"cpu":"500m","memory":"2Gi"}}` | Resource limits and requests for Kafka brokers |
-| kafka.broker.resources.requests.memory | string | `"2Gi"` | Memory request for broker pods |
-| kafka.broker.resources.requests.cpu | string | `"500m"` | CPU request for broker pods |
-| kafka.broker.resources.limits.memory | string | `"3Gi"` | Memory limit for broker pods |
-| kafka.broker.resources.limits.cpu | int | `2` | CPU limit for broker pods |
-| kafka.broker.jvmOptions | object | `{}` | JVM options for Kafka brokers (optional) |
-| kafka.broker.persistence | object | `{"size":"80Gi"}` | Persistent storage configuration for brokers |
-| kafka.broker.persistence.size | string | `"80Gi"` | Storage size for broker persistent volumes |
-| kafka.controller | object | `{"jvmOptions":{},"persistence":{"size":"10Gi"},"podLabels":{},"replicaCount":1,"resources":{"limits":{"cpu":"500m","memory":"2Gi"},"requests":{"cpu":"250m","memory":"1Gi"}},"tolerations":[]}` | Kafka controller configuration |
-| kafka.controller.replicaCount | int | `1` | Number of Kafka controller replicas |
-| kafka.controller.resources | object | `{"limits":{"cpu":"500m","memory":"2Gi"},"requests":{"cpu":"250m","memory":"1Gi"}}` | Resource limits and requests for Kafka controllers |
-| kafka.controller.resources.requests.memory | string | `"1Gi"` | Memory request for controller pods |
-| kafka.controller.resources.requests.cpu | string | `"250m"` | CPU request for controller pods |
-| kafka.controller.resources.limits.memory | string | `"2Gi"` | Memory limit for controller pods |
-| kafka.controller.resources.limits.cpu | string | `"500m"` | CPU limit for controller pods |
-| kafka.controller.jvmOptions | object | `{}` | JVM options for Kafka controllers (optional) |
-| kafka.controller.persistence | object | `{"size":"10Gi"}` | Persistent storage configuration for controllers |
-| kafka.controller.persistence.size | string | `"10Gi"` | Storage size for controller persistent volumes |
-| kafka.controller.podLabels | object | `{}` | Extra labels for controller pods |
-| kafka.controller.tolerations | list | `[]` | Tolerations for controller pods assignment |
-| kafka.service | object | `{"ports":{"client":9092}}` | Service ports configuration |
-| kafka.service.ports.client | int | `9092` | Kafka client port |
-| kafka.replication | object | `{"factor":1,"minInsyncReplicas":1}` | Kafka replication settings |
-| kafka.replication.factor | int | `1` | Default replication factor for topics |
-| kafka.replication.minInsyncReplicas | int | `1` | Minimum in-sync replicas for topics |
-
-### Strimzi Kafka Operator parameters
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| strimzi-kafka-operator.replicas | int | `1` | Number of operator replicas |
-| strimzi-kafka-operator.watchNamespaces | list | `[]` | List of namespaces to watch (empty = watch deployment namespace only) |
-| strimzi-kafka-operator.resources | object | `{"limits":{"cpu":"1000m","memory":"384Mi"},"requests":{"cpu":"200m","memory":"384Mi"}}` | Resource limits and requests for the operator |
-| strimzi-kafka-operator.resources.limits.memory | string | `"384Mi"` | Memory limit for operator |
-| strimzi-kafka-operator.resources.limits.cpu | string | `"1000m"` | CPU limit for operator |
-| strimzi-kafka-operator.resources.requests.memory | string | `"384Mi"` | Memory request for operator |
-| strimzi-kafka-operator.resources.requests.cpu | string | `"200m"` | CPU request for operator |
-| strimzi-kafka-operator.leaderElection | object | `{"enable":true}` | Leader election configuration (recommended for production) |
-| strimzi-kafka-operator.leaderElection.enable | bool | `true` | Enable leader election |
-| strimzi-kafka-operator.labels | object | `{}` | Extra labels for operator deployment |
-| strimzi-kafka-operator.annotations | object | `{}` | Extra annotations for operator deployment |
-| strimzi-kafka-operator.nodeSelector | object | `{}` | Node labels for pods assignment |
-| strimzi-kafka-operator.tolerations | list | `[]` | Tolerations for pods assignment |
-| strimzi-kafka-operator.affinity | object | `{}` | Affinity for pods assignment |
-| strimzi-kafka-operator.podDisruptionBudget | object | `{"enabled":false,"maxUnavailable":"","minAvailable":1,"unhealthyPodEvictionPolicy":"IfHealthyBudget"}` | PodDisruptionBudget configuration |
-| strimzi-kafka-operator.podDisruptionBudget.enabled | bool | `false` | Enable PodDisruptionBudget |
-| strimzi-kafka-operator.podDisruptionBudget.minAvailable | int | `1` | Set PodDisruptionBudget minAvailable |
-| strimzi-kafka-operator.podDisruptionBudget.maxUnavailable | string | `""` | Set PodDisruptionBudget maxUnavailable |
-| strimzi-kafka-operator.podDisruptionBudget.unhealthyPodEvictionPolicy | string | `"IfHealthyBudget"` | Unhealthy pod eviction policy |
+| kafka.controller.replicaCount | int | `1` | Number of Kafka controller-eligible nodes |
+| kafka.controller.extraConfig | string | `"offsets.topic.replication.factor=1\ntransaction.state.log.replication.factor=1\nlog.retention.check.interval.ms = 120000\nlog.roll.ms = 120000\nlog.retention.minutes = 10\n"` | Additional configuration to be appended at the end of the generated Kafka configuration file. |
+| kafka.controller.podLabels | object | `{}` | Extra labels for pods |
+| kafka.controller.podAnnotations | object | `{}` | Extra annotations for pods |
+| kafka.controller.nodeSelector | object | `{}` | Node labels for pods assignment |
+| kafka.controller.tolerations | string | `"{{ include \"common.tplvalues.render\" (dict \"value\" .Values.global.tolerations \"context\" $) }}"` | Tolerations for pods assignment |
+| kafka.controller.affinity | object | `{}` | Affinity for pods assignment |
+| kafka.controller.pdb.create | bool | `false` | Enable PodDisruptionBudget |
+| kafka.controller.pdb.minAvailable | string | `""` | Set PodDisruptionBudget minAvailable |
+| kafka.controller.pdb.maxUnavailable | string | `""` | Set PodDisruptionBudget minAvailable |
 
 ### Postgresql-Backup parameters
 
@@ -970,12 +927,12 @@ elasticsearch:
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://strimzi.io/charts/ | strimzi-kafka-operator | 0.47.0 |
 | oci://registry-1.docker.io/bitnamicharts | clickhouse | 8.0.7 |
 | oci://registry-1.docker.io/bitnamicharts | common | 2.x.x |
 | oci://registry-1.docker.io/bitnamicharts | elasticsearch | 21.4.1 |
 | oci://registry-1.docker.io/bitnamicharts | elasticsearchlogs(elasticsearch) | 21.4.1 |
 | oci://registry-1.docker.io/bitnamicharts | grafana | 11.3.26 |
+| oci://registry-1.docker.io/bitnamicharts | kafka | 31.0.0 |
 | oci://registry-1.docker.io/bitnamicharts | postgresql | 16.2.1 |
 | oci://registry-1.docker.io/bitnamicharts | prometheus | 1.3.28 |
 | oci://registry-1.docker.io/bitnamicharts | redis | 20.3.0 |

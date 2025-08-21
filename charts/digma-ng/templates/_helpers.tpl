@@ -525,7 +525,7 @@ Return elasticsearchlogs url
 Return the proper kafka fullname
 */}}
 {{- define "digma.kafka.fullname" -}}
-{{- printf "%s-kafka-kafka-bootstrap" (include "common.names.fullname" .) -}}
+{{- include "common.names.dependency.fullname" (dict "chartName" "kafka" "chartValues" .Values.kafka "context" $) -}}
 {{- end -}}
 
 {{/*

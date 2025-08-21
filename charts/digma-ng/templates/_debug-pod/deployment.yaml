@@ -45,7 +45,7 @@ spec:
         - containerPort: {{ .Values.debug.kafkaUi.port }}
         env:
         - name: KAFKA_CLUSTERS_0_NAME
-          value: {{ include "common.names.fullname" . }}-kafka
+          value: {{ .Values.kafka.kraft.clusterId }}
         - name: KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS
           value: {{include "digma.kafka.client" .}}
 
