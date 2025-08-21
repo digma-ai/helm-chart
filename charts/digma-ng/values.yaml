@@ -2672,15 +2672,15 @@ prometheus:
       # @section -- Prometheus parameters
       maxUnavailable: ""
 
-## kafka
-## ref: https://github.com/bitnami/charts/blob/main/bitnami/kafka/values.yaml
-##
 kafka:
+  image:
+    registry: docker.io
+    repository: apache/kafka
+    tag: "3.9.1"
+    pullPolicy: IfNotPresent
   kraft:
     clusterId: h4U35I9QRnGhbgsEQAlXAw
   controller:
-    # -- Number of Kafka controller-eligible nodes
-    # @section -- Kafka parameters
     replicaCount: 1
     resources:
       requests:
@@ -2689,14 +2689,17 @@ kafka:
       limits:
         memory: 3Gi
         cpu: 2
-    # -- Additional configuration to be appended at the end of the generated Kafka configuration file.
+    # -- Additional Kafka configuration properties
     # @section -- Kafka parameters
-    extraConfig: |
-      offsets.topic.replication.factor=1
-      transaction.state.log.replication.factor=1
-      log.retention.check.interval.ms = 120000
-      log.roll.ms = 120000
-      log.retention.minutes = 10
+    config:
+      log:
+        retention:
+          check:
+            interval:
+              ms: 120000
+          minutes: 10
+        roll:
+          ms: 120000
     ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
     # -- Extra labels for pods
     # @section -- Kafka parameters

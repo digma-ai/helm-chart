@@ -1,0 +1,144 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "digma.kafka.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: kafka
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.kafka.controller.replicaCount }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+      app.kubernetes.io/component: kafka
+  serviceName: {{ include "digma.kafka.fullname" . }}-headless
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels: {{- include "common.labels.standard" . | nindent 8 }}
+        app.kubernetes.io/component: kafka
+        {{- if .Values.kafka.controller.podLabels }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.kafka.controller.podLabels "context" $) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.commonLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+      annotations:
+        {{- if .Values.kafka.controller.podAnnotations }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.kafka.controller.podAnnotations "context" $) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.commonAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+    spec:
+      terminationGracePeriodSeconds: 5
+      {{- include "common.images.pullSecrets" ( dict "images" (list .Values.kafka.image) "global" .Values.global) | nindent 6 }}
+      {{- if .Values.kafka.controller.tolerations }}
+      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.kafka.controller.tolerations "context" $) | nindent 8 }}
+      {{- else if .Values.global.tolerations }}
+      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.global.tolerations "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.kafka.controller.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.kafka.controller.nodeSelector "context" $) | nindent 8 }}
+      {{- else if .Values.global.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.global.nodeSelector "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.kafka.controller.affinity }}
+      affinity: {{- include "common.tplvalues.render" (dict "value" .Values.kafka.controller.affinity "context" $) | nindent 8 }}
+      {{- end }}
+      securityContext:
+        fsGroup: 1000
+        runAsUser: 1000
+        runAsGroup: 1000
+      containers:
+      - name: kafka
+        image: {{ include "common.images.image" ( dict "imageRoot" .Values.kafka.image "global" .Values.global ) }}
+        imagePullPolicy: {{ .Values.kafka.image.pullPolicy }}
+        {{- if .Values.kafka.controller.resources }}
+        resources: {{- toYaml .Values.kafka.controller.resources | nindent 10 }}
+        {{- end }}
+        ports:
+        - name: client
+          containerPort: {{ .Values.kafka.service.ports.client }}
+        - name: controller
+          containerPort: {{ .Values.kafka.service.ports.controller }}
+        volumeMounts: 
+        - name: kafka-data
+          mountPath: /var/lib/kafka
+        env:
+        # KRaft settings
+        - name: CLUSTER_ID
+          value: {{ .Values.kafka.kraft.clusterId }}
+        - name: KAFKA_NODE_ID
+          value: "1"
+        - name: KAFKA_PROCESS_ROLES
+          value: controller,broker
+        - name: KAFKA_CONTROLLER_QUORUM_VOTERS
+          value: 1@127.0.0.1:{{ .Values.kafka.service.ports.controller }}
+        # Data directories
+        - name: KAFKA_LOG_DIRS
+          value: /var/lib/kafka/logs
+        # Listeners
+        - name: KAFKA_LISTENERS
+          value: PLAINTEXT://:{{ .Values.kafka.service.ports.client }},CONTROLLER://:{{ .Values.kafka.service.ports.controller }}
+        - name: KAFKA_ADVERTISED_LISTENERS
+          value: PLAINTEXT://{{ include "digma.kafka.fullname" . }}:{{ .Values.kafka.service.ports.client }}
+        - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
+          value: CONTROLLER:{{ .Values.kafka.listeners.controller.protocol }},PLAINTEXT:{{ .Values.kafka.listeners.client.protocol }},INTERNAL:{{ .Values.kafka.listeners.interbroker.protocol }}
+        - name: KAFKA_CONTROLLER_LISTENER_NAMES
+          value: CONTROLLER
+        - name: KAFKA_INTER_BROKER_LISTENER_NAME
+          value: PLAINTEXT
+        # Retention settings
+        - name: KAFKA_LOG_RETENTION_MINUTES
+          value: {{ .Values.kafka.controller.config.log.retention.minutes | quote }}
+        - name: KAFKA_LOG_RETENTION_CHECK_INTERVAL_MS
+          value: {{ .Values.kafka.controller.config.log.retention.check.interval.ms | quote }}
+        - name: KAFKA_LOG_ROLL_MS
+          value: {{ .Values.kafka.controller.config.log.roll.ms | quote }}
+        - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
+          value: "1"
+        - name: KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR
+          value: "1"
+        livenessProbe:
+          tcpSocket:
+            port: client
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          tcpSocket:
+            port: client
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 6
+  {{- if .Values.kafka.controller.persistence.enabled }}
+  volumeClaimTemplates:
+  - metadata:
+      name: kafka-data
+      {{- if .Values.kafka.controller.persistence.annotations }}
+      annotations: {{- include "common.tplvalues.render" (dict "value" .Values.kafka.controller.persistence.annotations "context" $) | nindent 8 }}
+      {{- end }}
+    spec:
+      accessModes: {{- range .Values.kafka.controller.persistence.accessModes }}
+        - {{ . | quote }}
+      {{- end }}
+      resources:
+        requests:
+          storage: {{ .Values.kafka.controller.persistence.size | quote }}
+      {{- if .Values.kafka.controller.persistence.storageClass }}
+      {{- if (eq "-" .Values.kafka.controller.persistence.storageClass) }}
+      storageClassName: ""
+      {{- else }}
+      storageClassName: {{ .Values.kafka.controller.persistence.storageClass | quote }}
+      {{- end }}
+      {{- end }}
+  {{- end }}
