@@ -2673,9 +2673,14 @@ prometheus:
       maxUnavailable: ""
 
 ## kafka
-## ref: https://github.com/bitnami/charts/blob/main/bitnami/kafka/values.yaml
+## Custom Kafka StatefulSet configuration (no longer using Bitnami chart)
 ##
 kafka:
+  image:
+    registry: docker.io
+    repository: apache/kafka
+    tag: "3.9.1"
+    pullPolicy: IfNotPresent
   kraft:
     clusterId: h4U35I9QRnGhbgsEQAlXAw
   controller:
