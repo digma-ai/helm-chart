@@ -95,13 +95,13 @@ spec:
           value: CONTROLLER
         - name: KAFKA_INTER_BROKER_LISTENER_NAME
           value: PLAINTEXT
-        # Retention settings from extraConfig
+        # Retention settings
         - name: KAFKA_LOG_RETENTION_MINUTES
-          value: "10"
+          value: {{ .Values.kafka.controller.config.log.retention.minutes | quote }}
         - name: KAFKA_LOG_RETENTION_CHECK_INTERVAL_MS
-          value: "120000"
+          value: {{ .Values.kafka.controller.config.log.retention.check.interval.ms | quote }}
         - name: KAFKA_LOG_ROLL_MS
-          value: "120000"
+          value: {{ .Values.kafka.controller.config.log.roll.ms | quote }}
         - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
           value: "1"
         - name: KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR
