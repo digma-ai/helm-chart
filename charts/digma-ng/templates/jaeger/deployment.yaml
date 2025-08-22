@@ -74,8 +74,6 @@ spec:
           value: {{include "digma.opensearch.url" .}}
         - name: ES_INDEX_PREFIX
           value: "digma"
-        - name: ES_TAGS_AS_FIELDS_ALL
-          value: "true"
         - name: COLLECTOR_OTLP_ENABLED
           value: "true"
         - name: COLLECTOR_OTLP_GRPC_MAX_MESSAGE_SIZE

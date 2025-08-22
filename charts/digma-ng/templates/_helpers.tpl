@@ -507,20 +507,7 @@ Return opensearch connectivity env
   value: {{ include "digma.opensearch.url" . }}
 {{- end -}}
 
-{{/*
-Backward compatibility: elasticsearch helpers that now point to opensearch
-*/}}
-{{- define "digma.elasticsearch.fullname" -}}
-{{- include "digma.opensearch.fullname" . -}}
-{{- end -}}
 
-{{- define "digma.elasticsearch.url" -}}
-{{- include "digma.opensearch.url" . -}}
-{{- end -}}
-
-{{- define "env.elasticsearch" -}}
-{{- include "env.opensearch" . -}}
-{{- end -}}
 
 {{/*
 Return the proper elasticsearchlogs fullname
