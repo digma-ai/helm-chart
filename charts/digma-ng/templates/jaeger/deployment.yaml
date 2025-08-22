@@ -39,10 +39,10 @@ spec:
       securityContext: {{- include "common.compatibility.renderSecurityContext" (dict "secContext" .Values.jaeger.podSecurityContext "context" $) | nindent 8 }}
       {{- end }}
       initContainers:
-        - name: wait-for-elasticsearch
+        - name: wait-for-opensearch
           imagePullPolicy: Always
           image: busybox:1.28
-          command: [ 'sh', '-c', 'until nc -z {{include "digma.elasticsearch.fullname" .}} {{.Values.elasticsearch.service.ports.restAPI}}; do echo waiting for elasticsearch; sleep 5; done;' ]
+          command: [ 'sh', '-c', 'until nc -z {{include "digma.opensearch.fullname" .}} {{.Values.opensearch.httpPort}}; do echo waiting for opensearch; sleep 5; done;' ]
           resources:
             requests:
               memory: 16Mi
@@ -71,9 +71,11 @@ spec:
         - name: SPAN_STORAGE_TYPE
           value: elasticsearch
         - name: ES_SERVER_URLS
-          value: {{include "digma.elasticsearch.url" .}}
+          value: {{include "digma.opensearch.url" .}}
         - name: ES_INDEX_PREFIX
           value: "digma"
+        - name: ES_TAGS_AS_FIELDS_ALL
+          value: "true"
         - name: COLLECTOR_OTLP_ENABLED
           value: "true"
         - name: COLLECTOR_OTLP_GRPC_MAX_MESSAGE_SIZE
