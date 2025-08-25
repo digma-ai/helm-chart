@@ -2513,9 +2513,24 @@ opensearch:
       network.host: 0.0.0.0
       plugins.security.disabled: true
       discovery.type: single-node
+    performance-analyzer.properties: |
+      # Minimal configuration to prevent startup errors
+      webservice-port = 9600
+      rpc-port = 9650
+      https-enabled = false
+      cleanup-metrics-db-files = true
+    plugin-stats-metadata: |
+      # Empty metadata file to prevent errors
   extraEnvs:
     - name: OPENSEARCH_JAVA_OPTS
       value: "-Xmx2g -Xms2g"
+  extraVolumeMounts:
+    - name: config
+      mountPath: /usr/share/opensearch/config/opensearch-performance-analyzer/performance-analyzer.properties
+      subPath: performance-analyzer.properties
+    - name: config
+      mountPath: /usr/share/opensearch/config/opensearch-performance-analyzer/plugin-stats-metadata
+      subPath: plugin-stats-metadata
   persistence:
     enabled: true
     size: 80Gi
