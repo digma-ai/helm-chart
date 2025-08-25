@@ -486,26 +486,28 @@ Return jaeger connectivity env
 {{- end -}}
 
 {{/*
-Return the proper elasticsearch fullname
+Return the proper opensearch fullname
 */}}
-{{- define "digma.elasticsearch.fullname" -}}
-{{- include "common.names.dependency.fullname" (dict "chartName" "elasticsearch" "chartValues" .Values.elasticsearch "context" $) -}}
+{{- define "digma.opensearch.fullname" -}}
+{{- printf "%s-%s" .Values.opensearch.clusterName .Values.opensearch.nodeGroup -}}
 {{- end -}}
 
 {{/*
-Return elasticsearch url
+Return opensearch url
 */}}
-{{- define "digma.elasticsearch.url" -}}
- {{ printf "http://%s:%v" (include "digma.elasticsearch.fullname" .) .Values.elasticsearch.service.ports.restAPI }}
+{{- define "digma.opensearch.url" -}}
+ {{ printf "http://%s:%v" (include "digma.opensearch.fullname" .) .Values.opensearch.httpPort }}
 {{- end -}}
 
 {{/*
-Return elasticsearch connectivity env
+Return opensearch connectivity env
 */}}
-{{- define "env.elasticsearch" -}}
-- name: ElasticSearch__Uri
-  value: {{ include "digma.elasticsearch.url" . }}
+{{- define "env.opensearch" -}}
+- name: OpenSearch__Uri
+  value: {{ include "digma.opensearch.url" . }}
 {{- end -}}
+
+
 
 {{/*
 Return the proper elasticsearchlogs fullname

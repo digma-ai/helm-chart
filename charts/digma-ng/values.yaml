@@ -2166,11 +2166,6 @@ postgresql:
   volumePermissions:
     image:
       repository: bitnamilegacy/os-shell
-  metrics:
-    enabled: true
-    image:
-      registry: docker.io
-      repository: bitnamilegacy/postgres-exporter
   auth:
     database: postgres
     username: postgres
@@ -2259,6 +2254,9 @@ postgresql:
     # -- Start a prometheus exporter
     # @section -- Postgresql parameters
     enabled: true
+    image:
+      registry: docker.io
+      repository: bitnamilegacy/postgres-exporter
     collectors:
       stat_bgwriter: false # disabled because it is not supported, produce output errors
     containerPorts:
@@ -2362,7 +2360,7 @@ jaeger:
     repository: jaegertracing/all-in-one
     # -- image tag
     # @section -- Jaeger parameters
-    tag: 1.61.0
+    tag: 1.72.0
     # -- image pull policy
     # @section -- Jaeger parameters
     pullPolicy: IfNotPresent
@@ -2498,88 +2496,59 @@ jaeger:
     # -- Set PodDisruptionBudget minAvailable
     # @section -- Jaeger parameters
     maxUnavailable: ""
-## elasticsearch
-## ref: https://github.com/bitnami/charts/blob/main/bitnami/elasticsearch/values.yaml
+## opensearch
+## ref: https://github.com/opensearch-project/helm-charts/blob/main/charts/opensearch/values.yaml
 ##
-elasticsearch:
-  enabled: true
-  image:
-    repository: bitnamilegacy/elasticsearch
-  volumePermissions:
-    image:
-      repository: bitnamilegacy/os-shell
-  sysctlImage:
+opensearch:
+  clusterName: "opensearch-cluster"
+  nodeGroup: "master"
+  masterService: "opensearch-cluster-master"
+  replicas: 1
+  singleNode: true
+  httpPort: 9200
+  transportPort: 9300
+  config:
+    opensearch.yml: |
+      cluster.name: opensearch-cluster
+      network.host: 0.0.0.0
+      plugins.security.disabled: true
+      discovery.type: single-node
+    performance-analyzer.properties: |
+      # Minimal configuration to prevent startup errors
+      webservice-port = 9600
+      rpc-port = 9650
+      https-enabled = false
+      cleanup-metrics-db-files = true
+    plugin-stats-metadata: |
+      # Empty metadata file to prevent errors
+  extraEnvs:
+    - name: OPENSEARCH_JAVA_OPTS
+      value: "-Xmx2g -Xms2g"
+  extraVolumeMounts:
+    - name: config
+      mountPath: /usr/share/opensearch/config/opensearch-performance-analyzer/performance-analyzer.properties
+      subPath: performance-analyzer.properties
+    - name: config
+      mountPath: /usr/share/opensearch/config/opensearch-performance-analyzer/plugin-stats-metadata
+      subPath: plugin-stats-metadata
+  persistence:
     enabled: true
-    repository: bitnamilegacy/os-shell
-  clusterName: elastic
-  security:
-    enabled: false
-    existingSecret: ""
-    tls:
-      restEncryption: false
-  ## Elasticsearch master-eligible node parameters
-  master:
-    masterOnly: false
-    replicaCount: 1
-    terminationGracePeriodSeconds: 5
-    podSecurityContext:
-      enabled: true
-      fsGroup: 1000
-    persistence:
-      enabled: true
-      size: 80Gi
-      accessModes:
-        - ReadWriteOnce
-    resources:
-      requests:
-        memory: 2Gi
-        cpu: 1
-      limits:
-        memory: 4Gi
-        cpu: 2
-    extraEnvVars:
-      - name: ES_JAVA_OPTS
-        value: -server -Xms2G -Xmx2G
-    ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
-    # -- Extra labels for pods
-    # @section -- Elasticsearch parameters
-    podLabels: {}
-    ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
-    # -- Extra annotations for pods
-    # @section -- Elasticsearch parameters
-    podAnnotations: {}
-    ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
-    # -- Node labels for pods assignment
-    # @section -- Elasticsearch parameters
-    nodeSelector: {}
-    ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
-    # -- Tolerations for pods assignment
-    # @section -- Elasticsearch parameters
-    tolerations: '{{ include "common.tplvalues.render" (dict "value" .Values.global.tolerations "context" $) }}'
-    ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
-    ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
-    # -- Affinity for pods assignment
-    # @section -- Elasticsearch parameters
-    affinity: {}
-    pdb:
-      # -- Enable PodDisruptionBudget
-      # @section -- Elasticsearch parameters
-      create: false
-      # -- Set PodDisruptionBudget minAvailable
-      # @section -- Elasticsearch parameters
-      minAvailable: ""
-      # -- Set PodDisruptionBudget minAvailable
-      # @section -- Elasticsearch parameters
-      maxUnavailable: ""
-  coordinating:
-    replicaCount: 0
-  data:
-    replicaCount: 0
-  ingest:
-    replicaCount: 0
+    size: 80Gi
+  resources:
+    requests:
+      cpu: "1000m"
+      memory: "2Gi"
+    limits:
+      cpu: "2000m"
+      memory: "4Gi"
+  nodeSelector: {}
+  # Tolerations: Override in environment-specific values files
+  # This will be set by each environment's values.yaml file
+  tolerations: []
+  nodeAffinity: {}
+  podAffinity: {}
   service:
-    ports:
-      restAPI: 9200
+    type: ClusterIP
 ## elasticsearch
 ## ref: https://github.com/bitnami/charts/blob/main/bitnami/elasticsearch/values.yaml
 ##
