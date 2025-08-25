@@ -2166,11 +2166,6 @@ postgresql:
   volumePermissions:
     image:
       repository: bitnamilegacy/os-shell
-  metrics:
-    enabled: true
-    image:
-      registry: docker.io
-      repository: bitnamilegacy/postgres-exporter
   auth:
     database: postgres
     username: postgres
@@ -2259,6 +2254,9 @@ postgresql:
     # -- Start a prometheus exporter
     # @section -- Postgresql parameters
     enabled: true
+    image:
+      registry: docker.io
+      repository: bitnamilegacy/postgres-exporter
     collectors:
       stat_bgwriter: false # disabled because it is not supported, produce output errors
     containerPorts:
