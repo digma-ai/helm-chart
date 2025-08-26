@@ -1,16 +1,10 @@
 # digma-ng
 
-
-
-
-![Version: 1.0.372](https://img.shields.io/badge/Version-1.0.372-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.344](https://img.shields.io/badge/AppVersion-0.3.344-informational?style=flat-square) 
+![Version: 1.0.372](https://img.shields.io/badge/Version-1.0.372-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.345](https://img.shields.io/badge/AppVersion-0.3.345-informational?style=flat-square)
 
 A Helm chart containing Digma's services
 
 **Homepage:** <https://github.com/digma-ai/digma>
-
-
-
 
 ## License Key
 Digma will not function without a valid license key.
@@ -31,7 +25,6 @@ helm upgrade --install digma digma/digma-ng -n digma --set digma.licenseKey=$DIG
 ## Introduction
 
 This chart bootstraps a [Digma](https://digma.ai) deployment on a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
-
 
 ## Prerequisites
 
@@ -192,10 +185,6 @@ Default Models by Vendor:
 | Grok      | grok-1                     |
 | Gemini    | gemini-2.0-flash           |
 
-
-
-
-
 ## PostgreSQL Backup
 The Digma-ng Helm chart provides an optional PostgreSQL backup job for debugging and troubleshooting purposes. This guide explains how to enable and configure the backup feature.
 
@@ -223,7 +212,7 @@ How It Works
 
 Elasticsearch requires certain **kernel parameters** to be set at the **host level** in order to function properly. If these values are not correctly configured in the underlying OS, the Elasticsearch containers may fail to start, displaying error messages related to system limits.
 
-📚 For more details, refer to the official Bitnami documentation:  
+📚 For more details, refer to the official Bitnami documentation: 
 ➡️ [Bitnami Elasticsearch – Default Kernel Settings](https://github.com/bitnami/charts/tree/main/bitnami/elasticsearch#default-kernel-settings)
 
 ---
@@ -837,7 +826,7 @@ elasticsearch:
 | jaeger.publicBaseUrl | string | `""` | jaeger external or public URL, automatically detected if not set |
 | jaeger.image.registry | string | `"docker.io"` | image registry |
 | jaeger.image.repository | string | `"jaegertracing/all-in-one"` | image repository |
-| jaeger.image.tag | string | `"1.61.0"` | image tag |
+| jaeger.image.tag | string | `"1.72.0"` | image tag |
 | jaeger.image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
 | jaeger.image.pullSecrets | list | `[]` | image pull secrets |
 | jaeger.replicas | int | `1` | Number of replicas to deploy |
@@ -863,19 +852,6 @@ elasticsearch:
 | jaeger.pdb.create | bool | `false` | Enable PodDisruptionBudget |
 | jaeger.pdb.minAvailable | string | `""` | Set PodDisruptionBudget minAvailable |
 | jaeger.pdb.maxUnavailable | string | `""` | Set PodDisruptionBudget minAvailable |
-
-### Elasticsearch parameters
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| elasticsearch.master.podLabels | object | `{}` | Extra labels for pods |
-| elasticsearch.master.podAnnotations | object | `{}` | Extra annotations for pods |
-| elasticsearch.master.nodeSelector | object | `{}` | Node labels for pods assignment |
-| elasticsearch.master.tolerations | string | `"{{ include \"common.tplvalues.render\" (dict \"value\" .Values.global.tolerations \"context\" $) }}"` | Tolerations for pods assignment |
-| elasticsearch.master.affinity | object | `{}` | Affinity for pods assignment |
-| elasticsearch.master.pdb.create | bool | `false` | Enable PodDisruptionBudget |
-| elasticsearch.master.pdb.minAvailable | string | `""` | Set PodDisruptionBudget minAvailable |
-| elasticsearch.master.pdb.maxUnavailable | string | `""` | Set PodDisruptionBudget minAvailable |
 
 ### Grafana parameters
 
@@ -905,8 +881,7 @@ elasticsearch:
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| kafka.controller.replicaCount | int | `1` | Number of Kafka controller-eligible nodes |
-| kafka.controller.extraConfig | string | `"offsets.topic.replication.factor=1\ntransaction.state.log.replication.factor=1\nlog.retention.check.interval.ms = 120000\nlog.roll.ms = 120000\nlog.retention.minutes = 10\n"` | Additional configuration to be appended at the end of the generated Kafka configuration file. |
+| kafka.controller.config | object | `{"log":{"retention":{"check":{"interval":{"ms":120000}},"minutes":10},"roll":{"ms":120000}}}` | Additional Kafka configuration properties |
 | kafka.controller.podLabels | object | `{}` | Extra labels for pods |
 | kafka.controller.podAnnotations | object | `{}` | Extra annotations for pods |
 | kafka.controller.nodeSelector | object | `{}` | Node labels for pods assignment |
@@ -927,12 +902,11 @@ elasticsearch:
 
 | Repository | Name | Version |
 |------------|------|---------|
+| https://opensearch-project.github.io/helm-charts/ | opensearch | 3.2.1 |
 | oci://registry-1.docker.io/bitnamicharts | clickhouse | 8.0.7 |
 | oci://registry-1.docker.io/bitnamicharts | common | 2.x.x |
-| oci://registry-1.docker.io/bitnamicharts | elasticsearch | 21.4.1 |
 | oci://registry-1.docker.io/bitnamicharts | elasticsearchlogs(elasticsearch) | 21.4.1 |
 | oci://registry-1.docker.io/bitnamicharts | grafana | 11.3.26 |
-| oci://registry-1.docker.io/bitnamicharts | kafka | 31.0.0 |
 | oci://registry-1.docker.io/bitnamicharts | postgresql | 16.2.1 |
 | oci://registry-1.docker.io/bitnamicharts | prometheus | 1.3.28 |
 | oci://registry-1.docker.io/bitnamicharts | redis | 20.3.0 |

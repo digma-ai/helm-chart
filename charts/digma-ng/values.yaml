@@ -1392,7 +1392,7 @@ nginx:
   image:
     registry: docker.io
     repository: digmatic/digma-ui
-    tag: 16.8.0
+    tag: 16.8.1
     # -- image pull policy
     # @section -- UI parameters
     pullPolicy: IfNotPresent
@@ -1704,7 +1704,7 @@ agentic:
   image:
     registry: docker.io
     repository: digmatic/digma-agentic
-    tag: 0.0.126
+    tag: 0.0.143
     # -- image pull policy
     # @section -- Agentic parameters
     pullPolicy: IfNotPresent
@@ -1768,10 +1768,18 @@ agentic:
   affinity: {}
   ## e.g:
   ## extraEnvVars:
-  ##   - name: API_KEY
-  ##     value: <API_KEY>
-  ##   - name: VENDOR
-  ##     value: <Claude/OpenAi/Grok,Gemini>
+  ##   - name: UI_BASE_URL
+  ##     value: <UI_BASE_URL>
+  ##   - name: DEFAULT_DIGMA_ENV
+  ##     value: <DEFAULT_DIGMA_ENV>
+  ##   - name: GLOBAL_LLM_NAME
+  ##     value: <GLOBAL_LLM_NAME> Supported providers: ChatAnthropic, ChatGoogleGenerativeAI, ChatOpenAI
+  ##   - name: GLOBAL_LLM_CONFIG
+  ##     value: <GLOBAL_LLM_CONFIG>  key=value;key=value style string,  # e.g., model=claude-3-5-sonnet-latest;api_key=sk-ant-api03-1234
+  ##   - name: {AGENT_NAME}_LLM_NAME
+  ##     value: <LLM_NAME>
+  ##   - name: {AGENT_NAME}_LLM_CONFIG
+  ##     value: <LLM_CONFIG>        
   # -- Array with extra environment variables to add
   # @section -- Agentic parameters
   extraEnvVars: []
