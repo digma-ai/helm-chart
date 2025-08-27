@@ -2884,3 +2884,94 @@ clickhouse:
     create: false
     minAvailable: ""
     maxUnavailable: ""
+
+toolhive:
+  # -- Enable ToolHive integration
+  # @section -- ToolHive
+  enabled: true
+
+# Configuration for the vendored toolhive-operator subchart
+toolhive-operator:
+  # -- Configure the operator for namespace-scoped operation
+  operator:
+    rbac:
+      # -- Use namespace-scoped RBAC (Role/RoleBinding) instead of cluster-scoped
+      scope: namespace
+    
+    # -- ToolHive operator image configuration
+    image: ghcr.io/stacklok/toolhive/operator:v0.2.8
+    imagePullPolicy: IfNotPresent
+    
+    # -- Resources for the ToolHive operator
+    resources:
+      requests:
+        memory: 128Mi
+        cpu: 50m
+      limits:
+        memory: 256Mi
+        cpu: 200m
+    
+    # -- Node selector for ToolHive operator
+    nodeSelector: {}
+    
+    # -- Tolerations for ToolHive operator
+    tolerations: []
+    
+    # -- Affinity for ToolHive operator
+    affinity: {}
+  
+  # MCP Server configurations
+  mcpServers:
+    # -- Enable default MCP servers for development
+    enableDefaults: true
+  
+  # Security configuration
+  security:
+    # -- Enable security policies for MCP servers
+    enablePolicies: true
+    
+    # -- Network policies configuration
+    networkPolicies:
+      enabled: true
+      egress:
+        # Allow egress to specific domains only
+        allowedDomains:
+          - "api.brave.com"
+          - "*.openai.com"
+    
+    # -- Pod security standards
+    podSecurityStandards:
+      enabled: true
+      runAsNonRoot: true
+      runAsUser: 1000
+      readOnlyRootFilesystem: true
+  
+  # Service configuration
+  service:
+    # -- Service type for ToolHive
+    type: ClusterIP
+    # -- Service port
+    port: 9090
+
+  # Demo MCP server (example resource managed by the embedded operator)
+  demo:
+    enabled: true
+    image:
+      repository: mcp/sqlite
+      tag: latest
+      pullPolicy: IfNotPresent
+    # example config for demo
+    config:
+      database_path: "/data/demo.db"
+    # optional secrets array
+    # secrets:
+    #   - name: DEMO_TOKEN
+    #     value: ""
+    # resources can be overridden
+    # resources:
+    #   requests:
+    #     cpu: 100m
+    #     memory: 128Mi
+    #   limits:
+    #     cpu: 200m
+    #     memory: 256Mi
