@@ -1766,6 +1766,10 @@ agentic:
   # -- Affinity for pods assignment
   # @section -- Agentic parameters
   affinity: {}
+  # -- Annotations to add to the ServiceAccount Metadata
+  # @section -- Agentic parameters
+  serviceAccount:
+    annotations: {}
   ## e.g:
   ## extraEnvVars:
   ##   - name: UI_BASE_URL

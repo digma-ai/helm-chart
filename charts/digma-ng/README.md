@@ -1,6 +1,6 @@
 # digma-ng
 
-![Version: 1.0.374](https://img.shields.io/badge/Version-1.0.374-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.348](https://img.shields.io/badge/AppVersion-0.3.348-informational?style=flat-square)
+![Version: 1.0.375](https://img.shields.io/badge/Version-1.0.375-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.348](https://img.shields.io/badge/AppVersion-0.3.348-informational?style=flat-square)
 
 A Helm chart containing Digma's services
 
@@ -705,6 +705,7 @@ elasticsearch:
 | agentic.nodeSelector | object | `{}` | Node labels for pods assignment |
 | agentic.tolerations | list | `[]` | Tolerations for pods assignment |
 | agentic.affinity | object | `{}` | Affinity for pods assignment |
+| agentic.serviceAccount | object | `{"annotations":{}}` | Annotations to add to the ServiceAccount Metadata |
 | agentic.extraEnvVars | list | `[]` | Array with extra environment variables to add |
 | agentic.pdb.create | bool | `false` | Enable PodDisruptionBudget |
 | agentic.pdb.minAvailable | string | `""` | Set PodDisruptionBudget minAvailable |
