@@ -705,6 +705,7 @@ elasticsearch:
 | agentic.nodeSelector | object | `{}` | Node labels for pods assignment |
 | agentic.tolerations | list | `[]` | Tolerations for pods assignment |
 | agentic.affinity | object | `{}` | Affinity for pods assignment |
+| agentic.serviceAccount | object | `{"annotations":{}}` | Annotations to add to the ServiceAccount Metadata |
 | agentic.extraEnvVars | list | `[]` | Array with extra environment variables to add |
 | agentic.pdb.create | bool | `false` | Enable PodDisruptionBudget |
 | agentic.pdb.minAvailable | string | `""` | Set PodDisruptionBudget minAvailable |
