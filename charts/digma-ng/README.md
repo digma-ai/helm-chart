@@ -1,16 +1,10 @@
 # digma-ng
 
-
-
-
-![Version: 1.0.373](https://img.shields.io/badge/Version-1.0.373-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.347](https://img.shields.io/badge/AppVersion-0.3.347-informational?style=flat-square) 
+![Version: 1.0.374](https://img.shields.io/badge/Version-1.0.374-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.348](https://img.shields.io/badge/AppVersion-0.3.348-informational?style=flat-square)
 
 A Helm chart containing Digma's services
 
 **Homepage:** <https://github.com/digma-ai/digma>
-
-
-
 
 ## License Key
 Digma will not function without a valid license key.
@@ -31,7 +25,6 @@ helm upgrade --install digma digma/digma-ng -n digma --set digma.licenseKey=$DIG
 ## Introduction
 
 This chart bootstraps a [Digma](https://digma.ai) deployment on a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
-
 
 ## Prerequisites
 
@@ -192,10 +185,6 @@ Default Models by Vendor:
 | Grok      | grok-1                     |
 | Gemini    | gemini-2.0-flash           |
 
-
-
-
-
 ## PostgreSQL Backup
 The Digma-ng Helm chart provides an optional PostgreSQL backup job for debugging and troubleshooting purposes. This guide explains how to enable and configure the backup feature.
 
@@ -223,7 +212,7 @@ How It Works
 
 Elasticsearch requires certain **kernel parameters** to be set at the **host level** in order to function properly. If these values are not correctly configured in the underlying OS, the Elasticsearch containers may fail to start, displaying error messages related to system limits.
 
-📚 For more details, refer to the official Bitnami documentation:  
+📚 For more details, refer to the official Bitnami documentation: 
 ➡️ [Bitnami Elasticsearch – Default Kernel Settings](https://github.com/bitnami/charts/tree/main/bitnami/elasticsearch#default-kernel-settings)
 
 ---
