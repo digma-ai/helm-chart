@@ -2634,6 +2634,52 @@ entries:
   - annotations:
       category: Application
     apiVersion: v2
+    appVersion: 0.3.348
+    created: "2025-08-28T11:38:31.237504983Z"
+    dependencies:
+    - condition: observability.useLocal
+      name: prometheus
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 1.3.28
+    - condition: observability.useLocal
+      name: grafana
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 11.3.26
+    - name: opensearch
+      repository: https://opensearch-project.github.io/helm-charts/
+      version: 3.2.1
+    - alias: elasticsearchlogs
+      condition: elasticsearchlogs.enabled
+      name: elasticsearch
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 21.4.1
+    - name: redis
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 20.3.0
+    - name: postgresql
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 16.2.1
+    - condition: clickhouse.enabled
+      name: clickhouse
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 8.0.7
+    - name: common
+      repository: oci://registry-1.docker.io/bitnamicharts
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    description: A Helm chart containing Digma's services
+    digest: b36195384c7ab6e62a01ee301b2e081e9b71d4853c074e0424d94d90b66bc1ac
+    home: https://github.com/digma-ai/digma
+    icon: https://digma.ai/wp-content/uploads/2024/02/logo-alt-1.svg
+    name: digma-ng
+    type: application
+    urls:
+    - https://github.com/digma-ai/helm-chart/releases/download/digma-ng-1.0.374/digma-ng-1.0.374.tgz
+    version: 1.0.374
+  - annotations:
+      category: Application
+    apiVersion: v2
     appVersion: 0.3.347
     created: "2025-08-27T20:45:34.711938884Z"
     dependencies:
@@ -8301,4 +8347,4 @@ entries:
     urls:
     - https://github.com/digma-ai/helm-chart/releases/download/sample-app-go-1.1.0/sample-app-go-1.1.0.tgz
     version: 1.1.0
-generated: "2025-08-27T20:45:34.71270866Z"
+generated: "2025-08-28T11:38:31.238111235Z"
