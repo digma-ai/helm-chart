@@ -1,7 +1,7 @@
 # editor and IDE paraphernalia
 .idea
 .vscode
-.DS_Store# ToolHive integration - ignore generated/binary/backup
+.DS_Store
 *.tgz
 *.exe
 *.yaml~
@@ -9,7 +9,6 @@
 charts/**/charts/*.tgz
 scripts/*-generated*
 
-# ToolHive integration - ignore generated/binary/backup
 *.tgz
 *.exe
 *.yaml~
