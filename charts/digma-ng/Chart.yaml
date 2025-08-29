@@ -34,6 +34,14 @@ dependencies:
   version: 2.x.x
   tags:
   - bitnami-common
+- name: toolhive-operator-crds
+  repository: oci://ghcr.io/stacklok/toolhive
+  version: "0.0.16"
+  condition: toolhive.enabled
+- name: toolhive-operator
+  repository: oci://ghcr.io/stacklok/toolhive
+  version: "0.2.6"
+  condition: toolhive.enabled
 name: digma-ng
 description: A Helm chart containing Digma's services
 home: https://github.com/digma-ai/digma

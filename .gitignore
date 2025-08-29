@@ -2,3 +2,10 @@
 .idea
 .vscode
 .DS_Store
+*.tgz
+*.exe
+*.yaml~
+*~
+charts/**/charts/*.tgz
+scripts/*-generated*
+

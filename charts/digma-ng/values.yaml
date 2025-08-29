@@ -2888,3 +2888,20 @@ clickhouse:
     create: false
     minAvailable: ""
     maxUnavailable: ""
+
+toolhive:
+  enabled: false
+
+toolhive-operator:
+  operator:
+    rbac:
+      scope: cluster
+      # scope: namespace
+      # allowedNamespaces: [] # When using namespace scope, explicitly specify the allowed namespaces.
+    resources:
+      requests:
+        cpu: 100m
+        memory: 64Mi
+      limits:
+        cpu: 500m
+        memory: 128Mi
