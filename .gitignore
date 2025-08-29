@@ -9,9 +9,3 @@
 charts/**/charts/*.tgz
 scripts/*-generated*
 
-*.tgz
-*.exe
-*.yaml~
-*~
-charts/**/charts/*.tgz
-scripts/*-generated*
