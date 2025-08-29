@@ -2886,13 +2886,14 @@ clickhouse:
     maxUnavailable: ""
 
 toolhive:
-  enabled: true
+  enabled: false
 
 toolhive-operator:
   operator:
     rbac:
-      scope: namespace
-      allowedNamespaces: []
+      scope: cluster
+      # scope: namespace
+      # allowedNamespaces: [] # When using namespace scope, explicitly specify the allowed namespaces.
     resources:
       requests:
         cpu: 100m
