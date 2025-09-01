@@ -2635,6 +2635,60 @@ entries:
       category: Application
     apiVersion: v2
     appVersion: 0.3.348
+    created: "2025-09-01T09:01:38.148524429Z"
+    dependencies:
+    - condition: observability.useLocal
+      name: prometheus
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 1.3.28
+    - condition: observability.useLocal
+      name: grafana
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 11.3.26
+    - name: opensearch
+      repository: https://opensearch-project.github.io/helm-charts/
+      version: 3.2.1
+    - alias: elasticsearchlogs
+      condition: elasticsearchlogs.enabled
+      name: elasticsearch
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 21.4.1
+    - name: redis
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 20.3.0
+    - name: postgresql
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 16.2.1
+    - condition: clickhouse.enabled
+      name: clickhouse
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 8.0.7
+    - name: common
+      repository: oci://registry-1.docker.io/bitnamicharts
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    - condition: toolhive.enabled
+      name: toolhive-operator-crds
+      repository: oci://ghcr.io/stacklok/toolhive
+      version: 0.0.16
+    - condition: toolhive.enabled
+      name: toolhive-operator
+      repository: oci://ghcr.io/stacklok/toolhive
+      version: 0.2.6
+    description: A Helm chart containing Digma's services
+    digest: 137952628dbe597c4e833b0463eed3e9fb3adf0cb0e97025dbab43f545ba5b9c
+    home: https://github.com/digma-ai/digma
+    icon: https://digma.ai/wp-content/uploads/2024/02/logo-alt-1.svg
+    name: digma-ng
+    type: application
+    urls:
+    - https://github.com/digma-ai/helm-chart/releases/download/digma-ng-1.0.376/digma-ng-1.0.376.tgz
+    version: 1.0.376
+  - annotations:
+      category: Application
+    apiVersion: v2
+    appVersion: 0.3.348
     created: "2025-08-28T14:53:48.728384694Z"
     dependencies:
     - condition: observability.useLocal
@@ -8393,4 +8447,4 @@ entries:
     urls:
     - https://github.com/digma-ai/helm-chart/releases/download/sample-app-go-1.1.0/sample-app-go-1.1.0.tgz
     version: 1.1.0
-generated: "2025-08-28T14:53:48.729111407Z"
+generated: "2025-09-01T09:01:38.149228272Z"
