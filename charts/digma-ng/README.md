@@ -918,7 +918,7 @@ elasticsearch:
 | agentic.enabled | bool | `false` |  |
 | agentic.image.registry | string | `"docker.io"` |  |
 | agentic.image.repository | string | `"digmatic/digma-agentic"` |  |
-| agentic.image.tag | string | `"0.0.145"` |  |
+| agentic.image.tag | string | `"0.0.146"` |  |
 | agentic.resources.limits.cpu | string | `"750m"` |  |
 | agentic.resources.limits.memory | string | `"768Mi"` |  |
 | agentic.resources.requests.cpu | string | `"500m"` |  |
@@ -1071,7 +1071,7 @@ elasticsearch:
 | nginx.commonHeaders.X-Frame-Options | string | `"DENY"` |  |
 | nginx.image.registry | string | `"docker.io"` |  |
 | nginx.image.repository | string | `"digmatic/digma-ui"` |  |
-| nginx.image.tag | string | `"16.8.1"` |  |
+| nginx.image.tag | string | `"16.8.3"` |  |
 | nginx.resources.limits.cpu | string | `"200m"` |  |
 | nginx.resources.limits.memory | string | `"200Mi"` |  |
 | nginx.resources.requests.cpu | string | `"100m"` |  |
