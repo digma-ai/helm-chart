@@ -66,6 +66,17 @@ Return the proper agentic api url
 {{ printf "http://%s:%v" (include "digma.agentic" .) .Values.agentic.service.ports.http }}
 {{- end -}}
 
+{{/*
+Create the name of the service account to use for the agentic
+*/}}
+{{- define "digma.agentic.serviceAccountName" -}}
+{{- if .Values.agentic.serviceAccount.create -}}
+    {{ default (include "digma.agentic" .) .Values.agentic.serviceAccount.name }}
+{{- else -}}
+    {{ default "default" .Values.agentic.serviceAccount.name }}
+{{- end -}}
+{{- end -}}
+
 
 {{/*
 Return the proper ai api fullname

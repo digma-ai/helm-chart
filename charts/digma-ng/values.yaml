@@ -1766,9 +1766,18 @@ agentic:
   # -- Affinity for pods assignment
   # @section -- Agentic parameters
   affinity: {}
-  # -- Annotations to add to the ServiceAccount Metadata
-  # @section -- Agentic parameters
+  ## Pods Service Account
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
+  ##
   serviceAccount:
+    # -- create Enable creation of ServiceAccount for agentic pod
+    # @section -- Agentic parameters
+    create: true
+    # -- If not set and create is true, a name is generated using the `common.names.fullname` template
+    # @section -- Agentic parameters
+    name: ""
+    # -- Annotations for service account. Evaluated as a template. Only used if `create` is `true`.
+    # @section -- Agentic parameters
     annotations: {}
   ## e.g:
   ## extraEnvVars:

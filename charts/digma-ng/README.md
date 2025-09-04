@@ -1,6 +1,6 @@
 # digma-ng
 
-![Version: 1.0.375](https://img.shields.io/badge/Version-1.0.375-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.348](https://img.shields.io/badge/AppVersion-0.3.348-informational?style=flat-square)
+![Version: 1.0.376](https://img.shields.io/badge/Version-1.0.376-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.348](https://img.shields.io/badge/AppVersion-0.3.348-informational?style=flat-square)
 
 A Helm chart containing Digma's services
 
@@ -705,7 +705,9 @@ elasticsearch:
 | agentic.nodeSelector | object | `{}` | Node labels for pods assignment |
 | agentic.tolerations | list | `[]` | Tolerations for pods assignment |
 | agentic.affinity | object | `{}` | Affinity for pods assignment |
-| agentic.serviceAccount | object | `{"annotations":{}}` | Annotations to add to the ServiceAccount Metadata |
+| agentic.serviceAccount.create | bool | `true` | create Enable creation of ServiceAccount for agentic pod |
+| agentic.serviceAccount.name | string | `""` | If not set and create is true, a name is generated using the `common.names.fullname` template |
+| agentic.serviceAccount.annotations | object | `{}` | Annotations for service account. Evaluated as a template. Only used if `create` is `true`. |
 | agentic.extraEnvVars | list | `[]` | Array with extra environment variables to add |
 | agentic.pdb.create | bool | `false` | Enable PodDisruptionBudget |
 | agentic.pdb.minAvailable | string | `""` | Set PodDisruptionBudget minAvailable |
@@ -904,6 +906,8 @@ elasticsearch:
 | Repository | Name | Version |
 |------------|------|---------|
 | https://opensearch-project.github.io/helm-charts/ | opensearch | 3.2.1 |
+| oci://ghcr.io/stacklok/toolhive | toolhive-operator | 0.2.6 |
+| oci://ghcr.io/stacklok/toolhive | toolhive-operator-crds | 0.0.16 |
 | oci://registry-1.docker.io/bitnamicharts | clickhouse | 8.0.7 |
 | oci://registry-1.docker.io/bitnamicharts | common | 2.x.x |
 | oci://registry-1.docker.io/bitnamicharts | elasticsearchlogs(elasticsearch) | 21.4.1 |

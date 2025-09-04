@@ -27,7 +27,7 @@ spec:
         {{- include "common.tplvalues.render" (dict "value" .Values.agentic.podAnnotations "context" .) | nindent 8 }}
         {{- end }}
     spec:
-      serviceAccountName: {{ include "digma.agentic" . }}
+      serviceAccountName: {{ include "digma.agentic.serviceAccountName" . }}
       {{- include "common.images.pullSecrets" ( dict "images" (list .Values.agentic.image) "global" .Values.global) | nindent 6 }}
       {{- if .Values.agentic.affinity }}
       affinity: {{- include "common.tplvalues.render" ( dict "value" .Values.agentic.affinity "context" $) | nindent 8 }}
