@@ -1,0 +1,110 @@
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ include "digma.analytics-api" . }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: analytics-api
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.analyticsApi.podLabels .Values.commonLabels ) "context" . ) }}
+  replicas: {{ include "replicas.value" (dict "value" .Values.analyticsApi.replicas "context" .) }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 6 }}
+      app.kubernetes.io/component: analytics-api
+  template:
+    metadata:
+      labels: 
+        {{- include "common.labels.standard" ( dict "customLabels" $podLabels "context" $ ) | nindent 8 }}
+        app.kubernetes.io/component: analytics-api
+      annotations:
+        {{- if .Values.commonAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.analyticsApi.podAnnotations }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.analyticsApi.podAnnotations "context" .) | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- include "common.images.pullSecrets" ( dict "images" (list .Values.analyticsApi.image) "global" .Values.global) | nindent 6 }}
+      {{- if .Values.analyticsApi.affinity }}
+      affinity: {{- include "common.tplvalues.render" ( dict "value" .Values.analyticsApi.affinity "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.analyticsApi.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.analyticsApi.nodeSelector "context" .) | nindent 8 }}
+      {{- end }}
+      {{- $mergedTolerations := (concat .Values.global.tolerations .Values.analyticsApi.tolerations) -}}
+      {{- if $mergedTolerations }}
+      tolerations: 
+      {{- toYaml $mergedTolerations | nindent 6 -}}
+      {{- end }}
+      {{- if .Values.analyticsApi.podSecurityContext.enabled }}
+      securityContext: {{- include "common.compatibility.renderSecurityContext" (dict "secContext" .Values.analyticsApi.podSecurityContext "context" $) | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: digma-analytics
+        image: {{ include "common.images.image" (dict "imageRoot" .Values.analyticsApi.image "global" .Values.global "chart" .Chart) }}
+        imagePullPolicy: {{ .Values.analyticsApi.image.pullPolicy }}
+        resources: {{- toYaml .Values.analyticsApi.resources | nindent 12 }}
+        ports:
+        - name: http
+          containerPort: {{ .Values.analyticsApi.service.ports.http }}
+        env:
+        - name: CacheSettings__Enabled
+          value: "False"
+        {{- include "env.digma.app.common" . | nindent  8 }}
+        {{- include "env.postgres" . | nindent  8 }}
+        {{- if .Values.analyticsApi.extraEnvVars }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.analyticsApi.extraEnvVars "context" $) | nindent 8 }}
+        {{- end }}
+        {{ if .Values.digma.socialLogin.enabled }}
+        - name: SocialLogin__Google__ClientId
+          value: {{ .Values.digma.socialLogin.google.clientId | quote}}
+        - name: SocialLogin__Google__ClientSecret
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "digma.analytics-api.secretName" . }}
+              key: {{ include "digma.analytics-api.socialLoginGoogleSecret.secretKeyName" . }}
+        {{- end }}
+        - name: GlobalExceptionSettings__ExposeInternalDetails
+          value: "true"
+        - name: Analytics.Endpoints__Default__Secured
+          value: {{ include "digma.analytics-api.secured" . | quote}}
+        - name: CollectorUrl
+          value: http://{{(include "digma.collector-api" $)}}:{{ .Values.collectorApi.service.ports.internal }}
+        {{- if .Values.digma.accessToken }}
+        - name: AccessToken
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "digma.analytics-api.secretName" . }}
+              key: {{ include "digma.analytics-api.accessToken.secretKeyName" . }}
+        {{- end }}
+        {{- if .Values.ai.enabled }}
+        - name: AI__Url
+          value: {{ include "digma.ai.url" . | quote }}
+        {{- end }}
+        {{- if .Values.agentic.enabled }}
+        - name: Agentic__Url
+          value: {{ include "digma.agentic.url" . | quote }}
+        {{- end }}
+        {{- include "env.digma.emailGateway" . | nindent 8 }}
+        {{- include "env.digma.analytics.uiServiceBaseUrl" . | nindent 8 }}
+        {{- include "env.auth.all" . | nindent 8 }}
+        - name: MCP__Enabled
+          value: {{  .Values.digma.mcp.enabled | quote }}
+        {{- if not .Values.diagnosticMode.enabled }}
+        {{- if .Values.analyticsApi.livenessProbe.enabled }}
+        livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit (omit .Values.analyticsApi.livenessProbe "enabled") "path") "context" $) | nindent 10 }}
+          httpGet:
+            path: {{ .Values.analyticsApi.livenessProbe.path }}
+            port: http
+            scheme: {{ include "digma.analytics-api.protocol" . | trim | upper}}
+        {{- end }}
+        {{- if .Values.analyticsApi.readinessProbe.enabled }}
+        readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit (omit .Values.analyticsApi.readinessProbe "enabled") "path") "context" $) | nindent 10 }}
+          httpGet:
+            path: {{ .Values.analyticsApi.readinessProbe.path }}
+            port: http
+            scheme: {{ include "digma.analytics-api.protocol" . | trim | upper }}
+        {{- end }}
+        {{- end }}
