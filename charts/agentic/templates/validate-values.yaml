@@ -1,0 +1,24 @@
+{{- if and (eq .Values.observability.useLocal true)  (not (empty .Values.observability.otlp.remoteEndpoint)) }}
+{{ fail "Installation failed: 'observability.useLocal' is true while 'observability.otlp.remoteEndpoint' is set. This combination is not allowed." }}
+{{- end }}
+
+{{- if .Values.digma.auth.emailVerificationEnabled -}}
+{{- if not .Values.digma.emailSettings.url -}}
+{{ fail "emailSettings.url must be set when emailVerificationEnabled is true" -}}
+{{- end -}}
+{{- end -}}
+{{- if or .Values.digma.emailSettings.url .Values.digma.emailSettings.apiKey -}}
+{{- if not (and .Values.digma.emailSettings.url .Values.digma.emailSettings.apiKey) -}}
+{{ fail "emailSettings.url and emailSettings.apiKey must be provided together" -}}
+{{- end -}}
+{{- end -}}
+
+{{- if or .Values.digma.auth.email .Values.digma.auth.password -}}
+{{- if not (and .Values.digma.auth.email .Values.digma.auth.password) -}}
+{{ fail "auth.email and auth.password must be provided together" -}}
+{{- end -}}
+{{- end -}} 
+
+{{- if and .Values.digma.mcp.enabled (or (not .Values.digma.auth.email) (not .Values.digma.accessToken)) -}}
+{{- fail "When digma.mcp.enabled is true, both digma.auth.email and digma.accessToken must be set." -}}
+{{- end -}} 

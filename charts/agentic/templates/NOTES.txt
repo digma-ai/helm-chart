@@ -1,0 +1,145 @@
+CHART NAME: {{ .Chart.Name }}
+CHART VERSION: {{ .Chart.Version }}
+APP VERSION: {{ .Chart.AppVersion }}
+
+** Please be patient while the chart is being deployed **
+
+{{- "\n" -}}
+
+{{- if .Values.analyticsApi.ingress.enabled }}
+  {{- if .Values.digma.mcp.enabled }}
+MCP: (Treat your MCP server URL like a secret!!)
+URL: https://{{ .Values.analyticsApi.ingress.hostname }}/mcp/{{ .Values.digma.accessToken }}/sse
+  {{- end }}
+
+API:
+URL: https://{{ .Values.analyticsApi.ingress.hostname }}
+{{- else }}
+{{- if contains "NodePort" .Values.analyticsApi.service.type }}
+  export NODE_PORT=$(kubectl get --namespace {{ include "common.names.namespace" . }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "digma.analytics-api" . }})
+  export NODE_IP=$(kubectl get nodes --namespace {{ include "common.names.namespace" . }} -o jsonpath="{.items[0].status.addresses[0].address}")
+  export URL="http://${NODE_IP}:${NODE_PORT}/"
+  echo "API URL: http://$NODE_IP:$NODE_PORT/"
+{{- else if contains "LoadBalancer" .Values.analyticsApi.service.type }}
+** Please ensure an external IP is associated to the {{ include "digma.analytics-api" . }} service before proceeding **
+** Watch the status using: kubectl get svc --namespace {{ include "common.names.namespace" . }} -w {{ include "digma.analytics-api" . }} **
+
+  export SERVICE_IP=$(kubectl get svc --namespace {{ include "common.names.namespace" . }} {{ include "digma.analytics-api" . }} --template "{{ "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}" }}")
+{{- $port:=.Values.analyticsApi.service.ports.http | toString }}
+  echo "API URL: http://$SERVICE_IP{{- if ne $port "80" }}:{{ .Values.analyticsApi.service.ports.http }}{{ end }}"
+{{- else if contains "ClusterIP" .Values.analyticsApi.service.type }}
+  echo "API URL: http://127.0.0.1:{{ .Values.analyticsApi.service.ports.http }}"  
+  kubectl port-forward --namespace {{ include "common.names.namespace" . }} svc/{{ include "digma.analytics-api" . }} {{ .Values.analyticsApi.service.ports.http }}:{{ .Values.analyticsApi.service.ports.http }} &
+{{- end }}
+{{- end }}
+
+Collector:
+{{- if or .Values.otelCollector.grpc.ingress.enabled .Values.otelCollector.http.ingress.enabled }}
+  {{- if or .Values.otelCollector.grpc.ingress.enabled }}
+[gRPC] https://{{ .Values.otelCollector.grpc.ingress.hostname }}
+  {{- end }}
+  {{- if or .Values.otelCollector.http.ingress.enabled }}
+[HTTP] https://{{ .Values.otelCollector.http.ingress.hostname }}
+  {{- end }}
+{{- else }}
+{{- if contains "NodePort" .Values.otelCollector.service.type }}
+  {{- if and .Values.otelCollector.service.ports.grpc .Values.otelCollector.service.ports.http }}
+  NODE_PORT=$(kubectl get --namespace {{ include "common.names.namespace" . }} -o jsonpath="{.spec.ports[2].nodePort}" services {{ include "digma.otel-collector" . }})
+  NODE_IP=$(kubectl get nodes --namespace {{ include "common.names.namespace" . }} -o jsonpath="{.items[0].status.addresses[0].address}")
+  URL="http://${NODE_IP}:${NODE_PORT}/"
+  echo "[gRPC] http://$NODE_IP:$NODE_PORT/"
+  NODE_PORT=$(kubectl get --namespace {{ include "common.names.namespace" . }} -o jsonpath="{.spec.ports[1].nodePort}" services {{ include "digma.otel-collector" . }})
+  NODE_IP=$(kubectl get nodes --namespace {{ include "common.names.namespace" . }} -o jsonpath="{.items[0].status.addresses[0].address}")
+  URL="http://${NODE_IP}:${NODE_PORT}/"
+  echo "[HTTP] http://$NODE_IP:$NODE_PORT/"
+  {{- else }}  
+    {{- if .Values.otelCollector.service.ports.grpc }}
+  NODE_PORT=$(kubectl get --namespace {{ include "common.names.namespace" . }} -o jsonpath="{.spec.ports[1].nodePort}" services {{ include "digma.otel-collector" . }})
+  NODE_IP=$(kubectl get nodes --namespace {{ include "common.names.namespace" . }} -o jsonpath="{.items[0].status.addresses[0].address}")
+  URL="http://${NODE_IP}:${NODE_PORT}/"
+  echo "[gRPC] http://$NODE_IP:$NODE_PORT/"
+    {{- else }}
+  NODE_PORT=$(kubectl get --namespace {{ include "common.names.namespace" . }} -o jsonpath="{.spec.ports[1].nodePort}" services {{ include "digma.otel-collector" . }})
+  NODE_IP=$(kubectl get nodes --namespace {{ include "common.names.namespace" . }} -o jsonpath="{.items[0].status.addresses[0].address}")
+  URL="http://${NODE_IP}:${NODE_PORT}/"
+  echo "[HTTP] http://$NODE_IP:$NODE_PORT/"
+    {{- end }}
+  {{- end }}
+{{- else if contains "LoadBalancer" .Values.otelCollector.service.type }}
+** Please ensure an external IP is associated to the {{ include "digma.otel-collector" . }} service before proceeding **
+** Watch the status using: kubectl get svc --namespace {{ include "common.names.namespace" . }} -w {{ include "digma.otel-collector" . }} **
+
+  export SERVICE_IP=$(kubectl get svc --namespace {{ include "common.names.namespace" . }} {{ include "digma.otel-collector" . }} --template "{{ "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}" }}")
+{{- if .Values.otelCollector.service.ports.grpc }}
+  echo "[gRPC] http://$SERVICE_IP:{{ .Values.otelCollector.service.ports.grpc }}"
+{{- end }}
+{{- if .Values.otelCollector.service.ports.http }}
+{{- $port:=.Values.otelCollector.service.ports.http | toString }}
+  echo "[HTTP] http://$SERVICE_IP{{- if ne $port "80" }}:{{ .Values.otelCollector.service.ports.http }}{{ end }}"
+{{- end }}
+{{- else if contains "ClusterIP" .Values.otelCollector.service.type }}
+  {{- if .Values.otelCollector.service.ports.grpc }}
+  echo "[gRPC] http://127.0.0.1:{{ .Values.otelCollector.service.ports.grpc }}"  
+  kubectl port-forward --namespace {{ include "common.names.namespace" . }} svc/{{ include "digma.otel-collector" . }} {{ .Values.otelCollector.service.ports.grpc }}:{{ .Values.otelCollector.service.ports.grpc }} &
+  {{- end }}
+  {{- if .Values.otelCollector.service.ports.http }}
+  echo "[HTTP] http://127.0.0.1:{{ .Values.otelCollector.service.ports.http }}"  
+  kubectl port-forward --namespace {{ include "common.names.namespace" . }} svc/{{ include "digma.otel-collector" . }} {{ .Values.otelCollector.service.ports.http }}:{{ .Values.otelCollector.service.ports.http }} &
+  {{- end }}
+{{- end }}
+{{- end }}
+
+UI:
+{{- if .Values.ui.ingress.enabled }}
+URL: https://{{ .Values.ui.ingress.hostname }}
+{{- else }}
+{{- if contains "NodePort" .Values.ui.service.type }}
+  export NODE_PORT=$(kubectl get --namespace {{ include "common.names.namespace" . }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "digma.ui" . }})
+  export NODE_IP=$(kubectl get nodes --namespace {{ include "common.names.namespace" . }} -o jsonpath="{.items[0].status.addresses[0].address}")
+  export URL="http://${NODE_IP}:${NODE_PORT}/"
+  echo "Digma UI URL: http://$NODE_IP:$NODE_PORT/"
+{{- else if contains "LoadBalancer" .Values.ui.service.type }}
+** Please ensure an external IP is associated to the {{ include "digma.ui" . }} service before proceeding **
+** Watch the status using: kubectl get svc --namespace {{ include "common.names.namespace" . }} -w {{ include "digma.ui" . }} **
+
+  export SERVICE_IP=$(kubectl get svc --namespace {{ include "common.names.namespace" . }} {{ include "digma.ui" . }} --template "{{ "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}" }}")
+{{- $port:=.Values.ui.service.ports.http | toString }}
+  echo "UI URL: http://$SERVICE_IP{{- if ne $port "80" }}:{{ .Values.ui.service.ports.http }}{{ end }}"
+{{- else if contains "ClusterIP" .Values.ui.service.type }}
+  echo "UI URL: http://127.0.0.1:{{ .Values.ui.service.ports.http }}"  
+  kubectl port-forward --namespace {{ include "common.names.namespace" . }} svc/{{ include "digma.ui" . }} {{ .Values.ui.service.ports.http }}:{{ .Values.ui.service.ports.http }} &
+{{- end }}
+{{- end }}
+
+Jaeger:
+{{- if .Values.jaeger.ingress.enabled }}
+URL: https://{{ .Values.jaeger.ingress.hostname }}
+{{- else }}
+{{- if contains "NodePort" .Values.jaeger.service.type }}
+  export NODE_PORT=$(kubectl get --namespace {{ include "common.names.namespace" . }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "digma.jaeger" . }})
+  export NODE_IP=$(kubectl get nodes --namespace {{ include "common.names.namespace" . }} -o jsonpath="{.items[0].status.addresses[0].address}")
+  export URL="http://${NODE_IP}:${NODE_PORT}/"
+  echo "Jaeger URL: http://$NODE_IP:$NODE_PORT/"
+{{- else if contains "LoadBalancer" .Values.jaeger.service.type }}
+** Please ensure an external IP is associated to the {{ include "digma.jaeger" . }} service before proceeding **
+** Watch the status using: kubectl get svc --namespace {{ include "common.names.namespace" . }} -w {{ include "digma.jaeger" . }} **
+  
+  export SERVICE_IP=$(kubectl get svc --namespace {{ include "common.names.namespace" . }} {{ include "digma.jaeger" . }} --template "{{ "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}" }}")
+{{- $port:=.Values.jaeger.service.ports.http_ui | toString }}
+  echo "Jaeger URL: http://$SERVICE_IP{{- if ne $port "80" }}:{{ .Values.jaeger.service.ports.http_ui }}{{ end }}"
+{{- else if contains "ClusterIP" .Values.jaeger.service.type }}
+  echo "Jaeger URL: http://127.0.0.1:{{ .Values.jaeger.service.ports.http_ui }}"  
+  kubectl port-forward --namespace {{ include "common.names.namespace" . }} svc/{{ include "digma.jaeger" . }} {{ .Values.jaeger.service.ports.http_ui }}:{{ .Values.jaeger.service.ports.http_ui }} &
+{{- end }}
+{{- end }}
+
+{{- if .Values.digma.report.enabled }}
+  {{- if (empty (default "" .Values.digma.report.uiExternalBaseUrl)) -}}
+    {{- if or (not .Values.ui.ingress.enabled) (or (not .Values.ui.ingress.hostname) (eq .Values.ui.ingress.hostname "")) }}  
+
+** Please make sure to set digma.report.uiExternalBaseUrl to enable the Digma daily report. **
+
+  {{- end -}}   
+  {{- end -}}
+{{- end -}}
+
