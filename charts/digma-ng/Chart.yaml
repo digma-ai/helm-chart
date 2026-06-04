@@ -21,7 +21,7 @@ dependencies:
   condition: elasticsearchlogs.enabled
 - name: redis
   repository: oci://registry-1.docker.io/bitnamicharts
-  version: 20.3.0
+  version: 19.6.4
 - name: postgresql
   repository: oci://registry-1.docker.io/bitnamicharts
   version: 16.2.1
@@ -47,4 +47,4 @@ description: A Helm chart containing Digma's services
 home: https://github.com/digma-ai/digma
 icon: https://digma.ai/wp-content/uploads/2024/02/logo-alt-1.svg
 type: application
-version: 1.0.377
+version: 1.0.378
