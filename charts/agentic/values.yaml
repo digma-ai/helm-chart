@@ -1,0 +1,782 @@
+digma:
+  # -- access token for plugin authentication, and set the same one in the IDE plugin settings.
+  # @section -- Global Digma parameters
+  accessToken:
+  # -- a digma license to use,If you've signed up for a free Digma account you should have received a Digma license to use. You can use this [link](https://digma.ai/sign-up/) to sign up
+  # @section -- Global Digma parameters
+  licenseKey:
+  ## Authentication parameters
+  ## 
+  auth:
+    # -- Enable email verification for new users. If enabled, emailSettings.url must be set
+    # @section -- Authentication
+    emailVerificationEnabled: false
+    # -- Admin user email (must be provided together with password)
+    # @section -- Authentication
+    email:
+    # -- Admin user password (must be provided together with email), requires a minimum length of 6 characters and at least one non-alphanumeric character.
+    # @section -- Authentication
+    password:
+    # -- Comma-separated or semicolon-separated list of allowed email domains for user registration
+    # @section -- Authentication
+    allowedEmailDomains:  
+    # -- Setting auth cookie secure flag. Set to false if ui is accessed via http
+    # @section -- Authentication
+    securedCookie: true
+  ## daily issues report parameters
+  ## 
+  report:
+    # -- daily issues report enabled
+    # @section -- Global Digma parameters
+    enabled: false
+    # -- scheduled time of the report, HH:mm:ss (24-hour format)
+    # @section -- Global Digma parameters
+    scheduledTimeUtc:
+    # -- UI external service URL (automatically detected if not set)
+    # @section -- Global Digma parameters
+    uiExternalBaseUrl: 
+    recipients:
+      # -- email recipients, list of recipients separated by semicolons (;)
+      # @section -- Global Digma parameters
+      to:
+      # -- report email additional recipients, list of recipients separated by semicolons (;)
+      # @section -- Global Digma parameters
+      cc:
+      # -- hidden from other recipients, list of recipients separated by semicolons (;)
+      # @section -- Global Digma parameters
+      bcc:
+    # -- Email gateway settings (legacy)
+    # @section -- Global Digma parameters
+    emailGateway:
+      # -- Email gateway API key
+      # @section -- Global Digma parameters
+      apiKey:
+      # -- Email gateway URL
+      # @section -- Global Digma parameters
+      url:
+  # -- Email settings configuration
+  # @section -- Global Digma parameters
+  emailSettings:
+    # -- Email gateway URL
+    # @section -- Global Digma parameters
+    url:
+    # -- Email gateway API key
+    # @section -- Global Digma parameters
+    apiKey:
+  # The base URL for the UI service. This is used for email links and other UI-related functionality.
+  # If not set, it will default to the ingress hostname.
+  uiExternalBaseUrl: ""
+  socialLogin:
+    # -- enable social login
+    # @section -- Social Login
+    enabled: false
+    google:
+      # -- google clientId
+      # @section -- Social Login
+      clientId:
+      # -- google secret
+      # @section -- Social Login      
+      secret:
+  mcp:
+    # -- enable mcp
+    # @section -- MCP parameters
+    enabled: true
+  externals:
+    postgresql:
+      # -- Host of an external PostgreSQL instance to connect (only if postgresql.enabled=false)
+      # @section -- Global Digma parameters
+      host: ""
+      # -- User of an external PostgreSQL instance to connect (only if postgresql.enabled=false)
+      # @section -- Global Digma parameters
+      user: ""
+      # -- Password of an external PostgreSQL instance to connect (only if postgresql.enabled=false)
+      # @section -- Global Digma parameters
+      password: ""
+      # -- Port of an external PostgreSQL instance to connect (only if postgresql.enabled=false)
+      # @section -- Global Digma parameters
+      port: 5432
+observability:
+  # -- Use local observability, Deploys Prometheus and Grafana 
+  # @section -- Observability parameters
+  useLocal: true
+  # -- Environments represent different deployment stages or scopes
+  # @section -- Observability parameters
+  environmentName: digma
+  otlp:
+    # -- Please note this parameter, cannot be set while useLocal is true, If no port is defined, port 443 will be added automatically 
+    # @section -- Observability parameters
+    remoteEndpoint:
+    # -- Control the fraction of traces that are sampled
+    # @section -- Observability parameters
+    samplerProbability: 0.1
+    # -- Export traces
+    # @section -- Observability parameters
+    exportTraces: true
+    # -- Export metrics
+    # @section -- Observability parameters
+    exportMetrics: true
+    # -- Export logs
+    # @section -- Observability parameters
+    exportLogs: true
+## Global Docker image parameters
+## Please, note that this will override the image parameters
+##
+global:
+  security:
+    allowInsecureImages: true
+  # -- Tolerations to add to all deployed objects, except prometheus and redis
+  # @section -- Common parameters
+  tolerations: []
+  ## E.g.
+  ## imagePullSecrets:
+  ##   - myRegistryKeySecretName
+  # -- Global Docker registry secret names as an array
+  # @section -- Global Docker image parameters
+  imagePullSecrets: []
+# -- kubeVersion Override Kubernetes version
+# @section -- Common parameters
+kubeVersion: ""
+# -- Labels to add to all deployed objects
+# @section -- Common parameters
+commonLabels: {}
+# -- Annotations to add to all deployed objects
+# @section -- Common parameters
+commonAnnotations: {}
+diagnosticMode:
+  # -- Enable diagnostic mode (all probes will be disabled)
+  # @section -- Common parameters
+  enabled: false
+# -- Array of extra objects to deploy with the release
+# @section -- Common parameters
+extraDeploy: []
+
+analyticsApi:
+  # -- Indicates whether the analytics API uses a secured HTTPS connection. will be set to false when ingress is enabled
+  # @section -- AnalyticsApi parameters
+  secured: true
+  image:
+    registry: docker.io
+    repository: digmatic/digma-analytics
+    # -- image pull policy
+    # @section -- AnalyticsApi parameters
+    pullPolicy: IfNotPresent
+    ## Optionally specify an array of imagePullSecrets.
+    ## Secrets must be manually created in the namespace.
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+    ## e.g:
+    ## pullSecrets:
+    ##   - myRegistryKeySecretName
+    ##
+    # -- image pull secrets
+    # @section -- AnalyticsApi parameters
+    pullSecrets: []
+  # -- Number of replicas to deploy
+  # @section -- AnalyticsApi parameters
+  replicas: 1
+  resources:
+    requests:
+      memory: 300Mi
+      cpu: 100m
+    limits:
+      memory: 800Mi
+      cpu: 800m
+  # -- Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+  # @section -- AnalyticsApi parameters
+  podSecurityContext:
+    enabled: true
+    runAsUser: 1654
+    runAsNonRoot: true 
+  service:
+    # -- service type
+    # @section -- AnalyticsApi parameters
+    type: ClusterIP
+    # -- Additional custom annotations for service
+    # @section -- AnalyticsApi parameters
+    annotations: {}
+    ports:
+      # -- HTTP service port, health check at /healthz
+      # @section -- AnalyticsApi parameters
+      http: 5051
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  # -- Extra labels for pods
+  # @section -- AnalyticsApi parameters
+  podLabels: {}
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  # -- Extra annotations for pods
+  # @section -- AnalyticsApi parameters
+  podAnnotations: {}
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  # -- Node labels for pods assignment
+  # @section -- AnalyticsApi parameters
+  nodeSelector: {}
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  # -- Tolerations for pods assignment
+  # @section -- AnalyticsApi parameters
+  tolerations: []
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
+  # -- Affinity for pods assignment
+  # @section -- AnalyticsApi parameters
+  affinity: {}
+  ## e.g:
+  ## extraEnvVars:
+  ##   - name: FOO
+  ##     value: "bar"
+  # -- Array with extra environment variables to add
+  # @section -- AnalyticsApi parameters
+  extraEnvVars: []
+  ## analyticsApi ingress parameters
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
+  ingress:
+    # -- Enable ingress, secured parameter will be set to false
+    # @section -- AnalyticsApi parameters
+    enabled: false
+    # --  Ingress path type
+    # @section -- AnalyticsApi parameters
+    pathType: ImplementationSpecific
+    # --  Force Ingress API version (automatically detected if not set)
+    # @section -- AnalyticsApi parameters
+    apiVersion: ""
+    # --  Default host for the ingress record
+    # @section -- AnalyticsApi parameters
+    hostname:
+    ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
+    ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
+    # --  IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
+    # @section -- AnalyticsApi parameters
+    ingressClassName:
+    # --  The Path to AnalyticsApi. You may need to set this to '/*' in order to use this with ALB ingress controllers.
+    # @section -- AnalyticsApi parameters
+    path: /
+    ## For a full list of possible ingress annotations, please see
+    ## ref: https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/nginx-configuration/annotations.md
+    ## Use this parameter to set the required annotations for cert-manager, see
+    ## ref: https://cert-manager.io/docs/usage/ingress/#supported-annotations
+    ##
+    ## e.g:
+    ## annotations:
+    ##   kubernetes.io/ingress.class: nginx
+    ##   cert-manager.io/cluster-issuer: cluster-issuer-name
+    # --  Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
+    # @section -- AnalyticsApi parameters
+    annotations:
+    ## For example: The ALB ingress controller requires a special rule for handling SSL redirection.
+    ## extraPaths:
+    ## - path: /*
+    ##   backend:
+    ##     serviceName: ssl-redirect
+    ##     servicePort: use-annotation
+    # --  Any additional paths that may need to be added to the ingress under the main host
+    # @section -- AnalyticsApi parameters
+    extraPaths: []
+    ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-rules
+    ## e.g:
+    ## extraRules:
+    ## - host: example.local
+    ##     http:
+    ##       path: /
+    ##       backend:
+    ##         service:
+    ##           name: example-svc
+    ##           port:
+    ##             name: http
+    # --  Additional rules to be covered with this ingress record
+    # @section -- AnalyticsApi parameters
+    extraRules: []
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  livenessProbe:
+    # -- Enable livenessProbe
+    # @section -- AnalyticsApi parameters
+    enabled: true
+    # -- Path for livenessProbe
+    # @section -- AnalyticsApi parameters
+    path: /healthz
+    # -- Initial delay seconds for livenessProbe
+    # @section -- AnalyticsApi parameters
+    initialDelaySeconds: 120
+    # -- Period seconds for livenessProbe
+    # @section -- AnalyticsApi parameters
+    periodSeconds: 10
+    # -- Timeout seconds for livenessProbe
+    # @section -- AnalyticsApi parameters
+    timeoutSeconds: 10
+    # -- Failure threshold for livenessProbe
+    # @section -- AnalyticsApi parameters
+    failureThreshold: 6
+    # -- Success threshold for livenessProbe
+    # @section -- AnalyticsApi parameters
+    successThreshold: 1
+  readinessProbe:
+    # -- Enable readinessProbe
+    # @section -- AnalyticsApi parameters
+    enabled: true
+    # -- Path for readinessProbe
+    # @section -- AnalyticsApi parameters
+    path: /readiness
+    # -- Initial delay seconds for readinessProbe
+    # @section -- AnalyticsApi parameters
+    initialDelaySeconds: 20
+    # -- Period seconds for readinessProbe
+    # @section -- AnalyticsApi parameters
+    periodSeconds: 10
+    # -- Timeout seconds for readinessProbe
+    # @section -- AnalyticsApi parameters
+    timeoutSeconds: 10
+    # -- Failure threshold for readinessProbe
+    # @section -- AnalyticsApi parameters
+    failureThreshold: 24
+    # -- Success threshold for readinessProbe
+    # @section -- AnalyticsApi parameters
+    successThreshold: 1
+  pdb:
+    # -- Enable PodDisruptionBudget
+    # @section -- AnalyticsApi parameters
+    create: false
+    # -- Set PodDisruptionBudget minAvailable
+    # @section -- AnalyticsApi parameters
+    minAvailable: ""
+    # -- Set PodDisruptionBudget minAvailable
+    # @section -- AnalyticsApi parameters
+    maxUnavailable: ""
+
+nginx:
+  commonHeaders:
+    X-Frame-Options: "DENY"
+    X-Content-Type-Options: "nosniff"
+    Referrer-Policy: "same-origin"
+    Content-Security-Policy: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.google.com https://*.posthog.com https://*.productfruits.com; connect-src 'self' http://localhost:* https://*.posthog.com https://*.productfruits.com https://productfruits.help/ wss://*.productfruits.com; worker-src 'self' blob: data:; img-src 'self' https://*.posthog.com https://*.productfruits.com blob: data:; style-src 'self' 'unsafe-inline' https://*.posthog.com https://*.productfruits.com; font-src 'self' https://*.posthog.com; frame-src https://*.productfruits.com; media-src https://*.posthog.com blob:;"
+    Permissions-Policy: "accelerometer=(), ambient-light-sensor=(), attribution-reporting=(), autoplay=(), bluetooth=(), browsing-topics=(), camera=(), compute-pressure=(), cross-origin-isolated=(), deferred-fetch=(), deferred-fetch-minimal=(), display-capture=(), document-domain=(), encrypted-media=(), fullscreen=(), gamepad=(), geolocation=(), gyroscope=(), hid=(), identity-credentials-get=(), idle-detection=(), local-fonts=(), magnetometer=(), microphone=(), midi=(), otp-credentials=(), payment=(), picture-in-picture=(), publickey-credentials-create=(), publickey-credentials-get=(), screen-wake-lock=(), serial=(), speaker-selection=(), storage-access=(), usb=(), web-share=(), window-management=(), xr-spatial-tracking=()"
+  image:
+    registry: docker.io
+    repository: digmatic/digma-ui
+    tag: 16.8.3
+    # -- image pull policy
+    # @section -- UI parameters
+    pullPolicy: IfNotPresent
+    ## Optionally specify an array of imagePullSecrets.
+    ## Secrets must be manually created in the namespace.
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+    ## e.g:
+    ## pullSecrets:
+    ##   - myRegistryKeySecretName
+    ##
+    # -- image pull secrets
+    # @section -- UI parameters
+    pullSecrets: []
+  # -- Number of replicas to deploy
+  # @section -- UI parameters
+  replicas: 1
+  resources:
+    requests:
+      memory: 100Mi
+      cpu: 100m
+    limits:
+      memory: 200Mi
+      cpu: 200m
+  # -- Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+  # @section -- UI parameters
+  podSecurityContext:
+    enabled: true
+    runAsUser: 1000
+    runAsNonRoot: true 
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  # -- Extra labels for pods
+  # @section -- UI parameters
+  podLabels: {}
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  # -- Extra annotations for pods
+  # @section -- UI parameters
+  podAnnotations: {}
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  # -- Node labels for pods assignment
+  # @section -- UI parameters
+  nodeSelector: {}
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  # -- Tolerations for pods assignment
+  # @section -- UI parameters
+  tolerations: []
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
+  # -- Affinity for pods assignment
+  # @section -- UI parameters
+  affinity: {}
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  livenessProbe:
+    # -- Enable livenessProbe
+    # @section -- UI parameters
+    enabled: true
+    # -- Initial delay seconds for livenessProbe
+    # @section -- UI parameters
+    initialDelaySeconds: 120
+    # -- Period seconds for livenessProbe
+    # @section -- UI parameters
+    periodSeconds: 10
+    # -- Timeout seconds for livenessProbe
+    # @section -- UI parameters
+    timeoutSeconds: 10
+    # -- Failure threshold for livenessProbe
+    # @section -- UI parameters
+    failureThreshold: 6
+    # -- Success threshold for livenessProbe
+    # @section -- UI parameters
+    successThreshold: 1
+  readinessProbe:
+    # -- Enable readinessProbe
+    # @section -- UI parameters
+    enabled: true
+    # -- Initial delay seconds for readinessProbe
+    # @section -- UI parameters
+    initialDelaySeconds: 20
+    # -- Period seconds for readinessProbe
+    # @section -- UI parameters
+    periodSeconds: 10
+    # -- Timeout seconds for readinessProbe
+    # @section -- UI parameters
+    timeoutSeconds: 10
+    # -- Failure threshold for readinessProbe
+    # @section -- UI parameters
+    failureThreshold: 24
+    # -- Success threshold for readinessProbe
+    # @section -- UI parameters
+    successThreshold: 1
+  pdb:
+    # -- Enable PodDisruptionBudget
+    # @section -- UI parameters
+    create: false
+    # -- Set PodDisruptionBudget minAvailable
+    # @section -- UI parameters
+    minAvailable: ""
+    # -- Set PodDisruptionBudget minAvailable
+    # @section -- UI parameters
+    maxUnavailable: ""
+ui:
+  postHogApiKey: phc_5sy6Kuv1EYJ9GAdWPeGl7gx31RAw7BR7NHnOuLCUQZK
+  productFruitsWorkspaceCode: GBNh54uJtBaeWuOq
+  sandboxEnabled: false
+  # -- List of UI applications/folders
+  # @section -- UI parameters
+  apps:
+    - admin
+    - agentic
+    - email-confirmation
+    - ide-launcher
+    - login
+  service:
+    # -- service type
+    # @section -- UI parameters
+    type: ClusterIP
+    # -- Additional custom annotations for service
+    # @section -- UI parameters
+    annotations: {}
+    ports:
+      # -- HTTP service port
+      # @section -- UI parameters
+      http: 8080
+  ## ui ingress parameters
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
+  ingress:
+    # -- Enable ingress
+    # @section -- UI parameters
+    enabled: false
+    # --  Ingress path type
+    # @section -- UI parameters
+    pathType: ImplementationSpecific
+    # --  Force Ingress API version (automatically detected if not set)
+    # @section -- UI parameters
+    apiVersion: ""
+    # --  Default host for the ingress record
+    # @section -- UI parameters
+    hostname:
+    ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
+    ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
+    # --  IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
+    # @section -- UI parameters
+    ingressClassName:
+    # --  The Path to UI. You may need to set this to '/*' in order to use this with ALB ingress controllers.
+    # @section -- UI parameters
+    path: /
+    ## For a full list of possible ingress annotations, please see
+    ## ref: https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/nginx-configuration/annotations.md
+    ## Use this parameter to set the required annotations for cert-manager, see
+    ## ref: https://cert-manager.io/docs/usage/ingress/#supported-annotations
+    ##
+    ## e.g:
+    ## annotations:
+    ##   kubernetes.io/ingress.class: nginx
+    ##   cert-manager.io/cluster-issuer: cluster-issuer-name
+    # --  Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
+    # @section -- UI parameters
+    annotations:
+    ## For example: The ALB ingress controller requires a special rule for handling SSL redirection.
+    ## extraPaths:
+    ## - path: /*
+    ##   backend:
+    ##     serviceName: ssl-redirect
+    ##     servicePort: use-annotation
+    # --  Any additional paths that may need to be added to the ingress under the main host
+    # @section -- UI parameters
+    extraPaths: []
+    ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-rules
+    ## e.g:
+    ## extraRules:
+    ## - host: example.local
+    ##     http:
+    ##       path: /
+    ##       backend:
+    ##         service:
+    ##           name: example-svc
+    ##           port:
+    ##             name: http
+    # --  Additional rules to be covered with this ingress record
+    # @section -- UI parameters
+    extraRules: []
+agentic:
+  enabled: false
+  image:
+    registry: docker.io
+    repository: digmatic/digma-agentic
+    tag: 0.0.146
+    # -- image pull policy
+    # @section -- Agentic parameters
+    pullPolicy: IfNotPresent
+    ## Optionally specify an array of imagePullSecrets.
+    ## Secrets must be manually created in the namespace.
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+    ## e.g:
+    ## pullSecrets:
+    ##   - myRegistryKeySecretName
+    ##
+    # -- image pull secrets
+    # @section -- Agentic parameters
+    pullSecrets: []
+  # -- Number of replicas to deploy
+  # @section -- Agentic parameters
+  replicas: 1
+  resources:
+    requests:
+      memory: 512Mi
+      cpu: 500m
+    limits:
+      memory: 768Mi
+      cpu: 750m
+  # -- Pod Security Context, ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+  # @section -- Agentic parameters
+  podSecurityContext:
+    enabled: true  
+    runAsUser: 1000
+    runAsNonRoot: true  
+  service:
+    # -- service type
+    # @section -- Agentic parameters
+    type: ClusterIP
+    # -- Additional custom annotations for service
+    # @section -- Agentic parameters
+    annotations: {}
+    ports:
+      # -- HTTP port listen to path: /analyze, health check at /health
+      # @section -- Agentic parameters
+      http: 8000
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  # -- Extra labels for pods
+  # @section -- Agentic parameters
+  podLabels: {}
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  # -- Extra annotations for pods
+  # @section -- Agentic parameters
+  podAnnotations: {}
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  # -- Node labels for pods assignment
+  # @section -- Agentic parameters
+  nodeSelector: {}
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  # -- Tolerations for pods assignment
+  # @section -- Agentic parameters
+  tolerations: []
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
+  # -- Affinity for pods assignment
+  # @section -- Agentic parameters
+  affinity: {}
+  # -- Annotations to add to the ServiceAccount Metadata
+  # @section -- Agentic parameters
+  serviceAccount:
+    annotations: {}
+  ## e.g:
+  ## extraEnvVars:
+  ##   - name: UI_BASE_URL
+  ##     value: <UI_BASE_URL>
+  ##   - name: DEFAULT_DIGMA_ENV
+  ##     value: <DEFAULT_DIGMA_ENV>
+  ##   - name: GLOBAL_LLM_NAME
+  ##     value: <GLOBAL_LLM_NAME> Supported providers: ChatAnthropic, ChatGoogleGenerativeAI, ChatOpenAI
+  ##   - name: GLOBAL_LLM_CONFIG
+  ##     value: <GLOBAL_LLM_CONFIG>  key=value;key=value style string,  # e.g., model=claude-3-5-sonnet-latest;api_key=sk-ant-api03-1234
+  ##   - name: {AGENT_NAME}_LLM_NAME
+  ##     value: <LLM_NAME>
+  ##   - name: {AGENT_NAME}_LLM_CONFIG
+  ##     value: <LLM_CONFIG>        
+  # -- Array with extra environment variables to add
+  # @section -- Agentic parameters
+  extraEnvVars: []
+  pdb:
+    # -- Enable PodDisruptionBudget
+    # @section -- Agentic parameters
+    create: false
+    # -- Set PodDisruptionBudget minAvailable
+    # @section -- Agentic parameters
+    minAvailable: ""
+    # -- Set PodDisruptionBudget minAvailable
+    # @section -- Agentic parameters
+    maxUnavailable: ""
+
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  livenessProbe:
+    # -- Enable livenessProbe
+    # @section -- Agentic parameters
+    enabled: true
+    # -- Path for livenessProbe
+    # @section -- Agentic parameters
+    path: /health
+    # -- Initial delay seconds for livenessProbe
+    # @section -- Agentic parameters
+    initialDelaySeconds: 120
+    # -- Period seconds for livenessProbe
+    # @section -- Agentic parameters
+    periodSeconds: 10
+    # -- Timeout seconds for livenessProbe
+    # @section -- Agentic parameters
+    timeoutSeconds: 10
+    # -- Failure threshold for livenessProbe
+    # @section -- Agentic parameters
+    failureThreshold: 6
+    # -- Success threshold for livenessProbe
+    # @section -- Agentic parameters
+    successThreshold: 1
+  readinessProbe:
+    # -- Enable readinessProbe
+    # @section -- Agentic parameters
+    enabled: true
+    # -- Path for readinessProbe
+    # @section -- Agentic parameters
+    path: /health
+    # -- Initial delay seconds for readinessProbe
+    # @section -- Agentic parameters
+    initialDelaySeconds: 20
+    # -- Period seconds for readinessProbe
+    # @section -- Agentic parameters
+    periodSeconds: 10
+    # -- Timeout seconds for readinessProbe
+    # @section -- Agentic parameters
+    timeoutSeconds: 10
+    # -- Failure threshold for readinessProbe
+    # @section -- Agentic parameters
+    failureThreshold: 24
+    # -- Success threshold for readinessProbe
+    # @section -- Agentic parameters
+    successThreshold: 1
+
+## postgresql
+## ref: https://github.com/bitnami/charts/blob/main/bitnami/postgresql/values.yaml
+##
+postgresql:
+  enabled: true
+  image:
+    repository: bitnamilegacy/postgresql
+  volumePermissions:
+    image:
+      repository: bitnamilegacy/os-shell
+  auth:
+    database: postgres
+    username: postgres
+    password: postgres
+    enablePostgresUser: false
+  architecture: standalone
+  containerPorts:
+    postgresql: 5432
+  primary:
+    resources:
+      requests:
+        memory: 2048Mi
+        cpu: 1.0
+      limits:
+        memory: 3300Mi
+        cpu: 2
+    networkPolicy:
+      enabled: false
+    livenessProbe:
+      failureThreshold: 10
+      initialDelaySeconds: 60
+      periodSeconds: 60
+    readinessProbe:
+      failureThreshold: 10
+      initialDelaySeconds: 60
+      periodSeconds: 60
+    service:
+      ports:
+        postgresql: 5432
+    persistence:
+      enabled: true
+      accessModes:
+        - ReadWriteOnce
+      size: 50Gi
+    extendedConfiguration: |
+      shared_buffers = '800MB'
+      logging_collector = on
+      log_directory ='log'
+      # log_min_duration_statement = 500 # Log queries that take longer than 500ms
+      shared_preload_libraries ='pg_stat_statements'
+      pg_stat_statements.max = 10000  # Max queries stored in memory
+      pg_stat_statements.track = all  # Track all queries
+      pg_stat_statements.track_utility = off  # Ignore utility commands (CREATE, DROP)
+      pg_stat_statements.save = on  # Preserve stats across restarts
+      pg_stat_statements.track_planning = off  # Avoid tracking query planning time
+    initdb:
+      scripts:
+        enable_pg_stat_statements.sql: |
+          CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
+    extraEnvVars:
+      - name: POSTGRESQL_MAX_CONNECTIONS
+        value: "400"
+    ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+    # -- Extra labels for pods
+    # @section -- Postgresql parameters
+    podLabels: {}
+    ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+    # -- Extra annotations for pods
+    # @section -- Postgresql parameters
+    podAnnotations: {}
+    ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+    # -- Node labels for pods assignment
+    # @section -- Postgresql parameters
+    nodeSelector: {}
+    ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+    # -- Tolerations for pods assignment
+    # @section -- Postgresql parameters
+    tolerations: '{{ include "common.tplvalues.render" (dict "value" .Values.global.tolerations "context" $) }}'
+    ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+    ## NOTE: `controller.podAffinityPreset`, `controller.podAntiAffinityPreset`, and `controller.nodeAffinityPreset` will be ignored when it's set
+    # -- Affinity for pods assignment
+    # @section -- Postgresql parameters
+    affinity: {}
+    pdb:
+      # -- Enable PodDisruptionBudget
+      # @section -- Postgresql parameters
+      create: false
+      # -- Set PodDisruptionBudget minAvailable
+      # @section -- Postgresql parameters
+      minAvailable: ""
+      # -- Set PodDisruptionBudget minAvailable
+      # @section -- Postgresql parameters
+      maxUnavailable: ""
+  metrics:
+    ## ref: https://github.com/bitnami/charts/tree/main/bitnami/postgresql
+    # -- Start a prometheus exporter
+    # @section -- Postgresql parameters
+    enabled: true
+    image:
+      registry: docker.io
+      repository: bitnamilegacy/postgres-exporter
+    collectors:
+      stat_bgwriter: false # disabled because it is not supported, produce output errors
+    containerPorts:
+      metrics: 9187

@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name:  {{ include "digma.ui" . }}
+  labels:
+    {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: ui
+  {{- if .Values.commonAnnotations }}
+  annotations:
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+data:
+  admin-env.js: |
+    window.areInsightSuggestionsEnabled = {{ .Values.ai.enabled }};
+    window.isAgenticEnabled = {{ .Values.agentic.enabled }};
+    window.isJaegerEnabled = true;
+    window.jaegerURL = "/jaeger";
+    window.jaegerApiPath = "/jaeger/api";
+    window.isSandboxModeEnabled = {{ .Values.ui.sandboxEnabled }};
+    window.platform = "Web";
+    window.theme = "dark-jetbrains";
+    window.postHogApiKey = "${POSTHOG_API_KEY}";
+    window.postHogHost = "https://us.i.posthog.com";
+    window.productFruitsWorkspaceCode = "${PRODUCT_FRUITS_WORKSPACE_CODE}";
+  agentic-env.js: |
+    window.platform = "Web";
+    window.theme = "dark-jetbrains";
+    window.postHogApiKey = "${POSTHOG_API_KEY}";
+    window.postHogHost = "https://us.i.posthog.com";
+    window.productFruitsWorkspaceCode = "${PRODUCT_FRUITS_WORKSPACE_CODE}";
+  email-confirmation-env.js: |
+    window.platform = "Web";
+    window.theme = "dark-jetbrains";
+    window.postHogApiKey =  "${POSTHOG_API_KEY}";
+    window.postHogHost = "https://us.i.posthog.com";
+  ide-launcher-env.js: |
+    window.platform = "Web";
+    window.theme = "dark-jetbrains";
+    window.postHogApiKey =  "${POSTHOG_API_KEY}";
+    window.postHogHost = "https://us.i.posthog.com";
+  login-env.js: |
+    window.platform = "Web";
+    window.theme = "dark-jetbrains";
+    window.postHogApiKey =  "${POSTHOG_API_KEY}";
+    window.postHogHost = "https://us.i.posthog.com";
+    {{ if .Values.digma.socialLogin.enabled }}
+    window.googleClientId = "{{ .Values.digma.socialLogin.google.clientId }}";
+    {{- end }}

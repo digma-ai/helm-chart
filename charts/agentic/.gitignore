@@ -1,0 +1,36 @@
+# Ignore chart build artifacts
+charts/
+Chart.lock
+
+# Ignore Helm release files
+release.yaml
+output.yaml
+
+# Ignore temporary files
+*.tmp
+*.log
+*.swp
+*.bak
+*.~*
+
+# Ignore specific configuration files
+**/values.local.yaml
+secrets.yaml      # Avoid committing sensitive data
+.env
+
+# Ignore package artifacts
+*.tgz
+
+# Ignore MacOS system files
+.DS_Store
+
+# Ignore IDE files
+.idea/
+*.iml
+.vscode/
+
+# Ignore debugging files
+debug.log
+
+# Ignore other build-related files
+build/

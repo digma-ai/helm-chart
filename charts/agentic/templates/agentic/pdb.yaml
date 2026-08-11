@@ -1,0 +1,22 @@
+{{- if .Values.agentic.pdb.create }}
+apiVersion: {{ include "common.capabilities.policy.apiVersion" . }}
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "digma.agentic" . }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: agentic
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.agentic.pdb.minAvailable }}
+  minAvailable: {{ .Values.agentic.pdb.minAvailable }}
+  {{- end }}
+  {{- if or .Values.agentic.pdb.maxUnavailable ( not .Values.agentic.pdb.minAvailable ) }}
+  maxUnavailable: {{ .Values.agentic.pdb.maxUnavailable | default 1 }}
+  {{- end }}
+  {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.agentic.podLabels .Values.commonLabels ) "context" . ) }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 6 }}
+      app.kubernetes.io/component: ai
+{{- end }}

@@ -1,0 +1,255 @@
+{{ template "chart.header" . }}
+
+{{ template "chart.deprecationWarning" . }}
+
+{{ template "chart.badgesSection" . }}
+
+{{ template "chart.description" . }}
+
+{{ template "chart.homepageLine" . }}
+
+{{ template "chart.maintainersSection" . }}
+
+{{ template "chart.sourcesSection" . }}
+## License Key
+Digma will not function without a valid license key.
+You can obtain a license key by signing up for a free account using this [link](https://digma.ai/sign-up/).
+
+## Applying the License Key
+To apply the license key, set the digma.licenseKey value in your Helm chart to the key provided by Digma.
+
+## TL;DR
+```console
+helm repo add digma https://digma-ai.github.io/helm-chart/
+helm repo update
+kubectl create namespace digma
+DIGMA_LICENSE='XXX' # license key provided by Digma
+helm upgrade --install digma digma/digma-ng -n digma --set digma.licenseKey=$DIGMA_LICENSE
+
+```
+## Introduction
+
+This chart bootstraps a [Digma](https://digma.ai) deployment on a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
+
+
+## Prerequisites
+
+- Kubernetes 1.23+
+- Helm 3.8.0+
+
+## Installing the Chart
+1. Create a local `myvalues.yaml` file that contains the default values.
+2. Set a valid Digma license key in the myvalues.yaml file
+3. Deploy the Digma Helm chart to your Kubernetes cluster.
+To install the chart with the release name `digma`:
+```console
+helm repo add digma https://digma-ai.github.io/helm-chart/
+helm repo update
+kubectl create namespace digma
+helm upgrade --install digma digma/digma-ng -n digma -f myvalues.yaml
+
+```
+## Expose Digma Services
+The service(s) created by the deployment can be exposed within or outside the cluster using any of the following approaches:
+- **ClusterIP [Default]**: This exposes the service(s) on a cluster-internal IP address. This approach makes the corresponding service(s) reachable only from within the cluster. Set service.type=ClusterIP to choose this approach.
+- **Ingres**s: This requires an Ingress controller to be installed in the Kubernetes cluster. Set ingress.enabled=true to expose the corresponding service(s) through Ingress.
+- **NodePort**: This exposes the service(s) on each node's IP address at a static port (the NodePort). This approach makes the corresponding service(s) reachable from outside the cluster by requesting the static port using the node's IP address, such as NODE-IP:NODE-PORT. Set service.type=NodePort to choose this approach.
+- **LoadBalancer**: This exposes the service(s) externally using a cloud provider's load balancer. Set service.type=LoadBalancer to choose this approach.
+### Service-Specific Exposures
+#### Analytics API
+This endpoint needs to be accessible to the IDE plugin.
+```yaml
+analyticsApi:
+  service:
+    type: ClusterIP
+    ..
+  ingress:
+    enabled: false
+```
+#### Collector
+The application should be able to send observability data to the IP/DNS of this endpoint.
+```yaml
+collectorApi:
+  service:
+    type: ClusterIP
+    ..
+  ingress:
+    enabled: false
+```
+#### UI
+This endpoint serves the Digma web application as well as additional services.
+```yaml
+ui:
+  service:
+    type: ClusterIP
+    ..
+  ingress:
+    enabled: false
+```
+#### Jaeger
+Digma bundles its own Jaeger service that aggregates sample traces for various insights, performance metrics, and exceptions.
+```yaml
+jaeger:
+  service:
+    type: ClusterIP
+    ..
+  ingress:
+    enabled: false
+```
+
+## Handle Zone-Specific Constraints
+Digma uses multiple StatefulSets.
+1. ### Enforce Zone-Affinity for StatefulSet Pods
+   Ensure the StatefulSet pod remains in the same zone as its data by configuring node affinity.
+   ####  Affinity Example
+   Here’s how to set node affinity for the StatefulSets in values.yaml:
+    ```yaml
+    elasticsearch:
+      master:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+                - matchExpressions:
+                    - key: topology.kubernetes.io/zone
+                      operator: In
+                      values:
+                        - <zone>
+    kafka:
+      controller:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+                - matchExpressions:
+                    - key: topology.kubernetes.io/zone
+                      operator: In
+                      values:
+                        - <zone>
+    postgresql:
+      primary:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+                - matchExpressions:
+                    - key: topology.kubernetes.io/zone
+                      operator: In
+                      values:
+                        - <zone>
+    redis:
+      master:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+                - matchExpressions:
+                    - key: topology.kubernetes.io/zone
+                      operator: In
+                      values:
+                        - <zone>
+    ```
+2. ### Use Multi-Zone Storage
+   Use storage solutions that replicate data across zones
+## Digma AI
+
+Digma includes a built-in integration with [Anthropic](https://www.anthropic.com/) and [OpenAI](https://platform.openai.com/docs/api-reference) to enhance **query observability** and **developer experience** through intelligent suggestions.
+
+### 🚀 Enabling the AI Feature
+
+To activate Anthropic-based suggestions in Digma, add the following configuration:
+
+```yaml
+ai:
+  enabled: true
+  extraEnvVars:
+    - name: API_KEY   # [Required]
+      value: <API_KEY>
+    - name: VENDOR
+      value: <VENDOR> # [Required] Possible Options: [Claude,OpenAi,Grok,Gemini]
+    - name: URL
+      value: <URL>    # [Optional] AI provider url, Default will be used if not set. Override this value if you are using a custom endpoint
+    - name: MODEL
+      value: <MODEL>  # [Optional] Default will be used if not set
+```
+
+The following environment variables can be configured to control the AI integration:
+
+| Variable Name            | Description                                                                          | Required | Default                                   |
+|--------------------------|--------------------------------------------------------------------------------------|----------|-------------------------------------------|
+| `API_KEY`                | The API key issued by the selected vendor for access.                                | ✅       | —                                         |
+| `VENDOR`                 | Vendor to use for the AI integration. Possible Options: [Claude,OpenAi,Grok,Gemini]  | ✅       | —                                         |
+| `URL`                    | URL of the AI provider, anthropic/openai based on the selected vendor.               | ❌       | AI provider default endpoint will be used |
+| `MODEL`                  | Model to use for the AI integration. See default models in table below.              | ❌       | default will be used for each vendor      |
+
+Default Models by Vendor:
+
+| Vendor    | Default Model               |
+|-----------|----------------------------|
+| Claude    | claude-3-5-sonnet-latest   |
+| OpenAi    | gpt-4                      |
+| Grok      | grok-1                     |
+| Gemini    | gemini-2.0-flash           |
+
+
+
+
+
+## PostgreSQL Backup
+The Digma-ng Helm chart provides an optional PostgreSQL backup job for debugging and troubleshooting purposes. This guide explains how to enable and configure the backup feature.
+
+### Enabling the Backup Job
+To enable the PostgreSQL backup job, set the following values in your Helm deployment configuration:
+```yaml
+postgresql_backup:
+  enabled: true
+  presigned_url: "<YOUR_PRESIGNED_URL>"
+```
+Required Parameters:
+	•	postgresql_backup.enabled: Set to true to enable the backup job.
+	•	postgresql_backup.presigned_url: The presigned URL provided by Digma for the S3 bucket.
+
+How It Works
+	•	When the backup job is enabled, a Kubernetes Job is created.
+	•	The job performs the following tasks:
+        1.	Connects to the PostgreSQL database.
+        2.	Creates a backup file.
+        3.	Uploads the backup file to the provided presigned S3 URL.
+
+## ⚠️ Troubleshooting
+
+### Elasticsearch Kernel Requirements
+
+Elasticsearch requires certain **kernel parameters** to be set at the **host level** in order to function properly. If these values are not correctly configured in the underlying OS, the Elasticsearch containers may fail to start, displaying error messages related to system limits.
+
+📚 For more details, refer to the official Bitnami documentation:  
+➡️ [Bitnami Elasticsearch – Default Kernel Settings](https://github.com/bitnami/charts/tree/main/bitnami/elasticsearch#default-kernel-settings)
+
+---
+
+#### 🛡️ Security Tool Warnings
+
+Some **security scanners or admission controllers** (e.g., Kyverno, Gatekeeper, Pod Security Admission) may **warn or block** the deployment because the Elasticsearch chart includes an **init container** that requires elevated privileges to set `vm.max_map_count`. This is essential for Elasticsearch to operate, as it relies on memory-mapped files extensively.
+
+---
+
+#### ✅ Managed Kubernetes (EKS, AKS) — Safe to Skip Init Container
+
+In most managed Kubernetes environments like **EKS**, **AKS**, or **GKE**, the required kernel setting is **already applied** by default:
+vm.max_map_count = 262144
+
+You can verify this from any running non-Elasticsearch pod:
+
+```bash
+cat /proc/sys/vm/max_map_count
+```
+If the output is at least 262144, You can safely disable the init container by adding the following to your values.yaml:
+```yaml
+elasticsearch:
+  master:
+    podSecurityContext:
+      enabled: false
+```
+
+{{ template "chart.valuesSection" . }}
+{{ template "chart.requirementsSection" . }}

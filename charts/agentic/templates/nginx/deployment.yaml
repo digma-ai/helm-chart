@@ -1,0 +1,167 @@
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ include "digma.nginx" . }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: nginx
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.nginx.podLabels .Values.commonLabels ) "context" . ) }}
+  replicas: {{ include "replicas.value" (dict "value" .Values.nginx.replicas "context" .) }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 6 }}
+      app.kubernetes.io/component: nginx
+  template:
+    metadata:
+      labels: 
+        {{- include "common.labels.standard" ( dict "customLabels" $podLabels "context" $ ) | nindent 8 }}
+        app.kubernetes.io/component: nginx
+      annotations:
+        {{- if .Values.commonAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+        {{- if .Values.nginx.podAnnotations }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.nginx.podAnnotations "context" .) | nindent 8 }}
+        {{- end }}
+        checksum/config: {{ include (print $.Template.BasePath "/nginx/config.yaml") . | sha256sum }}
+    spec:
+      {{- include "common.images.pullSecrets" ( dict "images" (list .Values.nginx.image) "global" .Values.global) | nindent 6 }}
+      {{- if .Values.nginx.affinity }}
+      affinity: {{- include "common.tplvalues.render" ( dict "value" .Values.nginx.affinity "context" $) | nindent 8 }}
+      {{- end }}       
+      {{- if .Values.nginx.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.nginx.nodeSelector "context" .) | nindent 8 }}
+      {{- end }}
+      {{- $mergedTolerations := (concat .Values.global.tolerations .Values.nginx.tolerations) -}}
+      {{- if $mergedTolerations }}
+      tolerations: 
+      {{- toYaml $mergedTolerations | nindent 6 -}}
+      {{- end }}
+      {{- if .Values.nginx.podSecurityContext.enabled }}
+      securityContext: {{- include "common.compatibility.renderSecurityContext" (dict "secContext" .Values.nginx.podSecurityContext "context" $) | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: conf-volume
+          configMap:
+            name: {{ include "digma.nginx" . }}
+        - name: ui-envs-volume
+          configMap:
+            name: {{ include "digma.ui" . }}
+        - name: processed-envs-volume
+          emptyDir: {}
+      initContainers:
+      - name: copy-nginx-config
+        image: busybox:latest
+        resources:
+          requests:
+            memory: 16Mi
+            cpu: 50m
+          limits:
+            memory: 64Mi
+            cpu: 100m
+        env:
+        - name: POSTHOG_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "digma.ui.secretName" . }}
+              key: {{ include "digma.ui.postHogApiKey.secretKeyName" . }}
+        - name: PRODUCT_FRUITS_WORKSPACE_CODE
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "digma.ui.secretName" . }}
+              key: {{ include "digma.ui.productFruitsWorkspaceCode.secretKeyName" . }}  
+        command:
+          - /bin/sh
+          - -c
+          - |
+            # Helper function to substitute environment variables
+            substitute_env_vars() {
+              file="$1"
+              temp_file="${file}.tmp"
+              
+              # Check if input file exists
+              if [ ! -f "$file" ]; then
+                  echo "Error: Input file '$file' does not exist"
+                  return 1
+              fi
+              
+              # Create or truncate temp file
+              > "$temp_file"
+              
+              # Process the file line by line
+              while IFS= read -r line || [ -n "$line" ]; do
+                  # Replace all ${VAR} patterns in the line
+                  while echo "$line" | grep -q '\${[^}]*}'; do
+                      var=$(echo "$line" | sed -n 's/.*\${\([^}]*\)}.*/\1/p')
+                      val=$(printenv "$var")
+                      if [ -n "$val" ]; then
+                          # Escape special characters in the value
+                          escaped_val=$(printf '%s\n' "$val" | sed 's/[\\/&]/\\&/g')
+                          line=$(echo "$line" | sed "s/\${$var}/$escaped_val/g")
+                      else
+                          # If variable not found, break to avoid infinite loop
+                          break
+                      fi
+                  done
+                  echo "$line" >> "$temp_file"
+              done < "$file"
+              
+              # Move temp file to original file
+              mv "$temp_file" "$file"
+            }
+
+            # Create subdirectories and copy env files to processed volume
+            ENV_FOLDERS="{{ join " " .Values.ui.apps }}"
+            
+            # Create all directories
+            for folder in $ENV_FOLDERS; do
+              mkdir -p "/processed-envs/$folder"
+            done
+            
+            # Copy and process env files
+            for folder in $ENV_FOLDERS; do
+              cp "/config/ui/envs/$folder-env.js" "/processed-envs/$folder/env.js"
+              substitute_env_vars "/processed-envs/$folder/env.js"
+            done
+        volumeMounts:
+          - name: processed-envs-volume
+            mountPath: /processed-envs
+          - name: ui-envs-volume
+            mountPath: /config/ui/envs             
+      containers:
+      - name: nginx
+        image: {{ include "common.images.image" (dict "imageRoot" .Values.nginx.image ) }}
+        imagePullPolicy: {{ .Values.nginx.image.pullPolicy }}
+        resources: {{- toYaml .Values.nginx.resources | nindent 12 }}
+        ports:
+        - name: ui
+          containerPort: {{ .Values.ui.service.ports.http }}
+        - name: jaeger
+          containerPort: {{ .Values.jaeger.service.ports.http_ui }}   
+        volumeMounts:
+          - name: conf-volume
+            mountPath: /usr/local/openresty/nginx/conf/nginx.conf
+            subPath: nginx.conf
+          {{- range .Values.ui.apps }}
+          - name: processed-envs-volume
+            mountPath: /app/{{ . }}/env.js
+            subPath: {{ . }}/env.js
+          {{- end }}
+        {{- if not .Values.diagnosticMode.enabled }}
+        {{- if .Values.nginx.livenessProbe.enabled }}
+        livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.nginx.livenessProbe "enabled") "context" $) | nindent 10 }}
+          httpGet:
+            path: /health
+            port: ui
+            scheme: HTTP
+        {{- end }}
+        {{- if .Values.nginx.readinessProbe.enabled }}
+        readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.nginx.readinessProbe "enabled") "context" $) | nindent 10 }}
+          httpGet:
+            path: /health
+            port: ui
+            scheme: HTTP
+        {{- end }}
+        {{- end }}
